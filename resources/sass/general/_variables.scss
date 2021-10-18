@@ -1,0 +1,33 @@
+$yellow: #ffcd00;
+$red: #c00936;
+$purple: #5a2282;
+$pink: #aa1555;
+$blue: #83b2ba;
+$black: #000000;
+$green: #24a793;
+$orange: #ff6e38;
+$lightblue: #0096fa;
+
+$grey-light: rgb(229, 229, 229);
+$grey-light-medium: #ccc;
+$grey-medium: #3b3b3b;
+
+$primary: $blue;
+$secondary: $orange;
+$tertiary: $purple;
+
+$highlight-text-color: white;
+$correct-color: $green;
+$warning-color: $orange;
+$danger-color: $red;
+
+$font-primary: "Source Sans Pro", serif;
+$font-secondary: "Source Sans Pro", sans-serif;
+$default-font-size: 16px;
+$form-font-size: $default-font-size;
+
+$layout-wrapper-width: 1040px;
+$default-margin: 32px;
+$default-half-margin: calc(#{$default-margin / 2});
+$header-height: 190px;
+$footer-height: 300px;

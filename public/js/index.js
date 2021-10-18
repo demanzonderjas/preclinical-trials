@@ -39256,6 +39256,78 @@ module.exports = function(originalModule) {
 
 /***/ }),
 
+/***/ "./resources/js/components/layout/Page.tsx":
+/*!*************************************************!*\
+  !*** ./resources/js/components/layout/Page.tsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Page = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PageFooter_1 = __webpack_require__(/*! ./PageFooter */ "./resources/js/components/layout/PageFooter.tsx");
+var PageHeader_1 = __webpack_require__(/*! ./PageHeader */ "./resources/js/components/layout/PageHeader.tsx");
+exports.Page = function (_a) {
+    var children = _a.children;
+    return (react_1.default.createElement("div", { className: "Page" },
+        react_1.default.createElement(PageHeader_1.PageHeader, null),
+        children,
+        react_1.default.createElement(PageFooter_1.PageFooter, null)));
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/PageFooter.tsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/layout/PageFooter.tsx ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PageFooter = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+exports.PageFooter = function () {
+    return react_1.default.createElement("div", { className: "PageHeader" }, "Footer");
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/PageHeader.tsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/layout/PageHeader.tsx ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PageHeader = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+exports.PageHeader = function () {
+    return react_1.default.createElement("div", { className: "PageHeader" }, "Header");
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/contexts/ModalContext.tsx":
 /*!************************************************!*\
   !*** ./resources/js/contexts/ModalContext.tsx ***!
@@ -39415,8 +39487,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AboutUsPage = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 exports.AboutUsPage = function () {
-    return react_1.default.createElement("div", { className: "AboutUsPage" }, "AboutUs");
+    return (react_1.default.createElement(Page_1.Page, null,
+        react_1.default.createElement("div", { className: "AboutUsPage" }),
+        ";"));
 };
 
 
@@ -39438,11 +39513,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomePage = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore */ "./resources/js/hooks/useTranslationStore.ts");
 exports.HomePage = function () {
     var t = useTranslationStore_1.useTranslationStore().t;
     var history = react_router_dom_1.useHistory();
-    return react_1.default.createElement("div", { className: "HomePage" }, "HOMESSS");
+    return (react_1.default.createElement(Page_1.Page, null,
+        react_1.default.createElement("div", { className: "Home" }, ":D")));
 };
 
 

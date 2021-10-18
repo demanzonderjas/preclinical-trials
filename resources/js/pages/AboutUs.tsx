@@ -1,5 +1,10 @@
 import React from "react";
+import { Page } from "../components/layout/Page";
 
 export const AboutUsPage: React.FC = () => {
-    return <div className="AboutUsPage">AboutUs</div>;
+    return (
+        <Page>
+            <div className="AboutUsPage"></div>;
+        </Page>
+    );
 };
