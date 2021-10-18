@@ -1,5 +1,10 @@
 import React from "react";
+import { Logo } from "./Logo";
 
 export const PageHeader: React.FC = () => {
-    return <div className="PageHeader">Header</div>;
+	return (
+		<div className="PageHeader">
+			<Logo />
+		</div>
+	);
 };

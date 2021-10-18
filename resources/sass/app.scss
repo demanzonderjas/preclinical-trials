@@ -1,7 +1,9 @@
 @import "./general/reset";
 @import "./general/variables";
 
+@import "./components/PageHeader";
+
 body {
-    background-color: $blue;
-    font-family: $font-primary;
+	background-color: $blue;
+	font-family: $font-primary;
 }

@@ -39256,6 +39256,54 @@ module.exports = function(originalModule) {
 
 /***/ }),
 
+/***/ "./resources/js/components/base/Image.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/components/base/Image.tsx ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Image = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+exports.Image = function (_a) {
+    var filename = _a.filename;
+    return (react_1.default.createElement("div", { className: "ImageWrapper" },
+        react_1.default.createElement("img", { src: "/images/" + filename })));
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/Logo.tsx":
+/*!*************************************************!*\
+  !*** ./resources/js/components/layout/Logo.tsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logo = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Image_1 = __webpack_require__(/*! ../base/Image */ "./resources/js/components/base/Image.tsx");
+exports.Logo = function () {
+    return (react_1.default.createElement("div", { className: "LogoWrapper" },
+        react_1.default.createElement(Image_1.Image, { filename: "logo-pct.jpeg" })));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/components/layout/Page.tsx":
 /*!*************************************************!*\
   !*** ./resources/js/components/layout/Page.tsx ***!
@@ -39321,8 +39369,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageHeader = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Logo_1 = __webpack_require__(/*! ./Logo */ "./resources/js/components/layout/Logo.tsx");
 exports.PageHeader = function () {
-    return react_1.default.createElement("div", { className: "PageHeader" }, "Header");
+    return (react_1.default.createElement("div", { className: "PageHeader" },
+        react_1.default.createElement(Logo_1.Logo, null)));
 };
 
 

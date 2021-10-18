@@ -138,6 +138,20 @@ table {
   box-sizing: border-box;
 }
 
+.PageHeader {
+  background-color: #fff;
+  position: relative;
+  padding: 24px;
+}
+
+.LogoWrapper {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #83b2ba;
+  overflow: hidden;
+}
+
 body {
   background-color: #83b2ba;
   font-family: "Source Sans Pro", serif;
