@@ -39304,6 +39304,39 @@ exports.Logo = function () {
 
 /***/ }),
 
+/***/ "./resources/js/components/layout/Menu.tsx":
+/*!*************************************************!*\
+  !*** ./resources/js/components/layout/Menu.tsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MenuItem = exports.Menu = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+exports.Menu = function () {
+    return (react_1.default.createElement("ul", { className: "Menu" },
+        react_1.default.createElement(exports.MenuItem, { text: "Database", url: "database" }),
+        react_1.default.createElement(exports.MenuItem, { text: "FAQ", url: "faq" }),
+        react_1.default.createElement(exports.MenuItem, { text: "About Us", url: "about-us" }),
+        react_1.default.createElement(exports.MenuItem, { text: "News", url: "news" }),
+        react_1.default.createElement(exports.MenuItem, { text: "Contact", url: "contact" })));
+};
+exports.MenuItem = function (_a) {
+    var text = _a.text, url = _a.url;
+    return (react_1.default.createElement("li", { className: "MenuItem" },
+        react_1.default.createElement(react_router_dom_1.Link, { to: url }, text)));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/components/layout/Page.tsx":
 /*!*************************************************!*\
   !*** ./resources/js/components/layout/Page.tsx ***!
@@ -39370,9 +39403,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageHeader = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var Logo_1 = __webpack_require__(/*! ./Logo */ "./resources/js/components/layout/Logo.tsx");
+var Menu_1 = __webpack_require__(/*! ./Menu */ "./resources/js/components/layout/Menu.tsx");
 exports.PageHeader = function () {
     return (react_1.default.createElement("div", { className: "PageHeader" },
-        react_1.default.createElement(Logo_1.Logo, null)));
+        react_1.default.createElement("div", { className: "Navigation" },
+            react_1.default.createElement(Logo_1.Logo, null),
+            react_1.default.createElement(Menu_1.Menu, null))));
 };
 
 
@@ -39505,6 +39541,7 @@ var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_mod
 var AboutUs_1 = __webpack_require__(/*! ./pages/AboutUs */ "./resources/js/pages/AboutUs.tsx");
 var ModalContext_1 = __importDefault(__webpack_require__(/*! ./contexts/ModalContext */ "./resources/js/contexts/ModalContext.tsx"));
 var ModalStore_1 = __webpack_require__(/*! ./stores/ModalStore */ "./resources/js/stores/ModalStore.ts");
+var Contact_1 = __webpack_require__(/*! ./pages/Contact */ "./resources/js/pages/Contact.tsx");
 var App = function () {
     var translationStore = react_1.useState(new TranslationStore_1.TranslationStore())[0];
     var modalStore = react_1.useState(new ModalStore_1.ModalStore())[0];
@@ -39515,7 +39552,9 @@ var App = function () {
                     react_1.default.createElement(react_router_dom_1.Route, { path: "/", exact: true },
                         react_1.default.createElement(Home_1.HomePage, null)),
                     react_1.default.createElement(react_router_dom_1.Route, { path: "/about-us", exact: true },
-                        react_1.default.createElement(AboutUs_1.AboutUsPage, null)))))));
+                        react_1.default.createElement(AboutUs_1.AboutUsPage, null)),
+                    react_1.default.createElement(react_router_dom_1.Route, { path: "/contact", exact: true },
+                        react_1.default.createElement(Contact_1.ContactPage, null)))))));
 };
 react_dom_1.render(react_1.default.createElement(App, null), document.getElementById("app"));
 
@@ -39542,6 +39581,30 @@ exports.AboutUsPage = function () {
     return (react_1.default.createElement(Page_1.Page, null,
         react_1.default.createElement("div", { className: "AboutUsPage" }),
         ";"));
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/Contact.tsx":
+/*!****************************************!*\
+  !*** ./resources/js/pages/Contact.tsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ContactPage = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
+exports.ContactPage = function () {
+    return (react_1.default.createElement(Page_1.Page, null,
+        react_1.default.createElement("div", { className: "ContactPage" })));
 };
 
 

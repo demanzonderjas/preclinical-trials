@@ -144,12 +144,59 @@ table {
   padding: 24px;
 }
 
+.PageHeader .Navigation {
+  display: flex;
+  width: 1437px;
+}
+
 .LogoWrapper {
   width: 200px;
-  height: 200px;
+  height: 180px;
   border-radius: 50%;
   background-color: #83b2ba;
   overflow: hidden;
+}
+
+.LogoWrapper img {
+  width: 100%;
+  height: 100%;
+}
+
+.Menu {
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 200px);
+  margin-left: 100px;
+  margin-top: 32px;
+}
+
+.Menu .MenuItem {
+  display: block;
+  position: relative;
+  height: 30px;
+}
+
+.Menu .MenuItem a {
+  color: #000000;
+  text-decoration: none;
+  font-size: 22px;
+}
+
+.Menu .MenuItem:hover:after {
+  width: 120%;
+  transform: translateX(-17.5%);
+}
+
+.Menu .MenuItem:after {
+  width: 80%;
+  margin: 0 auto;
+  height: 5px;
+  background-color: #ff6e38;
+  position: absolute;
+  content: "";
+  left: 10%;
+  bottom: -5px;
+  transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1), width 0.25s cubic-bezier(0, 0, 0.3, 1);
 }
 
 body {
