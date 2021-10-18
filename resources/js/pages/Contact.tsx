@@ -3,7 +3,7 @@ import { Page } from "../components/layout/Page";
 
 export const ContactPage: React.FC = () => {
 	return (
-		<Page>
+		<Page title="Contact">
 			<div className="ContactPage"></div>
 		</Page>
 	);

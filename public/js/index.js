@@ -39295,10 +39295,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Logo = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 var Image_1 = __webpack_require__(/*! ../base/Image */ "./resources/js/components/base/Image.tsx");
 exports.Logo = function () {
     return (react_1.default.createElement("div", { className: "LogoWrapper" },
-        react_1.default.createElement(Image_1.Image, { filename: "logo-pct.jpeg" })));
+        react_1.default.createElement(react_router_dom_1.Link, { to: "/" },
+            react_1.default.createElement(Image_1.Image, { filename: "logo-pct.jpeg" }))));
 };
 
 
@@ -39355,10 +39357,10 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var PageFooter_1 = __webpack_require__(/*! ./PageFooter */ "./resources/js/components/layout/PageFooter.tsx");
 var PageHeader_1 = __webpack_require__(/*! ./PageHeader */ "./resources/js/components/layout/PageHeader.tsx");
 exports.Page = function (_a) {
-    var children = _a.children;
+    var children = _a.children, title = _a.title, subtitle = _a.subtitle;
     return (react_1.default.createElement("div", { className: "Page" },
-        react_1.default.createElement(PageHeader_1.PageHeader, null),
-        children,
+        react_1.default.createElement(PageHeader_1.PageHeader, { title: title, subtitle: subtitle }),
+        react_1.default.createElement("div", { className: "PageContent" }, children),
         react_1.default.createElement(PageFooter_1.PageFooter, null)));
 };
 
@@ -39404,11 +39406,15 @@ exports.PageHeader = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var Logo_1 = __webpack_require__(/*! ./Logo */ "./resources/js/components/layout/Logo.tsx");
 var Menu_1 = __webpack_require__(/*! ./Menu */ "./resources/js/components/layout/Menu.tsx");
-exports.PageHeader = function () {
+exports.PageHeader = function (_a) {
+    var title = _a.title, subtitle = _a.subtitle;
     return (react_1.default.createElement("div", { className: "PageHeader" },
         react_1.default.createElement("div", { className: "Navigation" },
             react_1.default.createElement(Logo_1.Logo, null),
-            react_1.default.createElement(Menu_1.Menu, null))));
+            react_1.default.createElement(Menu_1.Menu, null)),
+        react_1.default.createElement("div", { className: "Copy" },
+            react_1.default.createElement("h1", null, title),
+            !!subtitle && react_1.default.createElement("h2", null, subtitle))));
 };
 
 
@@ -39578,7 +39584,7 @@ exports.AboutUsPage = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 exports.AboutUsPage = function () {
-    return (react_1.default.createElement(Page_1.Page, null,
+    return (react_1.default.createElement(Page_1.Page, { title: "About Us" },
         react_1.default.createElement("div", { className: "AboutUsPage" }),
         ";"));
 };
@@ -39603,7 +39609,7 @@ exports.ContactPage = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 exports.ContactPage = function () {
-    return (react_1.default.createElement(Page_1.Page, null,
+    return (react_1.default.createElement(Page_1.Page, { title: "Contact" },
         react_1.default.createElement("div", { className: "ContactPage" })));
 };
 
@@ -39631,7 +39637,7 @@ var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore
 exports.HomePage = function () {
     var t = useTranslationStore_1.useTranslationStore().t;
     var history = react_router_dom_1.useHistory();
-    return (react_1.default.createElement(Page_1.Page, null,
+    return (react_1.default.createElement(Page_1.Page, { title: "PreclinicalTrials.eu", subtitle: "International register of preclinical trial protocols" },
         react_1.default.createElement("div", { className: "Home" }, ":D")));
 };
 

@@ -149,6 +149,21 @@ table {
   width: 1437px;
 }
 
+.PageHeader .Copy {
+  text-align: center;
+  max-width: 80%;
+  margin: -40px auto 40px;
+}
+
+.PageHeader .Copy h1 {
+  font-size: 70px;
+  line-height: 92px;
+}
+
+.PageHeader .Copy h2 {
+  font-size: 36px;
+}
+
 .LogoWrapper {
   width: 200px;
   height: 180px;
@@ -157,9 +172,14 @@ table {
   overflow: hidden;
 }
 
+.LogoWrapper:hover img {
+  transform: scale(1.05);
+}
+
 .LogoWrapper img {
   width: 100%;
   height: 100%;
+  transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
 }
 
 .Menu {
@@ -202,5 +222,9 @@ table {
 body {
   background-color: #83b2ba;
   font-family: "Source Sans Pro", serif;
+}
+
+.PageContent {
+  min-height: calc(100vh - 300px - 100px);
 }
 

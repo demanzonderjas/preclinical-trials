@@ -7,3 +7,7 @@ body {
 	background-color: $blue;
 	font-family: $font-primary;
 }
+
+.PageContent {
+	min-height: calc(100vh - #{$header-height} - #{$footer-height});
+}
