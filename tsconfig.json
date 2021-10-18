@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ES5",
+		"moduleResolution": "node",
+		"allowJs": true,
+		"sourceMap": false,
+		"jsx": "react",
+		"strict": false,
+		"isolatedModules": true,
+		"esModuleInterop": true,
+		"noImplicitAny": false,
+		"experimentalDecorators": true,
+		"resolveJsonModule": true
+	},
+	"include": ["resources/js"],
+	"compileOnSave": false
+}
