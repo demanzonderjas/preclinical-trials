@@ -1,0 +1,81 @@
+{
+	"extends": ["eslint:recommended", "plugin:react/recommended"],
+	"parser": "babel-eslint",
+	"parserOptions": {
+		"ecmaVersion": 2016,
+		"experimentalDecorators": true,
+		"sourceType": "module"
+	},
+	"env": {
+		"browser": true
+	},
+	"rules": {
+		"react/react-in-jsx-scope": false,
+		"react/jsx-no-bind": [
+			"error",
+			{
+				"ignoreRefs": false,
+				"allowArrowFunctions": true,
+				"allowFunctions": false,
+				"allowBind": true
+			}
+		],
+		"react/no-direct-mutation-state": "error",
+		"react/no-multi-comp": false,
+		"react/no-typos": "error",
+		"react/no-this-in-sfc": "error",
+		"react/no-unknown-property": "error",
+		"react/no-unused-prop-types": "error",
+		"react/no-unused-state": "error",
+		"react/prop-types": false,
+		"react/self-closing-comp": "error",
+		"react/jsx-max-depth": [
+			"error",
+			{
+				"max": 6
+			}
+		],
+		"no-lone-blocks": "error",
+		"no-loop-func": "error",
+		"no-mixed-spaces-and-tabs": 0,
+		"no-unused-expressions": "error",
+		"no-useless-call": "error",
+		"no-useless-return": "error",
+		"require-await": "error",
+		"no-restricted-globals": "error",
+		"no-undef-init": "error",
+		"no-unused-vars": "error",
+		"array-bracket-spacing": "error",
+		"block-spacing": "error",
+		"brace-style": "error",
+		"comma-spacing": "error",
+		"func-names": "error",
+		"jsx-quotes": ["error", "prefer-double"],
+		"key-spacing": "error",
+		"max-depth": ["error", 2],
+		"max-len": ["error", 100],
+		"max-lines": ["error", 500],
+		"max-params": ["error", 4],
+		"max-statements-per-line": [
+			"error",
+			{
+				"max": 1
+			}
+		],
+		"no-inline-comments": "error",
+		"no-multiple-empty-lines": "error",
+		"no-nested-ternary": "error",
+		"no-trailing-spaces": 0,
+		"no-undef": "error",
+		"no-unneeded-ternary": "error",
+		"no-case-declarations": 0,
+		"no-const-assign": "error",
+		"no-duplicate-imports": "error",
+		"no-useless-constructor": "error",
+		"no-var": "error",
+		"prefer-const": "error",
+		"prefer-numeric-literals": "error",
+		"prefer-spread": "error",
+		"prefer-template": "error"
+	}
+}
