@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { Video } from "../components/base/Video";
 import { Page } from "../components/layout/Page";
 import { PageHeader } from "../components/layout/PageHeader";
 import { useTranslationStore } from "../hooks/useTranslationStore";
@@ -13,7 +14,9 @@ export const HomePage: React.FC = () => {
 			title="PreclinicalTrials.eu"
 			subtitle="International register of preclinical trial protocols"
 		>
-			<div className="Home">:D</div>
+			<div className="Home">
+				<Video url="xYjLvDBTsV4" />
+			</div>
 		</Page>
 	);
 };

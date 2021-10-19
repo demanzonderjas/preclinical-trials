@@ -5,6 +5,7 @@ import { Menu } from "./Menu";
 export const PageHeader: React.FC<{ title: string; subtitle?: string }> = ({ title, subtitle }) => {
 	return (
 		<div className="PageHeader">
+			<div className="Ellipse"></div>
 			<div className="Navigation">
 				<Logo />
 				<Menu />

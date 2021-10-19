@@ -2,10 +2,16 @@
 @import "./general/variables";
 
 @import "./components/PageHeader";
+@import "./components/Video";
 
 body {
 	background-color: $blue;
 	font-family: $font-primary;
+	overflow-x: hidden;
+}
+
+.Page {
+	overflow-x: hidden;
 }
 
 .PageContent {

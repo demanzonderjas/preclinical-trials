@@ -39280,6 +39280,30 @@ exports.Image = function (_a) {
 
 /***/ }),
 
+/***/ "./resources/js/components/base/Video.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/components/base/Video.tsx ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Video = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+exports.Video = function (_a) {
+    var url = _a.url;
+    return (react_1.default.createElement("div", { className: "VideoWrapper" },
+        react_1.default.createElement("iframe", { width: "100%", height: "100%", src: "https://www.youtube-nocookie.com/embed/" + url, frameBorder: "0", allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowFullScreen: true })));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/components/layout/Logo.tsx":
 /*!*************************************************!*\
   !*** ./resources/js/components/layout/Logo.tsx ***!
@@ -39409,6 +39433,7 @@ var Menu_1 = __webpack_require__(/*! ./Menu */ "./resources/js/components/layout
 exports.PageHeader = function (_a) {
     var title = _a.title, subtitle = _a.subtitle;
     return (react_1.default.createElement("div", { className: "PageHeader" },
+        react_1.default.createElement("div", { className: "Ellipse" }),
         react_1.default.createElement("div", { className: "Navigation" },
             react_1.default.createElement(Logo_1.Logo, null),
             react_1.default.createElement(Menu_1.Menu, null)),
@@ -39632,13 +39657,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomePage = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+var Video_1 = __webpack_require__(/*! ../components/base/Video */ "./resources/js/components/base/Video.tsx");
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore */ "./resources/js/hooks/useTranslationStore.ts");
 exports.HomePage = function () {
     var t = useTranslationStore_1.useTranslationStore().t;
     var history = react_router_dom_1.useHistory();
     return (react_1.default.createElement(Page_1.Page, { title: "PreclinicalTrials.eu", subtitle: "International register of preclinical trial protocols" },
-        react_1.default.createElement("div", { className: "Home" }, ":D")));
+        react_1.default.createElement("div", { className: "Home" },
+            react_1.default.createElement(Video_1.Video, { url: "xYjLvDBTsV4" }))));
 };
 
 
