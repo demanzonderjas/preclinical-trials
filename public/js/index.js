@@ -39256,6 +39256,39 @@ module.exports = function(originalModule) {
 
 /***/ }),
 
+/***/ "./resources/js/components/account/LoginForm.tsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/account/LoginForm.tsx ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LoginForm = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Image_1 = __webpack_require__(/*! ../base/Image */ "./resources/js/components/base/Image.tsx");
+exports.LoginForm = function () {
+    return (react_1.default.createElement("div", { className: "LoginForm" },
+        react_1.default.createElement("div", { className: "icon-wrapper" },
+            react_1.default.createElement(Image_1.Image, { filename: "login.png" })),
+        react_1.default.createElement("h3", null, "Login"),
+        react_1.default.createElement("form", { onSubmit: function (e) { return e.preventDefault(); } },
+            react_1.default.createElement("input", { type: "text", placeholder: "Email" }),
+            react_1.default.createElement("input", { type: "password", placeholder: "Password" }),
+            react_1.default.createElement("button", { type: "submit" }, "Go!")),
+        react_1.default.createElement("div", { className: "NewRegistration" },
+            react_1.default.createElement("p", null, "Or register as a new user"),
+            react_1.default.createElement(Image_1.Image, { filename: "new-account.png" }))));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/components/base/Image.tsx":
 /*!************************************************!*\
   !*** ./resources/js/components/base/Image.tsx ***!
@@ -39657,6 +39690,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HomePage = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+var LoginForm_1 = __webpack_require__(/*! ../components/account/LoginForm */ "./resources/js/components/account/LoginForm.tsx");
 var Video_1 = __webpack_require__(/*! ../components/base/Video */ "./resources/js/components/base/Video.tsx");
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore */ "./resources/js/hooks/useTranslationStore.ts");
@@ -39665,7 +39699,8 @@ exports.HomePage = function () {
     var history = react_router_dom_1.useHistory();
     return (react_1.default.createElement(Page_1.Page, { title: "PreclinicalTrials.eu", subtitle: "International register of preclinical trial protocols" },
         react_1.default.createElement("div", { className: "Home" },
-            react_1.default.createElement(Video_1.Video, { url: "xYjLvDBTsV4" }))));
+            react_1.default.createElement(Video_1.Video, { url: "xYjLvDBTsV4" }),
+            react_1.default.createElement(LoginForm_1.LoginForm, null))));
 };
 
 

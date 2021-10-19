@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { LoginForm } from "../components/account/LoginForm";
 import { Video } from "../components/base/Video";
 import { Page } from "../components/layout/Page";
 import { PageHeader } from "../components/layout/PageHeader";
@@ -16,6 +17,7 @@ export const HomePage: React.FC = () => {
 		>
 			<div className="Home">
 				<Video url="xYjLvDBTsV4" />
+				<LoginForm />
 			</div>
 		</Page>
 	);

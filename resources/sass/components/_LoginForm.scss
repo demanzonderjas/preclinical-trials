@@ -1,0 +1,79 @@
+.LoginForm {
+	background-color: $secondary;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
+	width: 750px;
+	max-width: 100%;
+	margin: 75px auto;
+	position: relative;
+	padding-bottom: 50px;
+
+	h3 {
+		text-transform: uppercase;
+		color: white;
+		font-size: 54px;
+		text-align: center;
+		padding: 24px 0;
+	}
+
+	.icon-wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		transform: translate(-60%, -65%);
+		width: 150px;
+
+		.ImageWrapper {
+			max-width: 100%;
+			max-height: 100%;
+
+			img {
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+	form {
+		width: 50%;
+		margin: 0 auto;
+		text-align: center;
+
+		input {
+			margin-bottom: 16px;
+		}
+	}
+
+	.NewRegistration {
+		position: absolute;
+		bottom: 8px;
+		right: 8px;
+		width: 130px;
+
+		p {
+			font-size: 18px;
+			color: white;
+			display: inline-block;
+			padding-bottom: 20px;
+			line-height: 24px;
+		}
+
+		.ImageWrapper {
+			width: 30px;
+			display: inline-block;
+			position: absolute;
+			bottom: 10px;
+			right: 24px;
+		}
+
+		&:after {
+			content: "";
+			background-color: white;
+			position: absolute;
+			bottom: 5px;
+			left: 0;
+			height: 2px;
+			display: block;
+			width: 100%;
+		}
+	}
+}
