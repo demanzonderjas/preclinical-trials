@@ -454,6 +454,32 @@ button {
   bottom: -15px;
 }
 
+.PageFooter {
+  min-height: 160px;
+  border-bottom: 10px #ff6e38 solid;
+}
+
+.PageFooter .links {
+  padding: 10px;
+  text-align: right;
+  margin-right: 60px;
+}
+
+.PageFooter .links ul {
+  text-align: left;
+  display: inline-block;
+  color: #fff;
+}
+
+.PageFooter .links ul li {
+  line-height: 24px;
+}
+
+.PageFooter .links ul li .ImageWrapper {
+  width: 30px;
+  margin-top: 5px;
+}
+
 body {
   background-color: #83b2ba;
   font-family: "Source Sans Pro", serif;

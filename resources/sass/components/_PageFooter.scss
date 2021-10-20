@@ -1,0 +1,24 @@
+.PageFooter {
+	min-height: 160px;
+	border-bottom: 10px $secondary solid;
+
+	.links {
+		padding: 10px;
+		text-align: right;
+		margin-right: 60px;
+
+		ul {
+			text-align: left;
+			display: inline-block;
+			color: $white;
+
+			li {
+				line-height: 24px;
+				.ImageWrapper {
+					width: 30px;
+					margin-top: 5px;
+				}
+			}
+		}
+	}
+}
