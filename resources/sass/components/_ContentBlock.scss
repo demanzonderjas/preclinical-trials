@@ -1,9 +1,10 @@
 .ContentBlock {
 	position: relative;
-	padding: 50px 50px 150px;
-	margin-bottom: 150px;
+	padding: 100px 50px 150px;
+	margin-bottom: 210px;
 	background-color: white;
 	z-index: 2;
+	border-top: 10px $secondary solid;
 
 	&:after {
 		width: 100%;
@@ -25,7 +26,7 @@
 	.content {
 		max-width: 60%;
 		margin: 0 auto;
-		min-height: 600px;
+		min-height: 500px;
 		position: relative;
 
 		line-height: 38px;

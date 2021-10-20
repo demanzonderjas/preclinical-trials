@@ -364,10 +364,11 @@ button {
 
 .ContentBlock {
   position: relative;
-  padding: 50px 50px 150px;
-  margin-bottom: 150px;
+  padding: 100px 50px 150px;
+  margin-bottom: 210px;
   background-color: white;
   z-index: 2;
+  border-top: 10px #ff6e38 solid;
 }
 
 .ContentBlock:after {
@@ -384,7 +385,7 @@ button {
 .ContentBlock .content {
   max-width: 60%;
   margin: 0 auto;
-  min-height: 600px;
+  min-height: 500px;
   position: relative;
   line-height: 38px;
   font-size: 26px;
@@ -398,6 +399,59 @@ button {
 .ContentBlock .content a {
   color: #ff6e38;
   font-weight: 500;
+}
+
+.PartnerBlock .partners {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  max-width: 50%;
+  margin: 50px auto;
+  border-radius: 50%;
+  background-color: #fff;
+  height: 775px;
+  width: 875px;
+  overflow: hidden;
+  padding: 30px;
+}
+
+.PartnerBlock .Partner {
+  display: inline-block;
+  max-width: 175px;
+  background-color: white;
+  margin: 10px;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+}
+
+.PartnerBlock .Partner:hover {
+  transform: scale(1.1);
+}
+
+.Subtitle {
+  text-transform: uppercase;
+  font-size: 72px;
+  position: relative;
+  text-align: center;
+}
+
+.Subtitle h2 {
+  display: inline-block;
+  position: relative;
+  color: white;
+  font-weight: 500;
+}
+
+.Subtitle h2:after {
+  width: 120%;
+  height: 15px;
+  background-color: #ff6e38;
+  position: absolute;
+  content: "";
+  left: -10%;
+  bottom: -15px;
 }
 
 body {

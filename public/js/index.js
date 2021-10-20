@@ -39502,6 +39502,74 @@ exports.PageHeader = function (_a) {
 
 /***/ }),
 
+/***/ "./resources/js/components/layout/PartnerBlock.tsx":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/layout/PartnerBlock.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Partner = exports.PartnerBlock = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var partnerData_1 = __webpack_require__(/*! ../../data/partners/partnerData */ "./resources/js/data/partners/partnerData.ts");
+var Image_1 = __webpack_require__(/*! ../base/Image */ "./resources/js/components/base/Image.tsx");
+var Subtitle_1 = __webpack_require__(/*! ./Subtitle */ "./resources/js/components/layout/Subtitle.tsx");
+exports.PartnerBlock = function () {
+    return (react_1.default.createElement("div", { className: "PartnerBlock" },
+        react_1.default.createElement(Subtitle_1.Subtitle, { text: "Partners" }),
+        react_1.default.createElement("div", { className: "partners" }, partnerData_1.partnerData.map(function (partner) { return (react_1.default.createElement(exports.Partner, __assign({ key: partner.image }, partner))); }))));
+};
+exports.Partner = function (_a) {
+    var image = _a.image, url = _a.url;
+    return (react_1.default.createElement("div", { className: "Partner" },
+        react_1.default.createElement("a", { href: url, rel: "noopener noreferrer", target: "_blank" },
+            react_1.default.createElement(Image_1.Image, { filename: "partners/" + image }))));
+};
+
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/Subtitle.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/layout/Subtitle.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Subtitle = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+exports.Subtitle = function (_a) {
+    var text = _a.text;
+    return (react_1.default.createElement("div", { className: "Subtitle" },
+        react_1.default.createElement("h2", null, text)));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/contexts/ModalContext.tsx":
 /*!************************************************!*\
   !*** ./resources/js/contexts/ModalContext.tsx ***!
@@ -39552,6 +39620,87 @@ exports.TranslationStoreProvider = function (_a) {
     return (react_1.default.createElement(exports.translationStoreContext.Provider, { value: storeHook }, children));
 };
 exports.default = exports.TranslationStoreProvider;
+
+
+/***/ }),
+
+/***/ "./resources/js/data/partners/partnerData.ts":
+/*!***************************************************!*\
+  !*** ./resources/js/data/partners/partnerData.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.partnerData = void 0;
+exports.partnerData = [
+    {
+        image: "awc.png",
+        url: "https://www.ivd-utrecht.nl/nl/"
+    },
+    {
+        image: "DCVA.png",
+        url: "https://dcvalliance.nl/"
+    },
+    {
+        image: "esc.png",
+        url: "https://www.escardio.org/"
+    },
+    {
+        image: "hartstichting.png",
+        url: "https://www.hartstichting.nl/"
+    },
+    {
+        image: "knaw.png",
+        url: "https://www.knaw.nl/"
+    },
+    {
+        image: "NLHI_logo.png",
+        url: "https://www.heart-institute.nl/"
+    },
+    {
+        image: "PAASP.png",
+        url: "https://paasp.net/"
+    },
+    {
+        image: "pris-logo.png",
+        url: "https://www.pris.nl/"
+    },
+    {
+        image: "rrp.png",
+        url: "https://www.responsibleresearchinpractice.co.uk/"
+    },
+    {
+        image: "sgf.png",
+        url: "http://www.gezondheidsfondsen.nl/"
+    },
+    {
+        image: "sit.png",
+        url: "https://scienceintransition.nl/"
+    },
+    {
+        image: "syrcle.png",
+        url: "http://www.syrcle.nl/"
+    },
+    {
+        image: "uls.png",
+        url: "https://www.uu.nl/organisatie/3rs-centre"
+    },
+    {
+        image: "umc.png",
+        url: "https://www.umcutrecht.nl/nl"
+    },
+    {
+        image: "Utrecht_University.png",
+        url: "https://www.uu.nl/"
+    },
+    {
+        image: "zonmw-logo.png",
+        url: "https://www.zonmw.nl/"
+    }
+];
 
 
 /***/ }),
@@ -39718,6 +39867,7 @@ var LoginForm_1 = __webpack_require__(/*! ../components/account/LoginForm */ "./
 var Video_1 = __webpack_require__(/*! ../components/base/Video */ "./resources/js/components/base/Video.tsx");
 var ContentBlock_1 = __webpack_require__(/*! ../components/layout/ContentBlock */ "./resources/js/components/layout/ContentBlock.tsx");
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
+var PartnerBlock_1 = __webpack_require__(/*! ../components/layout/PartnerBlock */ "./resources/js/components/layout/PartnerBlock.tsx");
 var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore */ "./resources/js/hooks/useTranslationStore.ts");
 exports.HomePage = function () {
     var t = useTranslationStore_1.useTranslationStore().t;
@@ -39735,7 +39885,8 @@ exports.HomePage = function () {
                 react_1.default.createElement("p", null,
                     "This register is web-based, open to all types of animal studies and freely accessible and searchable to all with a preclinicaltrials.eu account. The registration form is designed by experts on preclinical animal studies and preclinical evidence synthesis. Please join us and create a user account, this will provide access to the database and enables you to register your preclinical trial. Contact us at",
                     " ",
-                    react_1.default.createElement("a", { href: "mailto:info@preclinicaltrials.eu" }, "info@preclinicaltrials.eu"))))));
+                    react_1.default.createElement("a", { href: "mailto:info@preclinicaltrials.eu" }, "info@preclinicaltrials.eu"))),
+            react_1.default.createElement(PartnerBlock_1.PartnerBlock, null))));
 };
 
 

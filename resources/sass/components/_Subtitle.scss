@@ -1,0 +1,23 @@
+.Subtitle {
+	text-transform: uppercase;
+	font-size: 72px;
+	position: relative;
+	text-align: center;
+
+	h2 {
+		display: inline-block;
+		position: relative;
+		color: white;
+		font-weight: 500;
+
+		&:after {
+			width: 120%;
+			height: 15px;
+			background-color: $secondary;
+			position: absolute;
+			content: "";
+			left: -10%;
+			bottom: -15px;
+		}
+	}
+}

@@ -5,6 +5,7 @@ import { Video } from "../components/base/Video";
 import { ContentBlock } from "../components/layout/ContentBlock";
 import { Page } from "../components/layout/Page";
 import { PageHeader } from "../components/layout/PageHeader";
+import { PartnerBlock } from "../components/layout/PartnerBlock";
 import { useTranslationStore } from "../hooks/useTranslationStore";
 
 export const HomePage: React.FC = () => {
@@ -43,6 +44,7 @@ export const HomePage: React.FC = () => {
 						<a href="mailto:info@preclinicaltrials.eu">info@preclinicaltrials.eu</a>
 					</p>
 				</ContentBlock>
+				<PartnerBlock />
 			</div>
 		</Page>
 	);
