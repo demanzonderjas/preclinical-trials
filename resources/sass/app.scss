@@ -11,6 +11,7 @@
 @import "./components/PartnerBlock";
 @import "./components/Subtitle";
 @import "./components/PageFooter";
+@import "./components/Highlight";
 
 body {
 	background-color: $blue;
@@ -24,4 +25,5 @@ body {
 
 .PageContent {
 	min-height: calc(100vh - #{$header-height} - #{$footer-height});
+	position: relative;
 }

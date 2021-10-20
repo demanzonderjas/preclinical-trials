@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { LoginForm } from "../components/account/LoginForm";
 import { Video } from "../components/base/Video";
 import { ContentBlock } from "../components/layout/ContentBlock";
+import { Highlight } from "../components/layout/Highlight";
 import { Page } from "../components/layout/Page";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PartnerBlock } from "../components/layout/PartnerBlock";
@@ -18,6 +19,10 @@ export const HomePage: React.FC = () => {
 			subtitle="International register of preclinical trial protocols"
 		>
 			<div className="Home">
+				<Highlight
+					image="note.png"
+					text="98 protocols registered already! (25 under embargo)"
+				/>
 				<Video url="xYjLvDBTsV4" />
 				<LoginForm />
 				<ContentBlock>

@@ -39361,6 +39361,33 @@ exports.ContentBlock = function (_a) {
 
 /***/ }),
 
+/***/ "./resources/js/components/layout/Highlight.tsx":
+/*!******************************************************!*\
+  !*** ./resources/js/components/layout/Highlight.tsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Highlight = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Image_1 = __webpack_require__(/*! ../base/Image */ "./resources/js/components/base/Image.tsx");
+exports.Highlight = function (_a) {
+    var text = _a.text, image = _a.image;
+    return (react_1.default.createElement("div", { className: "Highlight" },
+        react_1.default.createElement("div", { className: "copy" },
+            react_1.default.createElement("p", null, text),
+            react_1.default.createElement(Image_1.Image, { filename: image }))));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/components/layout/Logo.tsx":
 /*!*************************************************!*\
   !*** ./resources/js/components/layout/Logo.tsx ***!
@@ -39873,6 +39900,7 @@ var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_mod
 var LoginForm_1 = __webpack_require__(/*! ../components/account/LoginForm */ "./resources/js/components/account/LoginForm.tsx");
 var Video_1 = __webpack_require__(/*! ../components/base/Video */ "./resources/js/components/base/Video.tsx");
 var ContentBlock_1 = __webpack_require__(/*! ../components/layout/ContentBlock */ "./resources/js/components/layout/ContentBlock.tsx");
+var Highlight_1 = __webpack_require__(/*! ../components/layout/Highlight */ "./resources/js/components/layout/Highlight.tsx");
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 var PartnerBlock_1 = __webpack_require__(/*! ../components/layout/PartnerBlock */ "./resources/js/components/layout/PartnerBlock.tsx");
 var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore */ "./resources/js/hooks/useTranslationStore.ts");
@@ -39881,6 +39909,7 @@ exports.HomePage = function () {
     var history = react_router_dom_1.useHistory();
     return (react_1.default.createElement(Page_1.Page, { title: "PreclinicalTrials.eu", subtitle: "International register of preclinical trial protocols" },
         react_1.default.createElement("div", { className: "Home" },
+            react_1.default.createElement(Highlight_1.Highlight, { image: "note.png", text: "98 protocols registered already! (25 under embargo)" }),
             react_1.default.createElement(Video_1.Video, { url: "xYjLvDBTsV4" }),
             react_1.default.createElement(LoginForm_1.LoginForm, null),
             react_1.default.createElement(ContentBlock_1.ContentBlock, null,

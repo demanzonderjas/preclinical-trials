@@ -146,7 +146,6 @@ table {
 
 .PageHeader .Navigation {
   display: flex;
-  width: 1437px;
   max-width: 100%;
   position: relative;
 }
@@ -339,6 +338,18 @@ input {
   font-size: 24px;
 }
 
+input::-moz-placeholder {
+  color: #ccc;
+}
+
+input:-ms-input-placeholder {
+  color: #ccc;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
 button {
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -407,7 +418,7 @@ button {
   align-items: center;
   align-content: center;
   flex-wrap: wrap;
-  max-width: 50%;
+  max-width: 90%;
   margin: 50px auto;
   border-radius: 50%;
   background-color: #fff;
@@ -480,6 +491,40 @@ button {
   margin-top: 5px;
 }
 
+.Highlight {
+  background: #ff6e38;
+  width: 271px;
+  height: 271px;
+  position: absolute;
+  top: -20px;
+  right: 20px;
+  border-radius: 50%;
+}
+
+.Highlight .copy {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: white;
+  font-size: 25px;
+  line-height: 31px;
+}
+
+.Highlight .copy p {
+  padding: 0 20px;
+}
+
+.Highlight .copy .ImageWrapper {
+  max-width: 40px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
 body {
   background-color: #83b2ba;
   font-family: "Source Sans Pro", serif;
@@ -492,5 +537,6 @@ body {
 
 .PageContent {
   min-height: calc(100vh - 300px - 100px);
+  position: relative;
 }
 
