@@ -39337,6 +39337,28 @@ exports.Video = function (_a) {
 
 /***/ }),
 
+/***/ "./resources/js/components/layout/ContentBlock.tsx":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/layout/ContentBlock.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ContentBlock = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+exports.ContentBlock = function () {
+    return react_1.default.createElement("div", { className: "ContentBlock" });
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/components/layout/Logo.tsx":
 /*!*************************************************!*\
   !*** ./resources/js/components/layout/Logo.tsx ***!
@@ -39692,6 +39714,7 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 var LoginForm_1 = __webpack_require__(/*! ../components/account/LoginForm */ "./resources/js/components/account/LoginForm.tsx");
 var Video_1 = __webpack_require__(/*! ../components/base/Video */ "./resources/js/components/base/Video.tsx");
+var ContentBlock_1 = __webpack_require__(/*! ../components/layout/ContentBlock */ "./resources/js/components/layout/ContentBlock.tsx");
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
 var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore */ "./resources/js/hooks/useTranslationStore.ts");
 exports.HomePage = function () {
@@ -39700,7 +39723,8 @@ exports.HomePage = function () {
     return (react_1.default.createElement(Page_1.Page, { title: "PreclinicalTrials.eu", subtitle: "International register of preclinical trial protocols" },
         react_1.default.createElement("div", { className: "Home" },
             react_1.default.createElement(Video_1.Video, { url: "xYjLvDBTsV4" }),
-            react_1.default.createElement(LoginForm_1.LoginForm, null))));
+            react_1.default.createElement(LoginForm_1.LoginForm, null),
+            react_1.default.createElement(ContentBlock_1.ContentBlock, null))));
 };
 
 
