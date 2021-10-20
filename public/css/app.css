@@ -363,11 +363,11 @@ button {
 }
 
 .ContentBlock {
-  min-height: 600px;
   position: relative;
+  padding: 50px 50px 150px;
   margin-bottom: 150px;
   background-color: white;
-  transform: skew(3100);
+  z-index: 2;
 }
 
 .ContentBlock:after {
@@ -377,7 +377,27 @@ button {
   display: block;
   content: "";
   position: absolute;
-  bottom: 0;
+  bottom: -199px;
+  left: 0;
+}
+
+.ContentBlock .content {
+  max-width: 60%;
+  margin: 0 auto;
+  min-height: 600px;
+  position: relative;
+  line-height: 38px;
+  font-size: 26px;
+}
+
+.ContentBlock .content ul {
+  list-style: disc;
+  margin: 20px 0 20px 40px;
+}
+
+.ContentBlock .content a {
+  color: #ff6e38;
+  font-weight: 500;
 }
 
 body {

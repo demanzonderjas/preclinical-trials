@@ -1,12 +1,9 @@
 .ContentBlock {
-	// background-size: cover;
-	// background-color: $primary;
-	// background-image: url("#{$image-path}rectangle-skew.svg");
-	min-height: 600px;
 	position: relative;
+	padding: 50px 50px 150px;
 	margin-bottom: 150px;
 	background-color: white;
-	transform: skew(3100);
+	z-index: 2;
 
 	&:after {
 		width: 100%;
@@ -21,6 +18,27 @@
 		display: block;
 		content: "";
 		position: absolute;
-		bottom: 0;
+		bottom: -199px;
+		left: 0;
+	}
+
+	.content {
+		max-width: 60%;
+		margin: 0 auto;
+		min-height: 600px;
+		position: relative;
+
+		line-height: 38px;
+		font-size: 26px;
+
+		ul {
+			list-style: disc;
+			margin: 20px 0 20px 40px;
+		}
+
+		a {
+			color: $secondary;
+			font-weight: 500;
+		}
 	}
 }
