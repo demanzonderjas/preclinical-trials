@@ -39959,6 +39959,7 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var AboutUsBlock_1 = __webpack_require__(/*! ../components/layout/AboutUsBlock */ "./resources/js/components/layout/AboutUsBlock.tsx");
 var ContentBlock_1 = __webpack_require__(/*! ../components/layout/ContentBlock */ "./resources/js/components/layout/ContentBlock.tsx");
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
+var PartnerBlock_1 = __webpack_require__(/*! ../components/layout/PartnerBlock */ "./resources/js/components/layout/PartnerBlock.tsx");
 var aboutUsData_1 = __webpack_require__(/*! ../data/about-us/aboutUsData */ "./resources/js/data/about-us/aboutUsData.ts");
 var aboutUs_1 = __webpack_require__(/*! ../typings/aboutUs */ "./resources/js/typings/aboutUs.ts");
 exports.AboutUsPage = function () {
@@ -40007,7 +40008,8 @@ exports.AboutUsPage = function () {
                 react_1.default.createElement("p", null, "The Dutch parliament passed a motion on July 3rd 2018 stating that prospective registration of animal studies and sharing of data should become the norm."),
                 react_1.default.createElement("p", null, "Internationally, we are supported by the TACTICS consortium and the European Society of Cardiology working group on cardiovascular regenerative and reparative medicine (ESC WG CARE). We plan to expand this line of international support."),
                 react_1.default.createElement("h3", null, "Support for prospective registration of confirmatory animal studies"),
-                react_1.default.createElement("p", null, "In The Netherlands we are now supported by funders, research institutes and research groups. The Royal Netherlands Academy of Arts and Sciences and the Netherlands Organization for Scientific Research are involved to guarantee permanent access to the database. Internationally, we are supported by the TACTICS consortium and the European Society of Cardiology working group on cardiovascular regenerative and reparative medicine (ESC WG CARE). We plan to expand this line of international support.")))));
+                react_1.default.createElement("p", null, "In The Netherlands we are now supported by funders, research institutes and research groups. The Royal Netherlands Academy of Arts and Sciences and the Netherlands Organization for Scientific Research are involved to guarantee permanent access to the database. Internationally, we are supported by the TACTICS consortium and the European Society of Cardiology working group on cardiovascular regenerative and reparative medicine (ESC WG CARE). We plan to expand this line of international support.")),
+            react_1.default.createElement(PartnerBlock_1.PartnerBlock, null))));
 };
 
 

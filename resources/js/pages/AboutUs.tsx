@@ -2,6 +2,7 @@ import React from "react";
 import { AboutUsBlock } from "../components/layout/AboutUsBlock";
 import { ContentBlock } from "../components/layout/ContentBlock";
 import { Page } from "../components/layout/Page";
+import { PartnerBlock } from "../components/layout/PartnerBlock";
 import { aboutUsData } from "../data/about-us/aboutUsData";
 import { TAboutUsType } from "../typings/aboutUs";
 
@@ -154,6 +155,7 @@ export const AboutUsPage: React.FC = () => {
 						to expand this line of international support.
 					</p>
 				</ContentBlock>
+				<PartnerBlock />
 			</div>
 		</Page>
 	);
