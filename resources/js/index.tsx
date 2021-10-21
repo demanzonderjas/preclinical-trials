@@ -10,6 +10,7 @@ import { AboutUsPage } from "./pages/AboutUs";
 import ModalStoreProvider from "./contexts/ModalContext";
 import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
+import { CreateAccountPage } from "./pages/CreateAccount";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -25,6 +26,9 @@ const App: React.FC = () => {
 						</Route>
 						<Route path="/about-us" exact={true}>
 							<AboutUsPage />
+						</Route>
+						<Route path="/create-account" exact={true}>
+							<CreateAccountPage />
 						</Route>
 						<Route path="/contact" exact={true}>
 							<ContactPage />

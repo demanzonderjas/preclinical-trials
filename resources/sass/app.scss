@@ -10,6 +10,7 @@
 @import "./components/ContentBlock";
 @import "./components/PartnerBlock";
 @import "./components/AboutUsBlock";
+@import "./components/FormBlock";
 @import "./components/Subtitle";
 @import "./components/PageFooter";
 @import "./components/Highlight";
@@ -27,4 +28,8 @@ body {
 .PageContent {
 	min-height: calc(100vh - #{$header-height} - #{$footer-height});
 	position: relative;
+}
+
+.border-top {
+	border-top: 10px solid $secondary;
 }
