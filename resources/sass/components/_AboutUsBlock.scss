@@ -1,0 +1,33 @@
+.AboutUsBlock {
+	margin: 64px 0;
+	.persons {
+		margin-top: 42px;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		.AboutUsPerson {
+			margin: 16px;
+			position: relative;
+			.ImageWrapper {
+				width: 240px;
+				border-radius: 50%;
+				overflow: hidden;
+				margin: 0 auto;
+				position: relative;
+				top: 16px;
+			}
+			.label {
+				background-color: $secondary;
+				padding: 16px 0;
+				font-size: 20px;
+				line-height: 32px;
+				color: white;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-wrap: wrap;
+				width: 300px;
+			}
+		}
+	}
+}

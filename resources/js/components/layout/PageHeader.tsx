@@ -2,10 +2,14 @@ import React from "react";
 import { Logo } from "./Logo";
 import { Menu } from "./Menu";
 
-export const PageHeader: React.FC<{ title: string; subtitle?: string }> = ({ title, subtitle }) => {
+export const PageHeader: React.FC<{
+	title: string;
+	subtitle?: string;
+	hasCurvedHeader?: boolean;
+}> = ({ title, subtitle, hasCurvedHeader }) => {
 	return (
 		<div className="PageHeader">
-			<div className="Ellipse"></div>
+			{hasCurvedHeader && <div className="Ellipse"></div>}
 			<div className="Navigation">
 				<Logo />
 				<Menu />

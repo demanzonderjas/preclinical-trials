@@ -6,6 +6,20 @@
 	z-index: 2;
 	border-top: 10px $secondary solid;
 
+	&:nth-child(even) {
+		margin-bottom: 260px;
+		&:after {
+			background: linear-gradient(
+				to bottom right,
+				$primary 0%,
+				$primary 50%,
+				$white 50%,
+				$white 100%
+			);
+			transform: rotateX(180deg);
+		}
+	}
+
 	&:after {
 		width: 100%;
 		height: 200px;
@@ -32,9 +46,30 @@
 		line-height: 38px;
 		font-size: 26px;
 
+		h3:first-child {
+			margin-bottom: 32px;
+		}
+
+		strong {
+			font-weight: bold;
+		}
+
+		p {
+			margin: 0 0 22px;
+		}
+
+		h3 {
+			font-size: 30px;
+			font-weight: bold;
+		}
+
 		ul {
 			list-style: disc;
 			margin: 20px 0 20px 40px;
+
+			ul {
+				list-style: circle;
+			}
 		}
 
 		a {

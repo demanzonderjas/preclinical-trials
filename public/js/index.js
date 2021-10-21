@@ -39337,6 +39337,51 @@ exports.Video = function (_a) {
 
 /***/ }),
 
+/***/ "./resources/js/components/layout/AboutUsBlock.tsx":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/layout/AboutUsBlock.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AboutUsPerson = exports.AboutUsBlock = void 0;
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Image_1 = __webpack_require__(/*! ../base/Image */ "./resources/js/components/base/Image.tsx");
+var Subtitle_1 = __webpack_require__(/*! ./Subtitle */ "./resources/js/components/layout/Subtitle.tsx");
+exports.AboutUsBlock = function (_a) {
+    var title = _a.title, personList = _a.personList;
+    return (react_1.default.createElement("div", { className: "AboutUsBlock" },
+        react_1.default.createElement(Subtitle_1.Subtitle, { text: title }),
+        react_1.default.createElement("div", { className: "persons" }, personList.map(function (person) { return (react_1.default.createElement(exports.AboutUsPerson, __assign({ key: person.name }, person))); }))));
+};
+exports.AboutUsPerson = function (_a) {
+    var image = _a.image, name = _a.name;
+    return (react_1.default.createElement("div", { className: "AboutUsPerson" },
+        react_1.default.createElement(Image_1.Image, { filename: "about-us/" + image }),
+        react_1.default.createElement("div", { className: "label" },
+            react_1.default.createElement("span", null, name))));
+};
+
+
+/***/ }),
+
 /***/ "./resources/js/components/layout/ContentBlock.tsx":
 /*!*********************************************************!*\
   !*** ./resources/js/components/layout/ContentBlock.tsx ***!
@@ -39465,9 +39510,9 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var PageFooter_1 = __webpack_require__(/*! ./PageFooter */ "./resources/js/components/layout/PageFooter.tsx");
 var PageHeader_1 = __webpack_require__(/*! ./PageHeader */ "./resources/js/components/layout/PageHeader.tsx");
 exports.Page = function (_a) {
-    var children = _a.children, title = _a.title, subtitle = _a.subtitle;
+    var children = _a.children, title = _a.title, subtitle = _a.subtitle, hasCurvedHeader = _a.hasCurvedHeader;
     return (react_1.default.createElement("div", { className: "Page" },
-        react_1.default.createElement(PageHeader_1.PageHeader, { title: title, subtitle: subtitle }),
+        react_1.default.createElement(PageHeader_1.PageHeader, { title: title, subtitle: subtitle, hasCurvedHeader: hasCurvedHeader }),
         react_1.default.createElement("div", { className: "PageContent" }, children),
         react_1.default.createElement(PageFooter_1.PageFooter, null)));
 };
@@ -39522,9 +39567,9 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var Logo_1 = __webpack_require__(/*! ./Logo */ "./resources/js/components/layout/Logo.tsx");
 var Menu_1 = __webpack_require__(/*! ./Menu */ "./resources/js/components/layout/Menu.tsx");
 exports.PageHeader = function (_a) {
-    var title = _a.title, subtitle = _a.subtitle;
+    var title = _a.title, subtitle = _a.subtitle, hasCurvedHeader = _a.hasCurvedHeader;
     return (react_1.default.createElement("div", { className: "PageHeader" },
-        react_1.default.createElement("div", { className: "Ellipse" }),
+        hasCurvedHeader && react_1.default.createElement("div", { className: "Ellipse" }),
         react_1.default.createElement("div", { className: "Navigation" },
             react_1.default.createElement(Logo_1.Logo, null),
             react_1.default.createElement(Menu_1.Menu, null)),
@@ -39654,6 +39699,70 @@ exports.TranslationStoreProvider = function (_a) {
     return (react_1.default.createElement(exports.translationStoreContext.Provider, { value: storeHook }, children));
 };
 exports.default = exports.TranslationStoreProvider;
+
+
+/***/ }),
+
+/***/ "./resources/js/data/about-us/aboutUsData.ts":
+/*!***************************************************!*\
+  !*** ./resources/js/data/about-us/aboutUsData.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.aboutUsData = void 0;
+var aboutUs_1 = __webpack_require__(/*! ../../typings/aboutUs */ "./resources/js/typings/aboutUs.ts");
+exports.aboutUsData = [
+    {
+        name: "Annemarie Scholman-Végh, Msc",
+        image: "annemarie_scholman_vegh.png",
+        role: aboutUs_1.TAboutUsType.DailyDirector
+    },
+    {
+        name: "Julia Menon, Msc",
+        image: "julia_menon.png",
+        role: aboutUs_1.TAboutUsType.DailyDirector
+    },
+    {
+        name: "Prof. Dr. Steven Chamuleau",
+        image: "steve_chamuleau.png",
+        role: aboutUs_1.TAboutUsType.SteeringCommittee,
+        workLocation: "Amsterdam University Medical Center"
+    },
+    {
+        name: "Prof. Dr. Dirk Duncker",
+        image: "dirk_duncker.png",
+        role: aboutUs_1.TAboutUsType.SteeringCommittee,
+        workLocation: "Erasmus University Medical Center"
+    },
+    {
+        name: "Mira van der Naald, MD",
+        image: "mira_van_der_naald.png",
+        role: aboutUs_1.TAboutUsType.SteeringCommittee,
+        workLocation: "University Medical Center Utrecht, the Netherlands - Member of the Transnational AllianCe for regenerative Therapies In Cardiovascular Syndromes (TACTICS)"
+    },
+    {
+        name: "Dr. Judith de Haan",
+        image: "dr_judith_de_haan.png",
+        role: aboutUs_1.TAboutUsType.SteeringCommittee,
+        workLocation: "Open Science Programme (Utrecht University)"
+    },
+    {
+        name: "Wim de Leeuw",
+        image: "wim_de_leeuw.png",
+        role: aboutUs_1.TAboutUsType.SteeringCommittee,
+        workLocation: "Animal Welfare Body Utrecht"
+    },
+    {
+        name: "Kimberley Wever PhD",
+        image: "kimberley_wever.png",
+        role: aboutUs_1.TAboutUsType.SteeringCommittee,
+        workLocation: "Systematic Review Center for Laboratory animal Experimentation (SYRCLE), Department of Health Evidence, Radboud university medical center, Nijmegen, The Netherlands"
+    }
+];
 
 
 /***/ }),
@@ -39847,11 +39956,58 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AboutUsPage = void 0;
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var AboutUsBlock_1 = __webpack_require__(/*! ../components/layout/AboutUsBlock */ "./resources/js/components/layout/AboutUsBlock.tsx");
+var ContentBlock_1 = __webpack_require__(/*! ../components/layout/ContentBlock */ "./resources/js/components/layout/ContentBlock.tsx");
 var Page_1 = __webpack_require__(/*! ../components/layout/Page */ "./resources/js/components/layout/Page.tsx");
+var aboutUsData_1 = __webpack_require__(/*! ../data/about-us/aboutUsData */ "./resources/js/data/about-us/aboutUsData.ts");
+var aboutUs_1 = __webpack_require__(/*! ../typings/aboutUs */ "./resources/js/typings/aboutUs.ts");
 exports.AboutUsPage = function () {
     return (react_1.default.createElement(Page_1.Page, { title: "About Us" },
-        react_1.default.createElement("div", { className: "AboutUsPage" }),
-        ";"));
+        react_1.default.createElement("div", { className: "AboutUsPage" },
+            react_1.default.createElement(ContentBlock_1.ContentBlock, null,
+                react_1.default.createElement("h3", null, "Goals and aims of Preclinicaltrials.eu"),
+                react_1.default.createElement("p", null, "Preclinicaltrials.eu aims to provide a comprehensive overview of all animal studies, including those that might otherwise remain unpublished. By (prospective) registration of animal studies we aim to:"),
+                react_1.default.createElement("ul", null,
+                    react_1.default.createElement("li", null, "Increase transparency"),
+                    react_1.default.createElement("li", null, "Avoid unnecessary duplication of animal studies"),
+                    react_1.default.createElement("li", null, "Reduce reporting bias, such as publication bias and bias induced by selective outcome reporting, p-hacking and HARKing"),
+                    react_1.default.createElement("li", null, "Increase data sharing, by"),
+                    react_1.default.createElement("ul", null,
+                        react_1.default.createElement("li", null, "allowing fellow researchers and reviewers to access information on the study design, which is often lacking in publications"),
+                        react_1.default.createElement("li", null, "provide a platform to share details and data of otherwise unpublished animal studies")),
+                    react_1.default.createElement("li", null, "Create opportunities for collaborative research")),
+                react_1.default.createElement("h3", null, "Which studies can you register on Preclinicaltrials.eu?"),
+                react_1.default.createElement("p", null, "The register is open for all animal studies. We especially encourage researchers to register their confirmatory studies. This register is created with support of the Transnational AllianCe for regenerative Therapies In Cardiovascular Syndromes (TACTICS) alliance. Therefore the original focus is on the field of cardiac regenerative therapy. The design of the registration form is discussed with members of the TACTICS alliance. However, the register is open for studies from all fields of biomedical science. Furthermore, registration is not limited to a certain country or continent.")),
+            react_1.default.createElement(AboutUsBlock_1.AboutUsBlock, { title: "Daily Directors", personList: aboutUsData_1.aboutUsData.filter(function (p) { return p.role === aboutUs_1.TAboutUsType.DailyDirector; }) }),
+            react_1.default.createElement(AboutUsBlock_1.AboutUsBlock, { title: "Steering Committee", personList: aboutUsData_1.aboutUsData.filter(function (p) { return p.role === aboutUs_1.TAboutUsType.SteeringCommittee; }) }),
+            react_1.default.createElement(ContentBlock_1.ContentBlock, null,
+                react_1.default.createElement("h3", null, "Advisory board of preclinicaltrials.eu"),
+                react_1.default.createElement("strong", null, "Prof Jonathan Kimmelman (McGill University, Montreal, Canada; Biomedical ethics)"),
+                react_1.default.createElement("p", null, "Jonathan is a professor in biomedical ethics at the McGill University, Montreal, Canada. He is also the director of the biomedical unit of the faculty of medicine."),
+                react_1.default.createElement("strong", null, "Prof. Paul Glasziou"),
+                react_1.default.createElement("p", null, "Paul is a professor in evidence-based medicine at the Bond University, Gold Coast, Australia."),
+                react_1.default.createElement("strong", null, "Prof John Ioannidis (Stanford University, Standford, USA; Health research and policy)"),
+                react_1.default.createElement("p", null, "John is a professor of Medicine and Heath Research and Policy at the Standford University School of Medicine and a Professor of Statistics at Standford University School of Humanities and Science. He is also director of Standford Prevention Research Center, co-director of the Meta-Research Innovation Center at Standford (METRICS) and he is editor in chief of the European Journal of Clinical Investigation."),
+                react_1.default.createElement("strong", null, "Prof. Annelien Bredenoord"),
+                react_1.default.createElement("p", null, "Annelien is a professor of Ethics of Biomedical Innovation at the University Medical Center of Utrecht, The Netherlands. As of 2015, she us a member of the Dutch Senate (Eerste Kamer) on behalf of D66."),
+                react_1.default.createElement("strong", null, "Prof. Lina Badimon"),
+                react_1.default.createElement("p", null, "Lina is the director of the Cardiovascular Research Center (CSIC-ICCC) at the Autonomous University of Barcelona, Spain. She is also and co-founder & chief scientific officer of the European Society of Cardiology (ESC)."),
+                react_1.default.createElement("strong", null, "Prof. Thomas Eschenhagen"),
+                react_1.default.createElement("p", null, "Thomas is a professor of Pharmacology at the University Medical Center Hamburg-Eppendorf, Germany. He is also Director of the department of Experimental Pharmacology and Toxicology. He is also one of the board of Directors of the DZHK, the German center for cardiovascular research."),
+                react_1.default.createElement("h3", null, "Relevant literature"),
+                react_1.default.createElement("ul", null,
+                    react_1.default.createElement("li", null, "Kimmelman et al \u2013 Should preclinical studies be registered? DOI:10.1038/nbt.2261"),
+                    react_1.default.createElement("li", null, "Jansen of Lorkeers SJ \u2013 All preclinical trials should be registered in advance in an online registry"),
+                    react_1.default.createElement("li", null, "Chamuleau SAJ - Translational research in cardiovascular repair: A call for a paradigm shift")),
+                react_1.default.createElement("strong", null, "Preclinical systematic reviews and meta-analysis"),
+                react_1.default.createElement("p", null, "The CAMARADES framework provides support for groups involved in preclinical systematic reviews and meta-analysis."),
+                react_1.default.createElement("p", null, "The Systematic Review Center for Laboratory animal Experimentation (SYRCLE) supports and trains researchers working with preclinical systematic reviews."),
+                react_1.default.createElement("h3", null, "Registries for clinical trials"),
+                react_1.default.createElement("p", null, "There are multiple registrations for clinical trials. The World Health Organisation provides additional information on these clinical trials."),
+                react_1.default.createElement("p", null, "The Dutch parliament passed a motion on July 3rd 2018 stating that prospective registration of animal studies and sharing of data should become the norm."),
+                react_1.default.createElement("p", null, "Internationally, we are supported by the TACTICS consortium and the European Society of Cardiology working group on cardiovascular regenerative and reparative medicine (ESC WG CARE). We plan to expand this line of international support."),
+                react_1.default.createElement("h3", null, "Support for prospective registration of confirmatory animal studies"),
+                react_1.default.createElement("p", null, "In The Netherlands we are now supported by funders, research institutes and research groups. The Royal Netherlands Academy of Arts and Sciences and the Netherlands Organization for Scientific Research are involved to guarantee permanent access to the database. Internationally, we are supported by the TACTICS consortium and the European Society of Cardiology working group on cardiovascular regenerative and reparative medicine (ESC WG CARE). We plan to expand this line of international support.")))));
 };
 
 
@@ -39907,7 +40063,7 @@ var useTranslationStore_1 = __webpack_require__(/*! ../hooks/useTranslationStore
 exports.HomePage = function () {
     var t = useTranslationStore_1.useTranslationStore().t;
     var history = react_router_dom_1.useHistory();
-    return (react_1.default.createElement(Page_1.Page, { title: "PreclinicalTrials.eu", subtitle: "International register of preclinical trial protocols" },
+    return (react_1.default.createElement(Page_1.Page, { title: "PreclinicalTrials.eu", subtitle: "International register of preclinical trial protocols", hasCurvedHeader: true },
         react_1.default.createElement("div", { className: "Home" },
             react_1.default.createElement(Highlight_1.Highlight, { image: "note.png", text: "98 protocols registered already! (25 under embargo)" }),
             react_1.default.createElement(Video_1.Video, { url: "xYjLvDBTsV4" }),
@@ -40037,6 +40193,26 @@ var TranslationStore = /** @class */ (function () {
     return TranslationStore;
 }());
 exports.TranslationStore = TranslationStore;
+
+
+/***/ }),
+
+/***/ "./resources/js/typings/aboutUs.ts":
+/*!*****************************************!*\
+  !*** ./resources/js/typings/aboutUs.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TAboutUsType = void 0;
+var TAboutUsType;
+(function (TAboutUsType) {
+    TAboutUsType["DailyDirector"] = "daily_director";
+    TAboutUsType["SteeringCommittee"] = "steering_committee";
+})(TAboutUsType = exports.TAboutUsType || (exports.TAboutUsType = {}));
 
 
 /***/ }),

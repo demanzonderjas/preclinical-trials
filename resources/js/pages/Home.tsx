@@ -17,6 +17,7 @@ export const HomePage: React.FC = () => {
 		<Page
 			title="PreclinicalTrials.eu"
 			subtitle="International register of preclinical trial protocols"
+			hasCurvedHeader={true}
 		>
 			<div className="Home">
 				<Highlight
