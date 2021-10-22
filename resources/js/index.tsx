@@ -15,6 +15,7 @@ import ScrollToTop from "./components/base/ScrollToTop";
 import { DatabasePage } from "./pages/Database";
 import { NewsPage } from "./pages/News";
 import { FAQPage } from "./pages/FAQ";
+import { DisclaimerPage } from "./pages/Disclaimer";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -46,6 +47,9 @@ const App: React.FC = () => {
 						</Route>
 						<Route path="/contact" exact={true}>
 							<ContactPage />
+						</Route>
+						<Route path="/disclaimer" exact={true}>
+							<DisclaimerPage />
 						</Route>
 					</Switch>
 				</Router>
