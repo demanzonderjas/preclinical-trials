@@ -11,6 +11,7 @@ import ModalStoreProvider from "./contexts/ModalContext";
 import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
 import { CreateAccountPage } from "./pages/CreateAccount";
+import ScrollToTop from "./components/base/ScrollToTop";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -20,6 +21,7 @@ const App: React.FC = () => {
 		<TranslationStoreProvider store={translationStore}>
 			<ModalStoreProvider store={modalStore}>
 				<Router>
+					<ScrollToTop />
 					<Switch>
 						<Route path="/" exact={true}>
 							<HomePage />
