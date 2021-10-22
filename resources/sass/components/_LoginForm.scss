@@ -1,6 +1,6 @@
 .LoginForm {
 	position: relative;
-	padding-bottom: 50px;
+	text-align: center;
 
 	h3 {
 		text-transform: uppercase;
@@ -19,38 +19,37 @@
 			margin-bottom: 16px;
 		}
 	}
+}
+.NewRegistration {
+	position: absolute;
+	bottom: 8px;
+	right: 8px;
+	width: 130px;
 
-	.NewRegistration {
+	p {
+		font-size: 18px;
+		color: white;
+		display: inline-block;
+		padding-bottom: 20px;
+		line-height: 24px;
+	}
+
+	.ImageWrapper {
+		width: 30px;
+		display: inline-block;
 		position: absolute;
-		bottom: 8px;
-		right: 8px;
-		width: 130px;
+		bottom: 10px;
+		right: 24px;
+	}
 
-		p {
-			font-size: 18px;
-			color: white;
-			display: inline-block;
-			padding-bottom: 20px;
-			line-height: 24px;
-		}
-
-		.ImageWrapper {
-			width: 30px;
-			display: inline-block;
-			position: absolute;
-			bottom: 10px;
-			right: 24px;
-		}
-
-		&:after {
-			content: "";
-			background-color: white;
-			position: absolute;
-			bottom: 5px;
-			left: 0;
-			height: 2px;
-			display: block;
-			width: 100%;
-		}
+	&:after {
+		content: "";
+		background-color: white;
+		position: absolute;
+		bottom: 5px;
+		left: 0;
+		height: 2px;
+		display: block;
+		width: 100%;
 	}
 }

@@ -5,11 +5,18 @@ import { FormStore } from "../../stores/FormStore";
 import { TForm } from "../../typings/forms";
 import { FormField } from "./FormField";
 
-export const FormWrapper: React.FC<TForm> = ({ fields, handleSubmit, submitText, children }) => {
+export const FormWrapper: React.FC<TForm> = ({
+	fields,
+	handleSubmit,
+	submitText,
+	align,
+	style,
+	children
+}) => {
 	const [formStore, setFormStore] = useState(null);
 
 	useEffect(() => {
-		setFormStore(new FormStore(fields, handleSubmit));
+		setFormStore(new FormStore(fields, handleSubmit, style));
 	}, [handleSubmit]);
 
 	if (!formStore) {
@@ -19,7 +26,7 @@ export const FormWrapper: React.FC<TForm> = ({ fields, handleSubmit, submitText,
 	return (
 		<div className="FormWrapper">
 			<FormStoreContext.Provider value={formStore}>
-				<form onSubmit={formStore.submit}>
+				<form onSubmit={formStore.submit} style={{ textAlign: align }}>
 					{children}
 					{fields.map(field => (
 						<FormField key={field.id} {...field} />

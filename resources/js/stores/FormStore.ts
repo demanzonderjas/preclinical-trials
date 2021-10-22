@@ -1,5 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
-import { TFormField, TFormFieldName } from "../typings/forms";
+import { TFormField, TFormFieldName, TFormStyle } from "../typings/forms";
 
 export class FormStore {
 	fields: TFormField[] = [];
@@ -8,15 +8,18 @@ export class FormStore {
 
 	isSubmitting: boolean = false;
 
+	style: TFormStyle = TFormStyle.RegularLabels;
+
 	errors: Map<TFormFieldName, any> = new Map<TFormFieldName, any>();
 
 	isDone: boolean = false;
 
 	handleSubmit: Function = null;
 
-	constructor(fields: TFormField[], handleSubmit: Function) {
+	constructor(fields: TFormField[], handleSubmit: Function, style: TFormStyle) {
 		this.setFields(fields);
 		this.handleSubmit = handleSubmit;
+		this.style = style;
 		makeAutoObservable(this, {
 			getFieldValue: action.bound,
 			setFieldValue: action.bound,

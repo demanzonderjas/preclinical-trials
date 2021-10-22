@@ -1,9 +1,16 @@
 export type TForm = {
 	id: TFormName;
 	fields: TFormField[];
+	align: TAlignment;
+	style: TFormStyle;
 	handleSubmit?: Function;
 	submitText: string;
 };
+
+export enum TAlignment {
+	Left = "left",
+	Center = "center"
+}
 
 export type TFormField = {
 	id: TFormFieldName;
@@ -34,5 +41,11 @@ export enum TFormFieldName {
 }
 
 export enum TFormName {
-	CreateAccount = "create_account"
+	CreateAccount = "create_account",
+	Login = "login"
+}
+
+export enum TFormStyle {
+	RegularLabels = "regular_labels",
+	InlinePlaceholder = "inline_placeholder"
 }

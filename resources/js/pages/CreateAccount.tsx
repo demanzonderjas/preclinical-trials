@@ -12,7 +12,7 @@ export const CreateAccountPage: React.FC = () => {
 	return (
 		<Page title="Create Account">
 			<div className="CreateAccount border-top">
-				<FormBlock icon="new-account.svg">
+				<FormBlock icon="new-account.png">
 					<FormWrapper {...createAccountForm} handleSubmit={handleSubmit}>
 						<p className="intro">
 							You need a user account to use this site. Please enter your details
