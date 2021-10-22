@@ -19,6 +19,13 @@
 			margin-bottom: 16px;
 		}
 	}
+
+	@include respond-to("xs") {
+		h3 {
+			font-size: 40px;
+			padding: 0 20px 0;
+		}
+	}
 }
 .NewRegistration {
 	position: absolute;

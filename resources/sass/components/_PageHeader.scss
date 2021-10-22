@@ -35,6 +35,33 @@
 		background-color: white;
 		border-radius: 50%;
 	}
+
+	@include respond-to("small") {
+		.Copy {
+			margin: 0 auto 40px;
+			h1 {
+				font-size: 50px;
+				line-height: 62px;
+			}
+			h2 {
+				font-size: 30px;
+			}
+		}
+	}
+
+	@include respond-to("xs") {
+		.Copy {
+			margin: 20px 0;
+			max-width: 95%;
+			h1 {
+				font-size: 42px;
+				line-height: 46px;
+			}
+			h2 {
+				font-size: 26px;
+			}
+		}
+	}
 }
 
 $logo-size: 200px;
@@ -56,6 +83,16 @@ $logo-size: 200px;
 		width: 100%;
 		height: 100%;
 		transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+	}
+
+	@include respond-to("small") {
+		height: 80px;
+		width: 90px;
+	}
+
+	@include respond-to("xs") {
+		height: 70px;
+		width: 75px;
 	}
 }
 
@@ -95,6 +132,38 @@ $logo-size: 200px;
 			bottom: -5px;
 			transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1),
 				width 0.25s cubic-bezier(0, 0, 0.3, 1);
+		}
+	}
+
+	@include respond-to("small") {
+		margin-left: 30px;
+		margin-top: 20px;
+
+		.MenuItem {
+			a {
+				font-size: 20px;
+			}
+		}
+	}
+
+	@include respond-to("xs") {
+		width: 60%;
+		margin: 0 auto 20px;
+		flex-wrap: wrap;
+		justify-content: center;
+
+		.MenuItem {
+			height: 16px;
+			margin: 8px;
+			a {
+				font-size: 14px;
+			}
+
+			&:after {
+				width: 80%;
+				height: 2px;
+				bottom: -4px;
+			}
 		}
 	}
 }

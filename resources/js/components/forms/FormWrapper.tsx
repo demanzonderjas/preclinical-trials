@@ -4,6 +4,7 @@ import { FormStoreContext } from "../../contexts/FormStoreContext";
 import { FormStore } from "../../stores/FormStore";
 import { TForm } from "../../typings/forms";
 import { FormField } from "./FormField";
+import cx from "classnames";
 
 export const FormWrapper: React.FC<TForm> = ({
 	fields,
@@ -26,7 +27,11 @@ export const FormWrapper: React.FC<TForm> = ({
 	return (
 		<div className="FormWrapper">
 			<FormStoreContext.Provider value={formStore}>
-				<form onSubmit={formStore.submit} style={{ textAlign: align }}>
+				<form
+					onSubmit={formStore.submit}
+					style={{ textAlign: align }}
+					className={cx({ [align]: true })}
+				>
 					{children}
 					{fields.map(field => (
 						<FormField key={field.id} {...field} />

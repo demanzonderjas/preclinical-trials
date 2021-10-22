@@ -25,4 +25,22 @@
 			}
 		}
 	}
+
+	@include respond-to("small") {
+		max-width: 70%;
+	}
+
+	@include respond-to("xs") {
+		padding: 16px 32px 100px;
+		max-width: 90%;
+
+		form.left {
+			margin-left: 42px;
+		}
+
+		.icon-wrapper {
+			transform: translate(-20%, -25%);
+			width: 80px;
+		}
+	}
 }

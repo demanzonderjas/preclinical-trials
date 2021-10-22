@@ -21,4 +21,10 @@
 			}
 		}
 	}
+
+	@include respond-to("xs") {
+		.links {
+			margin-right: 10px;
+		}
+	}
 }

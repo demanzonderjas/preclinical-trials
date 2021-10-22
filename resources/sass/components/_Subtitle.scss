@@ -20,4 +20,15 @@
 			bottom: -15px;
 		}
 	}
+
+	@include respond-to("xs") {
+		font-size: 50px;
+
+		h2 {
+			&:after {
+				bottom: -10px;
+				height: 10px;
+			}
+		}
+	}
 }
