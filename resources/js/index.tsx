@@ -12,6 +12,9 @@ import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
 import { CreateAccountPage } from "./pages/CreateAccount";
 import ScrollToTop from "./components/base/ScrollToTop";
+import { DatabasePage } from "./pages/Database";
+import { NewsPage } from "./pages/News";
+import { FAQPage } from "./pages/FAQ";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -28,6 +31,15 @@ const App: React.FC = () => {
 						</Route>
 						<Route path="/about-us" exact={true}>
 							<AboutUsPage />
+						</Route>
+						<Route path="/database" exact={true}>
+							<DatabasePage />
+						</Route>
+						<Route path="/news" exact={true}>
+							<NewsPage />
+						</Route>
+						<Route path="/faq" exact={true}>
+							<FAQPage />
 						</Route>
 						<Route path="/create-account" exact={true}>
 							<CreateAccountPage />
