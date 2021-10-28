@@ -15,7 +15,7 @@
 		max-width: 100%;
 		min-width: 50%;
 		width: 750px;
-		height: 50%;
+		height: 65%;
 		background-color: $secondary;
 
 		.CloseIcon {
@@ -34,6 +34,20 @@
 
 		.FormBlock {
 			box-shadow: none;
+
+			.icon-wrapper {
+				transform: translate(-60%, -60%);
+			}
+		}
+
+		@include respond-to("medium") {
+			height: 80vh;
+
+			.FormBlock {
+				.icon-wrapper {
+					transform: translate(-20%, -100%);
+				}
+			}
 		}
 	}
 }
