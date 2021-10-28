@@ -1,5 +1,12 @@
 import { TAboutUs, TAboutUsType } from "../../typings/aboutUs";
 
+export const aboutUsSubMenu: string[] = [
+	"Goals",
+	"Daily directors",
+	"Steering Committee",
+	"Advisory board"
+];
+
 export const aboutUsData: TAboutUs[] = [
 	{
 		name: "Annemarie Scholman-Végh, Msc",

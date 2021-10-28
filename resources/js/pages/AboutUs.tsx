@@ -3,15 +3,17 @@ import { AboutUsBlock } from "../components/layout/AboutUsBlock";
 import { ContentBlock } from "../components/layout/ContentBlock";
 import { Page } from "../components/layout/Page";
 import { PartnerBlock } from "../components/layout/PartnerBlock";
-import { aboutUsData } from "../data/about-us/aboutUsData";
+import { SubMenu } from "../components/layout/SubMenu";
+import { aboutUsData, aboutUsSubMenu } from "../data/about-us/aboutUsData";
 import { TAboutUsType } from "../typings/aboutUs";
 
 export const AboutUsPage: React.FC = () => {
 	return (
 		<Page title="About Us">
 			<div className="AboutUsPage">
+				<SubMenu items={aboutUsSubMenu} />
 				<ContentBlock>
-					<h3>Goals and aims of Preclinicaltrials.eu</h3>
+					<h3 id="goals">Goals and aims of Preclinicaltrials.eu</h3>
 					<p>
 						Preclinicaltrials.eu aims to provide a comprehensive overview of all animal
 						studies, including those that might otherwise remain unpublished. By
@@ -58,7 +60,7 @@ export const AboutUsPage: React.FC = () => {
 					personList={aboutUsData.filter(p => p.role === TAboutUsType.SteeringCommittee)}
 				/>
 				<ContentBlock>
-					<h3>Advisory board of preclinicaltrials.eu</h3>
+					<h3 id="advisory_board">Advisory board of preclinicaltrials.eu</h3>
 					<strong>
 						Prof Jonathan Kimmelman (McGill University, Montreal, Canada; Biomedical
 						ethics)

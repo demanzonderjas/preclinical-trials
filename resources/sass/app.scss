@@ -15,6 +15,11 @@
 @import "./components/Subtitle";
 @import "./components/PageFooter";
 @import "./components/Highlight";
+@import "./components/SubMenu";
+
+html {
+	scroll-behavior: smooth;
+}
 
 body {
 	background-color: $blue;
@@ -24,11 +29,13 @@ body {
 
 .Page {
 	overflow-x: hidden;
+	scroll-behavior: smooth;
 }
 
 .PageContent {
 	min-height: calc(100vh - #{$header-height} - #{$footer-height});
 	position: relative;
+	scroll-behavior: smooth;
 }
 
 .border-top {
