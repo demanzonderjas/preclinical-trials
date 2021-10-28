@@ -1,4 +1,5 @@
 import React from "react";
+import { LoginButton } from "./LoginButton";
 import { Logo } from "./Logo";
 import { Menu } from "./Menu";
 
@@ -18,6 +19,7 @@ export const PageHeader: React.FC<{
 				<h1>{title}</h1>
 				{!!subtitle && <h2>{subtitle}</h2>}
 			</div>
+			<LoginButton />
 		</div>
 	);
 };
