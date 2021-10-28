@@ -7,6 +7,7 @@ import { Highlight } from "../components/layout/Highlight";
 import { Page } from "../components/layout/Page";
 import { PageHeader } from "../components/layout/PageHeader";
 import { PartnerBlock } from "../components/layout/PartnerBlock";
+import { LoginModal } from "../components/modals/LoginModal";
 import { useTranslationStore } from "../hooks/useTranslationStore";
 
 export const HomePage: React.FC = () => {
@@ -20,6 +21,7 @@ export const HomePage: React.FC = () => {
 			hasCurvedHeader={true}
 		>
 			<div className="Home">
+				<LoginModal />
 				<Highlight
 					image="note.png"
 					text="98 protocols registered already! (25 under embargo)"
