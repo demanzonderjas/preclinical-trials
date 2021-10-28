@@ -3,8 +3,10 @@ import React from "react";
 export const Modal: React.FC = ({ children }) => {
 	return (
 		<div className="ModalWrapper">
-			<CloseIcon />
-			<div className="Modal">{children}</div>
+			<div className="Modal">
+				<CloseIcon />
+				{children}
+			</div>
 		</div>
 	);
 };
@@ -13,8 +15,8 @@ export const CloseIcon: React.FC = () => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
+			// width="24"
+			// height="24"
 			viewBox="0 0 24 24"
 			className="CloseIcon"
 		>
