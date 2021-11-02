@@ -1,6 +1,13 @@
 .FormField {
 	margin: 20px 0;
 
+	.error {
+		margin: 12px 0;
+		padding: 6px;
+		background-color: $red;
+		color: white;
+	}
+
 	a {
 		color: white;
 	}
