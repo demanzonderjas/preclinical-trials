@@ -21,7 +21,6 @@ export const HomePage: React.FC = () => {
 			hasCurvedHeader={true}
 		>
 			<div className="Home">
-				<LoginModal />
 				<Highlight
 					image="note.png"
 					text="98 protocols registered already! (25 under embargo)"

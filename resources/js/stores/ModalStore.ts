@@ -1,14 +1,22 @@
-import { observable, action } from "mobx";
+import { observable, action, computed, makeAutoObservable } from "mobx";
 import { TModal } from "../typings/modals";
 
 export class ModalStore {
-	@observable isActive = false;
 	@observable modal: TModal = null;
 	@observable data: any = null;
 
-	@action.bound setModal(modal: TModal) {
+	constructor() {
+		makeAutoObservable(this, {
+			setModal: action.bound
+		});
+	}
+
+	@computed get isActive() {
+		return !!this.modal;
+	}
+
+	setModal(modal: TModal) {
 		this.modal = modal;
-		this.isActive = !!modal;
 
 		if (this.isActive) {
 			document.body.classList.add("block-scroll");

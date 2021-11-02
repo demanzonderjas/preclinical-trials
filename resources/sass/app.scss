@@ -18,6 +18,11 @@
 @import "./components/SubMenu";
 @import "./components/Modal";
 
+.block-scroll {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
 html {
 	scroll-behavior: smooth;
 }

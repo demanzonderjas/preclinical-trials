@@ -1,9 +1,8 @@
 export type TModal = {
-    header?: string;
-    description?: string;
-    Component?: React.FC;
-    props?: any;
-    handleConfirm: Function;
-    align?: string;
-    isDefault?: boolean;
+	name: TModalName;
+	Component?: React.FC;
 };
+
+export enum TModalName {
+	LoginModal = "login_modal"
+}

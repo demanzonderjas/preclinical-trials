@@ -16,6 +16,7 @@ import { DatabasePage } from "./pages/Database";
 import { NewsPage } from "./pages/News";
 import { FAQPage } from "./pages/FAQ";
 import { DisclaimerPage } from "./pages/Disclaimer";
+import { Modal } from "./components/layout/Modal";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -52,6 +53,7 @@ const App: React.FC = () => {
 							<DisclaimerPage />
 						</Route>
 					</Switch>
+					<Modal />
 				</Router>
 			</ModalStoreProvider>
 		</TranslationStoreProvider>
