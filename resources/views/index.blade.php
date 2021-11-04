@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;900&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @unless (!Auth::check())
+        <meta name="session-id" content={{ rand() }}>
+    @endunless
     <link rel="stylesheet" href="/css/app.css?t={{ time() }}">
     <title>{{ env('APP_NAME') }}</title>
 </head>
