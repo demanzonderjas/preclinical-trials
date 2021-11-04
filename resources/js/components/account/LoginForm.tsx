@@ -9,11 +9,6 @@ import { useModalStore } from "../../hooks/useModalStore";
 
 export const LoginForm: React.FC = () => {
 	const { setModal } = useModalStore();
-	// const handleSubmit = async data => {
-	// 	console.log("data?", data);
-	// 	const attempt = await loginQuery(data);
-	// };
-
 	return (
 		<FormBlock icon="login.png">
 			<FormWrapper {...loginForm} handleSubmit={loginQuery}>
