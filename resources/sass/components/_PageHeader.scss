@@ -67,6 +67,17 @@ $login-button-size: 100px;
 				transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
 			}
 		}
+
+		@include respond-to("small") {
+			width: 60px;
+			height: 60px;
+
+			.content {
+				span {
+					font-size: 14px;
+				}
+			}
+		}
 	}
 
 	.Ellipse {
@@ -83,6 +94,7 @@ $login-button-size: 100px;
 	}
 
 	@include respond-to("small") {
+		padding: 10px;
 		.Copy {
 			margin: 0 auto 40px;
 			h1 {
@@ -187,6 +199,8 @@ $menu-margin-left: 100px;
 		margin-left: 30px;
 		margin-top: 20px;
 
+		width: calc(100% - 300px);
+
 		.MenuItem {
 			a {
 				font-size: 20px;
@@ -196,7 +210,7 @@ $menu-margin-left: 100px;
 
 	@include respond-to("xs") {
 		width: 60%;
-		margin: 0 auto 20px;
+		margin: 0 auto 20px 16px;
 		flex-wrap: wrap;
 		justify-content: center;
 

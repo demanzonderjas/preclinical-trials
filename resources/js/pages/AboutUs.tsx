@@ -10,8 +10,8 @@ import { TAboutUsType } from "../typings/aboutUs";
 export const AboutUsPage: React.FC = () => {
 	return (
 		<Page title="About Us">
+			<SubMenu items={aboutUsSubMenu} />
 			<div className="AboutUsPage">
-				<SubMenu items={aboutUsSubMenu} />
 				<ContentBlock>
 					<h3 id="goals">Goals and aims of Preclinicaltrials.eu</h3>
 					<p>
