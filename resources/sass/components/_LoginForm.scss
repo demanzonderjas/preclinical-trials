@@ -60,3 +60,13 @@
 		width: 100%;
 	}
 }
+.ForgotPassword {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+
+	a {
+		text-decoration: underline;
+		cursor: pointer;
+	}
+}

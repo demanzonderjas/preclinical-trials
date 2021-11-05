@@ -18,3 +18,12 @@ export async function logoutQuery() {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function forgotPasswordQuery({ email }) {
+	try {
+		const response = await API.post("forgot-password", { email });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

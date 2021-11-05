@@ -4,5 +4,6 @@ export type TModal = {
 };
 
 export enum TModalName {
-	LoginModal = "login_modal"
+	LoginModal = "login_modal",
+	ForgotPasswordModal = "forgot_password_modal"
 }

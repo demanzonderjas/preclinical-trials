@@ -26,6 +26,12 @@
 		}
 	}
 
+	.SuccessMessage {
+		max-width: 60%;
+		margin: 20px auto;
+		color: $white;
+	}
+
 	@include respond-to("small") {
 		max-width: 70%;
 	}

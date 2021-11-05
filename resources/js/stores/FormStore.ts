@@ -14,13 +14,21 @@ export class FormStore {
 
 	serverSideError: string = null;
 
+	succesText: string = null;
+
 	isDone: boolean = false;
 
 	handleSubmit: Function = null;
 
-	constructor(fields: TFormField[], handleSubmit: Function, style: TFormStyle) {
+	constructor(
+		fields: TFormField[],
+		handleSubmit: Function,
+		style: TFormStyle,
+		succesText: string
+	) {
 		this.setFields(fields);
 		this.handleSubmit = handleSubmit;
+		this.succesText = succesText;
 		this.style = style;
 		makeAutoObservable(this, {
 			getFieldValue: action.bound,
@@ -56,9 +64,13 @@ export class FormStore {
 		if (this.validate()) {
 			this.setIsSubmitting(true);
 			const keyValuePairs = this.createKeyValuePairs();
-			const { errors = {} } = await this.handleSubmit(keyValuePairs);
-			this.errors = new Map<TFormFieldName, any>(Object.entries(errors) as any);
-			this.setIsSubmitting(false);
+			const { errors } = await this.handleSubmit(keyValuePairs);
+			if (errors) {
+				this.errors = new Map<TFormFieldName, any>(Object.entries(errors) as any);
+				this.setIsSubmitting(false);
+			} else {
+				this.setIsDone(true);
+			}
 		}
 	};
 

@@ -6,6 +6,7 @@ import { FormWrapper } from "../forms/FormWrapper";
 import { loginForm } from "../../data/forms/login";
 import { loginQuery } from "../../queries/login";
 import { useModalStore } from "../../hooks/useModalStore";
+import { forgotPasswordModal } from "../../data/modals/loginModal";
 
 export const LoginForm: React.FC = () => {
 	const { setModal } = useModalStore();
@@ -22,6 +23,9 @@ export const LoginForm: React.FC = () => {
 					<Image filename="new-account.png" />
 				</div>
 			</Link>
+			<div className="ForgotPassword">
+				<a onClick={() => setModal(forgotPasswordModal)}>Forgot?</a>
+			</div>
 		</FormBlock>
 	);
 };

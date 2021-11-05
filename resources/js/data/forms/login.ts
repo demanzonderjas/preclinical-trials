@@ -9,3 +9,12 @@ export const loginForm: TForm = {
 	fields: [emailField, passwordField],
 	submitText: "Go!"
 };
+
+export const forgotPasswordForm: TForm = {
+	id: TFormName.ForgotPassword,
+	style: TFormStyle.InlinePlaceholder,
+	align: TAlignment.Center,
+	fields: [emailField],
+	submitText: "Send me reset instructions",
+	succesText: "An email with instructions on how to reset your password has just been sent."
+};

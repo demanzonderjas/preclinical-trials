@@ -16,7 +16,7 @@ export const InputField: React.FC<TFormFieldProps & {
 		<div className="InputField">
 			<input
 				type={type}
-				value={value}
+				value={value || ""}
 				onChange={e => setValue(e.target.value)}
 				placeholder={style === TFormStyle.InlinePlaceholder ? label : null}
 			/>

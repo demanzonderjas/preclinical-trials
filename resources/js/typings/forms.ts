@@ -5,6 +5,7 @@ export type TForm = {
 	style: TFormStyle;
 	handleSubmit?: Function;
 	submitText: string;
+	succesText?: string;
 };
 
 export enum TAlignment {
@@ -43,7 +44,8 @@ export enum TFormFieldName {
 
 export enum TFormName {
 	CreateAccount = "create_account",
-	Login = "login"
+	Login = "login",
+	ForgotPassword = "forgot_password"
 }
 
 export enum TFormStyle {

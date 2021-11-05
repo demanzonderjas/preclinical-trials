@@ -5,19 +5,21 @@ import { FormStore } from "../../stores/FormStore";
 import { TForm } from "../../typings/forms";
 import { FormField } from "./FormField";
 import cx from "classnames";
+import { SuccessMessage } from "./SuccessMessage";
 
 export const FormWrapper: React.FC<TForm> = ({
 	fields,
 	handleSubmit,
 	submitText,
 	align,
+	succesText,
 	style,
 	children
 }) => {
 	const [formStore, setFormStore] = useState(null);
 
 	useEffect(() => {
-		setFormStore(new FormStore(fields, handleSubmit, style));
+		setFormStore(new FormStore(fields, handleSubmit, style, succesText));
 	}, [handleSubmit]);
 
 	if (!formStore) {
@@ -37,6 +39,7 @@ export const FormWrapper: React.FC<TForm> = ({
 						<FormField key={field.id} {...field} />
 					))}
 					<button type="submit">{submitText}</button>
+					<SuccessMessage />
 				</form>
 			</FormStoreContext.Provider>
 		</div>
