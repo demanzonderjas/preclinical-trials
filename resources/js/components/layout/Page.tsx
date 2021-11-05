@@ -9,7 +9,7 @@ export const Page: React.FC<{ title: string; subtitle?: string; hasCurvedHeader?
 	hasCurvedHeader
 }) => {
 	return (
-		<div className="Page">
+		<div className="Page" style={{ overflow: hasCurvedHeader ? "hidden" : null }}>
 			<PageHeader title={title} subtitle={subtitle} hasCurvedHeader={hasCurvedHeader} />
 			<div className="PageContent">{children}</div>
 			<PageFooter />
