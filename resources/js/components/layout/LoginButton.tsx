@@ -9,8 +9,8 @@ export const LoginButton: React.FC = () => {
 	const { setModal } = useModalStore();
 	const sessionId = getMeta("session-id");
 
-	const logout = () => {
-		logoutQuery();
+	const logout = async () => {
+		await logoutQuery();
 		location.reload();
 	};
 
