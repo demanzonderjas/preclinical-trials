@@ -1,4 +1,4 @@
-import { TLoginCredentials } from "../typings/auth";
+import { TLoginCredentials, TResetPasswordData } from "../typings/auth";
 import { API } from "../utils/api";
 
 export async function loginQuery(credentials: TLoginCredentials) {
@@ -22,6 +22,15 @@ export async function logoutQuery() {
 export async function forgotPasswordQuery({ email }) {
 	try {
 		const response = await API.post("forgot-password", { email });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function resetPasswordQuery(resetPasswordData: TResetPasswordData) {
+	try {
+		const response = await API.post("reset-password", resetPasswordData);
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };

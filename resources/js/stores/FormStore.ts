@@ -48,7 +48,7 @@ export class FormStore {
 		this.errors.clear();
 		this.fields.forEach(field => {
 			const value = this.values.get(field.id);
-			if (field.validate && !field.validate(value)) {
+			if (field.validate && !field.validate(value, this.values)) {
 				this.errors.set(field.id, "field_not_valid");
 			}
 			if (field.required && value == "") {

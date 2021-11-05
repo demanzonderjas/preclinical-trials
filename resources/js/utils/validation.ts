@@ -1,3 +1,5 @@
+import { TFormFieldName } from "../typings/forms";
+
 export function validateEmail(email: string) {
 	if (!email) {
 		return false;
@@ -11,4 +13,12 @@ export function validatePassword(password: string) {
 		return false;
 	}
 	return password.length > 7;
+}
+
+export function validateSamePassword(password: string, values: Map<TFormFieldName, any>) {
+	if (!password) {
+		return false;
+	}
+	const passwordConfirmation = values.get(TFormFieldName.PasswordConfirm);
+	return password === passwordConfirmation;
 }

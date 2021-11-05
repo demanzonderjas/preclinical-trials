@@ -18,6 +18,7 @@ export type TFormField = {
 	label: string;
 	Component: React.FC;
 	validate: Function;
+	hidden?: boolean;
 	value: any;
 	required?: boolean;
 	props?: any;
@@ -38,14 +39,17 @@ export enum TFormFieldName {
 	LastName = "last_name",
 	Email = "email",
 	Password = "password",
+	PasswordConfirm = "password_confirmation",
 	Institution = "institution",
-	TermsConditions = "terms_conditions"
+	TermsConditions = "terms_conditions",
+	Token = "token"
 }
 
 export enum TFormName {
 	CreateAccount = "create_account",
 	Login = "login",
-	ForgotPassword = "forgot_password"
+	ForgotPassword = "forgot_password",
+	ResetPassword = "reset_password"
 }
 
 export enum TFormStyle {

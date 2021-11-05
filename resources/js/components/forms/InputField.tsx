@@ -10,7 +10,6 @@ export const InputField: React.FC<TFormFieldProps & {
 }> = observer(({ type = "text", id, label }) => {
 	const { value, setValue } = useFormField(id);
 	const { style } = useForm();
-	console.log(style);
 
 	return (
 		<div className="InputField">

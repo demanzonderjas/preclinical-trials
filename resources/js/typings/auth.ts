@@ -3,6 +3,12 @@ export type TLoginCredentials = {
 	password: string;
 };
 
+export type TResetPasswordData = {
+	password: string;
+	password_confirmation: string;
+	token: string;
+};
+
 export type TAccount = {
 	first_name: string;
 	last_name: string;
