@@ -1,0 +1,40 @@
+.MenuCircleItem {
+	background: $secondary;
+	width: 271px;
+	height: 271px;
+	position: relative;
+	border-radius: 50%;
+	margin: 20px;
+	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+	transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+	cursor: pointer;
+
+	&:hover {
+		transform: scale(1.1);
+	}
+
+	.content {
+		display: flex;
+		align-items: center;
+		align-content: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		color: white;
+		font-size: 40px;
+		line-height: 48px;
+
+		p {
+			padding: 0 20px;
+			min-height: 100px;
+		}
+
+		.ImageWrapper {
+			max-width: 70px;
+			display: inline-block;
+			margin-top: 10px;
+		}
+	}
+}

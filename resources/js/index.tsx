@@ -18,6 +18,7 @@ import { FAQPage } from "./pages/FAQ";
 import { DisclaimerPage } from "./pages/Disclaimer";
 import { Modal } from "./components/layout/Modal";
 import { ResetPasswordPage } from "./pages/ResetPassword";
+import { DashboardPage } from "./pages/Dashboard";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -46,6 +47,9 @@ const App: React.FC = () => {
 						</Route>
 						<Route path="/create-account" exact={true}>
 							<CreateAccountPage />
+						</Route>
+						<Route path="/dashboard" exact={true}>
+							<DashboardPage />
 						</Route>
 						<Route path="/reset-password/:token">
 							<ResetPasswordPage />
