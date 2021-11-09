@@ -4,6 +4,12 @@ import { API } from "../utils/api";
 export async function loginQuery(credentials: TLoginCredentials) {
 	try {
 		const response = await API.post("login", credentials);
+		console.log(response.data);
+
+		if (response.data?.success) {
+			location.href = "/dashboard";
+		}
+
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };

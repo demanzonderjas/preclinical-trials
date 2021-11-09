@@ -1,5 +1,6 @@
 import React from "react";
 import { loginModal } from "../../data/modals/loginModal";
+import { useIsLoggedIn } from "../../hooks/useLogin";
 import { useModalStore } from "../../hooks/useModalStore";
 import { logoutQuery } from "../../queries/login";
 import { getMeta } from "../../utils/api";
@@ -7,7 +8,7 @@ import { Image } from "../base/Image";
 
 export const LoginButton: React.FC = () => {
 	const { setModal } = useModalStore();
-	const sessionId = getMeta("session-id");
+	const isLoggedIn = useIsLoggedIn();
 
 	const logout = async () => {
 		await logoutQuery();
@@ -15,10 +16,10 @@ export const LoginButton: React.FC = () => {
 	};
 
 	return (
-		<div className="LoginButton" onClick={sessionId ? logout : () => setModal(loginModal)}>
+		<div className="LoginButton" onClick={isLoggedIn ? logout : () => setModal(loginModal)}>
 			<div className="content">
 				<Image filename="login.png" />
-				<span>{sessionId ? "Logout" : "Login"}</span>
+				<span>{isLoggedIn ? "Logout" : "Login"}</span>
 			</div>
 		</div>
 	);
