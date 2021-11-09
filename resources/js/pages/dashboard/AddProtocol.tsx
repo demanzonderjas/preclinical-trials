@@ -3,6 +3,7 @@ import { FormWrapper } from "../../components/forms/FormWrapper";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
 import { createAccountForm } from "../../data/forms/create-account";
+import { createProtocolForm } from "../../data/forms/protocol";
 import { createAccountQuery } from "../../queries/account";
 
 export const AddProtocolPage: React.FC = () => {
@@ -10,7 +11,7 @@ export const AddProtocolPage: React.FC = () => {
 		<Page title="Add Protocol">
 			<div className="AddProtocol border-top">
 				<FormBlock icon="add.png">
-					<FormWrapper {...createAccountForm} handleSubmit={createAccountQuery}>
+					<FormWrapper {...createProtocolForm} handleSubmit={createAccountQuery}>
 						<p className="intro">
 							Register your study by completing the following form. Notice that the
 							fields with an asterisk are mandatory, whereas other fields are

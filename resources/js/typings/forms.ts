@@ -17,11 +17,14 @@ export type TFormField = {
 	id: TFormFieldName;
 	label: string;
 	Component: React.FC;
-	validate: Function;
+	validate: (value: any, values: Map<TFormFieldName, any>) => boolean;
 	hidden?: boolean;
 	value: any;
 	required?: boolean;
 	props?: any;
+	section?: TSectionName;
+	description?: string;
+	dependencies?: TFormFieldDependency[];
 };
 
 export type TFormFieldProps = {
@@ -42,10 +45,17 @@ export enum TFormFieldName {
 	PasswordConfirm = "password_confirmation",
 	Institution = "institution",
 	TermsConditions = "terms_conditions",
-	Token = "token"
+	Token = "token",
+	Title = "title",
+	ShortTitle = "short_title",
+	ContactName = "contact_name",
+	ContactRole = "contact_role",
+	ContactEmail = "contact_email",
+	StudyCentre = "study_centre"
 }
 
 export enum TFormName {
+	CreateProtocol = "create_protocol",
 	CreateAccount = "create_account",
 	Login = "login",
 	ForgotPassword = "forgot_password",
@@ -56,3 +66,14 @@ export enum TFormStyle {
 	RegularLabels = "regular_labels",
 	InlinePlaceholder = "inline_placeholder"
 }
+
+export enum TSectionName {
+	General = "general",
+	ContactDetails = "contact_details",
+	StudyCentreDetails = "study_centre_details"
+}
+
+export type TFormFieldDependency = {
+	key: TFormFieldName;
+	value: any;
+};

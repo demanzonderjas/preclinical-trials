@@ -18,7 +18,7 @@ class CreateDetailsTable extends Migration
             $table->bigInteger('protocol_id')->unsigned();
             $table->foreign('protocol_id')->references('id')->on('protocols')->onDelete('cascade');
             $table->string('key');
-            $table->string('value');
+            $table->text('value');
             $table->timestamps();
         });
     }
