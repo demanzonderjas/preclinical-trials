@@ -1,4 +1,4 @@
-import { TFormFieldName } from "../typings/forms";
+import { TFormField, TFormFieldName } from "../typings/forms";
 
 export function validateEmail(email: string) {
 	if (!email) {
@@ -21,4 +21,14 @@ export function validateSamePassword(password: string, values: Map<TFormFieldNam
 	}
 	const passwordConfirmation = values.get(TFormFieldName.PasswordConfirm);
 	return password === passwordConfirmation;
+}
+
+export function fieldMeetsDependencies(field: TFormField, values: Map<TFormFieldName, any>) {
+	if (!field.dependencies) {
+		return true;
+	}
+	return field.dependencies.every(dependency => {
+		const activeValue = values.get(dependency.key);
+		return dependency.value === activeValue;
+	});
 }

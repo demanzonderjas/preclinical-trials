@@ -51,7 +51,9 @@ export enum TFormFieldName {
 	ContactName = "contact_name",
 	ContactRole = "contact_role",
 	ContactEmail = "contact_email",
-	StudyCentre = "study_centre"
+	StudyCentre = "study_centre",
+	FinancialSupport = "financial_support",
+	OtherSupport = "other_support"
 }
 
 export enum TFormName {

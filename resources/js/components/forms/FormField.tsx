@@ -20,7 +20,11 @@ export const FormField: React.FC<TFormField> = observer(
 
 		return (
 			<div className="FormField">
-				{style === TFormStyle.RegularLabels && !hidden && <label>{label}</label>}
+				{style === TFormStyle.RegularLabels && !hidden && (
+					<label>
+						{label} {required ? "*" : null}
+					</label>
+				)}
 				{description && <p className="description">{description}</p>}
 				<Component id={id} required={required} label={label} {...props} />
 				{error && <p className="error">{error}</p>}
