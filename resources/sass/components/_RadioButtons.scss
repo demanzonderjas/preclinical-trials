@@ -1,0 +1,29 @@
+.RadioButtonsField {
+	.RadioButton {
+		margin: 10px 0;
+		display: flex;
+		align-items: center;
+		input {
+			width: 24px;
+			height: 24px;
+			margin: 0;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		label {
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: 10px;
+			width: calc(100% - 34px);
+			line-height: 20px;
+
+			span {
+				display: block;
+
+				&.description {
+					font-size: 14px;
+				}
+			}
+		}
+	}
+}

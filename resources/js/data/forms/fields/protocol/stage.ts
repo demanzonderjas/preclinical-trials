@@ -22,7 +22,7 @@ export const studyStageField: TFormField = {
 		options: studyStageOptions
 	},
 	Component: RadioButtonsField,
-	section: TSectionName.StudyDesign,
+	section: TSectionName.General,
 	validate: value => value !== "",
 	value: ""
 };

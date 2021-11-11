@@ -1,5 +1,5 @@
 import { SelectField } from "../../../../components/forms/SelectField";
-import { TFormField, TFormFieldName } from "../../../../typings/forms";
+import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
 
 export const speciesOptions: string[] = [
 	"Cat",
@@ -25,6 +25,7 @@ export const speciesField: TFormField = {
 	props: {
 		options: speciesOptions
 	},
+	section: TSectionName.StudyDesign,
 	Component: SelectField,
 	validate: value => value != "",
 	value: ""
