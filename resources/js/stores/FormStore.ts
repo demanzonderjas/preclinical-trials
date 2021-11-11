@@ -1,5 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
-import { TFormField, TFormFieldName, TFormStyle } from "../typings/forms";
+import { TFormField, TFormFieldName, TFormStyle, TSectionName } from "../typings/forms";
 
 export class FormStore {
 	fields: TFormField[] = [];
@@ -18,6 +18,8 @@ export class FormStore {
 
 	isDone: boolean = false;
 
+	activeSection: TSectionName = null;
+
 	handleSubmit: Function = null;
 
 	constructor(
@@ -33,8 +35,13 @@ export class FormStore {
 		makeAutoObservable(this, {
 			getFieldValue: action.bound,
 			setFieldValue: action.bound,
+			setActiveSection: action.bound,
 			setFields: action.bound
 		});
+	}
+
+	setActiveSection(section: TSectionName) {
+		this.activeSection = section;
 	}
 
 	setFields(fields) {

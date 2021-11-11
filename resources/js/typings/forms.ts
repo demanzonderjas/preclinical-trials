@@ -102,14 +102,16 @@ export enum TFormName {
 
 export enum TFormStyle {
 	RegularLabels = "regular_labels",
-	InlinePlaceholder = "inline_placeholder"
+	InlinePlaceholder = "inline_placeholder",
+	WithSections = "with_sections"
 }
 
 export enum TSectionName {
-	General = "general",
-	ContactDetails = "contact_details",
-	StudyCentreDetails = "study_centre_details",
-	StudyDesign = "study_design"
+	General = "General",
+	ContactDetails = "Contact Details",
+	StudyCentreDetails = "Study Centre Details",
+	StudyDesign = "Study Design",
+	Submit = "Submit"
 }
 
 export enum TFormFieldDependencyType {

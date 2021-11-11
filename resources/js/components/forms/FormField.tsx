@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useForm, useFormField } from "../../hooks/useForm";
 import { TFormField, TFormStyle } from "../../typings/forms";
+import { fieldMeetsDependencies } from "../../utils/validation";
 
 export const FormField: React.FC<TFormField> = observer(
 	({ id, Component, props, label, hidden, required, description }) => {
@@ -20,7 +21,7 @@ export const FormField: React.FC<TFormField> = observer(
 
 		return (
 			<div className="FormField">
-				{style === TFormStyle.RegularLabels && !hidden && (
+				{style !== TFormStyle.InlinePlaceholder && !hidden && (
 					<label>
 						{label} {required ? "*" : null}
 					</label>
@@ -32,3 +33,18 @@ export const FormField: React.FC<TFormField> = observer(
 		);
 	}
 );
+
+export const FormFields: React.FC<{ fields: TFormField[] }> = observer(({ fields }) => {
+	const { values, activeSection } = useForm();
+
+	return (
+		<div className="FormFields">
+			{fields
+				.filter(field => fieldMeetsDependencies(field, values))
+				.filter(field => (activeSection ? field.section === activeSection : true))
+				.map(field => (
+					<FormField key={field.id} {...field} />
+				))}
+		</div>
+	);
+});
