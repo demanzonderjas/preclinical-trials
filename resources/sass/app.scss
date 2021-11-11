@@ -18,6 +18,7 @@
 @import "./components/SubMenu";
 @import "./components/Modal";
 @import "./components/MenuCircleItem";
+@import "./components/SelectField";
 
 .block-scroll {
 	overflow-x: hidden;
@@ -47,4 +48,18 @@ body {
 
 .border-top {
 	border-top: 10px solid $secondary;
+}
+
+.with-custom-scrollbar::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba($grey-medium, 0.3);
+	background-color: #f5f5f5;
+}
+
+.with-custom-scrollbar::-webkit-scrollbar {
+	width: 10px;
+	background-color: #f5f5f5;
+}
+
+.with-custom-scrollbar::-webkit-scrollbar-thumb {
+	background-color: $grey-medium;
 }

@@ -1,5 +1,5 @@
 import { BooleanField } from "../../../../components/forms/BooleanField";
-import { TFormField, TFormFieldName } from "../../../../typings/forms";
+import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
 
 export const accuracyField: TFormField = {
 	label: "Statement of accuracy",
@@ -10,6 +10,7 @@ export const accuracyField: TFormField = {
 		description:
 			"I confirm that the information provided in this form is true, complete and accurate"
 	},
+	section: TSectionName.Submit,
 	validate: (value: boolean) => !!value,
 	value: false
 };
