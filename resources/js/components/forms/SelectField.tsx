@@ -1,10 +1,10 @@
 import React from "react";
 import { useFormField } from "../../hooks/useForm";
-import { TFormFieldName, TSelectOption } from "../../typings/forms";
+import { TFormFieldName } from "../../typings/forms";
 
 type SelectFieldProps = {
 	id: TFormFieldName;
-	options: TSelectOption[];
+	options: string[];
 };
 
 export const SelectField: React.FC<SelectFieldProps> = ({ id, options }) => {
@@ -15,9 +15,10 @@ export const SelectField: React.FC<SelectFieldProps> = ({ id, options }) => {
 			onChange={e => setValue(e.target.value)}
 			className="SelectField"
 		>
+			<option value="" />
 			{options.map(option => (
-				<option key={option.value} value={option.value}>
-					{option.text}
+				<option key={option} value={option}>
+					{option}
 				</option>
 			))}
 		</select>

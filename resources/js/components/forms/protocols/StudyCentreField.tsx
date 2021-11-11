@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { studyCentreModel } from "../../../data/forms/fields/protocol/study-centre";
+import { studyCentreModel } from "../../../data/forms/fields/protocol/studyCentre";
 import { useFormField } from "../../../hooks/useForm";
 import { TFormFieldName } from "../../../typings/forms";
 import { TStudyCentre } from "../../../typings/protocols";
@@ -18,7 +18,7 @@ export const StudyCentreField: React.FC<{ id: TFormFieldName }> = observer(({ id
 
 	const deleteCentre = (index: number) => {
 		const newCentres = [...studyCentres];
-		newCentres.splice(index);
+		newCentres.splice(index, 1);
 		setValue(newCentres);
 	};
 
@@ -48,6 +48,7 @@ export const StudyCentreField: React.FC<{ id: TFormFieldName }> = observer(({ id
 						value={centre.country}
 						onChange={e => setStudyCentreValue(index, "country", e.target.value)}
 					>
+						<option value="" />
 						{getCountrySelectOptions().map(country => (
 							<option key={country.value} value={country.value}>
 								{country.text}

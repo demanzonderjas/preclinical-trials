@@ -1,24 +1,7 @@
 import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName, TSelectOption } from "../../../../typings/forms";
 
-export const supportFieldOptions: TSelectOption[] = [
-	{
-		text: "Industry",
-		value: "Industry"
-	},
-	{
-		text: "Investigator driven",
-		value: "Investigator driven"
-	},
-	{
-		text: "Grants",
-		value: "Grants"
-	},
-	{
-		text: "Other",
-		value: "Other"
-	}
-];
+export const supportFieldOptions: string[] = ["Industry", "Investigator driven", "Grants", "Other"];
 
 export const supportField: TFormField = {
 	id: TFormFieldName.FinancialSupport,

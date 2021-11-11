@@ -1,4 +1,4 @@
-import { TFormField, TFormFieldName } from "../typings/forms";
+import { TFormField, TFormFieldDependencyType, TFormFieldName } from "../typings/forms";
 
 export function validateEmail(email: string) {
 	if (!email) {
@@ -29,6 +29,16 @@ export function fieldMeetsDependencies(field: TFormField, values: Map<TFormField
 	}
 	return field.dependencies.every(dependency => {
 		const activeValue = values.get(dependency.key);
+		if (dependency.type === TFormFieldDependencyType.NotEqualTo) {
+			return dependency.value.every(value => value !== activeValue);
+		}
 		return dependency.value === activeValue;
 	});
+}
+
+export function validateMultiRowField(rows: Array<object>) {
+	if (!rows?.length) {
+		return false;
+	}
+	return Object.values(rows[0]).every((value: any) => value !== "");
 }
