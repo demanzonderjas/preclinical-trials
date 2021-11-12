@@ -21,8 +21,8 @@ Route::fallback(function () {
     return view('index');
 });
 
-Route::get('/dashboard*', function () {
+Route::get('/dashboard{any}', function () {
     return view('index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->where('any', '.*')->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__ . '/auth.php';
