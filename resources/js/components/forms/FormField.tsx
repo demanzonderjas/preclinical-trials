@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useForm, useFormField } from "../../hooks/useForm";
 import { TFormField, TFormStyle } from "../../typings/forms";
 import { fieldMeetsDependencies } from "../../utils/validation";
+import cx from "classnames";
 
 export const FormField: React.FC<TFormField> = observer(
 	({ id, Component, props, label, hidden, required, description }) => {
@@ -20,10 +21,13 @@ export const FormField: React.FC<TFormField> = observer(
 		}, []);
 
 		return (
-			<div className="FormField">
+			<div
+				className={cx("FormField", { "with-sections": style === TFormStyle.WithSections })}
+			>
 				{style !== TFormStyle.InlinePlaceholder && !hidden && (
 					<label>
-						{label} {required ? "*" : null}
+						{label}
+						{required ? "*" : null}
 					</label>
 				)}
 				{description && <p className="description">{description}</p>}

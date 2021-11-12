@@ -1,6 +1,12 @@
 .FormField {
 	margin: 20px 0;
 
+	&.with-sections {
+		background-color: rgba($grey-medium, 0.3);
+		border-radius: 5px;
+		padding: 10px;
+	}
+
 	> .description {
 		margin: 12px 0;
 	}
@@ -26,7 +32,8 @@
 	input[type="text"],
 	input[type="email"],
 	input[type="password"],
-	input[type="date"] {
+	input[type="date"],
+	input[type="number"] {
 		background: #ffffff;
 		font-family: $font-primary;
 		border: 1px solid rgba(0, 0, 0, 0.2);
@@ -48,6 +55,10 @@
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0;
+	}
+
+	input[type="number"] {
+		max-width: 130px;
 	}
 
 	input[type="date"] {

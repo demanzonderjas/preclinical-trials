@@ -29,7 +29,7 @@ export const StudyCentreField: React.FC<{ id: TFormFieldName }> = observer(({ id
 	};
 
 	return (
-		<div className="StudyCentreField">
+		<div className="StudyCentreField MultiRowField">
 			{studyCentres.map((centre: TStudyCentre, index: number) => (
 				<div className="StudyCentreInfo" key={index}>
 					<input

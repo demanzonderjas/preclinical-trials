@@ -18,6 +18,6 @@ export const studyArmsField: TFormField = {
 	required: true,
 	validate: validateMultiRowField,
 	value: [{ ...studyArmModel }],
-	section: TSectionName.StudyCentreDetails,
+	section: TSectionName.StudyDesign,
 	description: "Please indicate all of the study arms/groups and their purpose"
 };

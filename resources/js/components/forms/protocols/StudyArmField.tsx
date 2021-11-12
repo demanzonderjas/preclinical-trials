@@ -27,7 +27,7 @@ export const StudyArmField: React.FC<{ id: TFormFieldName }> = observer(({ id })
 	};
 
 	return (
-		<div className="StudyArmField">
+		<div className="StudyArmField MultiRowField">
 			{studyArms.map((arm: TStudyArm, index: number) => (
 				<div className="StudyArmInfo" key={index}>
 					<select
@@ -43,6 +43,7 @@ export const StudyArmField: React.FC<{ id: TFormFieldName }> = observer(({ id })
 					</select>
 					<input
 						type="number"
+						placeholder="number"
 						value={arm.number || ""}
 						onChange={e => setStudyArmValue(index, "number", e.target.value)}
 					/>

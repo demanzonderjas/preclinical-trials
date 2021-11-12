@@ -7,7 +7,8 @@ export const InputField: React.FC<TFormFieldProps & {
 	id: TFormFieldName;
 	required: boolean;
 	label: string;
-}> = observer(({ type = "text", id, label }) => {
+	placeholder?: string;
+}> = observer(({ type = "text", id, label, placeholder }) => {
 	const { value, setValue } = useFormField(id);
 	const { style } = useForm();
 
@@ -17,7 +18,7 @@ export const InputField: React.FC<TFormFieldProps & {
 				type={type}
 				value={value || ""}
 				onChange={e => setValue(e.target.value)}
-				placeholder={style === TFormStyle.InlinePlaceholder ? label : null}
+				placeholder={style === TFormStyle.InlinePlaceholder ? label : placeholder || ""}
 			/>
 		</div>
 	);

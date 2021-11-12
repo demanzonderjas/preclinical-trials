@@ -21,7 +21,7 @@ export const embargoField: TFormField = {
 		options: embargoOptions
 	},
 	Component: RadioButtonsField,
-	section: TSectionName.StudyDesign,
+	section: TSectionName.Submit,
 	validate: value => value !== "",
 	value: ""
 };
