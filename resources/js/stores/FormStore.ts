@@ -1,5 +1,5 @@
-import { action, makeAutoObservable } from "mobx";
-import { TFormField, TFormFieldName, TFormStyle, TSectionName } from "../typings/forms";
+import { action, computed, makeAutoObservable } from "mobx";
+import { TForm, TFormField, TFormFieldName, TFormStyle, TSectionName } from "../typings/forms";
 
 export class FormStore {
 	fields: TFormField[] = [];
@@ -8,36 +8,59 @@ export class FormStore {
 
 	isSubmitting: boolean = false;
 
-	style: TFormStyle = TFormStyle.RegularLabels;
-
 	errors: Map<TFormFieldName, any> = new Map<TFormFieldName, any>();
 
 	serverSideError: string = null;
 
-	succesText: string = null;
+	form: TForm = null;
 
 	isDone: boolean = false;
 
 	activeSection: TSectionName = null;
 
+	sections: TSectionName[] = null;
+
 	handleSubmit: Function = null;
 
-	constructor(
-		fields: TFormField[],
-		handleSubmit: Function,
-		style: TFormStyle,
-		succesText: string
-	) {
-		this.setFields(fields);
+	constructor(form: TForm, handleSubmit: Function, sections: TSectionName[]) {
+		this.form = form;
+		this.setFields(form.fields);
+		this.sections = sections;
 		this.handleSubmit = handleSubmit;
-		this.succesText = succesText;
-		this.style = style;
 		makeAutoObservable(this, {
 			getFieldValue: action.bound,
 			setFieldValue: action.bound,
 			setActiveSection: action.bound,
-			setFields: action.bound
+			setFields: action.bound,
+			style: computed,
+			succesText: computed,
+			isLastSection: computed,
+			goToNextSection: action.bound
 		});
+	}
+
+	get isLastSection() {
+		if (!this.sections) {
+			return true;
+		}
+		return this.activeSection === this.sections[this.sections.length - 1];
+	}
+
+	get style() {
+		return this.form.style;
+	}
+
+	get succesText() {
+		return this.form.succesText;
+	}
+
+	goToNextSection(e: any) {
+		e.preventDefault();
+		const currentIndex = this.sections.findIndex(section => section === this.activeSection);
+		this.setActiveSection(this.sections[currentIndex + 1]);
+		setTimeout(() => {
+			window.scrollTo(0, 0);
+		}, 0);
 	}
 
 	setActiveSection(section: TSectionName) {

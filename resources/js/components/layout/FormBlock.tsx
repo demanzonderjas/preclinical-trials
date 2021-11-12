@@ -7,23 +7,21 @@ import { FormStore } from "../../stores/FormStore";
 import { FormFields } from "../forms/FormField";
 import { SuccessMessage } from "../forms/SuccessMessage";
 import { FormSections } from "../forms/FormSections";
+import { ControlButtons } from "../forms/protocols/ControlButtons";
 
-export const FormBlock: React.FC<TForm & { icon: string; sections?: TSectionName[] }> = ({
-	children,
-	icon,
-	sections,
-	fields,
-	handleSubmit,
-	submitText,
-	align,
-	succesText,
-	style
-}) => {
+export const FormBlock: React.FC<{
+	form: TForm;
+	icon: string;
+	sections?: TSectionName[];
+	handleSubmit: Function;
+}> = ({ children, icon, sections, form, handleSubmit }) => {
 	const [formStore, setFormStore] = useState(null);
 
 	useEffect(() => {
-		setFormStore(new FormStore(fields, handleSubmit, style, succesText));
+		setFormStore(new FormStore(form, handleSubmit, sections));
 	}, [handleSubmit]);
+
+	const { align, fields } = form;
 
 	if (!formStore) {
 		return null;
@@ -44,7 +42,7 @@ export const FormBlock: React.FC<TForm & { icon: string; sections?: TSectionName
 					>
 						{children}
 						<FormFields fields={fields} />
-						<button type="submit">{submitText}</button>
+						<ControlButtons />
 						<SuccessMessage />
 					</form>
 				</div>

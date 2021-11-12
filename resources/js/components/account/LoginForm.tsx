@@ -10,7 +10,7 @@ import { forgotPasswordModal } from "../../data/modals/loginModal";
 export const LoginForm: React.FC = () => {
 	const { setModal } = useModalStore();
 	return (
-		<FormBlock icon="login.png" {...loginForm} handleSubmit={loginQuery}>
+		<FormBlock icon="login.png" form={loginForm} handleSubmit={loginQuery}>
 			<div className="LoginForm">
 				<h3>Login</h3>
 			</div>

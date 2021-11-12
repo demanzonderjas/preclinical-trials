@@ -10,7 +10,7 @@ export const ResetPasswordPage: React.FC = () => {
 			<div className="ResetPassword border-top">
 				<FormBlock
 					icon="password.png"
-					{...resetPasswordForm}
+					form={resetPasswordForm}
 					handleSubmit={resetPasswordQuery}
 				>
 					<p className="intro">You can create a new password below.</p>

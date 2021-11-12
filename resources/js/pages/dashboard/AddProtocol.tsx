@@ -10,7 +10,7 @@ export const AddProtocolPage: React.FC = () => {
 		<Page title="Add Protocol">
 			<div className="AddProtocol border-top">
 				<FormBlock
-					{...createProtocolForm}
+					form={createProtocolForm}
 					handleSubmit={createAccountQuery}
 					icon="add.png"
 					sections={[

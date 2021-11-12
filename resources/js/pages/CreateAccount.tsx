@@ -10,7 +10,7 @@ export const CreateAccountPage: React.FC = () => {
 			<div className="CreateAccount border-top">
 				<FormBlock
 					icon="new-account.png"
-					{...createAccountForm}
+					form={createAccountForm}
 					handleSubmit={createAccountQuery}
 				>
 					<p className="intro">
