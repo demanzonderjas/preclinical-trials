@@ -3,6 +3,7 @@ import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
 import { createProtocolForm } from "../../data/forms/protocol";
 import { createAccountQuery } from "../../queries/account";
+import { saveProtocolQuery } from "../../queries/protocol";
 import { TSectionName } from "../../typings/forms";
 
 export const AddProtocolPage: React.FC = () => {
@@ -11,7 +12,7 @@ export const AddProtocolPage: React.FC = () => {
 			<div className="AddProtocol border-top">
 				<FormBlock
 					form={createProtocolForm}
-					handleSubmit={createAccountQuery}
+					handleSubmit={saveProtocolQuery}
 					icon="add.png"
 					sections={[
 						TSectionName.General,

@@ -8,7 +8,8 @@ export const API: AxiosInstance = axios.create({
 		"X-CSRF-TOKEN": getMeta("csrf-token"),
 		"Content-Type": "application/json",
 		Accept: "application/json"
-	}
+	},
+	withCredentials: true
 });
 
 export function getMeta(name) {

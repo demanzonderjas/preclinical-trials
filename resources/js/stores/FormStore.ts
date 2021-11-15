@@ -35,7 +35,8 @@ export class FormStore {
 			style: computed,
 			succesText: computed,
 			isLastSection: computed,
-			goToNextSection: action.bound
+			goToNextSection: action.bound,
+			createKeyValuePairs: action.bound
 		});
 	}
 
@@ -109,6 +110,7 @@ export class FormStore {
 	};
 
 	createKeyValuePairs() {
+		console.log("this", this);
 		return this.fields.reduce((base, field) => {
 			base[field.id] = this.values.get(field.id);
 			return base;

@@ -3,6 +3,9 @@ import { API } from "../utils/api";
 
 export async function loginQuery(credentials: TLoginCredentials) {
 	try {
+		const cookieTime = await API.get("/sanctum/csrf-cookie");
+		console.log("cookit??", cookieTime);
+
 		const response = await API.post("login", credentials);
 		console.log(response.data);
 
