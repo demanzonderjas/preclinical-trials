@@ -8,6 +8,11 @@ export type TForm = {
 	succesText?: string;
 };
 
+export type TSavedFormValue = {
+	key: TFormFieldName;
+	value: any;
+};
+
 export enum TAlignment {
 	Left = "left",
 	Center = "center"

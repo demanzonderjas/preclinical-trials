@@ -20,6 +20,7 @@ import { Modal } from "./components/layout/Modal";
 import { ResetPasswordPage } from "./pages/ResetPassword";
 import { DashboardPage } from "./pages/dashboard/Dashboard";
 import { AddProtocolPage } from "./pages/dashboard/AddProtocol";
+import { EditProtocolPage } from "./pages/dashboard/EditProtocol";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -54,6 +55,9 @@ const App: React.FC = () => {
 						</Route>
 						<Route path="/dashboard/add-protocol" exact={true}>
 							<AddProtocolPage />
+						</Route>
+						<Route path="/dashboard/edit-protocol/:protocol_id">
+							<EditProtocolPage />
 						</Route>
 						<Route path="/reset-password/:token">
 							<ResetPasswordPage />

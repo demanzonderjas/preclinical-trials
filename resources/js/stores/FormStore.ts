@@ -1,5 +1,12 @@
 import { action, computed, makeAutoObservable } from "mobx";
-import { TForm, TFormField, TFormFieldName, TFormStyle, TSectionName } from "../typings/forms";
+import {
+	TForm,
+	TFormField,
+	TFormFieldName,
+	TFormStyle,
+	TSavedFormValue,
+	TSectionName
+} from "../typings/forms";
 
 export class FormStore {
 	fields: TFormField[] = [];
@@ -22,11 +29,16 @@ export class FormStore {
 
 	handleSubmit: Function = null;
 
-	constructor(form: TForm, handleSubmit: Function, sections: TSectionName[]) {
+	constructor(form: TForm, handleSubmit: Function, sections: TSectionName[], initialData?) {
 		this.form = form;
 		this.setFields(form.fields);
 		this.sections = sections;
 		this.handleSubmit = handleSubmit;
+
+		if (initialData) {
+			this.loadValues(initialData);
+		}
+
 		makeAutoObservable(this, {
 			getFieldValue: action.bound,
 			setFieldValue: action.bound,
@@ -36,7 +48,8 @@ export class FormStore {
 			succesText: computed,
 			isLastSection: computed,
 			goToNextSection: action.bound,
-			createKeyValuePairs: action.bound
+			createKeyValuePairs: action.bound,
+			loadValues: action.bound
 		});
 	}
 
@@ -86,7 +99,6 @@ export class FormStore {
 				this.errors.set(field.id, "field_required");
 			}
 		});
-		console.log([...this.errors.values()].length);
 		return ![...this.errors.values()].length;
 	}
 
@@ -142,17 +154,17 @@ export class FormStore {
 		this.values.clear();
 	}
 
-	getFieldValue(id) {
+	getFieldValue(id: TFormFieldName) {
 		return this.values.get(id);
 	}
 
-	loadValues(values) {
+	loadValues(values: TSavedFormValue[]) {
 		if (!values) {
 			return;
 		}
-		Object.keys(values).forEach((id: TFormFieldName) => {
-			if (values[id] !== null) {
-				this.values.set(id, values[id]);
+		values.forEach(({ key, value }) => {
+			if (values[key] !== null) {
+				this.setFieldValue(key, value);
 			}
 		});
 	}

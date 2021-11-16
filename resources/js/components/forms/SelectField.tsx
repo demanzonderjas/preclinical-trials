@@ -44,7 +44,6 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }
 								isSelected={option === value}
 								value={option}
 								handleClick={() => {
-									console.log("option", option);
 									setValue(option);
 									setIsActive(!isActive);
 								}}

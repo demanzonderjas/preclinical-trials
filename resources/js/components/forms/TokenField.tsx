@@ -10,7 +10,6 @@ export const TokenField: React.FC = observer(() => {
 
 	useEffect(() => {
 		setValue(token);
-		console.log("token!", token);
 	}, [token]);
 
 	return null;

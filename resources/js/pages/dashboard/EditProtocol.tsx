@@ -1,16 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
 import { createProtocolForm } from "../../data/forms/protocol";
-import { saveProtocolQuery } from "../../queries/protocol";
+import { getProtocolQuery, saveProtocolQuery } from "../../queries/protocol";
 import { TSectionName } from "../../typings/forms";
+import { TProtocol } from "../../typings/protocols";
 
-export const AddProtocolPage: React.FC = () => {
+export const EditProtocolPage: React.FC = () => {
+	const { protocol_id }: { protocol_id: string } = useParams();
+	const [protocol, setProtocol] = useState(null);
+
+	useEffect(() => {
+		if (protocol_id) {
+			(async () => {
+				const response = await getProtocolQuery(protocol_id);
+				const data = response.protocol as TProtocol;
+				setProtocol(data);
+			})();
+		}
+	}, [protocol_id]);
+
 	return (
-		<Page title="Add Protocol">
+		<Page title="Edit Protocol">
 			<div className="AddProtocol border-top">
 				<FormBlock
 					form={createProtocolForm}
+					waitForData={true}
+					initialData={protocol?.details}
 					handleSubmit={saveProtocolQuery}
 					icon="add.png"
 					sections={[

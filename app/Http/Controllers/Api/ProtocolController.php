@@ -14,4 +14,10 @@ class ProtocolController extends Controller
 		$request->user()->protocols()->save($protocol);
 		$protocol->saveDetails($request);
 	}
+
+	public function get(Request $request)
+	{
+		$protocol = Protocol::where(['id' => $request->protocol_id])->with('details')->firstOrFail();
+		return response()->json(["protocol" => $protocol->toArray()]);
+	}
 }

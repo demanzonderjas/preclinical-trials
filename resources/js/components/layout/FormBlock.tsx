@@ -14,12 +14,16 @@ export const FormBlock: React.FC<{
 	icon: string;
 	sections?: TSectionName[];
 	handleSubmit: Function;
-}> = ({ children, icon, sections, form, handleSubmit }) => {
+	initialData?: any;
+	waitForData?: boolean;
+}> = ({ children, icon, sections, form, handleSubmit, initialData, waitForData }) => {
 	const [formStore, setFormStore] = useState(null);
 
 	useEffect(() => {
-		setFormStore(new FormStore(form, handleSubmit, sections));
-	}, [handleSubmit]);
+		if ((waitForData && initialData) || !waitForData) {
+			setFormStore(new FormStore(form, handleSubmit, sections, initialData));
+		}
+	}, [handleSubmit, initialData]);
 
 	const { align, fields } = form;
 

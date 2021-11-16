@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "../../../hooks/useForm";
 import { saveProtocolQuery } from "../../../queries/protocol";
 import { TFormFieldName } from "../../../typings/forms";
+import { TProtocol } from "../../../typings/protocols";
 
 export const ControlButtons: React.FC = observer(() => {
 	const { isLastSection, form, goToNextSection, createKeyValuePairs } = useForm();
@@ -10,7 +11,7 @@ export const ControlButtons: React.FC = observer(() => {
 	const saveAsDraft = e => {
 		e.preventDefault();
 		const data = createKeyValuePairs();
-		saveProtocolQuery(data as { [K in TFormFieldName]: any });
+		saveProtocolQuery(data as TProtocol);
 		goToNextSection(e);
 	};
 

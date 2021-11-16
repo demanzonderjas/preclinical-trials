@@ -4,13 +4,14 @@ import { useForm } from "../../hooks/useForm";
 import { TFormFieldName, TSectionName } from "../../typings/forms";
 import cx from "classnames";
 import { saveProtocolQuery } from "../../queries/protocol";
+import { TProtocol } from "../../typings/protocols";
 
 export const FormSections: React.FC<{ sections: TSectionName[] }> = observer(({ sections }) => {
 	const { activeSection, setActiveSection, createKeyValuePairs } = useForm();
 
 	const saveAsDraft = section => {
 		const data = createKeyValuePairs();
-		saveProtocolQuery(data as { [K in TFormFieldName]: string });
+		saveProtocolQuery(data as TProtocol);
 		setActiveSection(section);
 	};
 
