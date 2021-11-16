@@ -13,6 +13,7 @@ class ProtocolController extends Controller
 		$protocol = new Protocol();
 		$request->user()->protocols()->save($protocol);
 		$protocol->saveDetails($request);
+		return response()->json(["protocol_id" => $protocol->id]);
 	}
 
 	public function update(Request $request)

@@ -16,3 +16,10 @@ export function slugify(str: string) {
 
 	return str;
 }
+
+export function getSectionFromHash(hash: string) {
+	if (!hash) {
+		return 0;
+	}
+	return hash.split("#").reverse()[0];
+}

@@ -7,6 +7,7 @@ import {
 	TSavedFormValue,
 	TSectionName
 } from "../typings/forms";
+import { getSectionFromHash } from "../utils/formatting";
 
 export class FormStore {
 	fields: TFormField[] = [];
@@ -39,6 +40,11 @@ export class FormStore {
 			this.loadValues(initialData);
 		}
 
+		if (sections && location.hash) {
+			const sectionToSet = getSectionFromHash(location.hash);
+			this.setActiveSection(this.sections[sectionToSet]);
+		}
+
 		makeAutoObservable(this, {
 			getFieldValue: action.bound,
 			setFieldValue: action.bound,
@@ -49,7 +55,8 @@ export class FormStore {
 			isLastSection: computed,
 			goToNextSection: action.bound,
 			createKeyValuePairs: action.bound,
-			loadValues: action.bound
+			loadValues: action.bound,
+			getSectionByIndex: action.bound
 		});
 	}
 
@@ -68,6 +75,10 @@ export class FormStore {
 		return this.form.succesText;
 	}
 
+	getSectionByIndex(section: TSectionName) {
+		return this.sections.indexOf(section);
+	}
+
 	goToNextSection(e: any) {
 		e.preventDefault();
 		const currentIndex = this.sections.findIndex(section => section === this.activeSection);
@@ -79,6 +90,15 @@ export class FormStore {
 
 	setActiveSection(section: TSectionName) {
 		this.activeSection = section;
+
+		console.log("go", section);
+
+		const sessionIndex = this.getSectionByIndex(section);
+		if (history.pushState) {
+			history.pushState(null, null, `#${sessionIndex}`);
+		} else {
+			location.hash = `${sessionIndex}`;
+		}
 	}
 
 	setFields(fields) {

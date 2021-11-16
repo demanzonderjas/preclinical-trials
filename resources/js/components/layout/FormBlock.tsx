@@ -8,6 +8,7 @@ import { FormFields } from "../forms/FormField";
 import { SuccessMessage } from "../forms/SuccessMessage";
 import { FormSections } from "../forms/FormSections";
 import { ControlButtons } from "../forms/protocols/ControlButtons";
+import { getSectionFromHash } from "../../utils/formatting";
 
 export const FormBlock: React.FC<{
 	form: TForm;

@@ -8,21 +8,24 @@ import { TProtocol } from "../../typings/protocols";
 import { useParams } from "react-router";
 
 export const FormSections: React.FC<{ sections: TSectionName[] }> = observer(({ sections }) => {
-	const { activeSection, setActiveSection, createKeyValuePairs } = useForm();
+	const { activeSection, setActiveSection, createKeyValuePairs, getSectionByIndex } = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
 
-	const saveAsDraft = section => {
+	const saveAsDraft = async section => {
 		const data = createKeyValuePairs() as TProtocol;
 		if (protocol_id) {
 			updateProtocolQuery(protocol_id, data);
+			setActiveSection(section);
 		} else {
-			saveProtocolQuery(data);
+			const response = await saveProtocolQuery(data);
+			const protocolId = response.protocol_id;
+			const nextSectionIndex = getSectionByIndex(section);
+			location.href = `/dashboard/edit-protocol/${protocolId}#${nextSectionIndex}`;
 		}
-		setActiveSection(section);
 	};
 
 	useEffect(() => {
-		if (sections) {
+		if (sections && !location.hash) {
 			setActiveSection(sections[0]);
 		}
 	}, []);
