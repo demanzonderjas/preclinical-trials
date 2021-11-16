@@ -11,6 +11,15 @@ export async function saveProtocolQuery(protocolData: TProtocol) {
 	}
 }
 
+export async function updateProtocolQuery(protocol_id: string, protocolData: TProtocol) {
+	try {
+		const response = await API.put("/api/protocol", { ...protocolData, protocol_id });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function getProtocolQuery(protocol_id: string) {
 	try {
 		const response = await API.get(`/api/protocol/${protocol_id}`);

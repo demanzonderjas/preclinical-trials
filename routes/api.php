@@ -20,5 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'Api'], function () {
     Route::middleware('auth:sanctum')->post('protocol', 'ProtocolController@store');
+    Route::middleware('auth:sanctum')->put('protocol', 'ProtocolController@update');
     Route::middleware('auth:sanctum')->get('protocol/{protocol_id}', 'ProtocolController@get');
 });

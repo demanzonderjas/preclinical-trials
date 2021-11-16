@@ -8,6 +8,14 @@ $item-height: 42px;
 	max-width: 400px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 4px rgba(0, 0, 0, 0.1);
 
+	&:not(.active) {
+		.active-option {
+			.SelectOption {
+				border-bottom: 0;
+			}
+		}
+	}
+
 	&.active {
 		max-height: 1000px;
 
