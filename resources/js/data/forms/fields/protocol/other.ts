@@ -5,6 +5,7 @@ export const otherSupportField: TFormField = {
 	...firstNameField,
 	id: TFormFieldName.OtherSupport,
 	label: "Other",
+	validate: null,
 	required: false,
 	section: TSectionName.General,
 	dependencies: [{ key: TFormFieldName.FinancialSupport, value: "Other" }]

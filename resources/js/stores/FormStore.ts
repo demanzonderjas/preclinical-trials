@@ -1,4 +1,4 @@
-import { action, computed, makeAutoObservable } from "mobx";
+import { action, computed, has, makeAutoObservable } from "mobx";
 import {
 	TForm,
 	TFormField,
@@ -56,7 +56,8 @@ export class FormStore {
 			goToNextSection: action.bound,
 			createKeyValuePairs: action.bound,
 			loadValues: action.bound,
-			getSectionByIndex: action.bound
+			getSectionByIndex: action.bound,
+			validate: action.bound
 		});
 	}
 
@@ -91,8 +92,6 @@ export class FormStore {
 	setActiveSection(section: TSectionName) {
 		this.activeSection = section;
 
-		console.log("go", section);
-
 		const sessionIndex = this.getSectionByIndex(section);
 		if (history.pushState) {
 			history.pushState(null, null, `#${sessionIndex}`);
@@ -119,7 +118,15 @@ export class FormStore {
 				this.errors.set(field.id, "field_required");
 			}
 		});
-		return ![...this.errors.values()].length;
+		const hasError = [...this.errors.values()].length;
+
+		if (hasError) {
+			const firstErrorKey = [...this.errors.keys()][0];
+			const fieldWithError = this.fields.find(f => f.id === firstErrorKey);
+			console.log(fieldWithError);
+			this.setActiveSection(fieldWithError.section);
+		}
+		return !hasError;
 	}
 
 	submit = async e => {

@@ -37,8 +37,8 @@ export const placeboControlledField: TFormField = {
 	label: "Was the intervention placebo-controlled?",
 	description: "Was one of the arms of the study a placebo arm?",
 	value: "",
-	validate: value => value != "",
-	required: true,
+	validate: null,
+	required: false,
 	section: TSectionName.StudyDesign,
 	dependencies: [
 		{

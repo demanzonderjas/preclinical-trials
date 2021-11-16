@@ -17,6 +17,7 @@ export const BooleanField: React.FC<TFormFieldProps & {
 				id={id}
 				type="checkbox"
 				value={value}
+				checked={!!value}
 				onChange={e => setValue(e.target.checked)}
 			/>
 			<label
