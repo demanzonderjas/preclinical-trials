@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProtocolResource;
 use App\Models\Protocol;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,6 @@ class ProtocolController extends Controller
 	public function get(Request $request)
 	{
 		$protocol = Protocol::where(['id' => $request->protocol_id])->with('details')->firstOrFail();
-		return response()->json(["protocol" => $protocol->toArray()]);
+		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
 }
