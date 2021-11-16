@@ -1,11 +1,18 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useForm } from "../../hooks/useForm";
-import { TSectionName } from "../../typings/forms";
+import { TFormFieldName, TSectionName } from "../../typings/forms";
 import cx from "classnames";
+import { saveProtocolQuery } from "../../queries/protocol";
 
 export const FormSections: React.FC<{ sections: TSectionName[] }> = observer(({ sections }) => {
-	const { activeSection, setActiveSection } = useForm();
+	const { activeSection, setActiveSection, createKeyValuePairs } = useForm();
+
+	const saveAsDraft = section => {
+		const data = createKeyValuePairs();
+		saveProtocolQuery(data as { [K in TFormFieldName]: string });
+		setActiveSection(section);
+	};
 
 	useEffect(() => {
 		if (sections) {
@@ -20,7 +27,7 @@ export const FormSections: React.FC<{ sections: TSectionName[] }> = observer(({ 
 					<li
 						className={cx({ active: activeSection === section })}
 						key={section}
-						onClick={() => setActiveSection(section)}
+						onClick={() => saveAsDraft(section)}
 					>
 						{idx + 1}. {section}
 					</li>

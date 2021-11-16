@@ -110,9 +110,14 @@ export class FormStore {
 	};
 
 	createKeyValuePairs() {
-		console.log("this", this);
 		return this.fields.reduce((base, field) => {
-			base[field.id] = this.values.get(field.id);
+			const value = this.values.get(field.id);
+			if (
+				(!field.validate && value !== "") ||
+				(field.validate && field.validate(value, this.values))
+			) {
+				base[field.id] = this.values.get(field.id);
+			}
 			return base;
 		}, {});
 	}

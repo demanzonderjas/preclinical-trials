@@ -8,7 +8,6 @@ export const ControlButtons: React.FC = observer(() => {
 	const { isLastSection, form, goToNextSection, createKeyValuePairs } = useForm();
 
 	const saveAsDraft = e => {
-		console.log("go!");
 		e.preventDefault();
 		const data = createKeyValuePairs();
 		saveProtocolQuery(data as { [K in TFormFieldName]: any });
