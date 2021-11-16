@@ -10,7 +10,14 @@ import {
 import { TProtocol } from "../../../typings/protocols";
 
 export const ControlButtons: React.FC = observer(() => {
-	const { isLastSection, form, goToNextSection, createKeyValuePairs, validate } = useForm();
+	const {
+		isLastSection,
+		form,
+		goToNextSection,
+		createKeyValuePairs,
+		validate,
+		sections
+	} = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
 
 	const saveAsDraft = e => {
@@ -39,7 +46,7 @@ export const ControlButtons: React.FC = observer(() => {
 				<button onClick={saveAsDraft}>Go to next section and save as draft</button>
 			)}
 			{!!isLastSection && <button type="submit">{form.submitText}</button>}
-			{!!isLastSection && (
+			{!!isLastSection && !!sections && (
 				<button onClick={submitForPublication}>Submit for publication</button>
 			)}
 		</div>

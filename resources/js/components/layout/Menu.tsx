@@ -8,7 +8,7 @@ export const Menu: React.FC = () => {
 		<ul className="Menu">
 			<MenuItem
 				text={isLoggedIn ? "Dashboard" : "Database"}
-				url={isLoggedIn ? "dashboard" : "database"}
+				url={isLoggedIn ? "/dashboard" : "database"}
 			/>
 			<MenuItem text="FAQ" url="faq" />
 			<MenuItem text="About Us" url="about-us" />
