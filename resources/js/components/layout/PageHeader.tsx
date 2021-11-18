@@ -1,4 +1,5 @@
 import React from "react";
+import { Highlight } from "./Highlight";
 import { LoginButton } from "./LoginButton";
 import { Logo } from "./Logo";
 import { Menu } from "./Menu";
@@ -10,7 +11,14 @@ export const PageHeader: React.FC<{
 }> = ({ title, subtitle, hasCurvedHeader }) => {
 	return (
 		<div className="PageHeader">
-			{hasCurvedHeader && <div className="Ellipse"></div>}
+			{hasCurvedHeader && (
+				<div className="Ellipse">
+					<Highlight
+						image="note.png"
+						text="98 protocols registered already! (25 under embargo)"
+					/>
+				</div>
+			)}
 			<div className="Navigation">
 				<Logo />
 				<Menu />

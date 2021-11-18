@@ -21,7 +21,7 @@ export const ManageProtocolsPage: React.FC = () => {
 	return (
 		<Page title="Manage protocols">
 			<div className="ManageProtocolsPage">
-				<ContentBlock>
+				<ContentBlock maxWidth="80%">
 					<p>
 						Listed below are all records you have previously created. You can continue
 						to edit any record that has not been submitted for publication and you can

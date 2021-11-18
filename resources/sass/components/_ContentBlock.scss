@@ -1,10 +1,18 @@
 .ContentBlock {
 	position: relative;
-	padding: 100px 50px 150px;
+	padding: 100px 50px 50px;
 	margin-bottom: 210px;
 	background-color: white;
 	z-index: 2;
 	border-top: 10px $secondary solid;
+
+	&.with-margin {
+		margin-top: 280px;
+
+		@include respond-to("small") {
+			margin-top: 160px;
+		}
+	}
 
 	&:nth-child(even) {
 		margin-bottom: 260px;
@@ -75,6 +83,33 @@
 		a {
 			color: $secondary;
 			font-weight: 500;
+		}
+
+		.two-columns {
+			display: flex;
+			align-items: center;
+
+			> div:first-child {
+				min-width: 60%;
+				padding-right: 20px;
+			}
+			> div:last-child {
+				display: flex;
+				justify-content: center;
+				padding: 20px;
+			}
+
+			@include respond-to("medium") {
+				flex-wrap: wrap;
+				> div {
+					width: 100% !important;
+				}
+				> div:last-child {
+					justify-content: left;
+					padding: 0;
+					margin: 20px 0;
+				}
+			}
 		}
 	}
 

@@ -21,26 +21,27 @@ export const HomePage: React.FC = () => {
 			hasCurvedHeader={true}
 		>
 			<div className="Home">
-				<Highlight
-					image="note.png"
-					text="98 protocols registered already! (25 under embargo)"
-				/>
-				<Video url="xYjLvDBTsV4" />
-				<LoginForm />
-				<ContentBlock>
-					<p>
-						Preclinicaltrials aims to provide a comprehensive listing of preclinical
-						animal study protocols. Preferably registered at inception in order to
-						increase transparency, help avoid duplication, and reduce the risk of
-						reporting bias by enabling comparison of the completed study with what was
-						planned in the protocol. Registration of your study requires you to create
-						an account that is:
-					</p>
-					<ul>
-						<li>Anonymous</li>
-						<li>Free of charge</li>
-						<li>Has an optional embargo period</li>
-					</ul>
+				<ContentBlock withMargin={true} maxWidth="80%">
+					<div className="two-columns">
+						<div>
+							<p>
+								Preclinicaltrials aims to provide a comprehensive listing of
+								preclinical animal study protocols. Preferably registered at
+								inception in order to increase transparency, help avoid duplication,
+								and reduce the risk of reporting bias by enabling comparison of the
+								completed study with what was planned in the protocol. Registration
+								of your study requires you to create an account that is:
+							</p>
+							<ul>
+								<li>Anonymous</li>
+								<li>Free of charge</li>
+								<li>Has an optional embargo period</li>
+							</ul>
+						</div>
+						<div>
+							<Video url="xYjLvDBTsV4" />
+						</div>
+					</div>
 					<p>
 						This register is web-based, open to all types of animal studies and freely
 						accessible and searchable to all with a preclinicaltrials.eu account. The
@@ -51,6 +52,7 @@ export const HomePage: React.FC = () => {
 						<a href="mailto:info@preclinicaltrials.eu">info@preclinicaltrials.eu</a>
 					</p>
 				</ContentBlock>
+				<LoginForm />
 				<PartnerBlock />
 			</div>
 		</Page>

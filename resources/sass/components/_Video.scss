@@ -1,7 +1,6 @@
 .SizeContainer {
-	width: 600px;
-	max-width: 50%;
-	margin: 0 auto;
+	width: 360px;
+	height: 360px;
 	position: relative;
 
 	.VideoWrapper {
@@ -16,7 +15,7 @@
 		}
 	}
 
-	@include respond-to("xs") {
-		max-width: 80%;
+	@include respond-to("medium") {
+		width: 100%;
 	}
 }

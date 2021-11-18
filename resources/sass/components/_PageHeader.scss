@@ -96,7 +96,7 @@ $login-button-size: 100px;
 	@include respond-to("small") {
 		padding: 10px;
 		.Copy {
-			margin: 0 auto 40px;
+			margin: 40px auto 40px;
 			h1 {
 				font-size: 50px;
 				line-height: 62px;
@@ -104,6 +104,10 @@ $login-button-size: 100px;
 			h2 {
 				font-size: 30px;
 			}
+		}
+
+		.Ellipse {
+			height: 650px;
 		}
 	}
 
@@ -122,11 +126,11 @@ $login-button-size: 100px;
 	}
 }
 
-$logo-size: 200px;
+$logo-size: 182px;
 
 .LogoWrapper {
 	width: $logo-size;
-	height: 180px;
+	height: $logo-size;
 	border-radius: 50%;
 	background-color: $primary;
 	overflow: hidden;
