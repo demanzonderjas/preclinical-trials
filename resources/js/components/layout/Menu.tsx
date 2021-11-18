@@ -10,10 +10,10 @@ export const Menu: React.FC = () => {
 				text={isLoggedIn ? "Dashboard" : "Database"}
 				url={isLoggedIn ? "/dashboard" : "database"}
 			/>
-			<MenuItem text="FAQ" url="faq" />
-			<MenuItem text="About Us" url="about-us" />
-			<MenuItem text="News" url="news" />
-			<MenuItem text="Contact" url="contact" />
+			<MenuItem text="FAQ" url="/faq" />
+			<MenuItem text="About Us" url="/about-us" />
+			<MenuItem text="News" url="/news" />
+			<MenuItem text="Contact" url="/contact" />
 		</ul>
 	);
 };

@@ -37,3 +37,12 @@ export async function getProtocolQuery(protocol_id: string) {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function getMyProtocolsQuery() {
+	try {
+		const response = await API.get(`/api/protocols/mine`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

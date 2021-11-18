@@ -1,0 +1,39 @@
+.TableBlock {
+	margin: 32px 0;
+	table {
+		width: 100%;
+
+		thead {
+			tr {
+				background-color: $primary;
+				th {
+					text-align: left;
+					font-weight: bold;
+					color: white;
+					padding: 5px 10px;
+				}
+			}
+		}
+		tbody {
+			tr {
+				&:nth-child(odd) {
+					background-color: rgba(#c4c4c4, 0.6);
+				}
+				&:nth-child(even) {
+					background-color: rgba($secondary, 0.4);
+				}
+
+				td {
+					padding: 20px 10px;
+
+					&.ActionCell {
+						button {
+							background-color: $secondary;
+							font-size: 18px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

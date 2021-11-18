@@ -13,3 +13,12 @@ export type TStudyArm = {
 };
 
 export type TProtocol = { [K in TFormFieldName]: any };
+
+export type TDBProtocol = {
+	id: number;
+	status: string;
+	details: TDetail[];
+	updated_at: string;
+};
+
+export type TDetail = { key: TFormFieldName; value: any };

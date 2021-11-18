@@ -32,6 +32,12 @@ class ProtocolController extends Controller
 		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
 
+	public function mine(Request $request)
+	{
+		$protocols = Protocol::where(['user_id' => $request->user()->id])->with('details')->get();
+		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
+	}
+
 	public function submitForPublication(Request $request)
 	{
 		$protocol = Protocol::findOrFail($request->protocol_id);

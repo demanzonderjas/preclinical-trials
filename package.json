@@ -27,7 +27,7 @@
 		"@types/react-dom": "^16.9.8",
 		"@types/react-router-dom": "^5.1.5",
 		"classnames": "^2.2.6",
-		"dayjs": "^1.8.34",
+		"dayjs": "^1.10.7",
 		"mobx": "^6.3.5",
 		"mobx-react": "^7.2.1",
 		"mobx-react-lite": "^3.*",

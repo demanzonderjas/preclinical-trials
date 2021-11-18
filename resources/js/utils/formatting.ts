@@ -1,3 +1,5 @@
+import { TDBProtocol, TProtocol } from "../typings/protocols";
+
 export function slugify(str: string) {
 	str = str.replace(/^\s+|\s+$/g, ""); // trim
 	str = str.toLowerCase();
@@ -22,4 +24,14 @@ export function getSectionFromHash(hash: string) {
 		return 0;
 	}
 	return hash.split("#").reverse()[0];
+}
+
+export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
+	return protocol.details.reduce(
+		(base, detail) => {
+			base[detail.key] = detail.value;
+			return base;
+		},
+		{ id: protocol.id, updated_at: protocol.updated_at }
+	);
 }
