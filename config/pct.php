@@ -43,5 +43,60 @@ return [
 		"contact_email",
 		"study_centre",
 		"statement_of_accuracy"
+	],
+	"valid_field_values" => [
+		"financial_support" => [
+			"Industry", "Investigator driven", "Grants", "Other"
+		],
+		"status" => [
+			"Not started",
+			"Active",
+			"Completed but not published",
+			"Completed and published (abstract)",
+			"Completed and published (full-text)",
+			"Study interrupted"
+		],
+		"sex" => [
+			"Male",
+			"Female",
+			"Both"
+		],
+		"intervention_type" => [
+			"Not applicable",
+			"Compound",
+			"Delivery method",
+			"Retention",
+			"Model optimalisation",
+			"Surgery",
+			"Other"
+		],
+		"study_stage" => [
+			"Stage 1 – Exploratory study (hypothesis generating)",
+			"Stage 2 – Confirmatory study (hypothesis testing)"
+		],
+		"exclusive_animal_use" => ["Yes", "No"],
+		"species" => [
+			"Cat",
+			"Dog",
+			"Ferret",
+			"Goat",
+			"Guinea Pig",
+			"Hamster",
+			"Horse",
+			"Mouse",
+			"Monkey",
+			"Pig",
+			"Rabbit",
+			"Rat",
+			"Sheep",
+			"Other"
+		],
+		"sample_size_calculation" => ["Yes", "No"],
+		"randomisation" => ["Yes", "No"],
+		"investigators_blinded_intervention" => ["No", "Yes - how?", "Yes partially, because"],
+		"investigators_blinded_assessment" => ["No", "Yes - how?", "Yes partially, because"],
+		"placebo_controlled" => ["Yes", "No"],
+		"has_embargo" => ["Yes", "No"],
+		"study_arm_options" => ["Sham", "Control", "Intervention", "Other"]
 	]
 ];
