@@ -1,0 +1,50 @@
+.ExpandableText {
+	position: relative;
+
+	.header {
+		font-weight: bold;
+		background-color: $black;
+		color: white;
+		padding: 10px;
+		font-size: 16px;
+		display: block;
+		width: 100%;
+		border-radius: 15px;
+	}
+
+	.body {
+		max-height: 0;
+		transition: max-height 0.35s cubic-bezier(0, 0, 0.3, 1);
+		overflow: hidden;
+		padding: 10px;
+		font-size: 18px;
+	}
+
+	&.active {
+		.body {
+			max-height: 500px;
+		}
+	}
+
+	.icon {
+		position: absolute;
+		top: 10px;
+		left: -37px;
+		padding: 5px;
+		width: 35px;
+		height: 35px;
+		background-color: $black;
+		filter: invert(100);
+		cursor: pointer;
+
+		transition: transform 0.15s cubic-bezier(0, 0, 0.3, 1);
+
+		&:hover {
+			transform: scale(1.05);
+		}
+
+		.ImageWrapper {
+			top: -1px;
+		}
+	}
+}
