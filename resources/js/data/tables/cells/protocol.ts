@@ -1,4 +1,4 @@
-import { EditCell } from "../../../components/tables/ActionCell";
+import { ActionCell, EditCell, ViewCell } from "../../../components/tables/ActionCell";
 import { DateCell } from "../../../components/tables/DateCell";
 import { TextCell } from "../../../components/tables/TextCell";
 import { TFormFieldName } from "../../../typings/forms";
@@ -26,5 +26,17 @@ export const lastUpdatedAtCell: TTableCell = {
 export const editCell: TTableCell = {
 	id: TTableCellName.Action,
 	Component: EditCell,
+	value: ""
+};
+
+export const viewCell: TTableCell = {
+	id: TTableCellName.Action,
+	Component: ViewCell,
+	value: ""
+};
+
+export const actionCell: TTableCell = {
+	id: TTableCellName.Action,
+	Component: ActionCell,
 	value: ""
 };

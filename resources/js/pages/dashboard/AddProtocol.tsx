@@ -1,7 +1,7 @@
 import React from "react";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
-import { createProtocolForm } from "../../data/forms/protocol";
+import { createProtocolForm, protocolSections } from "../../data/forms/protocol";
 import { saveProtocolQuery } from "../../queries/protocol";
 import { TSectionName } from "../../typings/forms";
 
@@ -13,13 +13,7 @@ export const AddProtocolPage: React.FC = () => {
 					form={createProtocolForm}
 					handleSubmit={saveProtocolQuery}
 					icon="add.png"
-					sections={[
-						TSectionName.General,
-						TSectionName.StudyDesign,
-						TSectionName.ContactDetails,
-						TSectionName.StudyCentreDetails,
-						TSectionName.Submit
-					]}
+					sections={protocolSections}
 				>
 					<p className="intro">
 						Register your study by completing the following form. Notice that the fields

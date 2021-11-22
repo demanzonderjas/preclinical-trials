@@ -1,4 +1,4 @@
-import { TAlignment, TForm, TFormName, TFormStyle } from "../../typings/forms";
+import { TAlignment, TForm, TFormName, TFormStyle, TSectionName } from "../../typings/forms";
 import { accuracyField } from "./fields/protocol/accuracy";
 import { applicationField, applicationNumberField } from "./fields/protocol/application";
 import {
@@ -93,3 +93,11 @@ export const createProtocolForm: TForm = {
 	],
 	align: TAlignment.Left
 };
+
+export const protocolSections: TSectionName[] = [
+	TSectionName.General,
+	TSectionName.StudyDesign,
+	TSectionName.ContactDetails,
+	TSectionName.StudyCentreDetails,
+	TSectionName.Submit
+];

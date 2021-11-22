@@ -120,6 +120,12 @@ export enum TSectionName {
 	Submit = "Submit"
 }
 
+export type TProtocolSection = {
+	name: TSectionName;
+	fields: TFormField[];
+	order: number;
+};
+
 export enum TFormFieldDependencyType {
 	Truthful = "truthful",
 	NotEqualTo = "not_equal_to"

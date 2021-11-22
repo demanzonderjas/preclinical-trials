@@ -11,7 +11,7 @@ button {
 	cursor: pointer;
 
 	&.tertiary {
-		background-color: $tertiary;
+		background-color: $tertiary !important;
 	}
 
 	&.big {

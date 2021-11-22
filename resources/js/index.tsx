@@ -24,6 +24,7 @@ import { EditProtocolPage } from "./pages/dashboard/EditProtocol";
 import { ManageProtocolsPage } from "./pages/dashboard/ManageProtocols";
 import { TeamPage } from "./pages/Team";
 import { AdvisoryBoardPage } from "./pages/AdvisoryBoard";
+import { ViewProtocolPage } from "./pages/ViewProtocol";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -49,6 +50,9 @@ const App: React.FC = () => {
 						</Route>
 						<Route path="/database" exact={true}>
 							<DatabasePage />
+						</Route>
+						<Route path="/database/view-protocol/:protocol_id" exact={true}>
+							<ViewProtocolPage />
 						</Route>
 						<Route path="/news" exact={true}>
 							<NewsPage />
