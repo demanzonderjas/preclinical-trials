@@ -1,7 +1,7 @@
 $login-button-size: 100px;
 
 .PageHeader {
-	background-color: $white;
+	background-color: $primary;
 	position: relative;
 	padding: 24px;
 
@@ -17,9 +17,11 @@ $login-button-size: 100px;
 		text-align: center;
 		max-width: 80%;
 		margin: -40px auto 40px;
+		color: $white;
 		h1 {
 			font-size: 70px;
 			line-height: 92px;
+			font-weight: bold;
 		}
 		h2 {
 			font-size: 36px;
@@ -29,7 +31,7 @@ $login-button-size: 100px;
 	.LoginButton {
 		width: $login-button-size;
 		height: $login-button-size;
-		background-color: $primary;
+		background-color: $tertiary;
 		color: $white;
 		position: absolute;
 		top: 0;
@@ -80,19 +82,6 @@ $login-button-size: 100px;
 		}
 	}
 
-	.Ellipse {
-		width: 160vw;
-		// min-width: 120vw;
-		max-width: 160%;
-		height: 1200px;
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		transform: translate(-19%, 18%);
-		background-color: white;
-		border-radius: 50%;
-	}
-
 	@include respond-to("small") {
 		padding: 10px;
 		.Copy {
@@ -104,10 +93,6 @@ $login-button-size: 100px;
 			h2 {
 				font-size: 30px;
 			}
-		}
-
-		.Ellipse {
-			height: 650px;
 		}
 	}
 
@@ -126,14 +111,15 @@ $login-button-size: 100px;
 	}
 }
 
-$logo-size: 182px;
+$logo-size: 160px;
 
 .LogoWrapper {
 	width: $logo-size;
 	height: $logo-size;
 	border-radius: 50%;
 	background-color: $primary;
-	overflow: hidden;
+	position: relative;
+	transform: translate(-10%, -20%);
 
 	&:hover {
 		img {
@@ -163,7 +149,7 @@ $menu-margin-left: 100px;
 .Menu {
 	display: flex;
 	justify-content: space-between;
-	width: calc(100% - #{$logo-size} - #{$login-button-size} - #{$menu-margin-left} - 20px);
+	width: calc(100% - #{$logo-size} - #{$login-button-size} - #{$menu-margin-left} - 80px);
 	margin-left: $menu-margin-left;
 	margin-top: 16px;
 
@@ -173,7 +159,7 @@ $menu-margin-left: 100px;
 		height: 30px;
 
 		a {
-			color: $black;
+			color: $white;
 			text-decoration: none;
 			font-size: 22px;
 		}

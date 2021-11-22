@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { LoginForm } from "../components/account/LoginForm";
 import { Video } from "../components/base/Video";
 import { ContentBlock } from "../components/layout/ContentBlock";
@@ -18,10 +18,13 @@ export const HomePage: React.FC = () => {
 		<Page
 			title="PreclinicalTrials.eu"
 			subtitle="International register of preclinical trial protocols"
-			hasCurvedHeader={true}
 		>
 			<div className="Home">
-				<ContentBlock withMargin={true} maxWidth="80%">
+				<Highlight
+					image="note.png"
+					text="98 protocols registered already! (25 under embargo)"
+				/>
+				<ContentBlock maxWidth="80%">
 					<div className="two-columns">
 						<div>
 							<p>
@@ -51,8 +54,12 @@ export const HomePage: React.FC = () => {
 						preclinical trial. Contact us at{" "}
 						<a href="mailto:info@preclinicaltrials.eu">info@preclinicaltrials.eu</a>
 					</p>
+					<div className="button-wrapper" style={{ margin: "40px 0" }}>
+						<Link to="/database">
+							<button className="tertiary big">Search database</button>
+						</Link>
+					</div>
 				</ContentBlock>
-				<LoginForm />
 				<PartnerBlock />
 			</div>
 		</Page>

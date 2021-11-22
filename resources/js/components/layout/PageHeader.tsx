@@ -7,18 +7,9 @@ import { Menu } from "./Menu";
 export const PageHeader: React.FC<{
 	title: string;
 	subtitle?: string;
-	hasCurvedHeader?: boolean;
-}> = ({ title, subtitle, hasCurvedHeader }) => {
+}> = ({ title, subtitle }) => {
 	return (
 		<div className="PageHeader">
-			{hasCurvedHeader && (
-				<div className="Ellipse">
-					<Highlight
-						image="note.png"
-						text="98 protocols registered already! (25 under embargo)"
-					/>
-				</div>
-			)}
 			<div className="Navigation">
 				<Logo />
 				<Menu />

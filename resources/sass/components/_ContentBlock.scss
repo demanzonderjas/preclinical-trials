@@ -1,10 +1,10 @@
 .ContentBlock {
 	position: relative;
-	padding: 100px 50px 50px;
+	padding: 50px 50px 50px;
 	margin-bottom: 210px;
 	background-color: white;
 	z-index: 2;
-	border-top: 10px $secondary solid;
+	// border-top: 10px $secondary solid;
 
 	&.with-margin {
 		margin-top: 280px;
@@ -96,7 +96,6 @@
 			> div:last-child {
 				display: flex;
 				justify-content: center;
-				padding: 20px;
 			}
 
 			@include respond-to("medium") {

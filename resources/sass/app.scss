@@ -14,7 +14,6 @@
 @import "./components/FormBlock";
 @import "./components/Subtitle";
 @import "./components/PageFooter";
-@import "./components/Highlight";
 @import "./components/SubMenu";
 @import "./components/Modal";
 @import "./components/MenuCircleItem";
@@ -23,6 +22,8 @@
 @import "./components/YesNoField";
 @import "./components/MultiRowField";
 @import "./components/TableBlock";
+
+@import "./pages/Home";
 
 .block-scroll {
 	overflow-x: hidden;

@@ -2,15 +2,14 @@ import React from "react";
 import { PageFooter } from "./PageFooter";
 import { PageHeader } from "./PageHeader";
 
-export const Page: React.FC<{ title: string; subtitle?: string; hasCurvedHeader?: boolean }> = ({
+export const Page: React.FC<{ title: string; subtitle?: string }> = ({
 	children,
 	title,
-	subtitle,
-	hasCurvedHeader
+	subtitle
 }) => {
 	return (
-		<div className="Page" style={{ overflow: hasCurvedHeader ? "hidden" : null }}>
-			<PageHeader title={title} subtitle={subtitle} hasCurvedHeader={hasCurvedHeader} />
+		<div className="Page">
+			<PageHeader title={title} subtitle={subtitle} />
 			<div className="PageContent">{children}</div>
 			<PageFooter />
 		</div>
