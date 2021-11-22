@@ -7,51 +7,54 @@ import { SubMenu } from "../components/layout/SubMenu";
 import { aboutUsData, aboutUsSubMenu } from "../data/about-us/aboutUsData";
 import { TAboutUsType } from "../typings/aboutUs";
 
-export const AboutUsPage: React.FC = () => {
+export const AboutPCTPage: React.FC = () => {
 	return (
-		<Page title="About Us">
-			<SubMenu items={aboutUsSubMenu} />
+		<Page title="About PCT">
 			<div className="AboutUsPage">
-				<ContentBlock>
-					<h3 id="goals">Goals and aims of Preclinicaltrials.eu</h3>
-					<p>
-						Preclinicaltrials.eu aims to provide a comprehensive overview of all animal
-						studies, including those that might otherwise remain unpublished. By
-						(prospective) registration of animal studies we aim to:
-					</p>
-					<ul>
-						<li>Increase transparency</li>
-						<li>Avoid unnecessary duplication of animal studies</li>
-						<li>
-							Reduce reporting bias, such as publication bias and bias induced by
-							selective outcome reporting, p-hacking and HARKing
-						</li>
-						<li>Increase data sharing, by</li>
+				<div className="PageWithSubMenu">
+					<SubMenu items={aboutUsSubMenu} />
+					<ContentBlock maxWidth="90%" withBorder={true}>
+						<h3 id="goals">Goals and aims of Preclinicaltrials.eu</h3>
+						<p>
+							Preclinicaltrials.eu aims to provide a comprehensive overview of all
+							animal studies, including those that might otherwise remain unpublished.
+							By (prospective) registration of animal studies we aim to:
+						</p>
 						<ul>
+							<li>Increase transparency</li>
+							<li>Avoid unnecessary duplication of animal studies</li>
 							<li>
-								allowing fellow researchers and reviewers to access information on
-								the study design, which is often lacking in publications
+								Reduce reporting bias, such as publication bias and bias induced by
+								selective outcome reporting, p-hacking and HARKing
 							</li>
-							<li>
-								provide a platform to share details and data of otherwise
-								unpublished animal studies
-							</li>
+							<li>Increase data sharing, by</li>
+							<ul>
+								<li>
+									allowing fellow researchers and reviewers to access information
+									on the study design, which is often lacking in publications
+								</li>
+								<li>
+									provide a platform to share details and data of otherwise
+									unpublished animal studies
+								</li>
+							</ul>
+							<li>Create opportunities for collaborative research</li>
 						</ul>
-						<li>Create opportunities for collaborative research</li>
-					</ul>
-					<h3>Which studies can you register on Preclinicaltrials.eu?</h3>
-					<p>
-						The register is open for all animal studies. We especially encourage
-						researchers to register their confirmatory studies. This register is created
-						with support of the Transnational AllianCe for regenerative Therapies In
-						Cardiovascular Syndromes (TACTICS) alliance. Therefore the original focus is
-						on the field of cardiac regenerative therapy. The design of the registration
-						form is discussed with members of the TACTICS alliance. However, the
-						register is open for studies from all fields of biomedical science.
-						Furthermore, registration is not limited to a certain country or continent.
-					</p>
-				</ContentBlock>
-				<AboutUsBlock
+						<h3>Which studies can you register on Preclinicaltrials.eu?</h3>
+						<p>
+							The register is open for all animal studies. We especially encourage
+							researchers to register their confirmatory studies. This register is
+							created with support of the Transnational AllianCe for regenerative
+							Therapies In Cardiovascular Syndromes (TACTICS) alliance. Therefore the
+							original focus is on the field of cardiac regenerative therapy. The
+							design of the registration form is discussed with members of the TACTICS
+							alliance. However, the register is open for studies from all fields of
+							biomedical science. Furthermore, registration is not limited to a
+							certain country or continent.
+						</p>
+					</ContentBlock>
+				</div>
+				{/* <AboutUsBlock
 					title="Daily Directors"
 					personList={aboutUsData.filter(p => p.role === TAboutUsType.DailyDirector)}
 				/>
@@ -157,7 +160,7 @@ export const AboutUsPage: React.FC = () => {
 						to expand this line of international support.
 					</p>
 				</ContentBlock>
-				<PartnerBlock />
+				<PartnerBlock /> */}
 			</div>
 		</Page>
 	);

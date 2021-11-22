@@ -9,7 +9,7 @@ export const AboutUsBlock: React.FC<{ title: string; personList: TAboutUs[] }> =
 }) => {
 	return (
 		<div className="AboutUsBlock">
-			<Subtitle text={title} />
+			<h2>{title}</h2>
 			<div className="persons">
 				{personList.map(person => (
 					<AboutUsPerson key={person.name} {...person} />
@@ -19,12 +19,18 @@ export const AboutUsBlock: React.FC<{ title: string; personList: TAboutUs[] }> =
 	);
 };
 
-export const AboutUsPerson: React.FC<TAboutUs> = ({ image, name }) => {
+export const AboutUsPerson: React.FC<TAboutUs> = ({ image, name, title }) => {
 	return (
 		<div className="AboutUsPerson">
-			<Image filename={`about-us/${image}`} />
-			<div className="label">
+			<div className="header">
+				<div className="header-bg"></div>
+				<Image filename={`about-us/${image}`} />
+			</div>
+			<div className="name">
 				<span>{name}</span>
+			</div>
+			<div className="title">
+				<span>{title}</span>
 			</div>
 		</div>
 	);

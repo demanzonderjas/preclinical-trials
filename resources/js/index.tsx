@@ -6,7 +6,7 @@ import { TranslationStore } from "./stores/TranslationStore";
 import { HomePage } from "./pages/Home";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AboutUsPage } from "./pages/AboutUs";
+import { AboutPCTPage } from "./pages/AboutUs";
 import ModalStoreProvider from "./contexts/ModalContext";
 import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
@@ -22,6 +22,7 @@ import { DashboardPage } from "./pages/dashboard/Dashboard";
 import { AddProtocolPage } from "./pages/dashboard/AddProtocol";
 import { EditProtocolPage } from "./pages/dashboard/EditProtocol";
 import { ManageProtocolsPage } from "./pages/dashboard/ManageProtocols";
+import { TeamPage } from "./pages/Team";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -36,8 +37,11 @@ const App: React.FC = () => {
 						<Route path="/" exact={true}>
 							<HomePage />
 						</Route>
-						<Route path="/about-us" exact={true}>
-							<AboutUsPage />
+						<Route path="/about-pct" exact={true}>
+							<AboutPCTPage />
+						</Route>
+						<Route path="/about-pct/team" exact={true}>
+							<TeamPage />
 						</Route>
 						<Route path="/database" exact={true}>
 							<DatabasePage />

@@ -1,23 +1,35 @@
 import { TAboutUs, TAboutUsType } from "../../typings/aboutUs";
+import { TSubMenuItem } from "../../typings/layout";
 
-export const aboutUsSubMenu: string[] = [
-	"Goals",
-	"Daily directors",
-	"Steering Committee",
-	"Advisory board"
+export const aboutUsSubMenu: TSubMenuItem[] = [
+	{
+		text: "Goals",
+		target: "/about-pct"
+	},
+	{
+		text: "Team",
+		target: "/about-pct/team"
+	},
+	{
+		text: "Advisory board",
+		target: "/about-pct/advisory-board"
+	}
 ];
 
 export const aboutUsData: TAboutUs[] = [
 	{
-		name: "Annemarie Scholman-Végh, Msc",
-		image: "annemarie_scholman_vegh.png",
-		role: TAboutUsType.DailyDirector
-	},
-	{
 		name: "Julia Menon, Msc",
+		title: "Scientific Daily Director",
 		image: "julia_menon.png",
 		role: TAboutUsType.DailyDirector
 	},
+	{
+		name: "Annemarie Scholman-Végh, Msc",
+		title: "Project Manager",
+		image: "annemarie_scholman_vegh.png",
+		role: TAboutUsType.DailyDirector
+	},
+
 	{
 		name: "Prof. Dr. Steven Chamuleau",
 		image: "steve_chamuleau.png",

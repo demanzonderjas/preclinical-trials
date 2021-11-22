@@ -1,6 +1,7 @@
 export type TAboutUs = {
 	image: string;
 	name: string;
+	title?: string;
 	workLocation?: string;
 	role: TAboutUsType;
 };
