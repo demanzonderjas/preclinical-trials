@@ -1,15 +1,18 @@
 import React from "react";
+import { THeaderStyle } from "../../typings/layout";
 import { Highlight } from "./Highlight";
 import { LoginButton } from "./LoginButton";
 import { Logo } from "./Logo";
 import { Menu } from "./Menu";
+import cx from "classnames";
 
 export const PageHeader: React.FC<{
 	title: string;
 	subtitle?: string;
-}> = ({ title, subtitle }) => {
+	style: THeaderStyle;
+}> = ({ title, subtitle, style }) => {
 	return (
-		<div className="PageHeader">
+		<div className={cx("PageHeader", { [style]: true })}>
 			<div className="Navigation">
 				<Logo />
 				<Menu />

@@ -33,13 +33,40 @@
 				text-decoration: none;
 			}
 		}
+	}
 
-		@include respond-to("small") {
+	@include respond-to("small") {
+		.SubMenu {
+			min-width: 140px;
+
 			ul {
-				width: 95%;
+				margin-top: 0;
 				li a {
 					font-size: 16px;
-					text-align: center;
+				}
+			}
+		}
+	}
+
+	@include respond-to("xs") {
+		flex-wrap: wrap;
+
+		.ContentBlock {
+			padding: 20px;
+			.content {
+				max-width: 100% !important;
+			}
+		}
+
+		.SubMenu {
+			width: 100%;
+			order: -1;
+			height: auto;
+
+			ul {
+				margin: 0 20px;
+				li a {
+					padding: 0;
 				}
 			}
 		}

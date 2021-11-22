@@ -1,10 +1,14 @@
 import React from "react";
-import { Page, PageWithSubmenu } from "../components/layout/Page";
+import {
+	PageWithSubmenu,
+	PrimaryHeaderPage,
+	PrimaryHeaderPageWithSubMenu
+} from "../components/layout/Page";
 import { aboutUsSubMenu } from "../data/about-us/aboutUsData";
 
 export const AboutPCTPage: React.FC = () => {
 	return (
-		<Page title="About PCT">
+		<PrimaryHeaderPageWithSubMenu title="About PCT">
 			<PageWithSubmenu subMenu={aboutUsSubMenu}>
 				<h3>Goals and aims of Preclinicaltrials.eu</h3>
 				<p>
@@ -44,6 +48,6 @@ export const AboutPCTPage: React.FC = () => {
 					to a certain country or continent.
 				</p>
 			</PageWithSubmenu>
-		</Page>
+		</PrimaryHeaderPageWithSubMenu>
 	);
 };

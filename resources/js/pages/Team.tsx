@@ -1,12 +1,12 @@
 import React from "react";
 import { AboutUsBlock } from "../components/layout/AboutUsBlock";
-import { Page, PageWithSubmenu } from "../components/layout/Page";
+import { Page, PageWithSubmenu, PrimaryHeaderPageWithSubMenu } from "../components/layout/Page";
 import { aboutUsData, aboutUsSubMenu } from "../data/about-us/aboutUsData";
 import { TAboutUsType } from "../typings/aboutUs";
 
 export const TeamPage: React.FC = () => {
 	return (
-		<Page title="Team">
+		<PrimaryHeaderPageWithSubMenu title="Team">
 			<PageWithSubmenu subMenu={aboutUsSubMenu}>
 				<AboutUsBlock
 					title="Daily Directors"
@@ -17,6 +17,6 @@ export const TeamPage: React.FC = () => {
 					personList={aboutUsData.filter(p => p.role === TAboutUsType.SteeringCommittee)}
 				/>
 			</PageWithSubmenu>
-		</Page>
+		</PrimaryHeaderPageWithSubMenu>
 	);
 };

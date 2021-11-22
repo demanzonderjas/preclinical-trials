@@ -1,13 +1,11 @@
 import React from "react";
-import { AboutUsBlock } from "../components/layout/AboutUsBlock";
 import { ExpandableText } from "../components/layout/ExpandableText";
-import { Page, PageWithSubmenu } from "../components/layout/Page";
-import { aboutUsData, aboutUsSubMenu } from "../data/about-us/aboutUsData";
-import { TAboutUsType } from "../typings/aboutUs";
+import { Page, PageWithSubmenu, PrimaryHeaderPageWithSubMenu } from "../components/layout/Page";
+import { aboutUsSubMenu } from "../data/about-us/aboutUsData";
 
 export const AdvisoryBoardPage: React.FC = () => {
 	return (
-		<Page title="Advisory board">
+		<PrimaryHeaderPageWithSubMenu title="Advisory board">
 			<PageWithSubmenu subMenu={aboutUsSubMenu}>
 				<ExpandableText
 					header="Prof Jonathan Kimmelman (McGill University, Montreal, Canada; Biomedical ethics)"
@@ -84,6 +82,6 @@ export const AdvisoryBoardPage: React.FC = () => {
 					expand this line of international support.
 				</p>
 			</PageWithSubmenu>
-		</Page>
+		</PrimaryHeaderPageWithSubMenu>
 	);
 };
