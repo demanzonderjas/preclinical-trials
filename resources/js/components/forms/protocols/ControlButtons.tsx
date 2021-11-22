@@ -16,19 +16,24 @@ export const ControlButtons: React.FC = observer(() => {
 		goToNextSection,
 		createKeyValuePairs,
 		validate,
-		sections
+		sections,
+		getSectionByIndex,
+		activeSection
 	} = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
 
-	const saveAsDraft = e => {
+	const saveAsDraft = async e => {
 		e.preventDefault();
 		const data = createKeyValuePairs() as TProtocol;
 		if (protocol_id) {
 			updateProtocolQuery(protocol_id, data);
+			goToNextSection(e);
 		} else {
-			saveProtocolQuery(data);
+			const response = await saveProtocolQuery(data);
+			const protocolId = response.protocol_id;
+			const nextSectionIndex = getSectionByIndex(activeSection) + 1;
+			location.href = `/dashboard/edit-protocol/${protocolId}#${nextSectionIndex}`;
 		}
-		goToNextSection(e);
 	};
 
 	const submitForPublication = async e => {
