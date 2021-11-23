@@ -4,7 +4,6 @@ import { validatePassword, validateSamePassword } from "../../../../utils/valida
 
 export const passwordField: TFormField = {
 	id: TFormFieldName.Password,
-	label: "Password",
 	Component: InputField,
 	props: {
 		type: "password"
@@ -17,6 +16,5 @@ export const passwordField: TFormField = {
 export const passwordConfirmField: TFormField = {
 	...passwordField,
 	id: TFormFieldName.PasswordConfirm,
-	label: "Confirm Password",
 	validate: validateSamePassword
 };

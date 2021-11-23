@@ -3,7 +3,6 @@ import { TFormField, TFormFieldName } from "../../../../typings/forms";
 
 export const tokenField: TFormField = {
 	id: TFormFieldName.Token,
-	label: "Token",
 	Component: TokenField,
 	hidden: true,
 	props: {

@@ -4,7 +4,7 @@ import { validateEmail } from "../../../../utils/validation";
 
 export const emailField: TFormField = {
 	id: TFormFieldName.Email,
-	label: "Email",
+	label: "contact_email",
 	Component: InputField,
 	props: {
 		type: "email"

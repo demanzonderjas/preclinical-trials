@@ -8,7 +8,7 @@ export const loginForm: TForm = {
 	style: TFormStyle.InlinePlaceholder,
 	align: TAlignment.Center,
 	fields: [emailField, passwordField],
-	submitText: "Go!"
+	submitText: "go"
 };
 
 export const forgotPasswordForm: TForm = {
@@ -16,8 +16,8 @@ export const forgotPasswordForm: TForm = {
 	style: TFormStyle.InlinePlaceholder,
 	align: TAlignment.Center,
 	fields: [emailField],
-	submitText: "Send me reset instructions",
-	succesText: "An email with instructions on how to reset your password has just been sent."
+	submitText: "send_me_reset_instructions",
+	succesText: "reset_password_email_success"
 };
 
 export const resetPasswordForm: TForm = {
@@ -25,6 +25,6 @@ export const resetPasswordForm: TForm = {
 	style: TFormStyle.RegularLabels,
 	align: TAlignment.Left,
 	fields: [emailField, passwordField, passwordConfirmField, tokenField],
-	submitText: "Reset password",
-	succesText: "Your password has succesfully been reset, you can now try and log in again."
+	submitText: "reset_password",
+	succesText: "reset_password_success"
 };

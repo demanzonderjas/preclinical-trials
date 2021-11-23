@@ -17,5 +17,5 @@ export const createAccountForm: TForm = {
 		institutionField,
 		termsConditionsField
 	],
-	submitText: "Create my account!"
+	submitText: "create_my_account"
 };

@@ -120,5 +120,19 @@
 	"financial_support_description": "Give the sources of financial support for the study",
 	"industry": "Industry",
 	"investigator_driven": "Investigator driven",
-	"grants": "Grants"
+	"grants": "Grants",
+	"institution": "Institution",
+	"first_name": "First name",
+	"last_name": "Last name",
+	"password": "Password",
+	"password_confirm": "Confirm password",
+	"terms_conditions": "Terms & Conditions",
+	"terms_conditions_description": "I have read the <a href='/disclaimer' rel='noreferrer noopener' target='blank'>terms and conditions</a> and agree to be bound by them",
+	"create_my_account": "Create my account!",
+	"go": "Go!",
+	"send_me_reset_instructions": "Send me reset instructions",
+	"reset_password_email_success": "An email with instructions on how to reset your password has just been sent.",
+	"reset_password": "Reset password",
+	"reset_password_success": "Your password has succesfully been reset, you can now try and log in again.",
+	"save": "Save"
 }
