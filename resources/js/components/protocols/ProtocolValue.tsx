@@ -1,16 +1,53 @@
 import React from "react";
-import { TFormFieldName } from "../../typings/forms";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { TFormField, TFormFieldName } from "../../typings/forms";
 import { TStudyArm, TStudyCentre } from "../../typings/protocols";
+import { fieldMeetsDependencies } from "../../utils/validation";
 
-export const ProtocolValue: React.FC<{ id: TFormFieldName; value: any }> = ({ id, value }) => {
+export const ProtocolValue: React.FC<{
+	id: TFormFieldName;
+	value: any;
+	fields: TFormField[];
+	valueMap: Map<TFormFieldName, any>;
+}> = ({ id, value, fields, valueMap }) => {
+	const { t } = useTranslationStore();
 	switch (id) {
 		case TFormFieldName.StudyArms:
 			return <StudyArmsValue value={value} />;
 		case TFormFieldName.StudyCentre:
 			return <StudyCentreValue value={value} />;
+		case TFormFieldName.FinancialSupport:
+		case TFormFieldName.Species:
+		case TFormFieldName.InterventionType:
+		case TFormFieldName.Randomisation:
+		case TFormFieldName.InvestigatorsBlindedIntervention:
+		case TFormFieldName.InvestigatorsBlindedAssesment:
+		case TFormFieldName.ExclusiveAnimalUse:
+			return <CombinedValue id={id} value={value} fields={fields} valueMap={valueMap} />;
 		default:
-			return <p>{value}</p>;
+			return <p>{t(value)}</p>;
 	}
+};
+
+export const CombinedValue: React.FC<{
+	id: TFormFieldName;
+	value: any;
+	fields: TFormField[];
+	valueMap: Map<TFormFieldName, any>;
+}> = ({ id, value, fields, valueMap }) => {
+	const otherValueField = fields.find(f => f.showValueIn === id);
+	const { t } = useTranslationStore();
+	const needCombinedValue = fieldMeetsDependencies(otherValueField, valueMap);
+
+	if (!needCombinedValue) {
+		return <p>{t(value)}</p>;
+	}
+
+	return (
+		<p>
+			<strong>{t(value)}</strong> - {t(otherValueField?.value)}
+		</p>
+	);
 };
 
 export const StudyArmsValue: React.FC<{ value: TStudyArm[] }> = ({ value }) => {

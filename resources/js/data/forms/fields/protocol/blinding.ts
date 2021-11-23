@@ -20,6 +20,7 @@ export const blindedInterventionField: TFormField = {
 export const blindedInterventionHowField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.YesBlindedInterventionHow,
+	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "how",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes_how" }]
@@ -28,6 +29,7 @@ export const blindedInterventionHowField: TFormField = {
 export const blindedInterventionPartiallyField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.YesBlindedInterventionPartially,
+	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "partially_because",
 	section: TSectionName.StudyDesign,
 	dependencies: [
@@ -45,12 +47,14 @@ export const blindedAssessmentField: TFormField = {
 export const blindedAssessmentHowField: TFormField = {
 	...blindedInterventionHowField,
 	id: TFormFieldName.YesBlindedAssessmentHow,
+	showValueIn: TFormFieldName.InvestigatorsBlindedAssesment,
 	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "yes_how" }]
 };
 
 export const blindedAssessmentPartiallyField: TFormField = {
 	...blindedInterventionPartiallyField,
 	id: TFormFieldName.YesBlindedAssessmentPartially,
+	showValueIn: TFormFieldName.InvestigatorsBlindedAssesment,
 	dependencies: [
 		{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "yes_partially_because" }
 	]

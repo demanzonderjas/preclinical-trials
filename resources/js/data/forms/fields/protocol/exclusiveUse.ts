@@ -15,6 +15,7 @@ export const animalsExclusiveUseField: TFormField = {
 export const noExclusiveAnimalUseDetailsField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.NoExclusiveAnimalUseDetails,
+	showValueIn: TFormFieldName.ExclusiveAnimalUse,
 	label: "details",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.ExclusiveAnimalUse, value: "no" }]

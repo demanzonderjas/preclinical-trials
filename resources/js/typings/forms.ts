@@ -24,6 +24,7 @@ export type TFormField = {
 	Component: React.FC;
 	validate: (value: any, values: Map<TFormFieldName, any>) => boolean;
 	hidden?: boolean;
+	showValueIn?: TFormFieldName;
 	value: any;
 	required?: boolean;
 	props?: any;

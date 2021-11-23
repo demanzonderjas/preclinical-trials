@@ -15,6 +15,7 @@ export const randomisationField: TFormField = {
 export const noRandomisationDetailsField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.WhyNoRandomisation,
+	showValueIn: TFormFieldName.Randomisation,
 	label: "no_details",
 	description: "no_randomisation_description",
 	section: TSectionName.StudyDesign,
