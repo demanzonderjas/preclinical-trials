@@ -24,8 +24,6 @@ export const ViewProtocolPage: React.FC = () => {
 
 	const fieldsWithValues = fillFieldsWithProtocolDetails(protocol);
 
-	console.log(fieldsWithValues);
-
 	return (
 		<Page title="View Protocol">
 			<div className="ViewProtocol border-top">

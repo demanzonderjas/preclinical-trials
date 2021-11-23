@@ -123,7 +123,6 @@ export class FormStore {
 		if (hasError) {
 			const firstErrorKey = [...this.errors.keys()][0];
 			const fieldWithError = this.fields.find(f => f.id === firstErrorKey);
-			console.log(fieldWithError);
 			this.setActiveSection(fieldWithError.section);
 		}
 		return !hasError;

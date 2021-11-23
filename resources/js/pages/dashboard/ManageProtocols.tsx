@@ -16,8 +16,6 @@ export const ManageProtocolsPage: React.FC = () => {
 		})();
 	}, []);
 
-	console.log(protocols);
-
 	return (
 		<Page title="Manage protocols">
 			<div className="ManageProtocolsPage">

@@ -8,7 +8,6 @@ import { getCountrySelectOptions } from "../../../utils/countries";
 
 export const StudyCentreField: React.FC<{ id: TFormFieldName }> = observer(({ id }) => {
 	const { value: studyCentres, setValue } = useFormField(id);
-	console.log("value", studyCentres);
 
 	const setStudyCentreValue = (index: number, key: string, value: any) => {
 		const newCentres = [...studyCentres];
