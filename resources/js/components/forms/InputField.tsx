@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { useForm, useFormField } from "../../hooks/useForm";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { TFormFieldName, TFormFieldProps, TFormStyle } from "../../typings/forms";
 
 export const InputField: React.FC<TFormFieldProps & {
@@ -10,6 +11,7 @@ export const InputField: React.FC<TFormFieldProps & {
 	placeholder?: string;
 }> = observer(({ type = "text", id, label, placeholder }) => {
 	const { value, setValue } = useFormField(id);
+	const { t } = useTranslationStore();
 	const { style } = useForm();
 
 	return (
@@ -18,7 +20,9 @@ export const InputField: React.FC<TFormFieldProps & {
 				type={type}
 				value={value || ""}
 				onChange={e => setValue(e.target.value)}
-				placeholder={style === TFormStyle.InlinePlaceholder ? label : placeholder || ""}
+				placeholder={
+					style === TFormStyle.InlinePlaceholder ? t(label) : t(placeholder || "")
+				}
 			/>
 		</div>
 	);

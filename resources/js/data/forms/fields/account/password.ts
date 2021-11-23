@@ -6,7 +6,8 @@ export const passwordField: TFormField = {
 	id: TFormFieldName.Password,
 	Component: InputField,
 	props: {
-		type: "password"
+		type: "password",
+		placeholder: "password"
 	},
 	required: true,
 	validate: validatePassword,

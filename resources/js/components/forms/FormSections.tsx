@@ -6,10 +6,12 @@ import cx from "classnames";
 import { saveProtocolQuery, updateProtocolQuery } from "../../queries/protocol";
 import { TProtocol } from "../../typings/protocols";
 import { useParams } from "react-router";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
 
 export const FormSections: React.FC<{ sections: TSectionName[] }> = observer(({ sections }) => {
 	const { activeSection, setActiveSection, createKeyValuePairs, getSectionByIndex } = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
+	const { t } = useTranslationStore();
 
 	const saveAsDraft = async section => {
 		const data = createKeyValuePairs() as TProtocol;
@@ -39,7 +41,7 @@ export const FormSections: React.FC<{ sections: TSectionName[] }> = observer(({ 
 						key={section}
 						onClick={() => saveAsDraft(section)}
 					>
-						{idx + 1}. {section}
+						{idx + 1}. {t(section)}
 					</li>
 				))}
 			</ul>

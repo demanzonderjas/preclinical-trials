@@ -134,5 +134,8 @@
 	"reset_password_email_success": "An email with instructions on how to reset your password has just been sent.",
 	"reset_password": "Reset password",
 	"reset_password_success": "Your password has succesfully been reset, you can now try and log in again.",
-	"save": "Save"
+	"save": "Save",
+	"select_option": "Select option",
+	"go_to_next_section": "Go to next section and save as draft",
+	"submit_for_publication": "Submit for publication"
 }

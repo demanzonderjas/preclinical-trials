@@ -90,14 +90,14 @@ export class FormStore {
 	}
 
 	setActiveSection(section: TSectionName) {
-		this.activeSection = section;
-
 		const sessionIndex = this.getSectionByIndex(section);
-		if (history.pushState) {
+		if (history.pushState && (sessionIndex != 0 || this.activeSection)) {
 			history.pushState(null, null, `#${sessionIndex}`);
-		} else {
+		} else if (!history.pushState) {
 			location.hash = `${sessionIndex}`;
 		}
+
+		this.activeSection = section;
 	}
 
 	setFields(fields) {

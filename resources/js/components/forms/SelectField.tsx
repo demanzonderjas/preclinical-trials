@@ -4,6 +4,7 @@ import { TFormFieldName } from "../../typings/forms";
 import cx from "classnames";
 import { observer } from "mobx-react-lite";
 import { Image } from "../base/Image";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
 
 type SelectFieldProps = {
 	id: TFormFieldName;
@@ -13,6 +14,7 @@ type SelectFieldProps = {
 export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }) => {
 	const { value, setValue } = useFormField(id);
 	const [isActive, setIsActive] = useState(false);
+	const { t } = useTranslationStore();
 
 	return (
 		<div className={cx("SelectField", { active: isActive })}>
@@ -23,7 +25,7 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }
 						setIsActive(!isActive);
 					}}
 				>
-					<SelectOption value={!value ? "Select option" : value} />
+					<SelectOption value={!value ? t("select_option") : value} />
 					<Image filename="arrow-down-white.svg" />
 				</div>
 				<div className="dropdown with-custom-scrollbar">
@@ -60,9 +62,10 @@ export const SelectOption: React.FC<{
 	handleClick?: Function;
 	isSelected?: boolean;
 }> = observer(({ value, handleClick, isSelected }) => {
+	const { t } = useTranslationStore();
 	return (
 		<div className="SelectOption" onClick={handleClick ? () => handleClick() : undefined}>
-			<span>{value}</span>
+			<span>{t(value)}</span>
 			{isSelected && (
 				<div className="image-wrapper">
 					<Image filename="check.svg" />

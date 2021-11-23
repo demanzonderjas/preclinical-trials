@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { useParams } from "react-router";
 import { useForm } from "../../../hooks/useForm";
+import { useTranslationStore } from "../../../hooks/useTranslationStore";
 import {
 	saveProtocolQuery,
 	submitProtocolForPulicationQuery,
@@ -21,6 +22,7 @@ export const ControlButtons: React.FC = observer(() => {
 		activeSection
 	} = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
+	const { t } = useTranslationStore();
 
 	const saveAsDraft = async e => {
 		e.preventDefault();
@@ -47,12 +49,10 @@ export const ControlButtons: React.FC = observer(() => {
 
 	return (
 		<div className="ControlButtons">
-			{!isLastSection && (
-				<button onClick={saveAsDraft}>Go to next section and save as draft</button>
-			)}
-			{!!isLastSection && <button type="submit">{form.submitText}</button>}
+			{!isLastSection && <button onClick={saveAsDraft}>{t("go_to_next_section")}</button>}
+			{!!isLastSection && <button type="submit">{t(form.submitText)}</button>}
 			{!!isLastSection && !!sections && (
-				<button onClick={submitForPublication}>Submit for publication</button>
+				<button onClick={submitForPublication}>{t("submit_for_publication")}</button>
 			)}
 		</div>
 	);

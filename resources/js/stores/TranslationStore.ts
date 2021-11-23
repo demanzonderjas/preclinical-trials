@@ -12,6 +12,9 @@ export class TranslationStore {
 	}
 
 	t(label: string) {
+		if (!label) {
+			return "";
+		}
 		return this.__[label] || label || "label_not_found";
 	}
 }

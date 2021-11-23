@@ -4,11 +4,13 @@ import { useForm, useFormField } from "../../hooks/useForm";
 import { TFormField, TFormStyle } from "../../typings/forms";
 import { fieldMeetsDependencies } from "../../utils/validation";
 import cx from "classnames";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
 
 export const FormField: React.FC<TFormField> = observer(
 	({ id, Component, props, label, hidden, required, description }) => {
 		const { errors, style } = useForm();
 		const { setValue } = useFormField(id);
+		const { t } = useTranslationStore();
 		const error = errors.get(id);
 
 		const params = new URLSearchParams(location.search);
@@ -26,11 +28,11 @@ export const FormField: React.FC<TFormField> = observer(
 			>
 				{style !== TFormStyle.InlinePlaceholder && !hidden && (
 					<label>
-						{label}
+						{t(label || id)}
 						{required ? "*" : null}
 					</label>
 				)}
-				{description && <p className="description">{description}</p>}
+				{description && <p className="description">{t(description)}</p>}
 				<Component id={id} required={required} label={label} {...props} />
 				{error && <p className="error">{error}</p>}
 			</div>
