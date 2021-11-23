@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { TTable } from "../../typings/tables";
 
 export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = ({ table, rows }) => {
+	const { t } = useTranslationStore();
 	const getMappedValue = (row: any, cellId: string, synonym: string) => {
 		return row[cellId] || row[synonym];
 	};
@@ -12,7 +14,7 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = ({ table, ro
 				<thead>
 					<tr>
 						{table.headers.map(header => (
-							<th key={header}>{header}</th>
+							<th key={header}>{t(header)}</th>
 						))}
 					</tr>
 				</thead>

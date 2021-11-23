@@ -46,57 +46,55 @@ return [
 	],
 	"valid_field_values" => [
 		"financial_support" => [
-			"Industry", "Investigator driven", "Grants", "Other"
+			"industry", "investigator_driven", "grants", "other"
 		],
 		"status" => [
-			"Not started",
-			"Active",
-			"Completed but not published",
-			"Completed and published (abstract)",
-			"Completed and published (full-text)",
-			"Study interrupted"
+			"not_started",
+			"active",
+			"completed_but_not_published",
+			"completed_and_published_abstract",
+			"completed_and_published_full_text",
+			"study_interrupted"
 		],
 		"sex" => [
-			"Male",
-			"Female",
-			"Both"
+			"male", "female", "both"
 		],
 		"intervention_type" => [
-			"Not applicable",
-			"Compound",
-			"Delivery method",
-			"Retention",
-			"Model optimalisation",
-			"Surgery",
-			"Other"
+			"not_applicable",
+			"compound",
+			"delivery_method",
+			"retention",
+			"model_optimalisation",
+			"surgery",
+			"other"
 		],
 		"study_stage" => [
-			"Stage 1 – Exploratory study (hypothesis generating)",
-			"Stage 2 – Confirmatory study (hypothesis testing)"
+			"study_stage_1_value",
+			"study_stage_2_value"
 		],
-		"exclusive_animal_use" => ["Yes", "No"],
+		"exclusive_animal_use" => ["yes", "no"],
 		"species" => [
-			"Cat",
-			"Dog",
-			"Ferret",
-			"Goat",
-			"Guinea Pig",
-			"Hamster",
-			"Horse",
-			"Mouse",
-			"Monkey",
-			"Pig",
-			"Rabbit",
-			"Rat",
-			"Sheep",
-			"Other"
+			"cat",
+			"dog",
+			"ferret",
+			"goat",
+			"guinea_pig",
+			"hamster",
+			"horse",
+			"mouse",
+			"monkey",
+			"pig",
+			"rabbit",
+			"rat",
+			"sheep",
+			"other"
 		],
-		"sample_size_calculation" => ["Yes", "No"],
-		"randomisation" => ["Yes", "No"],
-		"investigators_blinded_intervention" => ["No", "Yes - how?", "Yes partially, because"],
-		"investigators_blinded_assessment" => ["No", "Yes - how?", "Yes partially, because"],
-		"placebo_controlled" => ["Yes", "No"],
-		"has_embargo" => ["Yes", "No"],
-		"study_arm_options" => ["Sham", "Control", "Intervention", "Other"]
+		"sample_size_calculation" => ["yes", "no"],
+		"randomisation" => ["yes", "no"],
+		"investigators_blinded_intervention" => ["no", "yes_how", "yes_partially_because"],
+		"investigators_blinded_assessment" => ["no", "yes_how", "yes_partially_because"],
+		"placebo_controlled" => ["yes", "no"],
+		"has_embargo" => ["yes", "no"],
+		"study_arm_options" => ["sham", "control", "intervention", "other"]
 	]
 ];

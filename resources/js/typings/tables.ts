@@ -1,7 +1,7 @@
 import { TFormFieldName } from "./forms";
 
 export type TTable = {
-	headers: string[];
+	headers: TTableCellName[];
 	cells: TTableCell[];
 };
 

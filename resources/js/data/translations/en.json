@@ -137,5 +137,8 @@
 	"save": "Save",
 	"select_option": "Select option",
 	"go_to_next_section": "Go to next section and save as draft",
-	"submit_for_publication": "Submit for publication"
+	"submit_for_publication": "Submit for publication",
+	"last_updated": "Last updated",
+	"status": "Status",
+	"action": "Actions"
 }
