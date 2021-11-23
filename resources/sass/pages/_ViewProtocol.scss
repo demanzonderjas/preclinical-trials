@@ -10,6 +10,12 @@
 		font-size: 26px;
 		display: block;
 		width: 300px;
+		cursor: pointer;
+		transition: background-color 0.15s linear;
+
+		&:hover {
+			background-color: darken($secondary, 8);
+		}
 	}
 
 	.KeyValuePairs {
@@ -33,6 +39,7 @@
 			}
 
 			.value {
+				margin-top: 2px;
 				padding-left: 50px;
 				font-size: 18px;
 				line-height: 26px;
@@ -48,7 +55,7 @@
 
 	&.active {
 		.KeyValuePairs {
-			max-height: 2000px;
+			max-height: 3000px;
 		}
 	}
 

@@ -18,13 +18,13 @@ export const ProtocolSection: React.FC<{
 			<div className="icon" onClick={() => setIsExpanded(!isExpanded)}>
 				<Image filename={isExpanded ? "minus.png" : "plus.png"} />
 			</div>
-			<div className="SectionHeader">
+			<div className="SectionHeader" onClick={() => setIsExpanded(!isExpanded)}>
 				<h2>{t(name)}</h2>
 			</div>
 			<div className="KeyValuePairs">
 				{fields.map(f => (
 					<div className="KeyValue" key={f.id}>
-						<label className="key">{t(f.id)}</label>
+						<label className="key">{t(f.label || f.id)}</label>
 						<div className="value">
 							<ProtocolValue id={f.id} value={f.value} />
 						</div>

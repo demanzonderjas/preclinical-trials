@@ -16,6 +16,7 @@ export const sampleSizeCalculationField: TFormField = {
 export const noSampleSizeCalculationDetailsField: TFormField = {
 	...otherSpeciesField,
 	id: TFormFieldName.NoSampleSizeCalculationDetails,
+	label: "details",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.SampleSizeCalculation, value: "no" }]
 };

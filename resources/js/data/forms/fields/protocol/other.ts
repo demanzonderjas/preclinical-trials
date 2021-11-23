@@ -22,7 +22,7 @@ export const otherInterventionTypeField: TFormField = {
 export const otherSpeciesField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.OtherSpecies,
-	label: "",
+	label: "other",
 	required: false,
 	description: "other_species_description",
 	section: TSectionName.StudyDesign,
