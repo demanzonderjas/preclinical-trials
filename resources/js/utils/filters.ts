@@ -17,12 +17,12 @@ export function protocolMeetsFilters(
 		if (!filter.key) {
 			return JSON.stringify(row)
 				.toLowerCase()
-				.includes(activeFilterText.toLowerCase());
+				.includes(filter.value.toLowerCase());
 		}
 		if (filter.key && filter.value) {
-			return JSON.stringify(row[activeFilterKey])
+			return JSON.stringify(row[filter.key])
 				.toLowerCase()
-				.includes(activeFilterText.toLowerCase());
+				.includes(filter.value.toLowerCase());
 		}
 	});
 }

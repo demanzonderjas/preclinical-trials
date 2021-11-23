@@ -142,5 +142,7 @@
 	"last_updated": "Last updated",
 	"status": "Status",
 	"action": "Actions",
-	"any_field": "Any field"
+	"any_field": "Any field",
+	"add_filter": "Add filter",
+	"enter_search": "Enter your search here.."
 }

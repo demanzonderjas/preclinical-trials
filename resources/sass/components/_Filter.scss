@@ -1,0 +1,42 @@
+.Filter {
+	display: flex;
+	max-width: 600px;
+	margin: 40px auto;
+	align-items: center;
+	justify-content: space-between;
+
+	.SelectField {
+		width: 300px;
+	}
+
+	input[type="text"] {
+		background-color: $grey-light;
+		border: none;
+		padding: 10px;
+		font-size: 16px;
+		color: $grey-medium;
+		height: 42px;
+	}
+
+	.AddFilter {
+		cursor: pointer;
+		position: relative;
+		width: 60px;
+		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+		background-color: $secondary;
+		border-radius: 50%;
+
+		span {
+			color: $white;
+			text-transform: uppercase;
+			display: block;
+			text-align: center;
+			font-weight: bold;
+			font-size: 14px;
+		}
+	}
+}

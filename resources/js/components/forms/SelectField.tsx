@@ -11,6 +11,55 @@ type SelectFieldProps = {
 	options: string[];
 };
 
+export const GenericSelectField: React.FC<{
+	value: string;
+	setValue: Function;
+	options: string[];
+}> = ({ value, setValue, options }) => {
+	const [isActive, setIsActive] = useState(false);
+	const { t } = useTranslationStore();
+
+	return (
+		<div className={cx("SelectField", { active: isActive })}>
+			<div className="select-wrapper">
+				<div
+					className={cx("active-option", { "with-value": !!value })}
+					onClick={() => {
+						setIsActive(!isActive);
+					}}
+				>
+					<SelectOption value={!value ? t("select_option") : value} />
+					<Image filename="arrow-down-white.svg" />
+				</div>
+				<div className="dropdown with-custom-scrollbar">
+					{value && (
+						<SelectOption
+							handleClick={() => {
+								setValue(value);
+								setIsActive(!isActive);
+							}}
+							value={value}
+						/>
+					)}
+					{options
+						.filter(option => option != value)
+						.map(option => (
+							<SelectOption
+								key={option}
+								isSelected={option === value}
+								value={option}
+								handleClick={() => {
+									setValue(option);
+									setIsActive(!isActive);
+								}}
+							/>
+						))}
+				</div>
+			</div>
+		</div>
+	);
+};
+
 export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }) => {
 	const { value, setValue } = useFormField(id);
 	const [isActive, setIsActive] = useState(false);
