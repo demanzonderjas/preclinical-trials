@@ -1,5 +1,6 @@
 import { ActionCell, EditCell, ViewCell } from "../../../components/tables/ActionCell";
 import { DateCell } from "../../../components/tables/DateCell";
+import { StudyCentreCell } from "../../../components/tables/StudyCentreCell";
 import { TextCell } from "../../../components/tables/TextCell";
 import { TFormFieldName } from "../../../typings/forms";
 import { TTableCell, TTableCellName } from "../../../typings/tables";
@@ -21,6 +22,12 @@ export const lastUpdatedAtCell: TTableCell = {
 	Component: DateCell,
 	value: "",
 	synonym: "updated_at"
+};
+
+export const studyCentreCell: TTableCell = {
+	id: TTableCellName.StudyCentre,
+	Component: StudyCentreCell,
+	value: ""
 };
 
 export const editCell: TTableCell = {

@@ -16,5 +16,11 @@ export enum TTableCellName {
 	Title = "title",
 	Status = "status",
 	LastUpdated = "last_updated",
+	StudyCentre = "study_centre",
 	Action = "action"
 }
+
+export type TFilter = {
+	key?: TFormFieldName;
+	value: string;
+};

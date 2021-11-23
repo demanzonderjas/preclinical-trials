@@ -4,6 +4,7 @@ import { firstNameField } from "../account/name";
 export const researchField: TFormField = {
 	...firstNameField,
 	id: TFormFieldName.ResearchField,
+	useAsFilter: true,
 	section: TSectionName.StudyDesign,
 	description: "research_field_description"
 };

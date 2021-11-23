@@ -16,6 +16,7 @@ export const statusField: TFormField = {
 	description: "study_status_description",
 	Component: SelectField,
 	required: true,
+	useAsFilter: true,
 	props: {
 		options: statusFieldOptions
 	},

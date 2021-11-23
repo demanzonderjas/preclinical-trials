@@ -38,6 +38,15 @@ class ProtocolController extends Controller
 		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
 	}
 
+	public function getViewable()
+	{
+		$protocols = Protocol::where('status', '!=', 'draft')->get();
+		$withoutEmbargo = $protocols->filter(function ($p) {
+			return !$p->has_embargo;
+		});
+		return response()->json(["protocols" => ProtocolResource::collection($withoutEmbargo)]);
+	}
+
 	public function submitForPublication(Request $request)
 	{
 		$protocol = Protocol::findOrFail($request->protocol_id);

@@ -25,6 +25,7 @@ export type TFormField = {
 	validate: (value: any, values: Map<TFormFieldName, any>) => boolean;
 	hidden?: boolean;
 	showValueIn?: TFormFieldName;
+	useAsFilter?: boolean;
 	value: any;
 	required?: boolean;
 	props?: any;

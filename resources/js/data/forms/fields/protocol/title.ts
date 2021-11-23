@@ -6,6 +6,7 @@ export const titleField: TFormField = {
 	Component: InputField,
 	required: true,
 	validate: (value: string) => value && value.length >= 2,
+	useAsFilter: true,
 	value: "",
 	section: TSectionName.General,
 	description: "title_description"

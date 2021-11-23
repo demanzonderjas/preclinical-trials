@@ -8,6 +8,7 @@ export const sexField: TFormField = {
 	description: "sex_description",
 	Component: SelectField,
 	required: true,
+	useAsFilter: true,
 	props: {
 		options: sexFieldOptions
 	},

@@ -10,6 +10,7 @@ export const supportField: TFormField = {
 		options: supportFieldOptions
 	},
 	value: "",
+	useAsFilter: true,
 	validate: value => value != "",
 	section: TSectionName.General,
 	description: "financial_support_description",

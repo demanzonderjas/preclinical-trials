@@ -12,7 +12,6 @@ import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
 import { CreateAccountPage } from "./pages/CreateAccount";
 import ScrollToTop from "./components/base/ScrollToTop";
-import { DatabasePage } from "./pages/Database";
 import { NewsPage } from "./pages/News";
 import { FAQPage } from "./pages/FAQ";
 import { DisclaimerPage } from "./pages/Disclaimer";
@@ -25,6 +24,7 @@ import { ManageProtocolsPage } from "./pages/dashboard/ManageProtocols";
 import { TeamPage } from "./pages/Team";
 import { AdvisoryBoardPage } from "./pages/AdvisoryBoard";
 import { ViewProtocolPage } from "./pages/ViewProtocol";
+import { SearchDatabasePage } from "./pages/SearchDatabase";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -49,7 +49,7 @@ const App: React.FC = () => {
 							<AdvisoryBoardPage />
 						</Route>
 						<Route path="/database" exact={true}>
-							<DatabasePage />
+							<SearchDatabasePage />
 						</Route>
 						<Route path="/database/view-protocol/:protocol_id" exact={true}>
 							<ViewProtocolPage />
@@ -71,6 +71,9 @@ const App: React.FC = () => {
 						</Route>
 						<Route path="/dashboard/manage-protocols">
 							<ManageProtocolsPage />
+						</Route>
+						<Route path="/dashboard/database">
+							<SearchDatabasePage />
 						</Route>
 						<Route path="/dashboard/edit-protocol/:protocol_id">
 							<EditProtocolPage />

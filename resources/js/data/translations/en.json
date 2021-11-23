@@ -6,6 +6,7 @@
 	"general": "General",
 	"contact_details": "Contact details",
 	"study_design": "Study design",
+	"study_centre": "Study centre",
 	"study_centre_details": "Study centre details",
 	"submit": "Submit",
 	"statement_of_accuracy": "Statement of accuracy",
@@ -140,5 +141,6 @@
 	"submit_for_publication": "Submit for publication",
 	"last_updated": "Last updated",
 	"status": "Status",
-	"action": "Actions"
+	"action": "Actions",
+	"any_field": "Any field"
 }

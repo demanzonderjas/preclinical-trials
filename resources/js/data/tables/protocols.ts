@@ -1,5 +1,12 @@
 import { TTable, TTableCellName } from "../../typings/tables";
-import { actionCell, editCell, lastUpdatedAtCell, statusCell, titleCell } from "./cells/protocol";
+import {
+	actionCell,
+	editCell,
+	lastUpdatedAtCell,
+	statusCell,
+	studyCentreCell,
+	titleCell
+} from "./cells/protocol";
 
 export const manageProtocolsTable: TTable = {
 	headers: [
@@ -9,4 +16,9 @@ export const manageProtocolsTable: TTable = {
 		TTableCellName.Action
 	],
 	cells: [titleCell, lastUpdatedAtCell, statusCell, actionCell]
+};
+
+export const searchProtocolsTable: TTable = {
+	headers: [TTableCellName.Title, TTableCellName.StudyCentre, TTableCellName.Status],
+	cells: [titleCell, studyCentreCell, statusCell]
 };

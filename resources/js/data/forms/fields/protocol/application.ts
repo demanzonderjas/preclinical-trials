@@ -6,6 +6,7 @@ export const applicationField: TFormField = {
 	id: TFormFieldName.OriginalAnimalEthicsCommitteeApplication,
 	required: false,
 	validate: null,
+	useAsFilter: false,
 	props: {
 		placeholder: "application_field_placeholder"
 	},

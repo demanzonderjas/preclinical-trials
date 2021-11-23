@@ -33,4 +33,12 @@ class Protocol extends Model
             $this->details()->save($detail);
         });
     }
+
+    public function getHasEmbargoAttribute()
+    {
+        $detail = $this->details->first(function ($d) {
+            return $d->key === "has_embargo";
+        });
+        return !empty($detail) ? $detail->value === "yes" : false;
+    }
 }

@@ -8,6 +8,7 @@ export const startDateField: TFormField = {
 		type: "date"
 	},
 	required: true,
+	useAsFilter: true,
 	validate: (value: string) => value && value.length >= 2,
 	value: "",
 	section: TSectionName.General,
