@@ -3,19 +3,18 @@ import { TFormField, TFormFieldName, TRadioButton, TSectionName } from "../../..
 
 export const embargoOptions: TRadioButton[] = [
 	{
-		value: "Yes, embargo the details of this study",
+		value: "yes_embargo",
 		description: ""
 	},
 	{
-		value: "No, I do not want the details of this study embargoed",
+		value: "no_embargo",
 		description: ""
 	}
 ];
 
 export const embargoField: TFormField = {
 	id: TFormFieldName.HasEmbargo,
-	label: "Embargo",
-	description: "You may choose to embargo the details of this study (initially for 1 year)",
+	description: "embargo_description",
 	required: true,
 	props: {
 		options: embargoOptions

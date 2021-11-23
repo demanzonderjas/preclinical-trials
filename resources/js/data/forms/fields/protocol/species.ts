@@ -2,26 +2,25 @@ import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
 
 export const speciesOptions: string[] = [
-	"Cat",
-	"Dog",
-	"Ferret",
-	"Goat",
-	"Guinea Pig",
-	"Hamster",
-	"Horse",
-	"Mouse",
-	"Monkey",
-	"Pig",
-	"Rabbit",
-	"Rat",
-	"Sheep",
-	"Other"
+	"cat",
+	"dog",
+	"ferret",
+	"goat",
+	"guinea_pig",
+	"hamster",
+	"horse",
+	"mouse",
+	"monkey",
+	"pig",
+	"rabbit",
+	"rat",
+	"sheep",
+	"other"
 ];
 
 export const speciesField: TFormField = {
 	id: TFormFieldName.Species,
-	label: "Species",
-	description: "Select the appropriate species for the study",
+	description: "species_description",
 	props: {
 		options: speciesOptions
 	},

@@ -2,18 +2,18 @@ import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName, TSelectOption } from "../../../../typings/forms";
 
 export const statusFieldOptions: string[] = [
-	"Not started",
-	"Active",
-	"Completed but not published",
-	"Completed and published (abstract)",
-	"Completed and published (full-text)",
-	"Study interrupted"
+	"not_started",
+	"active",
+	"completed_but_not_published",
+	"completed_and_published_abstract",
+	"completed_and_published_full_text",
+	"study_interrupted"
 ];
 
 export const statusField: TFormField = {
 	id: TFormFieldName.Status,
-	label: "Study status",
-	description: "Please indicate what the current status of the study is",
+	label: "study_status",
+	description: "study_status_description",
 	Component: SelectField,
 	required: true,
 	props: {

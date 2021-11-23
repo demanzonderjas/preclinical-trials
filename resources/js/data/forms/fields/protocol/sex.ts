@@ -1,12 +1,11 @@
 import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName, TSelectOption } from "../../../../typings/forms";
 
-export const sexFieldOptions: string[] = ["Male", "Female", "Both"];
+export const sexFieldOptions: string[] = ["male", "female", "both"];
 
 export const sexField: TFormField = {
 	id: TFormFieldName.Sex,
-	label: "Sex",
-	description: "Indicate the sex of the animals in the study",
+	description: "sex_description",
 	Component: SelectField,
 	required: true,
 	props: {

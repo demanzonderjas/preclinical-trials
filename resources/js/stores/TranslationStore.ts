@@ -1,10 +1,17 @@
-import { observable, action } from "mobx";
+import { action, makeAutoObservable } from "mobx";
 import translations from "../data/translations/en.json";
+import { TTranslations } from "../typings/layout";
 
 export class TranslationStore {
-	@observable __ = translations;
+	__: TTranslations = translations;
 
-	@action.bound t(label: string) {
-		return this.__[label] || label;
+	constructor() {
+		makeAutoObservable(this, {
+			t: action.bound
+		});
+	}
+
+	t(label: string) {
+		return this.__[label] || label || "label_not_found";
 	}
 }

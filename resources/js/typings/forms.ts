@@ -20,7 +20,7 @@ export enum TAlignment {
 
 export type TFormField = {
 	id: TFormFieldName;
-	label: string;
+	label?: string;
 	Component: React.FC;
 	validate: (value: any, values: Map<TFormFieldName, any>) => boolean;
 	hidden?: boolean;
@@ -113,11 +113,11 @@ export enum TFormStyle {
 }
 
 export enum TSectionName {
-	General = "General",
-	ContactDetails = "Contact Details",
-	StudyCentreDetails = "Study Centre Details",
-	StudyDesign = "Study Design",
-	Submit = "Submit"
+	General = "general",
+	ContactDetails = "contact_details",
+	StudyCentreDetails = "study_centre_details",
+	StudyDesign = "study_design",
+	Submit = "submit"
 }
 
 export type TProtocolSection = {

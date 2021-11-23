@@ -6,21 +6,18 @@ export const applicationField: TFormField = {
 	id: TFormFieldName.OriginalAnimalEthicsCommitteeApplication,
 	required: false,
 	validate: null,
-	label: "Original animal ethics committee application or number of application",
 	props: {
-		placeholder: "Enter link address here"
+		placeholder: "application_field_placeholder"
 	},
-	description:
-		"Please provide a link to an online copy of the animal ethics committee application or provide the number of the application"
+	description: "application_field_description"
 };
 
 export const applicationNumberField: TFormField = {
 	...applicationField,
 	id: TFormFieldName.ApplicationNumber,
-	label: "Application number",
 	validate: null,
 	props: {
-		placeholder: "Enter ethics committee number here"
+		placeholder: "application_number_placeholder"
 	},
 	description: ""
 };

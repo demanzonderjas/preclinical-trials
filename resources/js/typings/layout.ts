@@ -8,3 +8,5 @@ export enum THeaderStyle {
 	PrimaryWithSubMenu = "primary_with_submenu",
 	White = "white"
 }
+
+export type TTranslations = { [K in string]: string };

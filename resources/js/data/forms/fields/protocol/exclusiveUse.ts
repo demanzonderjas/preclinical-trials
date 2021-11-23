@@ -5,8 +5,7 @@ import { otherSupportField } from "./other";
 export const animalsExclusiveUseField: TFormField = {
 	id: TFormFieldName.ExclusiveAnimalUse,
 	Component: YesNoField,
-	label: "Are animals exclusively used for this research question?",
-	description: "Please indicate if the animals (or tissues) are used for this study only",
+	description: "exclusive_animal_use_description",
 	value: "",
 	validate: value => value != "",
 	required: true,
@@ -16,7 +15,7 @@ export const animalsExclusiveUseField: TFormField = {
 export const noExclusiveAnimalUseDetailsField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.NoExclusiveAnimalUseDetails,
-	label: "Details?",
+	label: "details",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.ExclusiveAnimalUse, value: "no" }]
 };

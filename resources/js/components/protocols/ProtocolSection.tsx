@@ -3,6 +3,7 @@ import { TFormField, TSectionName } from "../../typings/forms";
 import { Image } from "../base/Image";
 import { ProtocolValue } from "./ProtocolValue";
 import cx from "classnames";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
 
 export const ProtocolSection: React.FC<{
 	name: TSectionName;
@@ -10,6 +11,7 @@ export const ProtocolSection: React.FC<{
 	shouldBeOpen: boolean;
 }> = ({ name, fields, shouldBeOpen }) => {
 	const [isExpanded, setIsExpanded] = useState(shouldBeOpen);
+	const { t } = useTranslationStore();
 
 	return (
 		<div className={cx("ProtocolSection", { active: isExpanded })}>
@@ -17,12 +19,12 @@ export const ProtocolSection: React.FC<{
 				<Image filename={isExpanded ? "minus.png" : "plus.png"} />
 			</div>
 			<div className="SectionHeader">
-				<h2>{name}</h2>
+				<h2>{t(name)}</h2>
 			</div>
 			<div className="KeyValuePairs">
 				{fields.map(f => (
 					<div className="KeyValue" key={f.id}>
-						<label className="key">{f.id}</label>
+						<label className="key">{t(f.id)}</label>
 						<div className="value">
 							<ProtocolValue id={f.id} value={f.value} />
 						</div>

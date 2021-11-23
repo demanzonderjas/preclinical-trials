@@ -11,12 +11,11 @@ export const studyCentreModel: TStudyCentre = {
 
 export const studyCentreField: TFormField = {
 	id: TFormFieldName.StudyCentre,
-	label: "Study centre details",
+	label: "study_centre_details",
 	Component: StudyCentreField,
 	required: true,
 	validate: validateMultiRowField,
 	value: [{ ...studyCentreModel }],
 	section: TSectionName.StudyCentreDetails,
-	description:
-		"Give the details of the institutions where the experiments will be undertaken. Add additional lines if there is more than one"
+	description: "study_centre_description"
 };

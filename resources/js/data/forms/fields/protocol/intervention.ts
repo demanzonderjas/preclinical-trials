@@ -8,19 +8,19 @@ import {
 } from "../../../../typings/forms";
 
 export const interventionFieldOptions: string[] = [
-	"Not applicable",
-	"Compound",
-	"Delivery method",
-	"Retention",
-	"Model optimalisation",
-	"Surgery",
-	"Other"
+	"not_applicable",
+	"compound",
+	"delivery_method",
+	"retention",
+	"model_optimalisation",
+	"surgery",
+	"other"
 ];
 
 export const interventionTypeField: TFormField = {
 	id: TFormFieldName.InterventionType,
-	label: "In case of intervention, Intervention type",
-	description: "What type of intervention is being tested in the study?",
+	label: "case_intervention_type",
+	description: "intervention_type_description",
 	Component: SelectField,
 	required: true,
 	props: {
@@ -34,8 +34,7 @@ export const interventionTypeField: TFormField = {
 export const placeboControlledField: TFormField = {
 	id: TFormFieldName.PlaceboControlled,
 	Component: YesNoField,
-	label: "Was the intervention placebo-controlled?",
-	description: "Was one of the arms of the study a placebo arm?",
+	description: "placebo_controlled_description",
 	value: "",
 	validate: null,
 	required: false,
@@ -44,7 +43,7 @@ export const placeboControlledField: TFormField = {
 		{
 			key: TFormFieldName.InterventionType,
 			type: TFormFieldDependencyType.NotEqualTo,
-			value: ["", "Not applicable"]
+			value: ["", "not_applicable"]
 		}
 	]
 };

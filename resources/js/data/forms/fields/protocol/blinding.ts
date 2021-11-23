@@ -6,9 +6,7 @@ export const blindingOptions: string[] = ["No", "Yes - how?", "Yes partially, be
 
 export const blindedInterventionField: TFormField = {
 	id: TFormFieldName.InvestigatorsBlindedIntervention,
-	label: "Blinding (intervention)",
-	description:
-		"Are the investigators involved in the experiment blinded to the allocation of the animals to the experimental groups?",
+	description: "investigators_blinded_intervention_description",
 	Component: SelectField,
 	required: true,
 	props: {
@@ -22,38 +20,38 @@ export const blindedInterventionField: TFormField = {
 export const blindedInterventionHowField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.YesBlindedInterventionHow,
-	label: "How?",
+	label: "how",
 	section: TSectionName.StudyDesign,
-	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "Yes - how?" }]
+	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes_how" }]
 };
 
 export const blindedInterventionPartiallyField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.YesBlindedInterventionPartially,
-	label: "Partially, because..",
+	label: "partially_because",
 	section: TSectionName.StudyDesign,
 	dependencies: [
-		{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "Yes partially, because" }
+		{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes_partially_because" }
 	]
 };
 
 export const blindedAssessmentField: TFormField = {
 	...blindedInterventionField,
 	id: TFormFieldName.InvestigatorsBlindedAssesment,
-	label: "Blinding (assessment)",
-	description: "Are the investigators blinded at the time of assessments of outcome(s)?"
+	label: "investigators_blinded_assessment",
+	description: "investigators_blinded_assessment_description"
 };
 
 export const blindedAssessmentHowField: TFormField = {
 	...blindedInterventionHowField,
 	id: TFormFieldName.YesBlindedAssessmentHow,
-	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "Yes - how?" }]
+	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "yes_how" }]
 };
 
 export const blindedAssessmentPartiallyField: TFormField = {
 	...blindedInterventionPartiallyField,
 	id: TFormFieldName.YesBlindedAssessmentPartially,
 	dependencies: [
-		{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "Yes partially, because" }
+		{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "yes_partially_because" }
 	]
 };

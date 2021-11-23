@@ -4,11 +4,11 @@ import { firstNameField } from "../account/name";
 export const otherSupportField: TFormField = {
 	...firstNameField,
 	id: TFormFieldName.OtherSupport,
-	label: "Other",
+	label: "other",
 	validate: null,
 	required: false,
 	section: TSectionName.General,
-	dependencies: [{ key: TFormFieldName.FinancialSupport, value: "Other" }]
+	dependencies: [{ key: TFormFieldName.FinancialSupport, value: "other" }]
 };
 
 export const otherInterventionTypeField: TFormField = {
@@ -16,7 +16,7 @@ export const otherInterventionTypeField: TFormField = {
 	required: false,
 	id: TFormFieldName.OtherInterventionType,
 	section: TSectionName.StudyDesign,
-	dependencies: [{ key: TFormFieldName.InterventionType, value: "Other" }]
+	dependencies: [{ key: TFormFieldName.InterventionType, value: "other" }]
 };
 
 export const otherSpeciesField: TFormField = {
@@ -24,7 +24,7 @@ export const otherSpeciesField: TFormField = {
 	id: TFormFieldName.OtherSpecies,
 	label: "",
 	required: false,
-	description: "What other species did you use?",
+	description: "other_species_description",
 	section: TSectionName.StudyDesign,
-	dependencies: [{ key: TFormFieldName.Species, value: "Other" }]
+	dependencies: [{ key: TFormFieldName.Species, value: "other" }]
 };

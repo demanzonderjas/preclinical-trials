@@ -3,7 +3,6 @@ import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/fo
 
 export const startDateField: TFormField = {
 	id: TFormFieldName.StartDate,
-	label: "Start date",
 	Component: InputField,
 	props: {
 		type: "date"
@@ -12,12 +11,11 @@ export const startDateField: TFormField = {
 	validate: (value: string) => value && value.length >= 2,
 	value: "",
 	section: TSectionName.General,
-	description: "The date the study started or is expected to start"
+	description: "start_date_description"
 };
 
 export const endDateField: TFormField = {
 	...startDateField,
 	id: TFormFieldName.EndDate,
-	label: "Expected end date",
-	description: "The date the study ended or is expected to end"
+	description: "end_date_description"
 };

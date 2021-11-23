@@ -1,11 +1,10 @@
 import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName, TSelectOption } from "../../../../typings/forms";
 
-export const supportFieldOptions: string[] = ["Industry", "Investigator driven", "Grants", "Other"];
+export const supportFieldOptions: string[] = ["industry", "investigator_driven", "grants", "other"];
 
 export const supportField: TFormField = {
 	id: TFormFieldName.FinancialSupport,
-	label: "Sources of support",
 	required: true,
 	props: {
 		options: supportFieldOptions
@@ -13,6 +12,6 @@ export const supportField: TFormField = {
 	value: "",
 	validate: value => value != "",
 	section: TSectionName.General,
-	description: "Give the sources of financial support for the study",
+	description: "financial_support_description",
 	Component: SelectField
 };

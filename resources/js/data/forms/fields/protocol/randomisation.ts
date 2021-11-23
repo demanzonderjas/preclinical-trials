@@ -5,8 +5,7 @@ import { otherSupportField } from "./other";
 export const randomisationField: TFormField = {
 	id: TFormFieldName.Randomisation,
 	Component: YesNoField,
-	label: "Randomisation",
-	description: "Are the animals randomly allocated to the experimental groups?",
+	description: "randomisation_description",
 	value: "",
 	validate: value => value != "",
 	required: true,
@@ -16,8 +15,8 @@ export const randomisationField: TFormField = {
 export const noRandomisationDetailsField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.WhyNoRandomisation,
-	label: "No - Details",
-	description: "Please explain why randomisation was not performed",
+	label: "no_details",
+	description: "no_randomisation_description",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.Randomisation, value: "no" }]
 };

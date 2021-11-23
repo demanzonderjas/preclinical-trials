@@ -3,20 +3,18 @@ import { TFormField, TFormFieldName, TRadioButton, TSectionName } from "../../..
 
 export const studyStageOptions: TRadioButton[] = [
 	{
-		value: "Stage 1 – Exploratory study (hypothesis generating)",
-		description: "Hypothesis-generating research. Normally pilot studies are stage 1 studies."
+		value: "study_stage_1_value",
+		description: "study_stage_1_description"
 	},
 	{
-		value: "Stage 2 – Confirmatory study (hypothesis testing)",
-		description:
-			"Final study confirming (or rejecting) a single hypothesis, these are normally blinded, randomized, controlled trials"
+		value: "study_stage_2_value",
+		description: "study_stage_2_description"
 	}
 ];
 
 export const studyStageField: TFormField = {
 	id: TFormFieldName.StudyStage,
-	label: "Study stage",
-	description: "Please indicate the stage of the study",
+	description: "study_stage_description",
 	required: true,
 	props: {
 		options: studyStageOptions
