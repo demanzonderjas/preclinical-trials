@@ -10,6 +10,10 @@ button {
 	text-transform: uppercase;
 	cursor: pointer;
 
+	&.secondary {
+		background-color: $secondary !important;
+	}
+
 	&.tertiary {
 		background-color: $tertiary !important;
 	}

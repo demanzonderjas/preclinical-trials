@@ -56,14 +56,29 @@ export const ControlButtons: React.FC = observer(() => {
 	};
 
 	return (
-		<div className="ControlButtons">
+		<div
+			className="ControlButtons"
+			style={{ display: "flex", justifyContent: "space-between" }}
+		>
 			{!isFirstSection && !!sections && (
-				<button onClick={e => saveAsDraft(e, true)}>{t("go_back")}</button>
+				<button className="secondary" onClick={e => saveAsDraft(e, true)}>
+					{t("go_back")}
+				</button>
 			)}
-			{!isLastSection && <button onClick={saveAsDraft}>{t("go_to_next_section")}</button>}
-			{!!isLastSection && <button type="submit">{t(form.submitText)}</button>}
+			{!isLastSection && (
+				<button className="secondary" onClick={saveAsDraft}>
+					{t("go_to_next_section")}
+				</button>
+			)}
+			{!!isLastSection && (
+				<button className="secondary" type="submit">
+					{t(form.submitText)}
+				</button>
+			)}
 			{!!isLastSection && !!sections && (
-				<button onClick={submitForPublication}>{t("submit_for_publication")}</button>
+				<button className="secondary" onClick={submitForPublication}>
+					{t("submit_for_publication")}
+				</button>
 			)}
 		</div>
 	);
