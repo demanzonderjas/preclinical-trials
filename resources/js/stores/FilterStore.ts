@@ -11,7 +11,8 @@ export class FilterStore {
 		makeAutoObservable(this, {
 			setActiveFilterText: action.bound,
 			setActiveFilterKey: action.bound,
-			addFilter: action.bound
+			addFilter: action.bound,
+			deleteFilter: action.bound
 		});
 	}
 
@@ -27,5 +28,11 @@ export class FilterStore {
 		this.filters.push({ value: this.activeFilterText, key: this.activeFilterKey });
 		this.setActiveFilterKey(null);
 		this.setActiveFilterText("");
+	}
+
+	deleteFilter(idx: number) {
+		const filters = [...this.filters];
+		filters.splice(idx, 1);
+		this.filters = filters;
 	}
 }

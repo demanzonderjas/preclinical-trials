@@ -147,5 +147,6 @@
 	"enter_search": "Enter your search here..",
 	"dashboard": "Dashboard",
 	"add_protocol": "Add protocol",
-	"go_back": "Go back"
+	"go_back": "Go back",
+	"active_filters": "Active filters"
 }

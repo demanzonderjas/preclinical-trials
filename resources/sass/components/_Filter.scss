@@ -1,9 +1,10 @@
 .Filter {
-	display: flex;
-	max-width: 600px;
 	margin: 40px auto;
-	align-items: center;
-	justify-content: center;
+	padding: 20px;
+	.SearchBar {
+		display: flex;
+		align-items: center;
+	}
 
 	.SelectField {
 		width: 225px;
@@ -41,6 +42,62 @@
 			text-align: center;
 			font-weight: bold;
 			font-size: 14px;
+		}
+	}
+
+	.ActiveFilters {
+		h3 {
+			font-weight: bold;
+			font-size: 22px;
+			margin: 16px 0;
+		}
+
+		.filters {
+			.ActiveFilter {
+				position: relative;
+				display: inline-block;
+				margin-right: 20px;
+
+				.flex-wrapper {
+					position: relative;
+					display: flex;
+				}
+
+				.value {
+					position: relative;
+					padding: 10px 20px;
+					display: block;
+					color: $grey-medium;
+					background-color: $grey-light-medium;
+
+					&.key {
+						background-color: $primary;
+						color: $white;
+					}
+				}
+
+				.delete {
+					cursor: pointer;
+					border-radius: 50%;
+					background-color: $danger-color;
+					color: white;
+					width: 15px;
+					height: 16px;
+					position: absolute;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					right: 0;
+					top: 50%;
+					transform: translate(50%, -50%);
+
+					span {
+						margin-top: -3px;
+						font-size: 14px;
+						font-weight: bold;
+					}
+				}
+			}
 		}
 	}
 }
