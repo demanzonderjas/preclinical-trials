@@ -8,6 +8,16 @@ $item-height: 42px;
 	max-width: 400px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1), 0px 4px 4px rgba(0, 0, 0, 0.1);
 
+	&.absolute {
+		&.active {
+			overflow: initial;
+		}
+
+		.dropdown {
+			position: absolute !important;
+		}
+	}
+
 	&:not(.active) {
 		.active-option {
 			.SelectOption {
@@ -19,7 +29,7 @@ $item-height: 42px;
 	&.active {
 		max-height: 1000px;
 
-		.active-option img {
+		.active-option .ImageWrapper {
 			transform: translateY(-50%) rotate(180deg);
 		}
 	}
@@ -27,14 +37,18 @@ $item-height: 42px;
 	.active-option {
 		position: relative;
 
-		img {
-			pointer-events: none;
+		.ImageWrapper {
 			width: 13px;
 			position: absolute;
 			top: 50%;
 			right: 15px;
 			transform: translateY(-50%);
 			transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+			pointer-events: none;
+
+			img {
+				height: 10px;
+			}
 		}
 
 		&.with-value {
@@ -51,7 +65,7 @@ $item-height: 42px;
 	}
 
 	.SelectOption {
-		padding: 10px 50px 10px 15px;
+		padding: 10px 40px 10px 15px;
 		height: $item-height;
 		background-color: $primary;
 		border-bottom: 1px solid $grey-light;
@@ -67,7 +81,7 @@ $item-height: 42px;
 			display: block;
 		}
 
-		.image-wrapper {
+		.ImageWrapper {
 			position: absolute;
 			top: 50%;
 			right: 20px;
@@ -88,6 +102,7 @@ $item-height: 42px;
 	.dropdown {
 		position: relative;
 		max-height: 200px;
+		width: 100%;
 		overflow-y: auto;
 	}
 }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const Menu: React.FC = () => {
 	return (
-		<ul className="Menu">
+		<ul className="Menu layout-wrapper">
 			<MenuItem text="Database" url={"/database"} />
 			<MenuItem text="About PCT" url="/about-pct" />
 			<MenuItem text="Help" url="/faq" />

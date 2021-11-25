@@ -8,7 +8,7 @@ export const ContentBlock: React.FC<{ maxWidth?: string; withBorder?: boolean }>
 }) => {
 	return (
 		<div className={cx("ContentBlock", { "with-border": withBorder })}>
-			<div className="content" style={{ maxWidth }}>
+			<div className="content layout-wrapper" style={{ maxWidth }}>
 				{children}
 			</div>
 		</div>

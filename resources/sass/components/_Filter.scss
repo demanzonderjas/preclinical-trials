@@ -3,18 +3,21 @@
 	max-width: 600px;
 	margin: 40px auto;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: center;
 
 	.SelectField {
-		width: 300px;
+		width: 225px;
+		filter: none;
+		box-shadow: none;
 	}
 
 	input[type="text"] {
-		background-color: $grey-light;
+		background-color: $grey-light-medium;
 		border: none;
 		padding: 10px;
 		font-size: 16px;
 		color: $grey-medium;
+		width: 250px;
 		height: 42px;
 	}
 
@@ -23,6 +26,7 @@
 		position: relative;
 		width: 60px;
 		height: 60px;
+		margin-left: 20px;
 		display: flex;
 		align-items: center;
 		justify-content: center;

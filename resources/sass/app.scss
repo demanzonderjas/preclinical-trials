@@ -55,6 +55,12 @@ body {
 	scroll-behavior: smooth;
 }
 
+.layout-wrapper {
+	max-width: $layout-width;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .border-top {
 	border-top: 10px solid $secondary;
 }

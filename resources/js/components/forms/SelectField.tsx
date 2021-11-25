@@ -20,7 +20,7 @@ export const GenericSelectField: React.FC<{
 	const { t } = useTranslationStore();
 
 	return (
-		<div className={cx("SelectField", { active: isActive })}>
+		<div className={cx("SelectField", { active: isActive, absolute: true })}>
 			<div className="select-wrapper">
 				<div
 					className={cx("active-option", { "with-value": !!value })}
@@ -29,7 +29,7 @@ export const GenericSelectField: React.FC<{
 					}}
 				>
 					<SelectOption value={!value ? t("select_option") : value} />
-					<Image filename="arrow-down-white.svg" />
+					<Image filename="triangle.png" />
 				</div>
 				<div className="dropdown with-custom-scrollbar">
 					{value && (
