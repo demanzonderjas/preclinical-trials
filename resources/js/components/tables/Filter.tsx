@@ -29,7 +29,7 @@ export const Filter: React.FC<{ options: string[] }> = observer(({ options }) =>
 				<GenericSelectField
 					setValue={value => setActiveFilterKey(value as TFormFieldName)}
 					value={activeFilterKey || ""}
-					options={options}
+					options={["", ...options]}
 				/>
 				<div className="AddFilter" onClick={addFilter}>
 					<span>{t("add_filter")}</span>

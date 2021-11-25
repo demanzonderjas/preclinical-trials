@@ -28,7 +28,7 @@ export const GenericSelectField: React.FC<{
 						setIsActive(!isActive);
 					}}
 				>
-					<SelectOption value={!value ? t("select_option") : value} />
+					<SelectOption value={!value ? t("any_field") : value} />
 					<Image filename="triangle.png" />
 				</div>
 				<div className="dropdown with-custom-scrollbar">
