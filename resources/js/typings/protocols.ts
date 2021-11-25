@@ -22,3 +22,8 @@ export type TDBProtocol = {
 };
 
 export type TDetail = { key: TFormFieldName; value: any };
+
+export enum TProtocolOverviewType {
+	Table = "table",
+	Cards = "cards"
+}
