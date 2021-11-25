@@ -1,0 +1,105 @@
+$cardMargin: 50px;
+
+.card-wrapper {
+	display: flex;
+	justify-content: left;
+	margin: 60px 0;
+
+	&:nth-child(even) {
+		justify-content: right;
+
+		.ProtocolCard {
+			.figure {
+				top: -10%;
+				right: 0%;
+				left: auto;
+				transform: rotate(125deg);
+			}
+		}
+	}
+}
+
+.ProtocolCard {
+	width: 650px;
+	position: relative;
+	cursor: pointer;
+	transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+
+	&:hover {
+		transform: scale(1.05);
+	}
+
+	.figure {
+		position: absolute;
+		top: 0;
+		left: -10%;
+		width: 300px;
+		height: 500px;
+		transform: rotate(-55deg);
+		background-color: $primary;
+	}
+
+	.header {
+		position: relative;
+		width: 60%;
+		padding: 20px;
+		margin-left: calc(20% + (#{$cardMargin}/ 2));
+		background-color: $secondary;
+		color: $white;
+		font-size: 22px;
+		text-align: center;
+		z-index: 2;
+		line-height: 26px;
+	}
+
+	.body {
+		width: calc(100% - #{$cardMargin} - 50px);
+		margin-left: $cardMargin;
+		background-color: $grey-light;
+		margin-top: -40px;
+		padding: 60px 20px 40px;
+		border-bottom: 8px solid $secondary;
+		position: relative;
+		line-height: 24px;
+	}
+
+	.footer {
+		position: relative;
+		width: calc(100% - #{$cardMargin} - #{$cardMargin});
+		margin-left: $cardMargin;
+
+		.start-date {
+			left: 0;
+			transform: translate(-50%, 10%);
+		}
+
+		.end-date {
+			right: 0;
+			transform: translate(50%, 10%);
+		}
+
+		.date {
+			position: absolute;
+			top: -100%;
+			width: 50px;
+			height: 50px;
+			text-transform: uppercase;
+			background-color: $secondary;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 50%;
+			font-weight: bold;
+			font-size: 12px;
+			text-align: center;
+			color: $white;
+		}
+
+		.status {
+			background-color: rgba($grey-medium, 0.75);
+			color: $white;
+			text-align: center;
+			padding: 10px 20px;
+		}
+	}
+}

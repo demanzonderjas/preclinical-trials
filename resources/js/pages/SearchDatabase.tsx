@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Image } from "../components/base/Image";
+import { ProtocolCardsBlock } from "../components/cards/CardsBlock";
 import { Page } from "../components/layout/Page";
 import { Filter } from "../components/tables/Filter";
 import { TableBlock } from "../components/tables/TableBlock";
@@ -13,7 +14,7 @@ import { mapProtocolDetailsToObject } from "../utils/formatting";
 
 export const SearchDatabasePage: React.FC = () => {
 	const [protocols, setProtocols] = useState([]);
-	const [overviewType, setOverviewType] = useState(TProtocolOverviewType.Table);
+	const [overviewType, setOverviewType] = useState(TProtocolOverviewType.Cards);
 	const [filterStore] = useState(new FilterStore());
 
 	useEffect(() => {
@@ -67,7 +68,9 @@ export const SearchDatabasePage: React.FC = () => {
 					{overviewType === TProtocolOverviewType.Table && (
 						<TableBlock table={searchProtocolsTable} rows={protocols} />
 					)}
-					{overviewType === TProtocolOverviewType.Cards && <>cards</>}
+					{overviewType === TProtocolOverviewType.Cards && (
+						<ProtocolCardsBlock protocols={protocols} />
+					)}
 				</div>
 			</Page>
 		</FilterStoreProvider>
