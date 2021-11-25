@@ -25,6 +25,19 @@
 					background-color: rgba($secondary, 0.4);
 				}
 
+				&.clickable {
+					cursor: pointer;
+
+					&:hover {
+						&:nth-child(odd) {
+							background-color: rgba(#c4c4c4, 1);
+						}
+						&:nth-child(even) {
+							background-color: rgba($secondary, 0.6);
+						}
+					}
+				}
+
 				td {
 					padding: 20px 10px;
 					line-height: 24px;
@@ -49,7 +62,7 @@
 			}
 
 			&:last-child {
-				padding-right: max(calc((100vw - #{$layout-width} + 20px) / 2), 20px);
+				padding-right: max(calc((100vw - #{$layout-width}) / 2), 20px);
 			}
 		}
 	}

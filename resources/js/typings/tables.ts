@@ -2,6 +2,7 @@ import { TFormFieldName } from "./forms";
 
 export type TTable = {
 	headers: TTableCellName[];
+	targetOnRowClick?: string;
 	cells: TTableCell[];
 };
 
@@ -9,6 +10,7 @@ export type TTableCell = {
 	id: TTableCellName;
 	Component: React.FC<any>;
 	value: string;
+	props?: any;
 	synonym?: TFormFieldName | string;
 };
 

@@ -20,5 +20,6 @@ export const manageProtocolsTable: TTable = {
 
 export const searchProtocolsTable: TTable = {
 	headers: [TTableCellName.Title, TTableCellName.StudyCentre, TTableCellName.Status],
+	targetOnRowClick: "/database/view-protocol",
 	cells: [titleCell, studyCentreCell, statusCell]
 };

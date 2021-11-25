@@ -107,6 +107,24 @@
 		}
 	}
 
+	table {
+		tbody,
+		thead {
+			tr {
+				td,
+				th {
+					&:first-child {
+						padding-left: 20px;
+					}
+
+					&:last-child {
+						padding-right: 20px;
+					}
+				}
+			}
+		}
+	}
+
 	@include respond-to("small") {
 		.content {
 			max-width: 80%;
