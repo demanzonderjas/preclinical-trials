@@ -44,11 +44,11 @@
 		td,
 		th {
 			&:first-child {
-				padding-left: max(calc((100vw - 1040px) / 2), 20px);
+				padding-left: max(calc((100vw - 1540px) / 2), 20px);
 			}
 
 			&:last-child {
-				padding-right: max(calc((100vw - 1060px) / 2), 20px);
+				padding-right: max(calc((100vw - 1560px) / 2), 20px);
 			}
 		}
 	}

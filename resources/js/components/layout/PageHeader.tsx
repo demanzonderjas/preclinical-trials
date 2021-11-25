@@ -1,7 +1,7 @@
 import React from "react";
 import { THeaderStyle } from "../../typings/layout";
 import { Highlight } from "./Highlight";
-import { LoginButton } from "./LoginButton";
+import { DashboardPanel } from "./DashboardPanel";
 import { Logo } from "./Logo";
 import { Menu } from "./Menu";
 import cx from "classnames";
@@ -21,7 +21,7 @@ export const PageHeader: React.FC<{
 				<h1>{title}</h1>
 				{!!subtitle && <h2>{subtitle}</h2>}
 			</div>
-			<LoginButton />
+			<DashboardPanel />
 		</div>
 	);
 };

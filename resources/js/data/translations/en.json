@@ -144,5 +144,8 @@
 	"action": "Actions",
 	"any_field": "Any field",
 	"add_filter": "Add filter",
-	"enter_search": "Enter your search here.."
+	"enter_search": "Enter your search here..",
+	"dashboard": "Dashboard",
+	"add_protocol": "Add protocol",
+	"go_back": "Go back"
 }

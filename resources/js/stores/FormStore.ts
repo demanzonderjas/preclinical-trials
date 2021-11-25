@@ -52,13 +52,22 @@ export class FormStore {
 			setFields: action.bound,
 			style: computed,
 			succesText: computed,
+			isFirstSection: computed,
 			isLastSection: computed,
 			goToNextSection: action.bound,
+			goToPrevSection: action.bound,
 			createKeyValuePairs: action.bound,
 			loadValues: action.bound,
 			getSectionByIndex: action.bound,
 			validate: action.bound
 		});
+	}
+
+	get isFirstSection() {
+		if (!this.sections) {
+			return true;
+		}
+		return this.activeSection === this.sections[0] || !this.activeSection;
 	}
 
 	get isLastSection() {
@@ -78,6 +87,15 @@ export class FormStore {
 
 	getSectionByIndex(section: TSectionName) {
 		return this.sections.indexOf(section);
+	}
+
+	goToPrevSection(e: any) {
+		e.preventDefault();
+		const currentIndex = this.sections.findIndex(section => section === this.activeSection);
+		this.setActiveSection(this.sections[currentIndex - 1]);
+		setTimeout(() => {
+			window.scrollTo(0, 0);
+		}, 0);
 	}
 
 	goToNextSection(e: any) {
