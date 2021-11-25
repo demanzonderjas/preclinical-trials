@@ -9,7 +9,7 @@ export const ProtocolCardsBlock: React.FC<{ protocols: TProtocol[] }> = observer
 	({ protocols }) => {
 		const { activeFilterText, activeFilterKey, filters } = useFilter();
 		return (
-			<div className="CardsBlock">
+			<div className="CardsBlock layout-wrapper">
 				{protocols
 					.filter(row =>
 						protocolMeetsFilters(activeFilterText, activeFilterKey, filters, row)
