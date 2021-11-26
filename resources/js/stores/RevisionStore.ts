@@ -13,8 +13,16 @@ export class RevisionStore {
 			setActiveRevision: action.bound,
 			revisions: computed,
 			activeRevisionDate: computed,
-			changes: computed
+			changes: computed,
+			activeRevisionNumber: computed
 		});
+	}
+
+	get activeRevisionNumber() {
+		if (!this.activeRevision) {
+			return 0;
+		}
+		return this.revisions.findIndex(r => r.id === this.activeRevision.id) + 1;
 	}
 
 	get revisions() {
@@ -32,12 +40,15 @@ export class RevisionStore {
 		if (!this.activeRevision) {
 			return "";
 		}
-		return day(this.activeRevision.created_at).format("DD/MM/YYYY");
+
+		return `V${this.activeRevisionNumber} - ${day(this.activeRevision.created_at).format(
+			"DD/MM/YYYY"
+		)}`;
 	}
 
 	setActiveRevision(revisionDate: string) {
 		this.activeRevision = this.revisions.find(
-			f => day(f.created_at).format("DD/MM/YYYY") === revisionDate
+			(r, idx) => `V${idx + 1} - ${day(r.created_at).format("DD/MM/YYYY")}` === revisionDate
 		);
 	}
 }

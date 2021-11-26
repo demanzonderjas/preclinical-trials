@@ -7,6 +7,7 @@ import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { fieldMeetsDependencies } from "../../utils/validation";
 import { useRevisions } from "../../hooks/useRevisions";
 import { observer } from "mobx-react-lite";
+import { RevisionValue } from "./RevisionValue";
 
 export const ProtocolSection: React.FC<{
 	name: TSectionName;
@@ -17,7 +18,9 @@ export const ProtocolSection: React.FC<{
 	const { t } = useTranslationStore();
 	const { changes = [] } = useRevisions();
 	const changeCount = changes.reduce((base, change) => {
-		const changeBelongsToSection = fields.some(f => f.id === change.key);
+		const changeBelongsToSection = fields.some(
+			f => f.id === change.key && !f.showValueIn && fieldMeetsDependencies(f, valueMap)
+		);
 		return changeBelongsToSection ? base + 1 : base;
 	}, 0);
 	const valueMap = fields.reduce((base, field) => {
@@ -44,14 +47,7 @@ export const ProtocolSection: React.FC<{
 					.map(f => (
 						<div className="KeyValue" key={f.id}>
 							<label className="key">{t(f.label || f.id)}</label>
-							<div className="value">
-								<ProtocolValue
-									id={f.id}
-									value={f.value}
-									fields={fields}
-									valueMap={valueMap}
-								/>
-							</div>
+							<RevisionValue field={f} fields={fields} valueMap={valueMap} />
 						</div>
 					))}
 			</div>
