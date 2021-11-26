@@ -16,7 +16,7 @@ class CreateRevisionsTable extends Migration
         Schema::create('revisions', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('protocol_id')->unsigned();
-            $table->foreign('protocol_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('protocol_id')->references('id')->on('protocols')->onDelete('cascade');
             $table->text('changes');
             $table->timestamps();
         });

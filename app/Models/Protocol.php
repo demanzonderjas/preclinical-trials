@@ -20,6 +20,11 @@ class Protocol extends Model
         return $this->hasMany(Detail::class);
     }
 
+    public function revisions()
+    {
+        return $this->hasMany(Revision::class);
+    }
+
     public function saveDetails(Request $request)
     {
         $validKeys = array_filter($request->all(), function ($key) {

@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Revision extends Model
 {
     use HasFactory;
+
+    protected $fillable = ["protocol_id", "changes"];
+    protected $casts = [
+        "changes" => 'json'
+    ];
 }

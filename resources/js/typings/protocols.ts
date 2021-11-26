@@ -27,3 +27,14 @@ export enum TProtocolOverviewType {
 	Table = "table",
 	Cards = "cards"
 }
+
+export type TRevisionChange = {
+	key: TFormFieldName;
+	old_value: any;
+	new_value: any;
+};
+
+export type TRevision = {
+	protocol_id: number;
+	changes: TRevisionChange[];
+};
