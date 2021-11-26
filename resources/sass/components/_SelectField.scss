@@ -70,11 +70,12 @@ $item-height: 42px;
 		background-color: $primary;
 		border-bottom: 1px solid $grey-light;
 		position: relative;
+		display: flex;
+		align-items: center;
 		color: $white;
 
 		span {
 			margin-top: 3px;
-			max-width: calc(100% - 20px);
 			min-height: 18px;
 			overflow-x: hidden;
 			overflow-y: hidden;

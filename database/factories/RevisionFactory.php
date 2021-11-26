@@ -31,9 +31,12 @@ class RevisionFactory extends Factory
 	public function definition()
 	{
 		$protocol = Protocol::all()->random();
+		$fakeTime = $this->faker->dateTimeThisYear();
 		return [
 			"protocol_id" => $protocol,
 			"changes" => $this->createRandomChanges($protocol),
+			"created_at" => $fakeTime,
+			"updated_at" => $fakeTime,
 		];
 	}
 

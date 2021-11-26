@@ -18,6 +18,7 @@ export type TDBProtocol = {
 	id: number;
 	status: string;
 	details: TDetail[];
+	revisions: TRevision[];
 	updated_at: string;
 };
 
@@ -35,6 +36,8 @@ export type TRevisionChange = {
 };
 
 export type TRevision = {
+	id: number;
 	protocol_id: number;
 	changes: TRevisionChange[];
+	created_at: string;
 };

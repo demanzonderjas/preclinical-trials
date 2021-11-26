@@ -15,7 +15,8 @@ export const GenericSelectField: React.FC<{
 	value: string;
 	setValue: Function;
 	options: string[];
-}> = ({ value, setValue, options }) => {
+	emptyPlaceholder?: string;
+}> = ({ value, setValue, options, emptyPlaceholder }) => {
 	const [isActive, setIsActive] = useState(false);
 	const { t } = useTranslationStore();
 
@@ -28,10 +29,20 @@ export const GenericSelectField: React.FC<{
 						setIsActive(!isActive);
 					}}
 				>
-					<SelectOption value={!value ? t("any_field") : value} />
+					<SelectOption value={!value ? t(emptyPlaceholder || "any_field") : value} />
 					<Image filename="triangle.png" />
 				</div>
 				<div className="dropdown with-custom-scrollbar">
+					{value && (
+						<SelectOption
+							value={""}
+							label="clear_revision"
+							handleClick={() => {
+								setValue("");
+								setIsActive(!isActive);
+							}}
+						/>
+					)}
 					{value && (
 						<SelectOption
 							handleClick={() => {
@@ -109,12 +120,13 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }
 export const SelectOption: React.FC<{
 	value: string;
 	handleClick?: Function;
+	label?: string;
 	isSelected?: boolean;
-}> = observer(({ value, handleClick, isSelected }) => {
+}> = observer(({ value, handleClick, isSelected, label }) => {
 	const { t } = useTranslationStore();
 	return (
 		<div className="SelectOption" onClick={handleClick ? () => handleClick() : undefined}>
-			<span>{t(value)}</span>
+			<span>{t(label || value)}</span>
 			{isSelected && (
 				<div className="image-wrapper">
 					<Image filename="check.svg" />

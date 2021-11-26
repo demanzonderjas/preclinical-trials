@@ -1,0 +1,40 @@
+.RevisionPanel {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 180px;
+
+	.actions {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.SelectField {
+		margin-top: 5px;
+		.SelectOption {
+			font-size: 16px !important;
+			line-height: 16px;
+		}
+	}
+
+	.version {
+		padding: 10px 40px 10px 15px;
+		height: $item-height;
+		font-size: 18px;
+		background-color: $primary;
+		border-bottom: 1px solid $grey-light;
+		position: relative;
+		display: flex;
+		margin-top: 5px;
+		align-items: center;
+		color: $white;
+
+		span {
+			margin-top: 3px;
+			min-height: 18px;
+			overflow-x: hidden;
+			overflow-y: hidden;
+			display: block;
+		}
+	}
+}

@@ -148,5 +148,8 @@
 	"dashboard": "Dashboard",
 	"add_protocol": "Add protocol",
 	"go_back": "Go back",
-	"active_filters": "Active filters"
+	"active_filters": "Active filters",
+	"current_version": "Current version",
+	"choose_revision": "Choose revision",
+	"clear_revision": "Clear revision"
 }

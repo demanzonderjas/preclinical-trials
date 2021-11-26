@@ -18,6 +18,7 @@ class ProtocolResource extends JsonResource
         return [
             "id" => $this->id,
             "details" => $this->details,
+            "revisions" => $this->revisions,
             "updated_at" => $this->updated_at
         ];
     }

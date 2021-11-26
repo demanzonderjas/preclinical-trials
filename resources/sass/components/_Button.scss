@@ -18,6 +18,11 @@ button {
 		background-color: $tertiary !important;
 	}
 
+	&.small {
+		font-size: 16px;
+		padding: 4px 16px;
+	}
+
 	&.big {
 		font-size: 28px;
 		padding: 16px 32px;
