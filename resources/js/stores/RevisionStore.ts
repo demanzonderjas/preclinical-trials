@@ -12,12 +12,20 @@ export class RevisionStore {
 		makeAutoObservable(this, {
 			setActiveRevision: action.bound,
 			revisions: computed,
-			activeRevisionDate: computed
+			activeRevisionDate: computed,
+			changes: computed
 		});
 	}
 
 	get revisions() {
 		return this.protocol.revisions;
+	}
+
+	get changes() {
+		if (!this.activeRevision) {
+			return [];
+		}
+		return this.activeRevision.changes;
 	}
 
 	get activeRevisionDate() {

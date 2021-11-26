@@ -151,5 +151,7 @@
 	"active_filters": "Active filters",
 	"current_version": "Current version",
 	"choose_revision": "Choose revision",
-	"clear_revision": "Clear revision"
+	"clear_revision": "Clear revision",
+	"changes": "changes",
+	"change": "change"
 }
