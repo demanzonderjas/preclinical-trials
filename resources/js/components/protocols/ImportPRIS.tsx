@@ -25,7 +25,7 @@ export const ImportPRIS: React.FC = () => {
 	}, [file]);
 
 	return (
-		<div className="ImportPRIS">
+		<div className="ImportPRIS UploadButton">
 			<button className="secondary small" onClick={e => e.preventDefault()}>
 				{t("import_pris")}
 			</button>

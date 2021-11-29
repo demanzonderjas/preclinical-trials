@@ -157,5 +157,5 @@
 	"arm": "Arm",
 	"number": "Number",
 	"clear": "Clear",
-	"import_pris": "Import PRIS"
+	"import_pris": "Import PRIS (.json)"
 }

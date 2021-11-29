@@ -12,6 +12,10 @@ button {
 
 	&.secondary {
 		background-color: $secondary !important;
+
+		&:hover {
+			background-color: darken($secondary, 30);
+		}
 	}
 
 	&.tertiary {
