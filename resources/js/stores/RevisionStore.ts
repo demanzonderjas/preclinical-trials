@@ -42,13 +42,14 @@ export class RevisionStore {
 		}
 
 		return `V${this.activeRevisionNumber} - ${day(this.activeRevision.created_at).format(
-			"DD/MM/YYYY"
+			"DD/MM/YYYY hh:mm"
 		)}`;
 	}
 
 	setActiveRevision(revisionDate: string) {
 		this.activeRevision = this.revisions.find(
-			(r, idx) => `V${idx + 1} - ${day(r.created_at).format("DD/MM/YYYY")}` === revisionDate
+			(r, idx) =>
+				`V${idx + 1} - ${day(r.created_at).format("DD/MM/YYYY hh:mm")}` === revisionDate
 		);
 	}
 }
