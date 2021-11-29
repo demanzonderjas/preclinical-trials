@@ -42,3 +42,9 @@ export type TRevision = {
 	changes: TRevisionChange[];
 	created_at: string;
 };
+
+export type TPRISConversion = {
+	value: string;
+	target: TFormFieldName;
+	conversion?: (value: any) => any;
+};

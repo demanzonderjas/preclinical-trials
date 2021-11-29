@@ -156,5 +156,6 @@
 	"change": "change",
 	"arm": "Arm",
 	"number": "Number",
-	"clear": "Clear"
+	"clear": "Clear",
+	"import_pris": "Import PRIS"
 }

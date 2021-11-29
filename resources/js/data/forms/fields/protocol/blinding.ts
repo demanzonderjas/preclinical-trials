@@ -2,7 +2,7 @@ import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName, TSelectOption } from "../../../../typings/forms";
 import { otherSupportField } from "./other";
 
-export const blindingOptions: string[] = ["No", "Yes - how?", "Yes partially, because"];
+export const blindingOptions: string[] = ["no", "yes_how", "yes_partially_because"];
 
 export const blindedInterventionField: TFormField = {
 	id: TFormFieldName.InvestigatorsBlindedIntervention,

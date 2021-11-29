@@ -40,3 +40,12 @@ export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 export function getRevisionDate(date: string, number: number) {
 	return `V${number} - ${day(date).format("DD/MM/YYYY hh:mm")}`;
 }
+
+export async function fileToJSON(file: File) {
+	return new Promise((resolve, reject) => {
+		const fileReader = new FileReader();
+		fileReader.onload = event => resolve(JSON.parse(event.target.result as string));
+		fileReader.onerror = error => reject(error);
+		fileReader.readAsText(file);
+	});
+}

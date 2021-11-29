@@ -1,9 +1,9 @@
 import React from "react";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
+import { ImportPRIS } from "../../components/protocols/ImportPRIS";
 import { createProtocolForm, protocolSections } from "../../data/forms/protocol";
 import { saveProtocolQuery } from "../../queries/protocol";
-import { TSectionName } from "../../typings/forms";
 
 export const AddProtocolPage: React.FC = () => {
 	return (
@@ -22,6 +22,7 @@ export const AddProtocolPage: React.FC = () => {
 						Changes made after publication on this site will be recorded with an audit
 						trail.
 					</p>
+					<ImportPRIS />
 				</FormBlock>
 			</div>
 		</Page>
