@@ -58,7 +58,7 @@ export const ControlButtons: React.FC = observer(() => {
 	return (
 		<div
 			className="ControlButtons"
-			style={{ display: "flex", justifyContent: "space-between" }}
+			style={{ display: "flex", justifyContent: !!sections ? "space-between" : "center" }}
 		>
 			{!isFirstSection && !!sections && (
 				<button className="secondary" onClick={e => saveAsDraft(e, true)}>

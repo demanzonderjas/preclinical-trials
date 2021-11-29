@@ -39,6 +39,34 @@ class Protocol extends Model
         });
     }
 
+    public function saveRevisions(Request $request)
+    {
+        $validKeys = array_filter($request->all(), function ($key) {
+            return in_array($key, config('pct.valid_protocol_keys'));
+        }, ARRAY_FILTER_USE_KEY);
+        $currentDetails = collect($validKeys);
+        $changes = [];
+        $currentDetails->each(function ($value, $key) use (&$changes) {
+            $detail = Detail::firstOrNew(['protocol_id' => $this->id, 'key' => $key]);
+            if ($detail->value != $value) {
+                $changes[] = [
+                    "key" => $key,
+                    "old_value" => $detail->value,
+                    "new_value" => $value
+                ];
+            }
+            $detail->value = $value;
+            $this->details()->save($detail);
+        });
+        if (count($changes) > 0) {
+            $this->revisions()->saveMany([
+                new Revision([
+                    "changes" => $changes
+                ])
+            ]);
+        }
+    }
+
     public function getHasEmbargoAttribute()
     {
         $detail = $this->details->first(function ($d) {

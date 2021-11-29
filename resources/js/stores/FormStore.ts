@@ -191,7 +191,9 @@ export class FormStore {
 	setIsDone(isDone) {
 		this.isDone = isDone;
 		this.setIsSubmitting(false);
-		this.clearFields();
+		if (!this.form.keepValuesAfterSubmit) {
+			this.clearFields();
+		}
 	}
 
 	clearFields() {

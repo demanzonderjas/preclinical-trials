@@ -47,6 +47,7 @@ import { shortTitleField, titleField } from "./fields/protocol/title";
 export const createProtocolForm: TForm = {
 	id: TFormName.CreateProtocol,
 	style: TFormStyle.WithSections,
+	keepValuesAfterSubmit: true,
 	submitText: "save",
 	fields: [
 		titleField,

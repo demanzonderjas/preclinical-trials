@@ -25,7 +25,7 @@ export const RevisionPanel: React.FC = observer(() => {
 	const hasRevisions = !!protocol.revisions && !!protocol.revisions.length;
 	const revisionDates = hasRevisions
 		? protocol.revisions.map(
-				(r, idx) => `V${idx + 1} - ${day(r.created_at).format("DD/MM/YYYY")}`
+				(r, idx) => `V${idx + 1} - ${day(r.created_at).format("DD/MM/YYYY hh:mm")}`
 		  )
 		: [];
 
