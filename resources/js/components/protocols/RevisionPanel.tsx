@@ -49,6 +49,7 @@ export const RevisionPanel: React.FC = observer(() => {
 				{hasRevisions && (
 					<GenericSelectField
 						emptyPlaceholder="current_version"
+						clearPlaceholder="clear_revision"
 						options={revisionDates}
 						setValue={value => setActiveRevision(value)}
 						value={activeRevisionDate}

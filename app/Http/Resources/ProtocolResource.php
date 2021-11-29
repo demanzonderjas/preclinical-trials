@@ -19,6 +19,7 @@ class ProtocolResource extends JsonResource
             "id" => $this->id,
             "details" => $this->details,
             "revisions" => $this->revisions,
+            "created_at" => $this->created_at,
             "updated_at" => $this->updated_at
         ];
     }

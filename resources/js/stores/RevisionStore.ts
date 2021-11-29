@@ -15,7 +15,8 @@ export class RevisionStore {
 			revisions: computed,
 			activeRevisionDate: computed,
 			changes: computed,
-			activeRevisionNumber: computed
+			activeRevisionNumber: computed,
+			prevRevisionDate: computed
 		});
 	}
 
@@ -24,6 +25,17 @@ export class RevisionStore {
 			return 0;
 		}
 		return this.revisions.findIndex(r => r.id === this.activeRevision.id) + 1;
+	}
+
+	get prevRevisionDate(): string {
+		if (this.revisions.length === 1 || this.activeRevisionNumber === 1) {
+			return getRevisionDate(this.protocol.created_at, 0);
+		} else if (this.revisions.length && this.activeRevisionNumber > 1) {
+			return getRevisionDate(
+				this.revisions[this.activeRevisionNumber - 2].created_at,
+				this.activeRevisionNumber - 1
+			);
+		}
 	}
 
 	get revisions() {
@@ -46,8 +58,9 @@ export class RevisionStore {
 	}
 
 	setActiveRevision(revisionDate: string) {
+		console.log(revisionDate);
 		this.activeRevision = this.revisions.find(
-			(r, idx) => getRevisionDate(revisionDate, idx + 1) === revisionDate
+			(r, idx) => getRevisionDate(r.created_at, idx + 1) === revisionDate
 		);
 	}
 }

@@ -19,6 +19,7 @@ export type TDBProtocol = {
 	status: string;
 	details: TDetail[];
 	revisions: TRevision[];
+	created_at: string;
 	updated_at: string;
 };
 

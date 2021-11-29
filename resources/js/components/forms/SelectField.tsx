@@ -16,7 +16,8 @@ export const GenericSelectField: React.FC<{
 	setValue: Function;
 	options: string[];
 	emptyPlaceholder?: string;
-}> = ({ value, setValue, options, emptyPlaceholder }) => {
+	clearPlaceholder?: string;
+}> = ({ value, setValue, options, emptyPlaceholder, clearPlaceholder }) => {
 	const [isActive, setIsActive] = useState(false);
 	const { t } = useTranslationStore();
 
@@ -36,35 +37,24 @@ export const GenericSelectField: React.FC<{
 					{value && (
 						<SelectOption
 							value={""}
-							label="clear_revision"
+							label={clearPlaceholder || "clear"}
 							handleClick={() => {
 								setValue("");
 								setIsActive(!isActive);
 							}}
 						/>
 					)}
-					{value && (
+					{options.map(option => (
 						<SelectOption
+							key={option}
+							isSelected={option === value}
+							value={option}
 							handleClick={() => {
-								setValue(value);
+								setValue(option);
 								setIsActive(!isActive);
 							}}
-							value={value}
 						/>
-					)}
-					{options
-						.filter(option => option != value)
-						.map(option => (
-							<SelectOption
-								key={option}
-								isSelected={option === value}
-								value={option}
-								handleClick={() => {
-									setValue(option);
-									setIsActive(!isActive);
-								}}
-							/>
-						))}
+					))}
 				</div>
 			</div>
 		</div>

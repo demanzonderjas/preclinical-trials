@@ -155,5 +155,6 @@
 	"changes": "changes",
 	"change": "change",
 	"arm": "Arm",
-	"number": "Number"
+	"number": "Number",
+	"clear": "Clear"
 }

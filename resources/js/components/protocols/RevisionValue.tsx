@@ -10,7 +10,7 @@ export const RevisionValue: React.FC<{
 	fields: TFormField[];
 	valueMap: Map<TFormFieldName, any>;
 }> = observer(({ field, fields, valueMap }) => {
-	const { changes = [], activeRevisionDate } = useRevisions();
+	const { changes = [], activeRevisionDate, prevRevisionDate } = useRevisions();
 	const { t } = useTranslationStore();
 	const hasChange = changes.find(c => c.key === field.id);
 	return (
@@ -22,11 +22,11 @@ export const RevisionValue: React.FC<{
 				fields={fields}
 				valueMap={valueMap}
 			/>
-			{!!hasChange && <div className="current label">{t("current_version")}</div>}
+			{!!hasChange && <div className="current label">{prevRevisionDate}</div>}
 			{!!hasChange && (
 				<ProtocolValue
 					id={field.id}
-					value={field.value}
+					value={hasChange.old_value}
 					fields={fields}
 					valueMap={valueMap}
 				/>
