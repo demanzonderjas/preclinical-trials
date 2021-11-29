@@ -35,7 +35,7 @@ export const ViewProtocolPage: React.FC = () => {
 				<div className="ViewProtocol border-top">
 					<ContentBlock maxWidth="90%">
 						<div className="protocol">
-							{protocolSections.map((section, idx) => (
+							{protocolSections.slice(0, -1).map((section, idx) => (
 								<ProtocolSection
 									key={section}
 									name={section}

@@ -2,7 +2,6 @@ import { ActionCell, EditCell, ViewCell } from "../../../components/tables/Actio
 import { DateCell } from "../../../components/tables/DateCell";
 import { StudyCentreCell } from "../../../components/tables/StudyCentreCell";
 import { TextCell } from "../../../components/tables/TextCell";
-import { TFormFieldName } from "../../../typings/forms";
 import { TTableCell, TTableCellName } from "../../../typings/tables";
 
 export const titleCell: TTableCell = {
@@ -46,4 +45,37 @@ export const actionCell: TTableCell = {
 	id: TTableCellName.Action,
 	Component: ActionCell,
 	value: ""
+};
+
+export const armCell: TTableCell = {
+	id: TTableCellName.Arm,
+	Component: TextCell,
+	value: ""
+};
+
+export const numberCell: TTableCell = {
+	id: TTableCellName.Number,
+	Component: TextCell,
+	value: ""
+};
+
+export const interventionCell: TTableCell = {
+	id: TTableCellName.Intervention,
+	Component: TextCell,
+	value: ""
+};
+
+export const nameCell: TTableCell = {
+	...titleCell,
+	id: TTableCellName.Name
+};
+
+export const cityCell: TTableCell = {
+	...titleCell,
+	id: TTableCellName.City
+};
+
+export const countryCell: TTableCell = {
+	...titleCell,
+	id: TTableCellName.Country
 };

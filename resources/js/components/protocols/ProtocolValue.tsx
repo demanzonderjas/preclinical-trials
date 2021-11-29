@@ -1,8 +1,12 @@
 import React from "react";
+import { FilterStoreProvider } from "../../contexts/FilterStoreContext";
+import { studyArmsTable, studyCentreTable } from "../../data/tables/protocols";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { FilterStore } from "../../stores/FilterStore";
 import { TFormField, TFormFieldName } from "../../typings/forms";
 import { TStudyArm, TStudyCentre } from "../../typings/protocols";
 import { fieldMeetsDependencies } from "../../utils/validation";
+import { TableBlock } from "../tables/TableBlock";
 
 export const ProtocolValue: React.FC<{
 	id: TFormFieldName;
@@ -51,15 +55,12 @@ export const CombinedValue: React.FC<{
 };
 
 export const StudyArmsValue: React.FC<{ value: TStudyArm[] }> = ({ value }) => {
+	console.log(value);
 	return (
 		<div className="StudyArmsValue">
-			{value.map((studyArm, idx) => (
-				<div className="StudyArm" key={idx}>
-					<span>{studyArm.arm}</span>
-					<span>{studyArm.number}</span>
-					<span>{studyArm.intervention}</span>
-				</div>
-			))}
+			<FilterStoreProvider store={new FilterStore()}>
+				<TableBlock rows={value} table={studyArmsTable} />
+			</FilterStoreProvider>
 		</div>
 	);
 };
@@ -67,13 +68,9 @@ export const StudyArmsValue: React.FC<{ value: TStudyArm[] }> = ({ value }) => {
 export const StudyCentreValue: React.FC<{ value: TStudyCentre[] }> = ({ value }) => {
 	return (
 		<div className="StudyArmsValue">
-			{value.map((studyCentre, idx) => (
-				<div className="StudyArm" key={idx}>
-					<span>{studyCentre.name}</span>
-					<span>{studyCentre.city}</span>
-					<span>{studyCentre.country}</span>
-				</div>
-			))}
+			<FilterStoreProvider store={new FilterStore()}>
+				<TableBlock rows={value} table={studyCentreTable} />
+			</FilterStoreProvider>
 		</div>
 	);
 };

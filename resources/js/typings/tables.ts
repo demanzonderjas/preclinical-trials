@@ -19,7 +19,13 @@ export enum TTableCellName {
 	Status = "status",
 	LastUpdated = "last_updated",
 	StudyCentre = "study_centre",
-	Action = "action"
+	Action = "action",
+	Arm = "arm",
+	Number = "number",
+	Intervention = "intervention",
+	Name = "name",
+	City = "city",
+	Country = "country"
 }
 
 export type TFilter = {

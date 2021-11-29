@@ -30,9 +30,9 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(({ 
 						.filter(row =>
 							protocolMeetsFilters(activeFilterText, activeFilterKey, filters, row)
 						)
-						.map(row => (
+						.map((row, idx) => (
 							<tr
-								key={row.id}
+								key={idx}
 								className={cx({ clickable: !!table.targetOnRowClick })}
 								onClick={
 									table.targetOnRowClick

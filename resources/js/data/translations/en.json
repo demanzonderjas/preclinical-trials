@@ -153,5 +153,7 @@
 	"choose_revision": "Choose revision",
 	"clear_revision": "Clear revision",
 	"changes": "changes",
-	"change": "change"
+	"change": "change",
+	"arm": "Arm",
+	"number": "Number"
 }
