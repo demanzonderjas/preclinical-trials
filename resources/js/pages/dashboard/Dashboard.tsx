@@ -1,11 +1,22 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { MenuCircleItem } from "../../components/layout/MenuCircleItem";
 import { Page } from "../../components/layout/Page";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { useUser } from "../../hooks/useUser";
 
-export const DashboardPage: React.FC = () => {
+export const DashboardPage: React.FC = observer(() => {
+	const { user } = useUser();
+	const { t } = useTranslationStore();
+
 	return (
 		<Page title="Dashboard">
 			<div className="Dashboard border-top">
+				{user && (
+					<div className="UserBar">
+						{t("welcome")} {user.first_name}
+					</div>
+				)}
 				<div
 					className="DashboardItems"
 					style={{
@@ -34,4 +45,4 @@ export const DashboardPage: React.FC = () => {
 			</div>
 		</Page>
 	);
-};
+});

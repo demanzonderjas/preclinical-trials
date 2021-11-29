@@ -1,0 +1,11 @@
+.UserBar {
+	background-color: $secondary;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+	font-weight: bold;
+	color: $white;
+	border-bottom: 10px solid $secondary;
+}
