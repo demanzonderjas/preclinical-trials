@@ -60,7 +60,7 @@ body {
 }
 
 .layout-wrapper {
-	max-width: $layout-width;
+	max-width: $layout-width !important;
 	margin-left: auto;
 	margin-right: auto;
 }

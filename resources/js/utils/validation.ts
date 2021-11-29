@@ -27,6 +27,9 @@ export function fieldMeetsDependencies(field: TFormField, values: Map<TFormField
 	if (!field.dependencies) {
 		return true;
 	}
+	if (!values) {
+		return false;
+	}
 	return field.dependencies.every(dependency => {
 		const activeValue = values.get(dependency.key);
 		if (dependency.type === TFormFieldDependencyType.NotEqualTo) {
