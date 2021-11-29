@@ -1,3 +1,4 @@
+import day from "dayjs";
 import { TDBProtocol, TProtocol } from "../typings/protocols";
 
 export function slugify(str: string) {
@@ -34,4 +35,8 @@ export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 		},
 		{ id: protocol.id, updated_at: protocol.updated_at }
 	);
+}
+
+export function getRevisionDate(date: string, number: number) {
+	return `V${number} - ${day(date).format("DD/MM/YYYY hh:mm")}`;
 }

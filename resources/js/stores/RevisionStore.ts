@@ -1,6 +1,7 @@
 import { action, computed, makeAutoObservable } from "mobx";
 import { TDBProtocol, TRevision } from "../typings/protocols";
 import day from "dayjs";
+import { getRevisionDate } from "../utils/formatting";
 
 export class RevisionStore {
 	protocol: TDBProtocol = null;
@@ -41,15 +42,12 @@ export class RevisionStore {
 			return "";
 		}
 
-		return `V${this.activeRevisionNumber} - ${day(this.activeRevision.created_at).format(
-			"DD/MM/YYYY hh:mm"
-		)}`;
+		return getRevisionDate(this.activeRevision.created_at, this.activeRevisionNumber);
 	}
 
 	setActiveRevision(revisionDate: string) {
 		this.activeRevision = this.revisions.find(
-			(r, idx) =>
-				`V${idx + 1} - ${day(r.created_at).format("DD/MM/YYYY hh:mm")}` === revisionDate
+			(r, idx) => getRevisionDate(revisionDate, idx + 1) === revisionDate
 		);
 	}
 }

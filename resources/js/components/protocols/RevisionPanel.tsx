@@ -5,6 +5,7 @@ import { useRevisions } from "../../hooks/useRevisions";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { GenericSelectField } from "../forms/SelectField";
 import day from "dayjs";
+import { getRevisionDate } from "../../utils/formatting";
 
 export const RevisionPanel: React.FC = observer(() => {
 	const { goBack, push } = useHistory();
@@ -24,9 +25,7 @@ export const RevisionPanel: React.FC = observer(() => {
 
 	const hasRevisions = !!protocol.revisions && !!protocol.revisions.length;
 	const revisionDates = hasRevisions
-		? protocol.revisions.map(
-				(r, idx) => `V${idx + 1} - ${day(r.created_at).format("DD/MM/YYYY hh:mm")}`
-		  )
+		? protocol.revisions.map((r, idx) => getRevisionDate(r.created_at, idx + 1))
 		: [];
 
 	return (
