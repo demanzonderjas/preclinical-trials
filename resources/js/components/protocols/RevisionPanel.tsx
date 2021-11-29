@@ -6,10 +6,12 @@ import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { GenericSelectField } from "../forms/SelectField";
 import day from "dayjs";
 import { getRevisionDate } from "../../utils/formatting";
+import { useUser } from "../../hooks/useUser";
 
 export const RevisionPanel: React.FC = observer(() => {
 	const { goBack, push } = useHistory();
 	const { t } = useTranslationStore();
+	const { isMine } = useUser();
 	const revisionStore = useRevisions();
 
 	const back = (e: any) => {
@@ -31,15 +33,17 @@ export const RevisionPanel: React.FC = observer(() => {
 	return (
 		<div className="RevisionPanel">
 			<div className="actions">
-				<button
-					className="tertiary small"
-					onClick={e => {
-						e.preventDefault();
-						push(`/dashboard/edit-protocol/${protocol.id}`);
-					}}
-				>
-					{t("edit")}
-				</button>
+				{isMine(protocol.user_id) && (
+					<button
+						className="tertiary small"
+						onClick={e => {
+							e.preventDefault();
+							push(`/dashboard/edit-protocol/${protocol.id}`);
+						}}
+					>
+						{t("edit")}
+					</button>
+				)}
 				<button className="tertiary small" onClick={back}>
 					{t("go_back")}
 				</button>

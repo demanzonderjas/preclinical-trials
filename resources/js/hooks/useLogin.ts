@@ -1,7 +1,8 @@
 import { getMeta } from "../utils/api";
+import { useUser } from "./useUser";
 
 export function useIsLoggedIn() {
-	const sessionId = getMeta("session-id");
+	const { user } = useUser();
 
-	return !!sessionId;
+	return !!user;
 }

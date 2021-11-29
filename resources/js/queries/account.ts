@@ -9,3 +9,12 @@ export async function createAccountQuery(accountInfo: TAccount) {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function getUserQuery() {
+	try {
+		const response = await API.get("api/user");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
