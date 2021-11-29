@@ -58,4 +58,10 @@ class ProtocolController extends Controller
 
 		Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
 	}
+
+	public function delete($protocol_id)
+	{
+		Protocol::destroy($protocol_id);
+		return response()->json(["success" => true]);
+	}
 }

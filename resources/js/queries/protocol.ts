@@ -38,6 +38,15 @@ export async function getProtocolQuery(protocol_id: string) {
 	}
 }
 
+export async function deleteProtocolQuery(protocol_id: string) {
+	try {
+		const response = await API.delete(`/api/protocol/${protocol_id}`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function getMyProtocolsQuery() {
 	try {
 		const response = await API.get(`/api/protocols/mine`);

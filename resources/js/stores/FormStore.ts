@@ -59,6 +59,7 @@ export class FormStore {
 			createKeyValuePairs: action.bound,
 			loadValues: action.bound,
 			getSectionByIndex: action.bound,
+			clearFields: action.bound,
 			validate: action.bound
 		});
 	}

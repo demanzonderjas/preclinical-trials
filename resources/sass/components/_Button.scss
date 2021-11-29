@@ -22,6 +22,10 @@ button {
 		background-color: $tertiary !important;
 	}
 
+	&.danger {
+		background-color: $danger-color !important;
+	}
+
 	&.small {
 		font-size: 16px;
 		padding: 4px 16px;

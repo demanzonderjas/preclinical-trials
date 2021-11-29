@@ -157,5 +157,7 @@
 	"arm": "Arm",
 	"number": "Number",
 	"clear": "Clear",
-	"import_pris": "Import PRIS (.json)"
+	"import_pris": "Import PRIS (.json)",
+	"clear_fields": "Clear fields",
+	"delete_protocol": "Delete protocol"
 }

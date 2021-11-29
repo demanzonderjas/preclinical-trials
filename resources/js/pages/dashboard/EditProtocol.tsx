@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
+import { CreateProtocolPanel } from "../../components/protocols/CreateProtocolPanel";
 import { createProtocolForm, protocolSections } from "../../data/forms/protocol";
 import { getProtocolQuery, saveProtocolQuery, updateProtocolQuery } from "../../queries/protocol";
 import { TSectionName } from "../../typings/forms";
@@ -36,13 +37,7 @@ export const EditProtocolPage: React.FC = () => {
 					icon="add.png"
 					sections={protocolSections}
 				>
-					<p className="intro">
-						Register your study by completing the following form. Notice that the fields
-						with an asterisk are mandatory, whereas other fields are optional. Once the
-						form is submitted it will be checked before publication on this website.
-						Changes made after publication on this site will be recorded with an audit
-						trail.
-					</p>
+					<CreateProtocolPanel />
 				</FormBlock>
 			</div>
 		</Page>
