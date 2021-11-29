@@ -79,7 +79,7 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }
 					<Image filename="arrow-down-white.svg" />
 				</div>
 				<div className="dropdown with-custom-scrollbar">
-					{value && (
+					{/* {value && (
 						<SelectOption
 							handleClick={() => {
 								setValue(value);
@@ -87,9 +87,9 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }
 							}}
 							value={value}
 						/>
-					)}
+					)} */}
 					{options
-						.filter(option => option != value)
+						// .filter(option => option != value)
 						.map(option => (
 							<SelectOption
 								key={option}

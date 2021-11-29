@@ -67,5 +67,14 @@
 				background-color: darken($secondary, 5);
 			}
 		}
+
+		@include respond-to("small") {
+			width: 60px;
+
+			.item {
+				font-size: 10px;
+				height: 25px;
+			}
+		}
 	}
 }
