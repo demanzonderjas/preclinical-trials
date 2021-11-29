@@ -55,7 +55,6 @@ export const CombinedValue: React.FC<{
 };
 
 export const StudyArmsValue: React.FC<{ value: TStudyArm[] }> = ({ value }) => {
-	console.log(value);
 	return (
 		<div className="StudyArmsValue">
 			<FilterStoreProvider store={new FilterStore()}>

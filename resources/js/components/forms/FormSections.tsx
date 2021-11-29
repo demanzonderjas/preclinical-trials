@@ -20,9 +20,11 @@ export const FormSections: React.FC<{ sections: TSectionName[] }> = observer(({ 
 			setActiveSection(section);
 		} else {
 			const response = await saveProtocolQuery(data);
-			const protocolId = response.protocol_id;
-			const nextSectionIndex = getSectionByIndex(section);
-			location.href = `/dashboard/edit-protocol/${protocolId}#${nextSectionIndex}`;
+			if (response.protocol_id) {
+				const protocolId = response.protocol_id;
+				const nextSectionIndex = getSectionByIndex(section);
+				location.href = `/dashboard/edit-protocol/${protocolId}#${nextSectionIndex}`;
+			}
 		}
 	};
 

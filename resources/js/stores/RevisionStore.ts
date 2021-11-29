@@ -58,7 +58,6 @@ export class RevisionStore {
 	}
 
 	setActiveRevision(revisionDate: string) {
-		console.log(revisionDate);
 		this.activeRevision = this.revisions.find(
 			(r, idx) => getRevisionDate(r.created_at, idx + 1) === revisionDate
 		);

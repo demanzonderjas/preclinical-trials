@@ -9,7 +9,7 @@ import { TPRISConversion, TStudyArm, TStudyCentre } from "../typings/protocols";
 
 export function getNestedValue(target: string, data: any) {
 	return target.split(".").reduce((base, next) => {
-		if (base[next]) {
+		if (base[next] !== undefined) {
 			return base[next];
 		}
 		return "";
@@ -32,12 +32,12 @@ export function convertPRIStoKeyValuePairs(prisData: any) {
 			conversion: convertAnimalSex
 		},
 		{
-			value: "blinding.intervention.selection",
+			value: "blinding.investigator.selection",
 			target: TFormFieldName.InvestigatorsBlindedIntervention,
 			conversion: convertInvestigatorsBlinded
 		},
 		{
-			value: "blinding.intervention.description",
+			value: "blinding.investigator.description",
 			target: TFormFieldName.YesBlindedInterventionHow
 		},
 		{
@@ -122,7 +122,8 @@ export function convertPRIStoKeyValuePairs(prisData: any) {
 		},
 		{
 			value: "sampleSize.selection",
-			target: TFormFieldName.SampleSizeCalculation
+			target: TFormFieldName.SampleSizeCalculation,
+			conversion: convertSelectionToNoYes
 		},
 		{
 			value: "sampleSize.description",
@@ -140,7 +141,7 @@ export function convertPRIStoKeyValuePairs(prisData: any) {
 		{
 			value: "stage",
 			target: TFormFieldName.StudyStage,
-			conversion: convertSpecies
+			conversion: convertStudyStage
 		},
 		{
 			value: "strains",
@@ -186,7 +187,7 @@ export function convertStudyCentres(centre: any): TStudyCentre[] {
 	return [
 		{
 			name: centre.name,
-			city: centre.city || "",
+			city: centre.city || " ",
 			country: centre.country
 		}
 	];

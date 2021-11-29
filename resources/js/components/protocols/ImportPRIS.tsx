@@ -10,8 +10,6 @@ export const ImportPRIS: React.FC = () => {
 	const { t } = useTranslationStore();
 	const { setFieldValue } = useForm();
 
-	console.log(file);
-
 	useEffect(() => {
 		if (file) {
 			(async () => {
@@ -22,7 +20,6 @@ export const ImportPRIS: React.FC = () => {
 				Object.keys(keyValuePairs).forEach((key: TFormFieldName) => {
 					setFieldValue(key, keyValuePairs[key]);
 				});
-				// const convertedFields =
 			})();
 		}
 	}, [file]);
