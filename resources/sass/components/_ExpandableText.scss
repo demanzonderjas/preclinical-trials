@@ -1,15 +1,16 @@
 .ExpandableText {
 	position: relative;
+	left: 10px;
 
 	.header {
 		font-weight: bold;
-		background-color: $black;
+		background-color: $tertiary;
 		color: white;
-		padding: 10px;
+		padding: 10px 20px;
 		font-size: 16px;
 		display: block;
 		width: 100%;
-		border-radius: 15px;
+		cursor: pointer;
 	}
 
 	.body {
@@ -30,13 +31,16 @@
 	.icon {
 		position: absolute;
 		top: 10px;
-		left: -37px;
+		left: -47px;
 		padding: 5px;
 		width: 35px;
 		height: 35px;
-		background-color: $black;
-		filter: invert(100);
+		background-color: $tertiary;
+		border-radius: 50%;
 		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 
 		transition: transform 0.15s cubic-bezier(0, 0, 0.3, 1);
 
@@ -44,12 +48,21 @@
 			transform: scale(1.05);
 		}
 
+		img {
+			width: 60%;
+			height: 60%;
+		}
 		.ImageWrapper {
-			top: -1px;
+			top: 1px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 
 	@include respond-to("xs") {
-		left: 15px;
+		.icon {
+			display: none;
+		}
 	}
 }

@@ -8,9 +8,11 @@ export const ExpandableText: React.FC<{ header: string; body: string }> = ({ hea
 	return (
 		<div className={cx("ExpandableText", { active: isExpanded })}>
 			<div className="icon" onClick={() => setIsExpanded(!isExpanded)}>
-				<Image filename={isExpanded ? "minus.png" : "plus.png"} />
+				<Image filename={isExpanded ? "white-minus.png" : "white-plus.png"} />
 			</div>
-			<strong className="header">{header}</strong>
+			<strong className="header" onClick={() => setIsExpanded(!isExpanded)}>
+				{header}
+			</strong>
 			<div className="body" dangerouslySetInnerHTML={{ __html: body }} />
 		</div>
 	);

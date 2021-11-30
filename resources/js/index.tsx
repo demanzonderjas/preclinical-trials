@@ -13,7 +13,7 @@ import { ContactPage } from "./pages/Contact";
 import { CreateAccountPage } from "./pages/CreateAccount";
 import ScrollToTop from "./components/base/ScrollToTop";
 import { NewsPage } from "./pages/News";
-import { FAQPage } from "./pages/FAQ";
+import { HelpPage } from "./pages/Help";
 import { DisclaimerPage } from "./pages/Disclaimer";
 import { Modal } from "./components/layout/Modal";
 import { ResetPasswordPage } from "./pages/ResetPassword";
@@ -61,8 +61,8 @@ const App: React.FC = () => {
 							<Route path="/news" exact={true}>
 								<NewsPage />
 							</Route>
-							<Route path="/faq" exact={true}>
-								<FAQPage />
+							<Route path="/help" exact={true}>
+								<HelpPage />
 							</Route>
 							<Route path="/create-account" exact={true}>
 								<CreateAccountPage />

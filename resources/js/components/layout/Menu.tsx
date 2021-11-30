@@ -6,7 +6,7 @@ export const Menu: React.FC = () => {
 		<ul className="Menu layout-wrapper">
 			<MenuItem text="Database" url={"/database"} />
 			<MenuItem text="About PCT" url="/about-pct" />
-			<MenuItem text="Help" url="/faq" />
+			<MenuItem text="Help" url="/help" />
 			<MenuItem text="News" url="/news" />
 			<MenuItem text="Contact" url="/contact" />
 		</ul>

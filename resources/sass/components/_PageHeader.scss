@@ -28,8 +28,8 @@ $login-button-size: 100px;
 
 	&.primary_with_submenu {
 		.Copy {
-			text-align: left;
-			left: 215px;
+			// text-align: left;
+			// left: 215px;
 		}
 		@include respond-to("small") {
 			.Copy {
