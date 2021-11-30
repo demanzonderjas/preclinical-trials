@@ -37,8 +37,6 @@ export function fieldMeetsDependencies(field: TFormField, values: Map<TFormField
 		} else if (dependency.type === TFormFieldDependencyType.InArray) {
 			return activeValue.includes(dependency.value);
 		}
-		console.log(dependency.value === activeValue, field.id);
-
 		return dependency.value === activeValue;
 	});
 }

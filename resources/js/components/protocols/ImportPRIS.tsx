@@ -14,9 +14,7 @@ export const ImportPRIS: React.FC = () => {
 		if (file) {
 			(async () => {
 				const data: any = await fileToJSON(file);
-				console.log(data);
 				const keyValuePairs = convertPRIStoKeyValuePairs(data.content);
-				console.log(keyValuePairs);
 				Object.keys(keyValuePairs).forEach((key: TFormFieldName) => {
 					setFieldValue(key, keyValuePairs[key]);
 				});
