@@ -17,7 +17,7 @@ export const PageHeader: React.FC<{
 				<Logo />
 				<Menu />
 			</div>
-			<div className="Copy">
+			<div className="Copy layout-wrapper">
 				<h1>{title}</h1>
 				{!!subtitle && <h2>{subtitle}</h2>}
 			</div>

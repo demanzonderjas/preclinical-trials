@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(ProtocolSeeder::class);
         $this->call(RevisionSeeder::class);
+        $this->call(NewsItemSeeder::class);
     }
 }
