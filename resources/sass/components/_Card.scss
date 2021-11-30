@@ -8,7 +8,7 @@ $cardMargin: 50px;
 	&:nth-child(even) {
 		justify-content: right;
 
-		.ProtocolCard {
+		.card {
 			.figure {
 				top: -10%;
 				right: 0%;
@@ -17,9 +17,20 @@ $cardMargin: 50px;
 			}
 		}
 	}
+
+	&:nth-child(even) {
+		.NewsItemCard {
+			.date {
+				left: auto;
+				right: 0;
+				transform: translate(50%, -50%);
+			}
+		}
+	}
 }
 
-.ProtocolCard {
+.ProtocolCard,
+.card {
 	width: 650px;
 	position: relative;
 	cursor: pointer;
@@ -62,12 +73,76 @@ $cardMargin: 50px;
 		border-bottom: 8px solid $secondary;
 		position: relative;
 		line-height: 24px;
+
+		.read-more {
+			padding: 10px 30px 10px 20px;
+			font-size: 18px;
+			background-color: $secondary;
+			color: $white;
+			position: absolute;
+			bottom: -25px;
+			right: -15px;
+
+			.arrow {
+				width: 20px;
+				position: absolute;
+				top: 50%;
+				right: 15px;
+				transform: translate(50%, -50%);
+				transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+			}
+		}
 	}
 
+	&:hover {
+		.read-more {
+			background-color: darken($secondary, 10);
+
+			.arrow {
+				transform: translate(70%, -50%);
+			}
+		}
+	}
+
+	.date {
+		position: absolute;
+		width: 50px;
+		height: 50px;
+		text-transform: uppercase;
+		background-color: $secondary;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 50%;
+		font-weight: bold;
+		font-size: 12px;
+		line-height: 14px;
+		text-align: center;
+		color: $white;
+	}
+}
+
+.NewsItemCard {
+	.date {
+		top: 0;
+		left: 0;
+		transform: translate(-50%, -50%);
+		width: 70px;
+		height: 70px;
+		font-size: 16px;
+		line-height: 18px;
+	}
+}
+
+.ProtocolCard {
 	.footer {
 		position: relative;
 		width: calc(100% - #{$cardMargin} - #{$cardMargin});
 		margin-left: $cardMargin;
+
+		.date {
+			top: -100%;
+		}
 
 		.start-date {
 			left: 0;
@@ -77,23 +152,6 @@ $cardMargin: 50px;
 		.end-date {
 			right: 0;
 			transform: translate(50%, 10%);
-		}
-
-		.date {
-			position: absolute;
-			top: -100%;
-			width: 50px;
-			height: 50px;
-			text-transform: uppercase;
-			background-color: $secondary;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			border-radius: 50%;
-			font-weight: bold;
-			font-size: 12px;
-			text-align: center;
-			color: $white;
 		}
 
 		.status {

@@ -1,9 +1,11 @@
 .Filter {
 	margin: 40px auto;
 	padding: 10px;
+	text-align: center;
 	.SearchBar {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 	}
 
 	.SelectField {

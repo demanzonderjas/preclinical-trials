@@ -12,7 +12,7 @@ export async function createAccountQuery(accountInfo: TAccount) {
 
 export async function getUserQuery() {
 	try {
-		const response = await API.get("api/user");
+		const response = await API.get("/api/user");
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };

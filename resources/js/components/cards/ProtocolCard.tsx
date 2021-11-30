@@ -10,7 +10,7 @@ export const ProtocolCard: React.FC<{ protocol: TProtocol }> = ({ protocol }) =>
 	return (
 		<div className="card-wrapper">
 			<div
-				className="ProtocolCard"
+				className="ProtocolCard card"
 				onClick={() => push(`/database/view-protocol/${protocol.id}`)}
 			>
 				<div className="figure"></div>

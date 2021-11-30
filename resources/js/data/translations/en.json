@@ -161,5 +161,6 @@
 	"clear_fields": "Clear fields",
 	"delete_protocol": "Delete protocol",
 	"welcome": "Hi,",
-	"view_protocol": "View protocol"
+	"view_protocol": "View protocol",
+	"read_more": "Read more"
 }

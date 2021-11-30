@@ -1,8 +1,10 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { useFilter } from "../../hooks/useFilter";
+import { TNewsItem } from "../../typings/news";
 import { TProtocol } from "../../typings/protocols";
 import { protocolMeetsFilters } from "../../utils/filters";
+import { NewsItemCard } from "./NewsItemCard";
 import { ProtocolCard } from "./ProtocolCard";
 
 export const ProtocolCardsBlock: React.FC<{ protocols: TProtocol[] }> = observer(
@@ -21,3 +23,14 @@ export const ProtocolCardsBlock: React.FC<{ protocols: TProtocol[] }> = observer
 		);
 	}
 );
+
+export const NewsCardsBlock: React.FC<{ newsItems: TNewsItem[] }> = observer(({ newsItems }) => {
+	const { activeFilterKey, filters } = useFilter();
+	return (
+		<div className="CardsBlock layout-wrapper">
+			{newsItems.map(item => (
+				<NewsItemCard key={item.id} {...item} />
+			))}
+		</div>
+	);
+});

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\NewsItemController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,5 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('protocol/{protocol_id}', 'ProtocolController@get');
     Route::get('protocols', 'ProtocolController@getViewable');
     Route::get('protocols/counts', 'ProtocolController@counts');
+    Route::get('news-items', 'NewsItemController@getViewable');
 });
