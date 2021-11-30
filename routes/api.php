@@ -25,4 +25,5 @@ Route::group(['namespace' => 'Api'], function () {
     Route::middleware(['auth:sanctum', 'auth.owner'])->post('protocol/submit-for-publication', 'ProtocolController@submitForPublication');
     Route::get('protocol/{protocol_id}', 'ProtocolController@get');
     Route::get('protocols', 'ProtocolController@getViewable');
+    Route::get('protocols/counts', 'ProtocolController@counts');
 });

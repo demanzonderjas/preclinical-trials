@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Video } from "../components/base/Video";
 import { ContentBlock } from "../components/layout/ContentBlock";
 import { Highlight } from "../components/layout/Highlight";
 import { Page, PrimaryHeaderPage } from "../components/layout/Page";
 import { PartnerBlock } from "../components/layout/PartnerBlock";
+import { getProtocolCountsQuery } from "../queries/protocol";
 
 export const HomePage: React.FC = () => {
+	const [counts, setCounts] = useState<{ total: number; with_embargo: number }>(null);
+
+	useEffect(() => {
+		(async () => {
+			const countsResponse = await getProtocolCountsQuery();
+			setCounts(countsResponse);
+		})();
+	}, []);
+
 	return (
 		<PrimaryHeaderPage
 			title="PreclinicalTrials.eu"
 			subtitle="International register of preclinical trial protocols"
 		>
 			<div className="Home">
-				<Highlight
-					image="note.png"
-					text="98 protocols registered already! (25 under embargo)"
-				/>
+				{!!counts && (
+					<Highlight
+						image="note.png"
+						text={`${counts.total} protocols registered already! (${counts.with_embargo} under embargo)`}
+					/>
+				)}
 				<ContentBlock maxWidth="80%">
 					<div className="two-columns">
 						<div>

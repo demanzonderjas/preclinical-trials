@@ -64,4 +64,13 @@ class ProtocolController extends Controller
 		Protocol::destroy($protocol_id);
 		return response()->json(["success" => true]);
 	}
+
+	public function counts()
+	{
+		$protocols = Protocol::all();
+		$withEmbargo = $protocols->filter(function ($p) {
+			return $p->has_embargo;
+		})->count();
+		return response()->json(["total" => $protocols->count(), "with_embargo" => $withEmbargo]);
+	}
 }
