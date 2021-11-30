@@ -21,6 +21,14 @@ export const ProtocolValue: React.FC<{
 		case TFormFieldName.StudyCentre:
 			return <StudyCentreValue value={value} />;
 		case TFormFieldName.FinancialSupport:
+			return (
+				<ArrayValueWithOtherField
+					id={id}
+					value={value}
+					fields={fields}
+					valueMap={valueMap}
+				/>
+			);
 		case TFormFieldName.Species:
 		case TFormFieldName.InterventionType:
 		case TFormFieldName.Randomisation:
@@ -33,7 +41,7 @@ export const ProtocolValue: React.FC<{
 	}
 };
 
-export const CombinedValue: React.FC<{
+export const ArrayValueWithOtherField: React.FC<{
 	id: TFormFieldName;
 	value: any;
 	fields: TFormField[];
@@ -44,6 +52,28 @@ export const CombinedValue: React.FC<{
 	const needCombinedValue = fieldMeetsDependencies(otherValueField, valueMap);
 
 	if (!needCombinedValue) {
+		return <p>{value.map(v => t(v)).join(", ")}</p>;
+	}
+
+	return (
+		<p>
+			<strong>{value.map(v => t(v)).join(", ")}</strong> - {t(otherValueField?.value)}
+		</p>
+	);
+};
+
+export const CombinedValue: React.FC<{
+	id: TFormFieldName;
+	value: any;
+	fields: TFormField[];
+	valueMap: Map<TFormFieldName, any>;
+}> = ({ id, value, fields, valueMap }) => {
+	const { t } = useTranslationStore();
+	const otherValueField = fields.find(
+		f => f.showValueIn === id && fieldMeetsDependencies(f, valueMap)
+	);
+
+	if (!otherValueField) {
 		return <p>{t(value)}</p>;
 	}
 

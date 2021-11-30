@@ -1,4 +1,9 @@
-import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
+import {
+	TFormField,
+	TFormFieldDependencyType,
+	TFormFieldName,
+	TSectionName
+} from "../../../../typings/forms";
 import { firstNameField } from "../account/name";
 
 export const otherSupportField: TFormField = {
@@ -9,7 +14,13 @@ export const otherSupportField: TFormField = {
 	validate: null,
 	required: false,
 	section: TSectionName.General,
-	dependencies: [{ key: TFormFieldName.FinancialSupport, value: "other" }]
+	dependencies: [
+		{
+			key: TFormFieldName.FinancialSupport,
+			type: TFormFieldDependencyType.InArray,
+			value: "other"
+		}
+	]
 };
 
 export const otherInterventionTypeField: TFormField = {

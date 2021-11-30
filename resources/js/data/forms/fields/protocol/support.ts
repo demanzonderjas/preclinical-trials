@@ -7,9 +7,10 @@ export const supportField: TFormField = {
 	id: TFormFieldName.FinancialSupport,
 	required: true,
 	props: {
-		options: supportFieldOptions
+		options: supportFieldOptions,
+		allowMulti: true
 	},
-	value: "",
+	value: [],
 	useAsFilter: true,
 	validate: value => value != "",
 	section: TSectionName.General,

@@ -160,5 +160,6 @@
 	"import_pris": "Import PRIS (.json)",
 	"clear_fields": "Clear fields",
 	"delete_protocol": "Delete protocol",
-	"welcome": "Hi,"
+	"welcome": "Hi,",
+	"view_protocol": "View protocol"
 }

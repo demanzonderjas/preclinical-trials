@@ -9,6 +9,7 @@ import { useTranslationStore } from "../../hooks/useTranslationStore";
 type SelectFieldProps = {
 	id: TFormFieldName;
 	options: string[];
+	allowMulti?: boolean;
 };
 
 export const GenericSelectField: React.FC<{
@@ -61,10 +62,29 @@ export const GenericSelectField: React.FC<{
 	);
 };
 
-export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }) => {
+export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options, allowMulti }) => {
 	const { value, setValue } = useFormField(id);
 	const [isActive, setIsActive] = useState(false);
 	const { t } = useTranslationStore();
+
+	const setMultiValue = (target: string) => {
+		const existingIndex = value.indexOf(target);
+		if (existingIndex > -1) {
+			const newValue = [...value];
+			newValue.splice(existingIndex, 1);
+			setValue(newValue);
+		} else {
+			setValue([...value, target]);
+		}
+	};
+
+	const getActiveValue = (value: any) => {
+		if (allowMulti) {
+			return value.map(v => t(v)).join(", ");
+		} else {
+			return value;
+		}
+	};
 
 	return (
 		<div className={cx("SelectField", { active: isActive })}>
@@ -75,32 +95,25 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options }
 						setIsActive(!isActive);
 					}}
 				>
-					<SelectOption value={!value ? t("select_option") : value} />
+					<SelectOption value={!value ? t("select_option") : getActiveValue(value)} />
 					<Image filename="arrow-down-white.svg" />
 				</div>
 				<div className="dropdown with-custom-scrollbar">
-					{/* {value && (
+					{options.map(option => (
 						<SelectOption
+							key={option}
+							isSelected={allowMulti ? value.indexOf(option) > -1 : option === value}
+							value={option}
 							handleClick={() => {
-								setValue(value);
-								setIsActive(!isActive);
-							}}
-							value={value}
-						/>
-					)} */}
-					{options
-						// .filter(option => option != value)
-						.map(option => (
-							<SelectOption
-								key={option}
-								isSelected={option === value}
-								value={option}
-								handleClick={() => {
+								if (allowMulti) {
+									setMultiValue(option);
+								} else {
 									setValue(option);
 									setIsActive(!isActive);
-								}}
-							/>
-						))}
+								}
+							}}
+						/>
+					))}
 				</div>
 			</div>
 		</div>

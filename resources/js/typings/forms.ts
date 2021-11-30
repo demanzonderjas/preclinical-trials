@@ -131,6 +131,7 @@ export type TProtocolSection = {
 
 export enum TFormFieldDependencyType {
 	Truthful = "truthful",
+	InArray = "in_array",
 	NotEqualTo = "not_equal_to"
 }
 

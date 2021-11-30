@@ -58,7 +58,7 @@ class ProtocolFactory extends Factory
 		$this->randomDataSet = [
 			"title" => $this->faker->sentence(rand(3, 20)),
 			"short_title" => $this->faker->sentence(rand(3, 5)),
-			"financial_support" => $this->selectRandom(config('pct.valid_field_values.financial_support')),
+			"financial_support" => [$this->selectRandom(config('pct.valid_field_values.financial_support')), $this->selectRandom(config('pct.valid_field_values.financial_support'))],
 			"other_support" => $this->faker->sentence(rand(1, 4)),
 			"start_date" => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 			"end_date" => $this->faker->dateTimeBetween('now', '+3 years')->format('Y-m-d'),
