@@ -21,11 +21,14 @@ class NewsItemFactory extends Factory
      */
     public function definition()
     {
+        $fakeTime = $this->faker->dateTimeBetween('-3 years', 'now')->format('Y-m-d');
         return [
             "title" => $this->faker->sentence(10, true),
             "status" => "published",
             "summary" => $this->faker->paragraph(10, true),
             "content" => $this->faker->paragraphs(4, true),
+            "created_at" => $fakeTime,
+            "updated_at" => $fakeTime
         ];
     }
 }

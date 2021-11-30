@@ -6,6 +6,7 @@ import { NewsCardsBlock } from "../components/cards/CardsBlock";
 import { FilterStore } from "../stores/FilterStore";
 import { FilterStoreProvider } from "../contexts/FilterStoreContext";
 import { Filter } from "../components/tables/Filter";
+import day from "dayjs";
 
 export const NewsPage: React.FC = () => {
 	const [newsItems, setNewsItems] = useState<TNewsItem[]>([]);
@@ -18,14 +19,24 @@ export const NewsPage: React.FC = () => {
 		})();
 	}, []);
 
+	const dateOptionsToInclude: string[] = newsItems.reduce((base, next) => {
+		const publishedDate = day(next.updated_at)
+			.get("year")
+			.toString();
+		if (!base.includes(publishedDate)) {
+			return [...base, publishedDate];
+		}
+		return base;
+	}, []);
+
 	return (
 		<Page
 			title="News"
 			subtitle="Updates including congresses and workshops where preclinicaltrials.eu is involved"
 		>
-			<div className="NewsPage" style={{ backgroundColor: "white" }}>
+			<div className="NewsPage border-top" style={{ backgroundColor: "white" }}>
 				<FilterStoreProvider store={filterStore}>
-					<Filter options={["2021", "2020"]} />
+					<Filter options={dateOptionsToInclude} filterPlaceholder="any_year" />
 					<NewsCardsBlock newsItems={newsItems} />
 				</FilterStoreProvider>
 			</div>

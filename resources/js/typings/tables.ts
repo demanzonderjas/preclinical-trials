@@ -29,6 +29,6 @@ export enum TTableCellName {
 }
 
 export type TFilter = {
-	key?: TFormFieldName;
+	key?: string;
 	value: string;
 };
