@@ -6,15 +6,20 @@ export class UserStore {
 	user: TUser = null;
 
 	constructor() {
-		this.fetchUser();
 		makeAutoObservable(this, {
-			isMine: action.bound
+			isMine: action.bound,
+			fetchUser: action.bound
 		});
+		this.fetchUser();
 	}
 
 	async fetchUser() {
 		const user = await getUserQuery();
-		this.user = user;
+		if (user.success !== false) {
+			action(() => {
+				this.user = user;
+			})();
+		}
 	}
 
 	isMine(userId: number) {

@@ -1,6 +1,5 @@
-import { useLocalStore } from "mobx-react-lite";
+import { useLocalObservable } from "mobx-react-lite";
 import React, { createContext } from "react";
-import { FilterStore } from "../stores/FilterStore";
 import { UserStore } from "../stores/UserStore";
 
 export const userStoreContext = createContext<UserStore>({} as UserStore);
@@ -11,7 +10,7 @@ type Props = {
 };
 
 export const UserStoreProvider: React.FC<Props> = ({ store, children }) => {
-	const storeHook = useLocalStore(() => store);
+	const storeHook = useLocalObservable(() => store);
 
 	return <userStoreContext.Provider value={storeHook}>{children}</userStoreContext.Provider>;
 };

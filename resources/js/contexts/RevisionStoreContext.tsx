@@ -1,4 +1,4 @@
-import { useLocalStore } from "mobx-react-lite";
+import { useLocalObservable } from "mobx-react-lite";
 import React, { createContext } from "react";
 import { RevisionStore } from "../stores/RevisionStore";
 
@@ -13,7 +13,7 @@ export const RevisionStoreProvider: React.FC<Props> = ({ store, children }) => {
 	if (!store) {
 		return <>{children}</>;
 	}
-	const storeHook = useLocalStore(() => store);
+	const storeHook = useLocalObservable(() => store);
 
 	return (
 		<revisionStoreContext.Provider value={storeHook}>{children}</revisionStoreContext.Provider>
