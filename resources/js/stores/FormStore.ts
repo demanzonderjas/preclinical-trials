@@ -90,8 +90,7 @@ export class FormStore {
 		return this.sections.indexOf(section);
 	}
 
-	goToPrevSection(e: any) {
-		e.preventDefault();
+	goToPrevSection() {
 		const currentIndex = this.sections.findIndex(section => section === this.activeSection);
 		this.setActiveSection(this.sections[currentIndex - 1]);
 		setTimeout(() => {
@@ -99,8 +98,7 @@ export class FormStore {
 		}, 0);
 	}
 
-	goToNextSection(e: any) {
-		e.preventDefault();
+	goToNextSection() {
 		const currentIndex = this.sections.findIndex(section => section === this.activeSection);
 		this.setActiveSection(this.sections[currentIndex + 1]);
 		setTimeout(() => {
@@ -198,7 +196,9 @@ export class FormStore {
 	}
 
 	clearFields() {
-		this.values.clear();
+		for (let { id, value } of this.fields) {
+			this.setFieldValue(id, value);
+		}
 	}
 
 	getFieldValue(id: TFormFieldName) {

@@ -35,7 +35,7 @@ export const FormField: React.FC<TFormField> = observer(
 				)}
 				{description && <p className="description">{t(description)}</p>}
 				<Component id={id} required={required} label={label} {...props} />
-				{error && <p className="error">{error}</p>}
+				{error && <p className="error">{t(error)}</p>}
 			</div>
 		);
 	}

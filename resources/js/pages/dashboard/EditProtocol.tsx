@@ -4,13 +4,14 @@ import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
 import { CreateProtocolPanel } from "../../components/protocols/CreateProtocolPanel";
 import { createProtocolForm, protocolSections } from "../../data/forms/protocol";
-import { getProtocolQuery, saveProtocolQuery, updateProtocolQuery } from "../../queries/protocol";
-import { TSectionName } from "../../typings/forms";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { getProtocolQuery, updateProtocolQuery } from "../../queries/protocol";
 import { TProtocol } from "../../typings/protocols";
 
 export const EditProtocolPage: React.FC = () => {
 	const { protocol_id }: { protocol_id: string } = useParams();
 	const [protocol, setProtocol] = useState(null);
+	const { t } = useTranslationStore();
 
 	useEffect(() => {
 		if (protocol_id) {
@@ -26,9 +27,16 @@ export const EditProtocolPage: React.FC = () => {
 		return updateProtocolQuery(protocol_id, data);
 	};
 
+	console.log(protocol);
+
 	return (
 		<Page title="Edit Protocol">
 			<div className="AddProtocol border-top">
+				<div className="Status">
+					<span>
+						{t("current_status")}: {t(protocol?.status)}
+					</span>
+				</div>
 				<FormBlock
 					form={createProtocolForm}
 					waitForData={true}

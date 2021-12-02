@@ -34,7 +34,7 @@ class ProtocolFactory extends Factory
 	{
 		return [
 			"user_id" => User::all()->random(),
-			"status" => 'submitted_for_application',
+			"status" => 'submitted_for_publication',
 		];
 	}
 

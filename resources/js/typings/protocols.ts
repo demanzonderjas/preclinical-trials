@@ -17,12 +17,19 @@ export type TProtocol = { [K in TFormFieldName]: any };
 export type TDBProtocol = {
 	id: number;
 	user_id: number;
-	status: string;
+	status: TProtocolStatus;
 	details: TDetail[];
 	revisions: TRevision[];
 	created_at: string;
 	updated_at: string;
 };
+
+export enum TProtocolStatus {
+	Draft = "draft",
+	SubmittedForPublication = "submitted_for_publication",
+	Published = "published",
+	Rejected = "rejected"
+}
 
 export type TDetail = { key: TFormFieldName; value: any };
 

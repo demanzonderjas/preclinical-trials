@@ -138,7 +138,8 @@
 	"reset_password_success": "Your password has succesfully been reset, you can now try and log in again.",
 	"save": "Save",
 	"select_option": "Select option",
-	"go_to_next_section": "Go to next section and save as draft",
+	"go_to_next_section": "Go to next section",
+	"go_to_next_section_and_save_as_draft": "Go to next section and save as draft",
 	"submit_for_publication": "Submit for publication",
 	"last_updated": "Last updated",
 	"status": "Status",
@@ -165,5 +166,13 @@
 	"view_protocol": "View protocol",
 	"read_more": "Read more",
 	"any_year": "Any year",
-	"save_changes": "Save changes"
+	"save_changes": "Save changes",
+	"resubmit_for_publication": "Re-submit for publication",
+	"current_status": "Current status",
+	"draft": "Draft",
+	"published": "Published",
+	"submitted_for_publication": "Submitted for publication",
+	"rejected": "Rejected",
+	"field_required": "This field is required.",
+	"field_not_valid": "This field does not have a valid value."
 }

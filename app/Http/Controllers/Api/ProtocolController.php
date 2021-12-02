@@ -35,6 +35,12 @@ class ProtocolController extends Controller
 		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
 
+	public function getStatus(Request $request)
+	{
+		$protocol = Protocol::where(['id' => $request->protocol_id])->firstOrFail();
+		return response()->json(["status" => $protocol->status]);
+	}
+
 	public function mine(Request $request)
 	{
 		$protocols = Protocol::where(['user_id' => $request->user()->id])->with('details')->get();
@@ -53,7 +59,7 @@ class ProtocolController extends Controller
 	public function submitForPublication(Request $request)
 	{
 		$protocol = Protocol::findOrFail($request->protocol_id);
-		$protocol->status = "submitted_for_application";
+		$protocol->status = "submitted_for_publication";
 		$protocol->save();
 
 		Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));

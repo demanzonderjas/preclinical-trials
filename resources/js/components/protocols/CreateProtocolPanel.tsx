@@ -62,7 +62,7 @@ export const CreateProtocolPanel: React.FC = () => {
 					</button>
 				)}
 				<ImportPRIS />
-				<button type="button" className="danger small" onClick={() => clearFields()}>
+				<button type="button" className="danger small" onClick={clearFields}>
 					{t("clear_fields")}
 				</button>
 				{!!protocol_id && (

@@ -11,7 +11,7 @@ export async function saveProtocolQuery(protocolData: TProtocol) {
 	}
 }
 
-export async function submitProtocolForPulicationQuery(protocol_id: string) {
+export async function submitProtocolForPublicationQuery(protocol_id: string) {
 	try {
 		const response = await API.post("/api/protocol/submit-for-publication", { protocol_id });
 		return response.data;
@@ -32,6 +32,15 @@ export async function updateProtocolQuery(protocol_id: string, protocolData: TPr
 export async function getProtocolQuery(protocol_id: string) {
 	try {
 		const response = await API.get(`/api/protocol/${protocol_id}`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function getProtocolStatusQuery(protocol_id: string) {
+	try {
+		const response = await API.get(`/api/protocol/${protocol_id}/status`);
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };
