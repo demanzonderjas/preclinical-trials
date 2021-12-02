@@ -17,5 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ProtocolSeeder::class);
         $this->call(RevisionSeeder::class);
         $this->call(NewsItemSeeder::class);
+        $this->call(FaqCategorySeeder::class);
+        $this->call(FaqItemSeeder::class);
     }
 }

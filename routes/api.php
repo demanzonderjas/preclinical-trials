@@ -28,4 +28,10 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('protocols', 'ProtocolController@getViewable');
     Route::get('protocols/counts', 'ProtocolController@counts');
     Route::get('news-items', 'NewsItemController@getViewable');
+
+    Route::get('faq-items', 'FaqController@getAllItems');
+    Route::get('faq-items/{itemId}', 'FaqController@getItemById');
+    Route::post('faq-items/create', 'FaqController@createItem');
+    Route::post('faq-items/edit/{itemId}', 'FaqController@editItem');
+    Route::post('faq-items/delete/{itemId}', 'FaqController@deleteItem');
 });
