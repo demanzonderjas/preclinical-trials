@@ -127,6 +127,7 @@
 	"last_name": "Last name",
 	"password": "Password",
 	"password_confirm": "Confirm password",
+	"password_confirmation": "Confirm password",
 	"terms_conditions": "Terms & Conditions",
 	"terms_conditions_description": "I have read the <a href='/disclaimer' rel='noreferrer noopener' target='blank'>terms and conditions</a> and agree to be bound by them",
 	"create_my_account": "Create my account!",
@@ -163,5 +164,6 @@
 	"welcome": "Hi,",
 	"view_protocol": "View protocol",
 	"read_more": "Read more",
-	"any_year": "Any year"
+	"any_year": "Any year",
+	"save_changes": "Save changes"
 }

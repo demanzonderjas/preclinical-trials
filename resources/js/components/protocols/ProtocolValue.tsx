@@ -52,12 +52,12 @@ export const ArrayValueWithOtherField: React.FC<{
 	const needCombinedValue = fieldMeetsDependencies(otherValueField, valueMap);
 
 	if (!needCombinedValue) {
-		return <p>{value.map(v => t(v)).join(", ")}</p>;
+		return <p>{value?.map(v => t(v)).join(", ")}</p>;
 	}
 
 	return (
 		<p>
-			<strong>{value.map(v => t(v)).join(", ")}</strong> - {t(otherValueField?.value)}
+			<strong>{value?.map(v => t(v)).join(", ")}</strong> - {t(otherValueField?.value)}
 		</p>
 	);
 };
