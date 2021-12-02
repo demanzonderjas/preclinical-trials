@@ -1,5 +1,5 @@
 import React from "react";
-import { THeaderStyle, TSubMenuItem } from "../../typings/layout";
+import { THeaderStyle, TSubMenu, TSubMenuItem } from "../../typings/layout";
 import { ContentBlock } from "./ContentBlock";
 import { PageFooter } from "./PageFooter";
 import { PageHeader } from "./PageHeader";
@@ -43,11 +43,11 @@ export const PrimaryHeaderPage: React.FC<{ children; title: string; subtitle?: s
 	);
 };
 
-export const PageWithSubmenu: React.FC<{ subMenu: TSubMenuItem[] }> = ({ children, subMenu }) => {
+export const PageWithSubmenu: React.FC<{ subMenu: TSubMenu }> = ({ children, subMenu }) => {
 	return (
 		<div className="AboutUsPage">
 			<div className="PageWithSubMenu">
-				<SubMenu items={subMenu} />
+				<SubMenu {...subMenu} />
 				<ContentBlock maxWidth="90%" withBorder={true}>
 					{children}
 				</ContentBlock>

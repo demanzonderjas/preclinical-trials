@@ -1,20 +1,22 @@
 import { TAboutUs, TAboutUsType } from "../../typings/aboutUs";
-import { TSubMenuItem } from "../../typings/layout";
+import { TSubMenu } from "../../typings/layout";
 
-export const aboutUsSubMenu: TSubMenuItem[] = [
-	{
-		text: "Goals",
-		target: "/about-pct"
-	},
-	{
-		text: "Team",
-		target: "/about-pct/team"
-	},
-	{
-		text: "Advisory board",
-		target: "/about-pct/advisory-board"
-	}
-];
+export const aboutUsSubMenu: TSubMenu = {
+	items: [
+		{
+			text: "Goals",
+			target: "/about-pct"
+		},
+		{
+			text: "Team",
+			target: "/about-pct/team"
+		},
+		{
+			text: "Advisory board",
+			target: "/about-pct/advisory-board"
+		}
+	]
+};
 
 export const aboutUsData: TAboutUs[] = [
 	{

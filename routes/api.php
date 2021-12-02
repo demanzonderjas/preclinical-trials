@@ -29,6 +29,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('protocols/counts', 'ProtocolController@counts');
     Route::get('news-items', 'NewsItemController@getViewable');
 
+    Route::get('faq', 'FaqController@getByCategory');
     Route::get('faq-items', 'FaqController@getAllItems');
     Route::get('faq-items/{itemId}', 'FaqController@getItemById');
     Route::post('faq-items/create', 'FaqController@createItem');

@@ -1,6 +1,11 @@
+export type TSubMenu = {
+	items: TSubMenuItem[];
+	handleClick?: Function;
+};
+
 export type TSubMenuItem = {
 	text: string;
-	target: string;
+	target: any;
 };
 
 export enum THeaderStyle {
