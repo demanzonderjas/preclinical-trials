@@ -178,5 +178,8 @@
 	"last_saved_at": "Last saved at",
 	"cancel": "Cancel",
 	"confirm": "Confirm",
-	"are_you_sure": "Are you sure that you want to perform this action?"
+	"are_you_sure": "Are you sure that you want to perform this action?",
+	"name": "Name",
+	"city": "City",
+	"country": "Country"
 }

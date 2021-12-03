@@ -1,4 +1,5 @@
 import { ActionCell, EditCell, ViewCell } from "../../../components/tables/ActionCell";
+import { CountryCell } from "../../../components/tables/CountryCell";
 import { DateCell } from "../../../components/tables/DateCell";
 import { StudyCentreCell } from "../../../components/tables/StudyCentreCell";
 import { TextCell } from "../../../components/tables/TextCell";
@@ -77,5 +78,6 @@ export const cityCell: TTableCell = {
 
 export const countryCell: TTableCell = {
 	...titleCell,
+	Component: CountryCell,
 	id: TTableCellName.Country
 };
