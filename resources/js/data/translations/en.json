@@ -175,5 +175,8 @@
 	"rejected": "Rejected",
 	"field_required": "This field is required.",
 	"field_not_valid": "This field does not have a valid value.",
-	"last_saved_at": "Last saved at"
+	"last_saved_at": "Last saved at",
+	"cancel": "Cancel",
+	"confirm": "Confirm",
+	"are_you_sure": "Are you sure that you want to perform this action?"
 }

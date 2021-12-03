@@ -64,3 +64,16 @@
 		}
 	}
 }
+
+.ConfirmModal {
+	p {
+		color: $white;
+		font-size: 18px;
+		display: block;
+		margin: 16px 0;
+	}
+
+	.FlexWrapper {
+		flex-wrap: wrap;
+	}
+}

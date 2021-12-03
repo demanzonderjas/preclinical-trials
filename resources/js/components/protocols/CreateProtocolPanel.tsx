@@ -1,6 +1,8 @@
 import React from "react";
 import { useHistory, useParams } from "react-router";
+import { confirmModal } from "../../data/modals/confirm";
 import { useForm } from "../../hooks/useForm";
+import { useModalStore } from "../../hooks/useModalStore";
 import { useProtocol } from "../../hooks/useProtocol";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import {
@@ -15,6 +17,7 @@ export const CreateProtocolPanel: React.FC = () => {
 	const { t } = useTranslationStore();
 	const { activeSection, createKeyValuePairs, getSectionByIndex, clearFields } = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
+	const { setModal } = useModalStore();
 	const { status } = useProtocol();
 	const { push } = useHistory();
 
@@ -73,13 +76,25 @@ export const CreateProtocolPanel: React.FC = () => {
 				{status === TProtocolStatus.Draft && (
 					<>
 						<ImportPRIS />
-						<button type="button" className="danger small" onClick={clearFields}>
+						<button
+							type="button"
+							className="danger small"
+							onClick={() =>
+								setModal({ ...confirmModal, actionOnConfirm: clearFields })
+							}
+						>
 							{t("clear_fields")}
 						</button>
 					</>
 				)}
 				{!!protocol_id && (
-					<button type="button" className="danger small" onClick={deleteProtocol}>
+					<button
+						type="button"
+						className="danger small"
+						onClick={() =>
+							setModal({ ...confirmModal, actionOnConfirm: deleteProtocol })
+						}
+					>
 						{t("delete_protocol")}
 					</button>
 				)}

@@ -1,11 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { confirmModal } from "../../data/modals/confirm";
+import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { deleteProtocolQuery } from "../../queries/protocol";
 import { TProtocol } from "../../typings/protocols";
 
 export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row }) => {
 	const { t } = useTranslationStore();
+	const { setModal } = useModalStore();
 	const deleteProtocol = async () => {
 		const response = await deleteProtocolQuery(row.id);
 		if (response.success) {
@@ -21,7 +24,10 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 				<Link to={`/database/view-protocol/${row.id}`}>
 					<button className="tertiary small">{t("view")}</button>
 				</Link>
-				<button className="danger small" onClick={deleteProtocol}>
+				<button
+					className="danger small"
+					onClick={() => setModal({ ...confirmModal, actionOnConfirm: deleteProtocol })}
+				>
 					{t("delete")}
 				</button>
 			</div>

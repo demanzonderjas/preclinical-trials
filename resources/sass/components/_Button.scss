@@ -10,6 +10,10 @@ button {
 	text-transform: uppercase;
 	cursor: pointer;
 
+	&:hover {
+		background-color: darken($primary, 10);
+	}
+
 	&.secondary {
 		background-color: $secondary !important;
 

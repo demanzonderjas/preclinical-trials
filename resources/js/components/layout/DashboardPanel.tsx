@@ -38,5 +38,5 @@ export const DashboardPanel: React.FC = observer(() => {
 				</div>
 			)}
 		</div>
-	;
+	);
 });

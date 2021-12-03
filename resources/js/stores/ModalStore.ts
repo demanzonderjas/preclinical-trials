@@ -7,6 +7,8 @@ export class ModalStore {
 
 	constructor() {
 		makeAutoObservable(this, {
+			cancel: action.bound,
+			confirm: action.bound,
 			setModal: action.bound
 		});
 	}
@@ -30,6 +32,7 @@ export class ModalStore {
 	}
 
 	@action.bound confirm() {
+		this.modal.actionOnConfirm();
 		this.setModal(null);
 	}
 
