@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { useHistory } from "react-router";
 import { loginModal } from "../../data/modals/loginModal";
@@ -7,7 +8,7 @@ import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { logoutQuery } from "../../queries/login";
 import { Image } from "../base/Image";
 
-export const DashboardPanel: React.FC = () => {
+export const DashboardPanel: React.FC = observer(() => {
 	const { setModal } = useModalStore();
 	const isLoggedIn = useIsLoggedIn();
 	const { push } = useHistory();
@@ -37,5 +38,5 @@ export const DashboardPanel: React.FC = () => {
 				</div>
 			)}
 		</div>
-	);
-};
+	;
+});
