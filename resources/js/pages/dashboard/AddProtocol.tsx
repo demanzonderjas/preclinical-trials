@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
 import { CreateProtocolPanel } from "../../components/protocols/CreateProtocolPanel";
+import { ProtocolStatus } from "../../components/protocols/ProtocolStatus";
 import { ProtocolStoreProvider } from "../../contexts/ProtocolContext";
 import { createProtocolForm, protocolSections } from "../../data/forms/protocol";
 import { saveProtocolQuery } from "../../queries/protocol";
@@ -13,6 +14,7 @@ export const AddProtocolPage: React.FC = () => {
 		<Page title="Add Protocol">
 			<div className="AddProtocol border-top">
 				<ProtocolStoreProvider store={protocolStore}>
+					<ProtocolStatus />
 					<FormBlock
 						form={createProtocolForm}
 						handleSubmit={saveProtocolQuery}

@@ -1,6 +1,8 @@
 import { action, computed, makeAutoObservable } from "mobx";
 import { getProtocolQuery } from "../queries/protocol";
 import { TDBProtocol, TProtocolStatus } from "../typings/protocols";
+import day from "dayjs";
+import { getDateTimeFormat } from "../utils/formatting";
 
 export class ProtocolStore {
 	protocol: TDBProtocol = null;
@@ -13,6 +15,13 @@ export class ProtocolStore {
 		if (protocol_id) {
 			this.fetchProtocol(protocol_id);
 		}
+	}
+
+	get lastUpdatedAt(): string {
+		if (!this.protocol) {
+			return null;
+		}
+		return getDateTimeFormat(this.protocol.updated_at);
 	}
 
 	get status(): TProtocolStatus {

@@ -174,5 +174,6 @@
 	"submitted_for_publication": "Submitted for publication",
 	"rejected": "Rejected",
 	"field_required": "This field is required.",
-	"field_not_valid": "This field does not have a valid value."
+	"field_not_valid": "This field does not have a valid value.",
+	"last_saved_at": "Last saved at"
 }

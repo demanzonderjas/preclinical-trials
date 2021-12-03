@@ -37,8 +37,12 @@ export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 	);
 }
 
+export function getDateTimeFormat(date: string) {
+	return day(date).format("DD/MM/YYYY hh:mm");
+}
+
 export function getRevisionDate(date: string, number: number) {
-	return `V${number} - ${day(date).format("DD/MM/YYYY hh:mm")}`;
+	return `V${number} - ${getDateTimeFormat(date)}`;
 }
 
 export async function fileToJSON(file: File) {

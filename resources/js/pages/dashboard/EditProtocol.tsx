@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
 import { CreateProtocolPanel } from "../../components/protocols/CreateProtocolPanel";
+import { ProtocolStatus } from "../../components/protocols/ProtocolStatus";
 import { ProtocolStoreProvider } from "../../contexts/ProtocolContext";
 import { createProtocolForm, protocolSections } from "../../data/forms/protocol";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
@@ -33,12 +34,8 @@ export const EditProtocolPage: React.FC = () => {
 	return (
 		<Page title="Edit Protocol">
 			<div className="AddProtocol border-top">
-				<div className="Status">
-					<span>
-						{t("current_status")}: {t(protocol?.status)}
-					</span>
-				</div>
 				<ProtocolStoreProvider store={protocolStore}>
+					<ProtocolStatus />
 					<FormBlock
 						form={createProtocolForm}
 						waitForData={true}

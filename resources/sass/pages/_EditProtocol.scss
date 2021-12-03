@@ -3,10 +3,28 @@
 		padding: 10px 20px;
 		background-color: $secondary;
 		color: $white;
-		font-size: 24px;
-		text-align: center;
 		border-bottom: 10px solid $secondary;
-		text-transform: uppercase;
-		font-weight: bold;
+		text-align: center;
+		// text-transform: uppercase;
+
+		.content {
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.publish-status {
+			font-size: 24px;
+			font-weight: bold;
+			display: block;
+		}
+
+		.save-status {
+			margin-top: 10px;
+			display: block;
+			margin: 18px 0;
+			font-size: 16px;
+			font-style: italic;
+			font-weight: normal;
+		}
 	}
 }
