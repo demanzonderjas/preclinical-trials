@@ -1,19 +1,21 @@
 import React from "react";
 import { useHistory, useParams } from "react-router";
 import { useForm } from "../../hooks/useForm";
+import { useProtocol } from "../../hooks/useProtocol";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import {
 	deleteProtocolQuery,
 	saveProtocolQuery,
 	updateProtocolQuery
 } from "../../queries/protocol";
-import { TProtocol } from "../../typings/protocols";
+import { TProtocol, TProtocolStatus } from "../../typings/protocols";
 import { ImportPRIS } from "./ImportPRIS";
 
 export const CreateProtocolPanel: React.FC = () => {
 	const { t } = useTranslationStore();
 	const { activeSection, createKeyValuePairs, getSectionByIndex, clearFields } = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
+	const { status } = useProtocol();
 	const { push } = useHistory();
 
 	const saveAsDraft = async () => {
@@ -47,11 +49,18 @@ export const CreateProtocolPanel: React.FC = () => {
 			</p>
 			<div
 				className="flex-wrapper"
-				style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					margin: "16px 0"
+				}}
 			>
-				<button className="secondary small" type="button" onClick={saveAsDraft}>
-					{t("save_changes")}
-				</button>
+				{status === TProtocolStatus.Draft && (
+					<button className="secondary small" type="button" onClick={saveAsDraft}>
+						{t("save_changes")}
+					</button>
+				)}
 				{protocol_id && (
 					<button
 						type="button"
@@ -61,10 +70,14 @@ export const CreateProtocolPanel: React.FC = () => {
 						{t("view_protocol")}
 					</button>
 				)}
-				<ImportPRIS />
-				<button type="button" className="danger small" onClick={clearFields}>
-					{t("clear_fields")}
-				</button>
+				{status === TProtocolStatus.Draft && (
+					<>
+						<ImportPRIS />
+						<button type="button" className="danger small" onClick={clearFields}>
+							{t("clear_fields")}
+						</button>
+					</>
+				)}
 				{!!protocol_id && (
 					<button type="button" className="danger small" onClick={deleteProtocol}>
 						{t("delete_protocol")}

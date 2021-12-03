@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { useForm } from "../../../hooks/useForm";
+import { useProtocol } from "../../../hooks/useProtocol";
 import { useTranslationStore } from "../../../hooks/useTranslationStore";
 import {
 	getProtocolStatusQuery,
@@ -26,16 +27,8 @@ export const ControlButtons: React.FC = observer(() => {
 	} = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
 	const { t } = useTranslationStore();
-	const [status, setStatus] = useState<TProtocolStatus>(TProtocolStatus.Draft);
-
-	useEffect(() => {
-		if (protocol_id) {
-			(async () => {
-				const newStatus = await getProtocolStatusQuery(protocol_id);
-				setStatus(newStatus.status);
-			})();
-		}
-	}, [protocol_id]);
+	const { status } = useProtocol();
+	console.log(status);
 
 	const saveAsDraft = async (goBack?: boolean) => {
 		if (status !== TProtocolStatus.Draft) {
