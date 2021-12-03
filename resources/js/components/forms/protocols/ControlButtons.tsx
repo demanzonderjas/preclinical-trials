@@ -65,10 +65,16 @@ export const ControlButtons: React.FC = observer(() => {
 
 	const submitForPublication = async () => {
 		const data = createKeyValuePairs() as TProtocol;
-		await updateProtocolQuery(protocol_id, data);
 		if (validate()) {
-			await submitProtocolForPublicationQuery(protocol_id);
-			location.href = `/database/view-protocol/${protocol_id}`;
+			if (protocol_id) {
+				await updateProtocolQuery(protocol_id, data);
+				await submitProtocolForPublicationQuery(protocol_id);
+				location.href = `/database/view-protocol/${protocol_id}`;
+			} else {
+				const response = await saveProtocolQuery(data);
+				await submitProtocolForPublicationQuery(response.protocol_id);
+				location.href = `/database/view-protocol/${response.protocol_id}`;
+			}
 		}
 	};
 

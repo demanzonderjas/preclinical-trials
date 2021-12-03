@@ -14,7 +14,7 @@ button {
 		background-color: $secondary !important;
 
 		&:hover {
-			background-color: darken($secondary, 30);
+			background-color: darken($secondary, 10) !important;
 		}
 	}
 
@@ -24,6 +24,9 @@ button {
 
 	&.danger {
 		background-color: $danger-color !important;
+		&:hover {
+			background-color: darken($danger-color, 10) !important;
+		}
 	}
 
 	&.small {

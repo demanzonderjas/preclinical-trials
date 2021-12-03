@@ -3,6 +3,12 @@
 	cursor: pointer;
 	display: inline-block;
 
+	button {
+		position: relative;
+		z-index: 1;
+		pointer-events: none;
+	}
+
 	input[type="file"] {
 		opacity: 0;
 		top: 0;
