@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('index');
 })->name('index');
 
+Route::get('/admin{any}', function () {
+    return view('index');
+})->where('any', '.*')->middleware(['auth', 'verified', 'admin'])->name('admin');
+
 Route::fallback(function () {
     return view('index');
 });

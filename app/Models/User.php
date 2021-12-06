@@ -47,4 +47,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Protocol::class);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function getIsAdminAttribute()
+    {
+        return $this->roles->contains(function ($role) {
+            return $role->name === 'admin';
+        });
+    }
 }

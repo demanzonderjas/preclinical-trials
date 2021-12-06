@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Protocol;
 use App\Models\Revision;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RevisionFactory extends Factory
@@ -35,8 +36,8 @@ class RevisionFactory extends Factory
 		return [
 			"protocol_id" => $protocol,
 			"changes" => $this->createRandomChanges($protocol),
-			"created_at" => $fakeTime,
-			"updated_at" => $fakeTime,
+			"created_at" => Carbon::createFromDate($fakeTime)->toDateString(),
+			"updated_at" => Carbon::createFromDate($fakeTime)->toDateString(),
 		];
 	}
 
