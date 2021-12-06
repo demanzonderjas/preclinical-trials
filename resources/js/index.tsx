@@ -33,6 +33,7 @@ import { AdminIndexPage } from "./pages/admin/AdminIndex";
 import { FAQPage } from "./pages/admin/FAQ";
 import { PagesPage } from "./pages/admin/Pages";
 import { StatsPage } from "./pages/admin/Stats";
+import { NewsItemPage } from "./pages/NewsItem";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -67,6 +68,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/news" exact={true}>
 								<NewsPage />
+							</Route>
+							<Route path="/news/view-item/:news_item_id" exact={true}>
+								<NewsItemPage />
 							</Route>
 							<Route path="/help" exact={true}>
 								<HelpPage />

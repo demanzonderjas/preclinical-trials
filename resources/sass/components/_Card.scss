@@ -6,6 +6,25 @@ $cardMargin: 50px;
 	position: relative;
 	margin: 80px 0;
 
+	&.single {
+		justify-content: center;
+
+		.card {
+			width: 1000px;
+		}
+
+		.NewsItemCard {
+			cursor: initial;
+			&:hover {
+				transform: none;
+			}
+
+			.read-more {
+				display: none;
+			}
+		}
+	}
+
 	&:last-child {
 		padding-bottom: 350px;
 	}
@@ -78,6 +97,12 @@ $cardMargin: 50px;
 		border-bottom: 8px solid $secondary;
 		position: relative;
 		line-height: 24px;
+
+		.content {
+			p {
+				margin: 16px 0;
+			}
+		}
 
 		.read-more {
 			padding: 10px 30px 10px 20px;

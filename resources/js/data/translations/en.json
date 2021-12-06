@@ -183,5 +183,6 @@
 	"city": "City",
 	"country": "Country",
 	"admin_action": "Admin Action",
-	"publish_status": "Status"
+	"publish_status": "Status",
+	"back_to_overview": "Back to overview"
 }

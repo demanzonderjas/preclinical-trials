@@ -14,4 +14,10 @@ class NewsItemController extends Controller
         $newsItems = NewsItem::where('status', '!=', 'draft')->orderByDesc('updated_at')->get();
         return response()->json(["news_items" => NewsItemResource::collection($newsItems)]);
     }
+
+    public function get($news_item_id)
+    {
+        $newsItem = NewsItem::find($news_item_id);
+        return response()->json(["news_item" => new NewsItemResource($newsItem)]);
+    }
 }
