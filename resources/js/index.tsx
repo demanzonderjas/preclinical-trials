@@ -12,7 +12,7 @@ import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
 import { CreateAccountPage } from "./pages/CreateAccount";
 import ScrollToTop from "./components/base/ScrollToTop";
-import { NewsPage } from "./pages/News";
+import { NewsPage } from "./pages/admin/News";
 import { HelpPage } from "./pages/Help";
 import { DisclaimerPage } from "./pages/Disclaimer";
 import { Modal } from "./components/layout/Modal";
@@ -27,6 +27,11 @@ import { ViewProtocolPage } from "./pages/ViewProtocol";
 import { SearchDatabasePage } from "./pages/SearchDatabase";
 import { UserStoreProvider } from "./contexts/UserContext";
 import { UserStore } from "./stores/UserStore";
+import { ProtocolsPage } from "./pages/admin/Protocols";
+import { AdminIndexPage } from "./pages/admin/AdminIndex";
+import { FAQPage } from "./pages/admin/FAQ";
+import { PagesPage } from "./pages/admin/Pages";
+import { StatsPage } from "./pages/admin/Stats";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -43,6 +48,7 @@ const App: React.FC = () => {
 							<Route path="/" exact={true}>
 								<HomePage />
 							</Route>
+
 							<Route path="/about-pct" exact={true}>
 								<AboutPCTPage />
 							</Route>
@@ -90,6 +96,24 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/disclaimer" exact={true}>
 								<DisclaimerPage />
+							</Route>
+							<Route path="/admin" exact={true}>
+								<AdminIndexPage />
+							</Route>
+							<Route path="/admin/protocols" exact={true}>
+								<ProtocolsPage />
+							</Route>
+							<Route path="/admin/news" exact={true}>
+								<NewsPage />
+							</Route>
+							<Route path="/admin/faq" exact={true}>
+								<FAQPage />
+							</Route>
+							<Route path="/admin/pages" exact={true}>
+								<PagesPage />
+							</Route>
+							<Route path="/admin/stats" exact={true}>
+								<StatsPage />
 							</Route>
 						</Switch>
 						<Modal />

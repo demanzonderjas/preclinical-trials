@@ -1,0 +1,23 @@
+.Sidebar {
+	background-color: $primary;
+	width: 180px;
+	min-height: 100vh;
+
+	.AdminMenu {
+		.MenuItem {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			height: 120px;
+			background-color: $secondary;
+			margin-bottom: 1px;
+
+			a {
+				text-decoration: none;
+				color: $white;
+				font-size: 26px;
+			}
+		}
+	}
+}
