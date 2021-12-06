@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export const Menu: React.FC = () => {
 	return (
@@ -16,7 +16,7 @@ export const Menu: React.FC = () => {
 export const MenuItem: React.FC<{ text: string; url: string }> = ({ text, url }) => {
 	return (
 		<li className="MenuItem">
-			<Link to={url}>{text}</Link>
+			<NavLink to={url}>{text}</NavLink>
 		</li>
 	);
 };

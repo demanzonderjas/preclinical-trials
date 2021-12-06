@@ -12,7 +12,8 @@ import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
 import { CreateAccountPage } from "./pages/CreateAccount";
 import ScrollToTop from "./components/base/ScrollToTop";
-import { NewsPage } from "./pages/admin/News";
+import { NewsPage as AdminNewsPage } from "./pages/admin/News";
+import { NewsPage } from "./pages/News";
 import { HelpPage } from "./pages/Help";
 import { DisclaimerPage } from "./pages/Disclaimer";
 import { Modal } from "./components/layout/Modal";
@@ -104,7 +105,7 @@ const App: React.FC = () => {
 								<ProtocolsPage />
 							</Route>
 							<Route path="/admin/news" exact={true}>
-								<NewsPage />
+								<AdminNewsPage />
 							</Route>
 							<Route path="/admin/faq" exact={true}>
 								<FAQPage />
