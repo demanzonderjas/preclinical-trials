@@ -36,4 +36,10 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('faq-items/create', 'FaqController@createItem');
     Route::post('faq-items/edit/{itemId}', 'FaqController@editItem');
     Route::post('faq-items/delete/{itemId}', 'FaqController@deleteItem');
+
+    Route::group(['middleware' => 'admin'], function () {
+        Route::get('protocols/admin', 'ProtocolController@getViewableForAdmin');
+        Route::post('protocol/{protocol_id}/approve', 'ProtocolController@approve');
+        Route::post('protocol/{protocol_id}/reject', 'ProtocolController@reject');
+    });
 });

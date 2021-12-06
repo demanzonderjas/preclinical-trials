@@ -4,30 +4,43 @@ import {
 	armCell,
 	cityCell,
 	countryCell,
-	editCell,
+	hasEmbargoCell,
 	interventionCell,
 	lastUpdatedAtCell,
 	nameCell,
 	numberCell,
-	statusCell,
+	studyStatusCell,
 	studyCentreCell,
-	titleCell
+	titleCell,
+	publishStatusCell,
+	adminActionCell
 } from "./cells/protocol";
+
+export const adminProtocolsTable: TTable = {
+	headers: [
+		TTableCellName.Title,
+		TTableCellName.LastUpdated,
+		TTableCellName.PublishStatus,
+		TTableCellName.HasEmbargo,
+		TTableCellName.AdminAction
+	],
+	cells: [titleCell, lastUpdatedAtCell, publishStatusCell, hasEmbargoCell, adminActionCell]
+};
 
 export const manageProtocolsTable: TTable = {
 	headers: [
 		TTableCellName.Title,
 		TTableCellName.LastUpdated,
-		TTableCellName.Status,
+		TTableCellName.StudyStatus,
 		TTableCellName.Action
 	],
-	cells: [titleCell, lastUpdatedAtCell, statusCell, actionCell]
+	cells: [titleCell, lastUpdatedAtCell, studyStatusCell, actionCell]
 };
 
 export const searchProtocolsTable: TTable = {
-	headers: [TTableCellName.Title, TTableCellName.StudyCentre, TTableCellName.Status],
+	headers: [TTableCellName.Title, TTableCellName.StudyCentre, TTableCellName.StudyStatus],
 	targetOnRowClick: "/database/view-protocol",
-	cells: [titleCell, studyCentreCell, statusCell]
+	cells: [titleCell, studyCentreCell, studyStatusCell]
 };
 
 export const studyArmsTable: TTable = {

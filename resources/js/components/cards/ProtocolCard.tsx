@@ -25,7 +25,7 @@ export const ProtocolCard: React.FC<{ protocol: TProtocol }> = ({ protocol }) =>
 						<span>{day(protocol.start_date).format("D MMM YYYY")}</span>
 					</div>
 					<div className="status">
-						<span>{t(protocol.status)}</span>
+						<span>{t(protocol.study_status)}</span>
 					</div>
 					<div className="end-date date">
 						<span>{day(protocol.end_date).format("D MMM YYYY")}</span>

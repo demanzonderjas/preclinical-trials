@@ -1,4 +1,6 @@
 import { ActionCell, EditCell, ViewCell } from "../../../components/tables/ActionCell";
+import { AdminActionCell } from "../../../components/tables/AdminActionCell";
+import { BooleanCell } from "../../../components/tables/BooleanCell";
 import { CountryCell } from "../../../components/tables/CountryCell";
 import { DateCell } from "../../../components/tables/DateCell";
 import { StudyCentreCell } from "../../../components/tables/StudyCentreCell";
@@ -11,8 +13,8 @@ export const titleCell: TTableCell = {
 	value: ""
 };
 
-export const statusCell: TTableCell = {
-	id: TTableCellName.Status,
+export const studyStatusCell: TTableCell = {
+	id: TTableCellName.StudyStatus,
 	Component: TextCell,
 	value: ""
 };
@@ -80,4 +82,23 @@ export const countryCell: TTableCell = {
 	...titleCell,
 	Component: CountryCell,
 	id: TTableCellName.Country
+};
+
+export const hasEmbargoCell: TTableCell = {
+	id: TTableCellName.HasEmbargo,
+	Component: BooleanCell,
+	value: ""
+};
+
+export const publishStatusCell: TTableCell = {
+	id: TTableCellName.PublishStatus,
+	Component: TextCell,
+	value: "",
+	synonym: "status"
+};
+
+export const adminActionCell: TTableCell = {
+	id: TTableCellName.AdminAction,
+	Component: AdminActionCell,
+	value: ""
 };

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProtocolResource;
+use App\Mail\ProtocolApprovedAndPublished;
+use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Models\Protocol;
 use Illuminate\Http\Request;
@@ -65,6 +67,26 @@ class ProtocolController extends Controller
 		Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
 	}
 
+	public function approve($protocol_id)
+	{
+		$protocol = Protocol::findOrFail($protocol_id);
+		$protocol->status = "published";
+		$protocol->save();
+
+		Mail::to($protocol->user)->send(new ProtocolApprovedAndPublished($protocol));
+		return response()->json(["success" => true]);
+	}
+
+	public function reject($protocol_id)
+	{
+		$protocol = Protocol::findOrFail($protocol_id);
+		$protocol->status = "rejected";
+		$protocol->save();
+
+		Mail::to($protocol->user)->send(new ProtocolRejected($protocol));
+		return response()->json(["success" => true]);
+	}
+
 	public function delete($protocol_id)
 	{
 		Protocol::destroy($protocol_id);
@@ -78,5 +100,11 @@ class ProtocolController extends Controller
 			return $p->has_embargo;
 		})->count();
 		return response()->json(["total" => $protocols->count(), "with_embargo" => $withEmbargo]);
+	}
+
+	public function getViewableForAdmin()
+	{
+		$protocols = Protocol::where('status', '!=', 'draft')->get();
+		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
 	}
 }

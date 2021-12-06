@@ -65,7 +65,7 @@ export enum TFormFieldName {
 	OtherSupport = "other_support",
 	StartDate = "start_date",
 	EndDate = "end_date",
-	Status = "status",
+	Status = "study_status",
 	ResearchField = "research_field",
 	Hypothesis = "hypothesis",
 	InterventionType = "intervention_type",

@@ -8,7 +8,7 @@ return [
 		"other_support",
 		"start_date",
 		"end_date",
-		"status",
+		"study_status",
 		"research_field",
 		"hypothesis",
 		"intervention_type",
@@ -48,7 +48,7 @@ return [
 		"financial_support" => [
 			"industry", "investigator_driven", "grants", "other"
 		],
-		"status" => [
+		"study_status" => [
 			"not_started",
 			"active",
 			"completed_but_not_published",

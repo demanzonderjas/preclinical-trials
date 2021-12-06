@@ -181,5 +181,7 @@
 	"are_you_sure": "Are you sure that you want to perform this action?",
 	"name": "Name",
 	"city": "City",
-	"country": "Country"
+	"country": "Country",
+	"admin_action": "Admin Action",
+	"publish_status": "Status"
 }

@@ -16,10 +16,13 @@ export type TTableCell = {
 
 export enum TTableCellName {
 	Title = "title",
-	Status = "status",
+	StudyStatus = "study_status",
+	PublishStatus = "publish_status",
 	LastUpdated = "last_updated",
 	StudyCentre = "study_centre",
 	Action = "action",
+	AdminAction = "admin_action",
+	HasEmbargo = "has_embargo",
 	Arm = "arm",
 	Number = "number",
 	Intervention = "intervention",

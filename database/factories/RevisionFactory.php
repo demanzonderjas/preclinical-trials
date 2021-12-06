@@ -69,7 +69,7 @@ class RevisionFactory extends Factory
 			"other_support" => $this->faker->sentence(rand(1, 4)),
 			"start_date" => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 			"end_date" => $this->faker->dateTimeBetween('now', '+3 years')->format('Y-m-d'),
-			"status" => $this->selectRandom(config('pct.valid_field_values.status')),
+			"status" => $this->selectRandom(config('pct.valid_field_values.study_status')),
 			"research_field" => $this->faker->sentence(rand(3, 5)),
 			"hypothesis" => $this->faker->paragraph(),
 			"intervention_type" => $this->selectRandom(config('pct.valid_field_values.intervention_type')),

@@ -33,7 +33,7 @@ export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 			base[detail.key] = detail.value;
 			return base;
 		},
-		{ id: protocol.id, updated_at: protocol.updated_at }
+		{ id: protocol.id, updated_at: protocol.updated_at, status: protocol.status }
 	);
 }
 

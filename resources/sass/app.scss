@@ -56,6 +56,10 @@ body {
 	scroll-behavior: smooth;
 }
 
+.AdminPage {
+	font-size: 16px;
+}
+
 .PageContent {
 	min-height: calc(100vh - #{$header-height} - #{$footer-height});
 	position: relative;

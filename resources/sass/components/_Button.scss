@@ -24,6 +24,10 @@ button {
 
 	&.tertiary {
 		background-color: $tertiary !important;
+
+		&:hover {
+			background-color: darken($tertiary, 10) !important;
+		}
 	}
 
 	&.danger {
