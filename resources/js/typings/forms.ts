@@ -101,7 +101,8 @@ export enum TFormFieldName {
 	StatementOfAccuracy = "statement_of_accuracy",
 	Summary = "summary",
 	Content = "content",
-	PublishStatus = "status"
+	PublishStatus = "status",
+	FAQCategoryId = "faq_category_id"
 }
 
 export enum TFormName {
@@ -109,6 +110,7 @@ export enum TFormName {
 	CreateAccount = "create_account",
 	Login = "login",
 	CreateNewsItem = "create_news_item",
+	CreateFAQItem = "create_faq_item",
 	ForgotPassword = "forgot_password",
 	ResetPassword = "reset_password"
 }

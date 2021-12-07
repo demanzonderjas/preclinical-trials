@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { AdminPage } from "../../components/layout/admin/AdminPage";
-import { FormBlock } from "../../components/layout/FormBlock";
-import { createNewsItemQuery, getNewsItemQuery, updateNewsItemQuery } from "../../queries/news";
-import { createNewsItemForm } from "../../data/forms/news";
+import { AdminPage } from "../../../components/layout/admin/AdminPage";
+import { FormBlock } from "../../../components/layout/FormBlock";
+import { createNewsItemQuery, getNewsItemQuery, updateNewsItemQuery } from "../../../queries/news";
+import { createNewsItemForm } from "../../../data/forms/news";
 import { Link } from "react-router-dom";
-import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { useTranslationStore } from "../../../hooks/useTranslationStore";
 import { useHistory, useParams } from "react-router";
-import { TNewsItem } from "../../typings/news";
-import { mapNewsItemToKeyValueArray } from "../../utils/formatting";
+import { TNewsItem } from "../../../typings/news";
+import { mapNewsItemToKeyValueArray } from "../../../utils/formatting";
 
 export const EditNewsItemPage: React.FC = () => {
 	const { t } = useTranslationStore();

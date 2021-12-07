@@ -1,10 +1,10 @@
 import React from "react";
-import { AdminPage } from "../../components/layout/admin/AdminPage";
-import { FormBlock } from "../../components/layout/FormBlock";
-import { createNewsItemQuery } from "../../queries/news";
-import { createNewsItemForm } from "../../data/forms/news";
+import { AdminPage } from "../../../components/layout/admin/AdminPage";
+import { FormBlock } from "../../../components/layout/FormBlock";
+import { createNewsItemQuery } from "../../../queries/news";
+import { createNewsItemForm } from "../../../data/forms/news";
 import { Link } from "react-router-dom";
-import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { useTranslationStore } from "../../../hooks/useTranslationStore";
 import { useHistory } from "react-router";
 
 export const AddNewsItemPage: React.FC = () => {

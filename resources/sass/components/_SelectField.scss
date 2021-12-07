@@ -11,6 +11,7 @@ $item-height: 42px;
 	&.absolute {
 		&.active {
 			overflow: initial;
+			z-index: 2;
 		}
 
 		.dropdown {

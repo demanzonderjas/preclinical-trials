@@ -89,7 +89,7 @@ class FaqItemSeeder extends Seeder
             $f->faq_category_id = FaqCategory::where('name', $item['category'])->first()->id;
             $f->title = $item["title"];
             $f->content = isset($item["content"]) ? $item["content"] : "";
-            $f->show = true;
+            $f->status = "published";
             $f->save();
         }
     }

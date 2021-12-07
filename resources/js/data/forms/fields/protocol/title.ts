@@ -12,6 +12,11 @@ export const titleField: TFormField = {
 	description: "title_description"
 };
 
+export const titleWithoutDescriptionField: TFormField = {
+	...titleField,
+	description: null
+};
+
 export const shortTitleField: TFormField = {
 	...titleField,
 	id: TFormFieldName.ShortTitle,

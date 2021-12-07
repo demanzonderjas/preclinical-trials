@@ -8,7 +8,7 @@ class FaqItem extends Model
 {
     protected $appends = ['category'];
 
-    protected $fillable = ["title", "content", "show"];
+    protected $fillable = ["title", "content", "status"];
 
     public function faqCategory()
     {

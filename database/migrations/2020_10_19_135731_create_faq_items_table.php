@@ -19,7 +19,7 @@ class CreateFaqItemsTable extends Migration
             $table->foreign('faq_category_id')->references('id')->on('faq_categories')->onDelete('cascade');
             $table->string('title');
             $table->text('content');
-            $table->string('show')->default("yes");
+            $table->string('status')->default("draft");
             $table->timestamps();
         });
     }

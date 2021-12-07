@@ -12,8 +12,8 @@ import { ModalStore } from "./stores/ModalStore";
 import { ContactPage } from "./pages/Contact";
 import { CreateAccountPage } from "./pages/CreateAccount";
 import ScrollToTop from "./components/base/ScrollToTop";
-import { AddNewsItemPage } from "./pages/admin/AddNewsItem";
-import { NewsPage as AdminNewsPage } from "./pages/admin/News";
+import { AddNewsItemPage } from "./pages/admin/news/AddNewsItem";
+import { NewsPage as AdminNewsPage } from "./pages/admin/news/News";
 import { NewsPage } from "./pages/News";
 import { HelpPage } from "./pages/Help";
 import { DisclaimerPage } from "./pages/Disclaimer";
@@ -35,7 +35,8 @@ import { FAQPage } from "./pages/admin/FAQ";
 import { PagesPage } from "./pages/admin/Pages";
 import { StatsPage } from "./pages/admin/Stats";
 import { NewsItemPage } from "./pages/NewsItem";
-import { EditNewsItemPage } from "./pages/admin/EditNewsitem";
+import { EditNewsItemPage } from "./pages/admin/news/EditNewsitem";
+import { AddFAQItemPage } from "./pages/admin/faq/AddFAQItem";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -122,6 +123,10 @@ const App: React.FC = () => {
 							<Route path="/admin/faq" exact={true}>
 								<FAQPage />
 							</Route>
+							<Route path="/admin/faq/add-item" exact={true}>
+								<AddFAQItemPage />
+							</Route>
+
 							<Route path="/admin/pages" exact={true}>
 								<PagesPage />
 							</Route>

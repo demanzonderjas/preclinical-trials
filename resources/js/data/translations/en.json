@@ -187,5 +187,7 @@
 	"back_to_overview": "Back to overview",
 	"summary": "Summary",
 	"content": "Content",
-	"add_news_item": "+ Add news item"
+	"add_news_item": "+ Add news item",
+	"faq_category": "FAQ Category",
+	"choose_category": "Choose category"
 }
