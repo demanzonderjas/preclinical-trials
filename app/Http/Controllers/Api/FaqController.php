@@ -58,15 +58,9 @@ class FaqController extends Controller
     }
 
 
-    public function getAllItems()
+    public function getViewableForAdmin()
     {
-        $items = FaqItem::all();
-        return response()->json(["success" => true, "items" => $items->toArray()]);
-    }
-
-    public function getItemById($itemId)
-    {
-        $item = FaqItem::find($itemId);
-        return response()->json(["success" => true, "item" => $item->toArray()]);
+        $items = FaqItem::orderByDesc('updated_at')->get();
+        return response()->json(["success" => true, "faq_items" => $items->toArray()]);
     }
 }

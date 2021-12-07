@@ -4,34 +4,35 @@ import { Filter } from "../../../components/tables/Filter";
 import { TableBlock } from "../../../components/tables/TableBlock";
 import { FilterStoreProvider } from "../../../contexts/FilterStoreContext";
 import { FilterStore } from "../../../stores/FilterStore";
-import { TNewsItem } from "../../../typings/news";
 import { adminNewsTable } from "../../../data/tables/news";
-import { getAdminNewsQuery } from "../../../queries/news";
 import { useTranslationStore } from "../../../hooks/useTranslationStore";
 import { Link } from "react-router-dom";
+import { TFaqItem } from "../../../typings/faq";
+import { getAdminFAQQuery } from "../../../queries/faq";
+import { adminFaqItemsTable } from "../../../data/tables/faq";
 
-export const NewsPage: React.FC = () => {
-	const [news, setNews] = useState<TNewsItem[]>([]);
+export const AdminFAQPage: React.FC = () => {
+	const [faqItems, setFaqItems] = useState<TFaqItem[]>([]);
 	const [filterStore] = useState(new FilterStore());
 	const { t } = useTranslationStore();
 
 	useEffect(() => {
 		(async () => {
-			const response = await getAdminNewsQuery();
-			setNews(response.news_items);
+			const response = await getAdminFAQQuery();
+			setFaqItems(response.faq_items);
 		})();
 	}, []);
 
 	return (
-		<AdminPage title="News">
+		<AdminPage title="FAQ">
 			<FilterStoreProvider store={filterStore}>
-				<Filter justify="left" options={["title", "summary", "content"]} />
-				<Link to="/admin/news/add-item">
+				<Filter justify="left" options={["title", "content"]} />
+				<Link to="/admin/faq/add-item">
 					<button type="button" className="tertiary">
-						{t("add_news_item")}
+						{t("add_faq_item")}
 					</button>
 				</Link>
-				<TableBlock rows={news} table={adminNewsTable}></TableBlock>
+				<TableBlock rows={faqItems} table={adminFaqItemsTable}></TableBlock>
 			</FilterStoreProvider>
 		</AdminPage>
 	);

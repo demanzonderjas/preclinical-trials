@@ -10,5 +10,10 @@ export type TFaqItem = {
 	faq_category_id: number;
 	title: string;
 	content: string;
-	show: boolean;
+	status: TPublishStatus;
 };
+
+export enum TPublishStatus {
+	Draft = "draft",
+	Published = "published"
+}

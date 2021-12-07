@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import { ExpandableText } from "../components/layout/ExpandableText";
 import { PrimaryHeaderPageWithSubMenu, PageWithSubmenu } from "../components/layout/Page";
 import { getFAQ } from "../queries/faq";
-import { TFaqCategory, TFaqItem } from "../typings/faq";
+import { TFaqCategory, TFaqItem, TPublishStatus } from "../typings/faq";
 import { TSubMenu } from "../typings/layout";
 
 export const HelpPage: React.FC = () => {
@@ -29,7 +29,7 @@ export const HelpPage: React.FC = () => {
 			<PageWithSubmenu subMenu={subMenu}>
 				<div className="HelpPage">
 					{activeCategory?.faq_items
-						.filter(item => !!item.show)
+						.filter(item => item.status !== TPublishStatus.Draft)
 						.map(item => (
 							<ExpandableText key={item.id} header={item.title} body={item.content} />
 						))}

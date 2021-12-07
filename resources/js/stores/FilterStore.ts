@@ -25,6 +25,9 @@ export class FilterStore {
 	}
 
 	addFilter() {
+		if (!this.activeFilterText && !this.activeFilterKey) {
+			return;
+		}
 		this.filters.push({ value: this.activeFilterText, key: this.activeFilterKey });
 		this.setActiveFilterKey(null);
 		this.setActiveFilterText("");

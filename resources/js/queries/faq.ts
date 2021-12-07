@@ -57,7 +57,7 @@ export async function deleteFAQItemQuery(faq_item_id: string) {
 
 export async function updateFAQItemQuery(faq_item_id: string, faqItemData: TFaqItem) {
 	try {
-		const response = await API.put("/api/news-item", { ...faqItemData, faq_item_id });
+		const response = await API.put("/api/faq-item", { ...faqItemData, faq_item_id });
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };

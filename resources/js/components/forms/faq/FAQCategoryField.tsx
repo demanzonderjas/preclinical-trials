@@ -11,8 +11,12 @@ export const FAQCategoryField: React.FC<{ id: TFormFieldName }> = observer(({ id
 	const { value, setValue } = useFormField(id);
 
 	const setOptionValue = (option: string) => {
-		const category = categories.find(c => c.name === option);
-		setValue(category.id);
+		if (option === "") {
+			setValue("");
+		} else {
+			const category = categories.find(c => c.name === option);
+			setValue(category.id);
+		}
 	};
 
 	const stringValue = categories.find(c => c.id === value)?.name;

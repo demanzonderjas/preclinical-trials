@@ -189,5 +189,6 @@
 	"content": "Content",
 	"add_news_item": "+ Add news item",
 	"faq_category": "FAQ Category",
-	"choose_category": "Choose category"
+	"choose_category": "Choose category",
+	"add_faq_item": "Add FAQ Item"
 }
