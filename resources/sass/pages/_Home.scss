@@ -20,7 +20,14 @@
 		top: -230px;
 		right: 80px;
 		border-radius: 50%;
+		cursor: pointer;
 		z-index: 3;
+		transition: transform 0.15s cubic-bezier(0, 0, 0.3, 1);
+
+		&:hover {
+			background: darken($secondary, 5);
+			transform: scale(1.05);
+		}
 
 		.copy {
 			display: flex;
