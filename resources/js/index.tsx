@@ -35,6 +35,7 @@ import { FAQPage } from "./pages/admin/FAQ";
 import { PagesPage } from "./pages/admin/Pages";
 import { StatsPage } from "./pages/admin/Stats";
 import { NewsItemPage } from "./pages/NewsItem";
+import { EditNewsItemPage } from "./pages/admin/EditNewsitem";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -114,6 +115,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/admin/news/add-item" exact={true}>
 								<AddNewsItemPage />
+							</Route>
+							<Route path="/admin/news/edit-item/:news_item_id">
+								<EditNewsItemPage />
 							</Route>
 							<Route path="/admin/faq" exact={true}>
 								<FAQPage />

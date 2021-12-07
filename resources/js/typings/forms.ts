@@ -101,7 +101,7 @@ export enum TFormFieldName {
 	StatementOfAccuracy = "statement_of_accuracy",
 	Summary = "summary",
 	Content = "content",
-	PublishStatus = "publish_status"
+	PublishStatus = "status"
 }
 
 export enum TFormName {

@@ -45,3 +45,12 @@ export async function deleteNewsItemQuery(news_item_id: string) {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function updateNewsItemQuery(news_item_id: string, newsData: TNewsItem) {
+	try {
+		const response = await API.put("/api/news-item", { ...newsData, news_item_id });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

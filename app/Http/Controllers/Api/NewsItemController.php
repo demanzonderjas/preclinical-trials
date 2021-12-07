@@ -22,6 +22,18 @@ class NewsItemController extends Controller
         return response()->json(["news_item" => $newsItem->toArray(), "success" => true]);
     }
 
+    public function update(Request $request)
+    {
+        $newsItem = NewsItem::findOrFail($request->news_item_id);
+        $newsItem->title = $request->title;
+        $newsItem->summary = $request->summary;
+        $newsItem->content = $request->content;
+        $newsItem->status = $request->status;
+        $newsItem->save();
+
+        return response()->json(["news_item" => new NewsItemResource($newsItem)]);
+    }
+
     public function getViewable()
     {
         $newsItems = NewsItem::where('status', '!=', 'draft')->orderByDesc('updated_at')->get();

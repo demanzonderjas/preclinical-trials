@@ -5,6 +5,7 @@ export const publishStatusOptions = ["draft", "published"];
 
 export const publishStatusField: TFormField = {
 	id: TFormFieldName.PublishStatus,
+	label: "publish_status",
 	Component: SelectField,
 	required: true,
 	props: {

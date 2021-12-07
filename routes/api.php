@@ -42,6 +42,7 @@ Route::group(['namespace' => 'Api'], function () {
         Route::post('protocol/{protocol_id}/approve', 'ProtocolController@approve');
         Route::post('protocol/{protocol_id}/reject', 'ProtocolController@reject');
         Route::post('news-item', 'NewsItemController@store');
+        Route::put('news-item', 'NewsItemController@update');
         Route::get('news-items/admin', 'NewsItemController@getViewableForAdmin');
         Route::delete('news-item/{news_item_id}', 'NewsItemController@delete');
     });

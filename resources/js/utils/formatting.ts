@@ -1,4 +1,7 @@
 import day from "dayjs";
+import { createNewsItemForm } from "../data/forms/news";
+import { TFormFieldName, TSavedFormValue } from "../typings/forms";
+import { TNewsItem } from "../typings/news";
 import { TDBProtocol, TProtocol } from "../typings/protocols";
 
 export function slugify(str: string) {
@@ -52,4 +55,15 @@ export async function fileToJSON(file: File) {
 		fileReader.onerror = error => reject(error);
 		fileReader.readAsText(file);
 	});
+}
+
+export function mapNewsItemToKeyValueArray(newsItem: TNewsItem): TSavedFormValue[] {
+	if (!newsItem) {
+		return null;
+	}
+	console.log(newsItem);
+	return createNewsItemForm.fields.map(field => ({
+		key: field.id,
+		value: newsItem[field.id]
+	}));
 }
