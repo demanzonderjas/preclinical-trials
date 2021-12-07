@@ -1,7 +1,6 @@
 import JoditEditor from "jodit-react";
 import React, { useRef, useState, useEffect } from "react";
 import { AdminPage } from "../../components/layout/admin/AdminPage";
-import { Config } from "../../../../node_modules/jodit/types/config";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { createNewsItemQuery } from "../../queries/news";
 import { createNewsItemForm } from "../../data/forms/news";
