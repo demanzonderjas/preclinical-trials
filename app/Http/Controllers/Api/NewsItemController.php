@@ -28,6 +28,12 @@ class NewsItemController extends Controller
         return response()->json(["news_items" => NewsItemResource::collection($newsItems)]);
     }
 
+    public function getViewableForAdmin()
+    {
+        $newsItems = NewsItem::orderByDesc('updated_at')->get();
+        return response()->json(["news_items" => NewsItemResource::collection($newsItems)]);
+    }
+
     public function get($news_item_id)
     {
         $newsItem = NewsItem::find($news_item_id);

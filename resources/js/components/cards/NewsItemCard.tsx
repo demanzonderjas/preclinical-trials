@@ -27,8 +27,10 @@ export const NewsItemCard: React.FC<TNewsItem & { single?: boolean }> = ({
 					<p>{title}</p>
 				</div>
 				<div className="body">
-					{single && <p>{summary}</p>}
-					{summary && (
+					{!single && (
+						<div className="summary" dangerouslySetInnerHTML={{ __html: summary }} />
+					)}
+					{single && (
 						<div className="content" dangerouslySetInnerHTML={{ __html: content }} />
 					)}
 					<div className="date">

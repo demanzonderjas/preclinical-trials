@@ -9,11 +9,16 @@ export const RichTextField: React.FC<{ id: TFormFieldName; height?: number }> = 
 		const editor = useRef(null);
 		const { value, setValue } = useFormField(id);
 
+		const listOfButtons = "underline,italic,bold,ul,ol,indent,outdent,left";
+
 		const config = {
 			readonly: false,
-			buttons: "underline,italic,bold,ul,ol,indent,outdent,left",
+			buttons: listOfButtons,
+			buttonsSM: listOfButtons,
+			buttonsMD: listOfButtons,
+			buttonsXS: listOfButtons,
 			height: `${height}px`,
-			width: "100%"
+			width: "80%"
 		};
 
 		return (

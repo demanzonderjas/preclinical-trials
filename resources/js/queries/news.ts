@@ -27,3 +27,12 @@ export async function getNewsItemQuery(news_item_id: string) {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function getAdminNewsQuery() {
+	try {
+		const response = await API.get("/api/news-items/admin");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

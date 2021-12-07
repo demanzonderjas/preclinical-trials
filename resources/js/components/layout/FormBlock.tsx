@@ -47,7 +47,7 @@ export const FormBlock: React.FC<{
 		<FormStoreContext.Provider value={formStore}>
 			<div
 				className={cx("FormBlock", { "with-sections": !!sections })}
-				style={{ margin: withoutMargin ? "0" : null, width: withoutMargin ? "100%" : null }}
+				style={{ margin: withoutMargin ? "0" : null, width: withoutMargin ? "80%" : null }}
 			>
 				{!!sections && <FormSections sections={sections} />}
 				{icon && (
