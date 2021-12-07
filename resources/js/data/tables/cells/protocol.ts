@@ -1,5 +1,5 @@
 import { ActionCell, EditCell, ViewCell } from "../../../components/tables/ActionCell";
-import { AdminActionCell } from "../../../components/tables/AdminActionCell";
+import { AdminProtocolActionCell } from "../../../components/tables/AdminProtocolActionCell";
 import { BooleanCell } from "../../../components/tables/BooleanCell";
 import { CountryCell } from "../../../components/tables/CountryCell";
 import { DateCell } from "../../../components/tables/DateCell";
@@ -99,6 +99,6 @@ export const publishStatusCell: TTableCell = {
 
 export const adminActionCell: TTableCell = {
 	id: TTableCellName.AdminAction,
-	Component: AdminActionCell,
+	Component: AdminProtocolActionCell,
 	value: ""
 };

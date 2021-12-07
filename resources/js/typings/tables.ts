@@ -9,7 +9,7 @@ export type TTable = {
 export type TTableCell = {
 	id: TTableCellName;
 	Component: React.FC<any>;
-	value: string;
+	value?: string;
 	props?: any;
 	synonym?: TFormFieldName | string;
 };

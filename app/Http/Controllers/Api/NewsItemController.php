@@ -39,4 +39,10 @@ class NewsItemController extends Controller
         $newsItem = NewsItem::find($news_item_id);
         return response()->json(["news_item" => new NewsItemResource($newsItem)]);
     }
+
+    public function delete($news_item_id)
+    {
+        NewsItem::destroy($news_item_id);
+        return response()->json(["success" => true]);
+    }
 }

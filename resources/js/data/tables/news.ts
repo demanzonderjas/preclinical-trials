@@ -1,4 +1,5 @@
 import { TTable, TTableCellName } from "../../typings/tables";
+import { newsAdminActionCell } from "./cells/news";
 import { lastUpdatedAtCell, publishStatusCell, titleCell } from "./cells/protocol";
 
 export const adminNewsTable: TTable = {
@@ -8,5 +9,5 @@ export const adminNewsTable: TTable = {
 		TTableCellName.PublishStatus,
 		TTableCellName.AdminAction
 	],
-	cells: [titleCell, lastUpdatedAtCell, publishStatusCell]
+	cells: [titleCell, lastUpdatedAtCell, publishStatusCell, newsAdminActionCell]
 };

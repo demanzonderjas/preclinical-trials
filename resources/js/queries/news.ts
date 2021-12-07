@@ -36,3 +36,12 @@ export async function getAdminNewsQuery() {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function deleteNewsItemQuery(news_item_id: string) {
+	try {
+		const response = await API.delete(`/api/news-item/${news_item_id}`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

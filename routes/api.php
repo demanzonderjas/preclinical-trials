@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\NewsItemController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,5 +43,6 @@ Route::group(['namespace' => 'Api'], function () {
         Route::post('protocol/{protocol_id}/reject', 'ProtocolController@reject');
         Route::post('news-item', 'NewsItemController@store');
         Route::get('news-items/admin', 'NewsItemController@getViewableForAdmin');
+        Route::delete('news-item/{news_item_id}', 'NewsItemController@delete');
     });
 });
