@@ -23,8 +23,9 @@ export const EditNewsItemPage: React.FC = () => {
 	}, [news_item_id]);
 
 	const updateNewsItem = async data => {
-		await updateNewsItemQuery(news_item_id, data);
+		const response = await updateNewsItemQuery(news_item_id, data);
 		push("/admin/news");
+		return response;
 	};
 
 	return (

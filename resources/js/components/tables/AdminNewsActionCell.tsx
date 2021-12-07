@@ -22,13 +22,13 @@ export const AdminNewsActionCell: React.FC<{ value: string; row: TProtocol }> = 
 		<td className="ActionCell">
 			<div className="actions">
 				<Link to={`/news/view-item/${row.id}`} target="_blank">
-					<button className="secondary small">{t("view")}</button>
+					<button className="secondary xs">{t("view")}</button>
 				</Link>
 				<Link to={`/admin/news/edit-item/${row.id}`}>
-					<button className="tertiary small">{t("edit")}</button>
+					<button className="tertiary xs">{t("edit")}</button>
 				</Link>
 				<button
-					className="danger small"
+					className="danger xs"
 					onClick={() => setModal({ ...confirmModal, actionOnConfirm: deleteNews })}
 				>
 					{t("delete")}

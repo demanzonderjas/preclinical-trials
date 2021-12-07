@@ -5,9 +5,18 @@ import { createNewsItemQuery } from "../../queries/news";
 import { createNewsItemForm } from "../../data/forms/news";
 import { Link } from "react-router-dom";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { useHistory } from "react-router";
 
 export const AddNewsItemPage: React.FC = () => {
 	const { t } = useTranslationStore();
+	const { push } = useHistory();
+
+	const addNewsItem = async data => {
+		const response = await createNewsItemQuery(data);
+		push("/admin/news");
+		return response;
+	};
+
 	return (
 		<AdminPage title="Add News Item">
 			<Link to="/admin/news">
@@ -18,7 +27,7 @@ export const AddNewsItemPage: React.FC = () => {
 			<FormBlock
 				withoutMargin={true}
 				form={createNewsItemForm}
-				handleSubmit={createNewsItemQuery}
+				handleSubmit={addNewsItem}
 			></FormBlock>
 		</AdminPage>
 	);

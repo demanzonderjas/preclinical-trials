@@ -16,7 +16,7 @@ class NewsItemController extends Controller
             "title" => $request->title,
             "summary" => $request->summary,
             "content" => $request->content,
-            "status" => $request->publish_status
+            "status" => $request->status
         ]);
         $newsItem->save();
         return response()->json(["news_item" => $newsItem->toArray(), "success" => true]);
