@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Image } from "../base/Image";
 import cx from "classnames";
-import { TForm, TSectionName } from "../../typings/forms";
+import { TForm, TFormFieldName, TSectionName } from "../../typings/forms";
 import { FormStoreContext } from "../../contexts/FormStoreContext";
 import { FormStore } from "../../stores/FormStore";
 import { FormFields } from "../forms/FormField";
 import { SuccessMessage } from "../forms/SuccessMessage";
 import { FormSections } from "../forms/FormSections";
 import { ControlButtons } from "../forms/protocols/ControlButtons";
-import { getSectionFromHash } from "../../utils/formatting";
+import { RichTextField } from "../forms/RichTextField";
 
 export const FormBlock: React.FC<{
 	form: TForm;
-	icon: string;
+	icon?: string;
 	sections?: TSectionName[];
+	withoutMargin?: boolean;
+	width?: number;
 	handleSubmit: Function;
 	initialData?: any;
 	waitForData?: boolean;
-}> = ({ children, icon, sections, form, handleSubmit, initialData, waitForData }) => {
+}> = ({
+	children,
+	icon,
+	sections,
+	form,
+	handleSubmit,
+	initialData,
+	waitForData,
+	withoutMargin
+}) => {
 	const [formStore, setFormStore] = useState(null);
 
 	useEffect(() => {
@@ -34,12 +45,20 @@ export const FormBlock: React.FC<{
 
 	return (
 		<FormStoreContext.Provider value={formStore}>
-			<div className={cx("FormBlock", { "with-sections": !!sections })}>
+			<div
+				className={cx("FormBlock", { "with-sections": !!sections })}
+				style={{ margin: withoutMargin ? "0" : null, width: withoutMargin ? "100%" : null }}
+			>
 				{!!sections && <FormSections sections={sections} />}
-				<div className="icon-wrapper">
-					<Image filename={icon} />
-				</div>
-				<div className="FormWrapper">
+				{icon && (
+					<div className="icon-wrapper">
+						<Image filename={icon} />
+					</div>
+				)}
+				<div
+					className="FormWrapper"
+					style={{ padding: withoutMargin ? "10px 30px 30px" : null }}
+				>
 					<form
 						onSubmit={formStore.submit}
 						style={{ textAlign: align }}

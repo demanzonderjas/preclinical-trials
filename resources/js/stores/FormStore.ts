@@ -140,7 +140,7 @@ export class FormStore {
 		});
 		const hasError = [...this.errors.values()].length;
 
-		if (hasError) {
+		if (hasError && !!this.sections) {
 			const firstErrorKey = [...this.errors.keys()][0];
 			const fieldWithError = this.fields.find(f => f.id === firstErrorKey);
 			this.setActiveSection(fieldWithError.section);
@@ -154,12 +154,14 @@ export class FormStore {
 		if (this.validate()) {
 			this.setIsSubmitting(true);
 			const keyValuePairs = this.createKeyValuePairs();
-			const { errors } = await this.handleSubmit(keyValuePairs);
+			const { errors, exception } = await this.handleSubmit(keyValuePairs);
 			if (errors) {
 				this.errors = new Map<TFormFieldName, any>(Object.entries(errors) as any);
 				this.setIsSubmitting(false);
-			} else {
+			} else if (!exception) {
 				this.setIsDone(true);
+			} else {
+				this.setIsSubmitting(false);
 			}
 		}
 	};

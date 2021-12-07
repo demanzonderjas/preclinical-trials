@@ -1377,6 +1377,21 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@microsoft/tsdoc-config@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc-config/-/tsdoc-config-0.15.2.tgz#eb353c93f3b62ab74bdc9ab6f4a82bcf80140f14"
+  integrity sha512-mK19b2wJHSdNf8znXSMYVShAHktVr/ib0Ck2FA3lsVBSEhSI/TfXT7DJQkAYgcztTuwazGcg58ZjYdk0hTCVrA==
+  dependencies:
+    "@microsoft/tsdoc" "0.13.2"
+    ajv "~6.12.6"
+    jju "~1.4.0"
+    resolve "~1.19.0"
+
+"@microsoft/tsdoc@0.13.2":
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.13.2.tgz#3b0efb6d3903bd49edb073696f60e90df08efb26"
+  integrity sha512-WrHvO8PDL8wd8T2+zBGKrMwVL5IyzR3ryWUsl0PXgEV0QHup4mTLi0QcATefGI6Gx9Anu7vthPyyyLpY0EpiQg==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -2102,7 +2117,7 @@ ajv-keywords@^3.1.0, ajv-keywords@^3.4.1, ajv-keywords@^3.5.2:
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.5.2.tgz#31f29da5ab6e00d1c2d329acf7b5929614d5014d"
   integrity sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==
 
-ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.3, ajv@^6.12.4:
+ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.3, ajv@^6.12.4, ajv@~6.12.6:
   version "6.12.6"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
   integrity sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==
@@ -2372,6 +2387,11 @@ atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+
+autobind-decorator@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-2.4.0.tgz#ea9e1c98708cf3b5b356f7cf9f10f265ff18239c"
+  integrity sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw==
 
 autoprefixer@^9.4.2, autoprefixer@^9.6.1:
   version "9.8.8"
@@ -4531,6 +4551,14 @@ eslint-plugin-react@7.19.0:
     string.prototype.matchall "^4.0.2"
     xregexp "^4.3.0"
 
+eslint-plugin-tsdoc@^0.2.14:
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-tsdoc/-/eslint-plugin-tsdoc-0.2.14.tgz#e32e7c1df8af7b3009c252590bec07a1030afbf2"
+  integrity sha512-fJ3fnZRsdIoBZgzkQjv8vAj6NeeOoFkTfgosj6mKsFjX70QV256sA/wq+y/R2+OL4L8E79VVaVWrPeZnKNe8Ng==
+  dependencies:
+    "@microsoft/tsdoc" "0.13.2"
+    "@microsoft/tsdoc-config" "0.15.2"
+
 eslint-scope@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-4.0.3.tgz#ca03833310f6889a3264781aa82e63eb9cfe7848"
@@ -6111,7 +6139,7 @@ is-color-stop@^1.0.0:
     rgb-regex "^1.0.1"
     rgba-regex "^1.0.0"
 
-is-core-module@^2.2.0:
+is-core-module@^2.1.0, is-core-module@^2.2.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.8.0.tgz#0321336c3d0925e497fd97f5d95cb114a5ccd548"
   integrity sha512-vd15qHsaqrRL7dtH6QNuy0ndJmRDrS9HAM1CAiSifNUFv4x1a0CCVsj18hJ1mShxIG6T2i1sO78MkP56r0nYRw==
@@ -6817,6 +6845,27 @@ jest@24.9.0:
   dependencies:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
+
+jju@~1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/jju/-/jju-1.4.0.tgz#a3abe2718af241a2b2904f84a625970f389ae32a"
+  integrity sha1-o6vicYryQaKykE+EpiWXDzia4yo=
+
+jodit-react@^1.1.14:
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.1.14.tgz#6af4516ddb4e933c661547ac081cf65e774f0f9c"
+  integrity sha512-l2OHg1ravxE36HreYqIujbzUwEs2zdqDUcVrfQW3jp4VCmOoZu4aOGiIkf2cYK8J2x5Jl3s8ipd166d98sKMaQ==
+  dependencies:
+    jodit "^3.9.4"
+
+jodit@^3.10.2, jodit@^3.9.4:
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/jodit/-/jodit-3.10.2.tgz#e0faac17a9dbfbb5b9bee660e7f7852b515a466d"
+  integrity sha512-FgCwckVT9m5S0OeHW0uUN7UVjKLJOSuTiFntL+Ko7XqGtfcnw+PI5tPQN6I2hyxVAznJHsO9FQqlmiPY0ct9Dw==
+  dependencies:
+    autobind-decorator "^2.4.0"
+    eslint-plugin-tsdoc "^0.2.14"
+    postcss-less "^5.0.0"
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
@@ -8711,6 +8760,11 @@ postcss-lab-function@^2.0.1:
     postcss "^7.0.2"
     postcss-values-parser "^2.0.0"
 
+postcss-less@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/postcss-less/-/postcss-less-5.0.0.tgz#3fa361ed8e52a9c3e6e4fdb9bb95fd9032f3c62b"
+  integrity sha512-djK6NlApALJeBnNx7CzLatq64eMF3BCyzBH+faYPxrvNHHM/YCimJ6XQkgWgtim2G89EzdQG4Ed0lGNCXPfD7A==
+
 postcss-load-config@^2.0.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/postcss-load-config/-/postcss-load-config-2.1.2.tgz#c5ea504f2c4aef33c7359a34de3573772ad7502a"
@@ -9968,6 +10022,14 @@ resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.15.1, resolve@^1.2
   integrity sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==
   dependencies:
     is-core-module "^2.2.0"
+    path-parse "^1.0.6"
+
+resolve@~1.19.0:
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.19.0.tgz#1af5bf630409734a067cae29318aac7fa29a267c"
+  integrity sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==
+  dependencies:
+    is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
 restore-cursor@^3.1.0:

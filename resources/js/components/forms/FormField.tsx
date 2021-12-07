@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useForm, useFormField } from "../../hooks/useForm";
-import { TFormField, TFormStyle } from "../../typings/forms";
+import { TFormField, TFormFieldName, TFormStyle } from "../../typings/forms";
 import { fieldMeetsDependencies } from "../../utils/validation";
 import cx from "classnames";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { useHistory } from "react-router";
+import { RichTextField } from "./RichTextField";
 
 export const FormField: React.FC<TFormField> = observer(
 	({ id, Component, props, label, hidden, required, description }) => {

@@ -1,0 +1,20 @@
+.jodit {
+	background-color: $white;
+	color: black;
+
+	button {
+		filter: none;
+		color: black;
+		font-weight: normal;
+	}
+
+	ul,
+	ol {
+		margin-left: 1em;
+		padding-left: 20px;
+	}
+
+	.jodit-status-bar-link {
+		display: none;
+	}
+}

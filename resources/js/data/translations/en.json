@@ -184,5 +184,7 @@
 	"country": "Country",
 	"admin_action": "Admin Action",
 	"publish_status": "Status",
-	"back_to_overview": "Back to overview"
+	"back_to_overview": "Back to overview",
+	"summary": "Summary",
+	"content": "Content"
 }

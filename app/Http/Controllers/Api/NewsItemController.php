@@ -9,6 +9,19 @@ use App\Models\NewsItem;
 
 class NewsItemController extends Controller
 {
+
+    public function store(Request $request)
+    {
+        $newsItem = new NewsItem([
+            "title" => $request->title,
+            "summary" => $request->summary,
+            "content" => $request->content,
+            "status" => $request->publish_status
+        ]);
+        $newsItem->save();
+        return response()->json(["news_item" => $newsItem->toArray(), "success" => true]);
+    }
+
     public function getViewable()
     {
         $newsItems = NewsItem::where('status', '!=', 'draft')->orderByDesc('updated_at')->get();

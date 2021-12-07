@@ -98,13 +98,17 @@ export enum TFormFieldName {
 	AdditionalInformation = "additional_information",
 	LinkToData = "link_to_data",
 	HasEmbargo = "has_embargo",
-	StatementOfAccuracy = "statement_of_accuracy"
+	StatementOfAccuracy = "statement_of_accuracy",
+	Summary = "summary",
+	Content = "content",
+	PublishStatus = "publish_status"
 }
 
 export enum TFormName {
 	CreateProtocol = "create_protocol",
 	CreateAccount = "create_account",
 	Login = "login",
+	CreateNewsItem = "create_news_item",
 	ForgotPassword = "forgot_password",
 	ResetPassword = "reset_password"
 }
