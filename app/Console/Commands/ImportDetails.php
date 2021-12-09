@@ -40,13 +40,15 @@ class ImportDetails extends Command
      */
     public function handle()
     {
-        ini_set('memory_limit', '1024M'); // or you could use 1G
-        Excel::import(new DetailsImport, 'details.csv');
+        // ini_set('memory_limit', '1024M'); // or you could use 1G
+        // Excel::import(new DetailsImport, 'details.csv');
 
-        $details = Detail::where('key', 'study_centre')->get();
+        $details = Detail::where(['key' => 'study_arms'])->get();
         $details->each(function ($d) {
-            $d->value = stripslashes($d->value);
-            $d->save();
+            $d->value = json_decode($d->value);
+            if (!empty($d->value)) {
+                $d->save();
+            }
         });
         return 0;
     }
