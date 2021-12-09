@@ -31,6 +31,7 @@ return [
 		"randomisation_method_used",
 		"other_randomisation_method",
 		"details_randomisation",
+		"experimental_design",
 		"investigators_blinded_intervention",
 		"yes_blinded_intervention_how_details",
 		"yes_blinded_intervention_partially_details",

@@ -43,6 +43,7 @@ import { studyCentreField } from "./fields/protocol/studyCentre";
 import { studyArmsField } from "./fields/protocol/studyArms";
 import { supportField } from "./fields/protocol/support";
 import { shortTitleField, titleField } from "./fields/protocol/title";
+import { experimentalDesignField } from "./fields/protocol/experimentalDesign";
 
 export const createProtocolForm: TForm = {
 	id: TFormName.CreateProtocol,
@@ -70,6 +71,7 @@ export const createProtocolForm: TForm = {
 		otherSpeciesField,
 		strainField,
 		sexField,
+		experimentalDesignField,
 		sampleSizeCalculationField,
 		noSampleSizeCalculationDetailsField,
 		studyArmsField,

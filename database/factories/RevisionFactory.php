@@ -92,6 +92,7 @@ class RevisionFactory extends Factory
 					"intervention" => $this->faker->sentence(rand(2, 3))
 				]
 			],
+			"experimental_design" => $this->faker->paragraph(),
 			"randomisation" => $this->selectRandom(config('pct.valid_field_values.randomisation')),
 			"why_no_randomisation" => $this->faker->paragraph(),
 			"randomisation_method_used" => $this->selectRandom(config('pct.valid_field_values.randomisation_method_used')),

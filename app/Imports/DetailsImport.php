@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Models\Detail;
 use App\Models\Protocol;
-use App\Models\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -19,13 +18,53 @@ class DetailsImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row) {
             $protocol = Protocol::find($row["recordid"]);
             if (!empty($protocol)) {
+                $fieldName = $this->convertFieldName($row);
                 Detail::create([
                     'protocol_id' => $protocol->id,
-                    'key' => $this->convertFieldName($row),
-                    'value' => $row["fieldvalue"],
+                    'key' => $fieldName,
+                    'value' => $this->convertFieldValue($fieldName, $row["fieldvalue"]),
                 ]);
             }
         }
+    }
+
+    public function convertFieldValue($fieldName, $value)
+    {
+        switch ($fieldName) {
+            case "randomisation":
+            case "sex":
+            case "randomisation":
+            case "has_embargo":
+            case "exclusive_animal_use":
+            case "investigators_blinded_intervention":
+            case "investigators_blinded_assessment":
+                return strtolower($value);
+            case "financial_support":
+            case "intervention_type":
+            case "study_status":
+            case "species":
+            case "randomisation_method_used":
+            case "details_randomisation":
+                return $this->slugify($value);
+            case "study_stage":
+                return $this->convertStudyStageValue($value);
+            default:
+                return $value;
+        }
+    }
+
+    public function convertStudyStageValue($value)
+    {
+        $mappingTable = [
+            "Stage 1 - Exploratory study (hypothesis generating)" => "study_stage_1_value",
+            "Stage 2 - Confirmatory study (hypothesis testing)" => "study_stage_2_value",
+        ];
+        return $mappingTable[$value];
+    }
+
+    public function slugify($string)
+    {
+        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $string)));
     }
 
     public function convertFieldName($row)
@@ -46,6 +85,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "PE" => "primary_readout_parameter",
             "SE" => "secondary_readout_parameter",
             "AO" => "exclusive_animal_use",
+            "AM" => "experimental_design",
             "AR" => "short_title",
             "BA" => $this->getBlindedAssessmentKey($row),
             "BI" => $this->getBlindedAssessmentKey($row),
@@ -60,7 +100,8 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "SP" => "species",
             "SR" => "strain",
             "SX" => "sex",
-            "TN" => "sum_of_animals"
+            "TN" => "sum_of_animals",
+            "EO" => "has_embargo"
         ];
         return $mappingTable[$row['fieldtag']];
     }
@@ -81,7 +122,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "intervention_type",
             "other_intervention_type",
         ];
-        return $mappingTable[$row['subtag']];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 
     public function getBlindedAssessmentKey($row)
@@ -103,7 +144,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "original_animal_ethics_committee_application",
             "application_number",
         ];
-        return $mappingTable[$row['subtag']];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 
     public function getRandomisationKey($row)
@@ -124,6 +165,6 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "sample_size_calculation",
             "no_sample_size_calculation_details",
         ];
-        return $mappingTable[$row['subtag']];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 }
