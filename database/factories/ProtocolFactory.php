@@ -86,6 +86,8 @@ class ProtocolFactory extends Factory
 				]
 			],
 			"randomisation" => $this->selectRandom(config('pct.valid_field_values.randomisation')),
+			"randomisation_method_used" => $this->selectRandom(config('pct.valid_field_values.randomisation_method_used')),
+			"details_randomisation" => $this->selectRandom(config('pct.valid_field_values.details_randomisation')),
 			"why_no_randomisation" => $this->faker->paragraph(),
 			"investigators_blinded_intervention" => $this->selectRandom(config('pct.valid_field_values.investigators_blinded_intervention')),
 			"yes_blinded_intervention_how_details" => $this->faker->paragraph(),

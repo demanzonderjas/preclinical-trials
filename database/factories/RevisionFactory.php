@@ -94,6 +94,8 @@ class RevisionFactory extends Factory
 			],
 			"randomisation" => $this->selectRandom(config('pct.valid_field_values.randomisation')),
 			"why_no_randomisation" => $this->faker->paragraph(),
+			"randomisation_method_used" => $this->selectRandom(config('pct.valid_field_values.randomisation_method_used')),
+			"details_randomisation" => $this->selectRandom(config('pct.valid_field_values.details_randomisation')),
 			"investigators_blinded_intervention" => $this->selectRandom(config('pct.valid_field_values.investigators_blinded_intervention')),
 			"yes_blinded_intervention_how_details" => $this->faker->paragraph(),
 			"yes_blinded_intervention_partially_details" => $this->faker->paragraph(),

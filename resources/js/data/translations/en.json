@@ -190,5 +190,7 @@
 	"add_news_item": "+ Add news item",
 	"faq_category": "FAQ Category",
 	"choose_category": "Choose category",
-	"add_faq_item": "Add FAQ Item"
+	"add_faq_item": "Add FAQ Item",
+	"randomisation_method_used": "Method used - If randomisation is applied, please indicate the method used.",
+	"details_randomisation": "Further details on randomisation - Provide further details on randomisation."
 }

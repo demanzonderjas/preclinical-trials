@@ -17,6 +17,7 @@ return [
 		"primary_readout_parameter",
 		"secondary_readout_parameter",
 		"exclusive_animal_use",
+		"sum_of_animals",
 		"no_exclusive_animal_use_details",
 		"species",
 		"other_species",
@@ -27,6 +28,9 @@ return [
 		"study_arms",
 		"randomisation",
 		"why_no_randomisation",
+		"randomisation_method_used",
+		"other_randomisation_method",
+		"details_randomisation",
 		"investigators_blinded_intervention",
 		"yes_blinded_intervention_how_details",
 		"yes_blinded_intervention_partially_details",
@@ -95,6 +99,18 @@ return [
 		"investigators_blinded_assessment" => ["no", "yes_how", "yes_partially_because"],
 		"placebo_controlled" => ["yes", "no"],
 		"has_embargo" => ["yes", "no"],
-		"study_arm_options" => ["sham", "control", "intervention", "other"]
+		"study_arm_options" => ["sham", "control", "intervention", "other"],
+		"randomisation_method_used" => [
+			"computer_generated_random_number_sequence",
+			"random_number_table",
+			"shuffled_blinded_envelopes",
+			"coin_toss",
+			"other"
+		],
+		"details_randomisation" => [
+			"simple_randomisation",
+			"block_randomisation",
+			"stratified_randomisation"
+		]
 	]
 ];

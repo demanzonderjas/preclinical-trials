@@ -19,7 +19,7 @@ class RoleSeeder extends Seeder
         $role->name = 'admin';
         $role->save();
 
-        $user = User::find(1);
+        $user = User::where('email', 'daan@puzzel.org')->first();
         $user->roles()->save($role);
     }
 }
