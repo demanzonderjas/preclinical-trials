@@ -34,6 +34,7 @@ class ProtocolController extends Controller
 	public function get(Request $request)
 	{
 		$protocol = Protocol::where(['id' => $request->protocol_id])->with('details', 'revisions')->firstOrFail();
+		dd($protocol);
 		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
 

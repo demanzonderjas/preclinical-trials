@@ -17,20 +17,27 @@ class DetailsImport implements ToCollection, WithHeadingRow
     {
         foreach ($rows as $row) {
             $protocol = Protocol::find($row["recordid"]);
-            if (!empty($protocol)) {
-                $fieldName = $this->convertFieldName($row);
-                Detail::create([
-                    'protocol_id' => $protocol->id,
-                    'key' => $fieldName,
-                    'value' => $this->convertFieldValue($fieldName, $row["fieldvalue"]),
-                ]);
+            if (empty($protocol)) {
+                continue;
             }
+            $fieldName = $this->convertFieldName($row);
+            if ($fieldName === null) {
+                continue;
+            }
+            Detail::create([
+                'protocol_id' => $protocol->id,
+                'key' => $fieldName,
+                'value' => $this->convertFieldValue($fieldName, $row["fieldvalue"]),
+            ]);
         }
     }
 
     public function convertFieldValue($fieldName, $value)
     {
         switch ($fieldName) {
+            case "study_centre":
+            case "study_arms":
+                return stripslashes($value);
             case "randomisation":
             case "sex":
             case "randomisation":
@@ -39,7 +46,6 @@ class DetailsImport implements ToCollection, WithHeadingRow
             case "investigators_blinded_intervention":
             case "investigators_blinded_assessment":
                 return strtolower($value);
-            case "financial_support":
             case "intervention_type":
             case "study_status":
             case "species":
@@ -48,9 +54,27 @@ class DetailsImport implements ToCollection, WithHeadingRow
                 return $this->slugify($value);
             case "study_stage":
                 return $this->convertStudyStageValue($value);
+            case "financial_support":
+                return $this->convertFinancialSupport($value);
+            case "has_embargo":
+                return $this->convertEmbargo($value);
             default:
                 return $value;
         }
+    }
+
+    public function convertEmbargo($value)
+    {
+        $mappingTable = [
+            "Embargo" => "yes",
+            "No Embargo" => "no"
+        ];
+        return $mappingTable[$value];
+    }
+
+    public function convertFinancialSupport($value)
+    {
+        return [$this->slugify($value)];
     }
 
     public function convertStudyStageValue($value)
@@ -58,13 +82,16 @@ class DetailsImport implements ToCollection, WithHeadingRow
         $mappingTable = [
             "Stage 1 - Exploratory study (hypothesis generating)" => "study_stage_1_value",
             "Stage 2 - Confirmatory study (hypothesis testing)" => "study_stage_2_value",
+            "Stage 1 – Exploratory study (hypothesis generating)" => "study_stage_1_value",
+            "Stage 2 – Confirmatory study (hypothesis testing)" => "study_stage_2_value"
         ];
         return $mappingTable[$value];
     }
 
     public function slugify($string)
     {
-        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $string)));
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $string)));
+        return substr($slug, -1) === "_" ? substr($slug, 0, strlen($slug) - 1) : $slug;
     }
 
     public function convertFieldName($row)
@@ -103,7 +130,9 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "TN" => "sum_of_animals",
             "EO" => "has_embargo"
         ];
-        return $mappingTable[$row['fieldtag']];
+        $keyExists = array_key_exists($row['fieldtag'], $mappingTable);
+
+        return $keyExists ? $mappingTable[$row['fieldtag']] : null;
     }
 
     public function getContactKey($row)
@@ -113,7 +142,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "contact_role",
             "contact_email"
         ];
-        return $mappingTable[$row['subtag']];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 
     public function getInterventionKey($row)
@@ -135,7 +164,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "yes_blinded_assessment_how_details",
             "yes_blinded_assessment_partially_details",
         ];
-        return $mappingTable[$row['subtag']];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 
     public function getEthicsCommitteeApplicationKey($row)
@@ -152,11 +181,11 @@ class DetailsImport implements ToCollection, WithHeadingRow
         $mappingTable = [
             "randomisation",
             "why_no_randomisation",
-            "randomisation_method_used",
             "other_randomisation_method",
+            "randomisation_method_used",
             "details_randomisation"
         ];
-        return $mappingTable[$row['subtag']];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 
     public function getJustifyNumberOfAnimals($row)

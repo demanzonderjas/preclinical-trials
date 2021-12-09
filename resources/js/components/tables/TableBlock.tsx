@@ -16,6 +16,10 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 			return row[cellId] || row[synonym];
 		};
 
+		if (!rows) {
+			return null;
+		}
+
 		return (
 			<div className="TableBlock">
 				<table>

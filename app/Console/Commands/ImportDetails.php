@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Imports\DetailsImport;
+use App\Models\Detail;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -41,6 +42,12 @@ class ImportDetails extends Command
     {
         ini_set('memory_limit', '1024M'); // or you could use 1G
         Excel::import(new DetailsImport, 'details.csv');
+
+        $details = Detail::where('key', 'study_centre')->get();
+        $details->each(function ($d) {
+            $d->value = stripslashes($d->value);
+            $d->save();
+        });
         return 0;
     }
 }
