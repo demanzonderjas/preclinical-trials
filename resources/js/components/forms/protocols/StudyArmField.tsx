@@ -31,8 +31,8 @@ export const StudyArmField: React.FC<{ id: TFormFieldName }> = observer(({ id })
 			{studyArms.map((arm: TStudyArm, index: number) => (
 				<div className="StudyArmInfo" key={index}>
 					<select
-						value={arm.arm}
-						onChange={e => setStudyArmValue(index, "arm", e.target.value)}
+						value={arm.type}
+						onChange={e => setStudyArmValue(index, "type", e.target.value)}
 					>
 						<option value="" />
 						{studyArmOptions.map(option => (

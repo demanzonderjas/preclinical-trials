@@ -7,7 +7,7 @@ export type TStudyCentre = {
 };
 
 export type TStudyArm = {
-	arm: string;
+	type: string;
 	number: number;
 	intervention: string;
 };

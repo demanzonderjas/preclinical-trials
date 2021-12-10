@@ -51,7 +51,7 @@ export const actionCell: TTableCell = {
 };
 
 export const armCell: TTableCell = {
-	id: TTableCellName.Arm,
+	id: TTableCellName.Type,
 	Component: TextCell,
 	value: ""
 };

@@ -4,7 +4,7 @@ import { TStudyArm } from "../../../../typings/protocols";
 import { validateMultiRowField } from "../../../../utils/validation";
 
 export const studyArmModel: TStudyArm = {
-	arm: "",
+	type: "",
 	number: 0,
 	intervention: ""
 };

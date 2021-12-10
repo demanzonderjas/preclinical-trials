@@ -24,27 +24,34 @@ class DetailsImport implements ToCollection, WithHeadingRow
             if ($fieldName === null) {
                 continue;
             }
-            Detail::create([
+            $value = $this->convertFieldValue($fieldName, $row["fieldvalue"]);
+            if ($value === null) {
+                continue;
+            }
+            $detail = Detail::firstOrNew([
                 'protocol_id' => $protocol->id,
                 'key' => $fieldName,
-                'value' => $this->convertFieldValue($fieldName, $row["fieldvalue"]),
             ]);
+            $detail->value = $value;
+            $detail->save();
         }
     }
 
     public function convertFieldValue($fieldName, $value)
     {
         switch ($fieldName) {
-            case "study_centre":
             case "study_arms":
-                return stripslashes($value);
+                return json_decode($value);
+            case "study_centre":
+                return $this->convertStudyCentre($value);
+            case "investigators_blinded_intervention":
+            case "investigators_blinded_assessment":
+                return $this->slugify($value);
             case "randomisation":
             case "sex":
             case "randomisation":
             case "has_embargo":
             case "exclusive_animal_use":
-            case "investigators_blinded_intervention":
-            case "investigators_blinded_assessment":
                 return strtolower($value);
             case "intervention_type":
             case "study_status":
@@ -58,9 +65,32 @@ class DetailsImport implements ToCollection, WithHeadingRow
                 return $this->convertFinancialSupport($value);
             case "has_embargo":
                 return $this->convertEmbargo($value);
+            case "start_date":
+            case "end_date":
+                return $this->convertDate($value);
             default:
                 return $value;
         }
+    }
+
+    public function convertDate($value)
+    {
+        $dateWithoutDoubleSlashes = stripslashes($value);
+        return str_replace("/", "-", $dateWithoutDoubleSlashes);
+    }
+
+    public function convertStudyCentre($value)
+    {
+        $studyCentreArray = json_decode($value);
+        $countries = config('pct.countries');
+        if (empty($studyCentreArray)) {
+            return null;
+        }
+        foreach ($studyCentreArray as &$centre) {
+            $matchingCountryCode = array_search($centre->country, $countries);
+            $centre->country = $matchingCountryCode !== false ? $matchingCountryCode : "";
+        }
+        return $studyCentreArray;
     }
 
     public function convertEmbargo($value)
@@ -74,7 +104,10 @@ class DetailsImport implements ToCollection, WithHeadingRow
 
     public function convertFinancialSupport($value)
     {
-        return [$this->slugify($value)];
+        $arrayOfValues = explode("//", $value);
+        return array_map(function ($value) {
+            return $this->slugify($value);
+        }, $arrayOfValues);
     }
 
     public function convertStudyStageValue($value)
@@ -91,7 +124,14 @@ class DetailsImport implements ToCollection, WithHeadingRow
     public function slugify($string)
     {
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $string)));
-        return substr($slug, -1) === "_" ? substr($slug, 0, strlen($slug) - 1) : $slug;
+        $lastCharUnderScore = substr($slug, -1) === "_";
+        $firstCharUnderScore = substr($slug, 0, 1) === "_";
+        if ($lastCharUnderScore) {
+            return substr($slug, 0, strlen($slug) - 1);
+        } else if ($firstCharUnderScore) {
+            return substr($slug, 1);
+        }
+        return $slug;
     }
 
     public function convertFieldName($row)
@@ -111,7 +151,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "SA" => "study_stage",
             "PE" => "primary_readout_parameter",
             "SE" => "secondary_readout_parameter",
-            "AO" => "exclusive_animal_use",
+            "AO" => $this->getExclusiveAnimalUseKey($row),
             "AM" => "experimental_design",
             "AR" => "short_title",
             "BA" => $this->getBlindedAssessmentKey($row),
@@ -124,7 +164,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "PL" => "placebo_controlled",
             "RA" => $this->getRandomisationKey($row),
             "SI" => $this->getJustifyNumberOfAnimals($row),
-            "SP" => "species",
+            "SP" => $this->getSpeciesKey($row),
             "SR" => "strain",
             "SX" => "sex",
             "TN" => "sum_of_animals",
@@ -133,6 +173,24 @@ class DetailsImport implements ToCollection, WithHeadingRow
         $keyExists = array_key_exists($row['fieldtag'], $mappingTable);
 
         return $keyExists ? $mappingTable[$row['fieldtag']] : null;
+    }
+
+    public function getExclusiveAnimalUseKey($row)
+    {
+        $mappingTable = [
+            "exclusive_animal_use",
+            "no_exclusive_animal_use_details"
+        ];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+    }
+
+    public function getSpeciesKey($row)
+    {
+        $mappingTable = [
+            "species",
+            "other_species"
+        ];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 
     public function getContactKey($row)
@@ -180,10 +238,10 @@ class DetailsImport implements ToCollection, WithHeadingRow
     {
         $mappingTable = [
             "randomisation",
-            "why_no_randomisation",
-            "other_randomisation_method",
             "randomisation_method_used",
-            "details_randomisation"
+            "other_randomisation_method",
+            "details_randomisation",
+            "why_no_randomisation",
         ];
         return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }

@@ -44,7 +44,7 @@ export const searchProtocolsTable: TTable = {
 };
 
 export const studyArmsTable: TTable = {
-	headers: [TTableCellName.Arm, TTableCellName.Number, TTableCellName.Intervention],
+	headers: [TTableCellName.Type, TTableCellName.Number, TTableCellName.Intervention],
 	cells: [armCell, numberCell, interventionCell]
 };
 

@@ -23,7 +23,7 @@ export enum TTableCellName {
 	Action = "action",
 	AdminAction = "admin_action",
 	HasEmbargo = "has_embargo",
-	Arm = "arm",
+	Type = "type",
 	Number = "number",
 	Intervention = "intervention",
 	Name = "name",

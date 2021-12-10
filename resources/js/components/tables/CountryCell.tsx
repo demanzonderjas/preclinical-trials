@@ -4,5 +4,6 @@ import { getCountries } from "../../utils/countries";
 
 export const CountryCell: React.FC<{ value: string }> = ({ value }) => {
 	const { t } = useTranslationStore();
+	console.log(value);
 	return <td className="TextCell">{getCountries()[value]}</td>;
 };

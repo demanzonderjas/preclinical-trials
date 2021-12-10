@@ -248,7 +248,7 @@ export function convertStudyArms(studyArms: any[]): TStudyArm[] {
 		return [];
 	}
 	return studyArms.map(arm => ({
-		arm:
+		type:
 			arm.type && arm.type.selection
 				? studyArmOptions[arm.type.selection]
 				: studyArmOptions[0],
