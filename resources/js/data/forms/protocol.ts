@@ -28,10 +28,15 @@ import {
 	primaryReadoutParameterField,
 	secondaryReadoutParameterField
 } from "./fields/protocol/parameters";
-import { noRandomisationDetailsField, randomisationField } from "./fields/protocol/randomisation";
+import {
+	noRandomisationDetailsField,
+	randomisationDetailsField,
+	randomisationField,
+	randomisationMethodUsedField
+} from "./fields/protocol/randomisation";
 import { researchField } from "./fields/protocol/researchField";
 import {
-	noSampleSizeCalculationDetailsField,
+	sampleSizeCalculationDetailsField,
 	sampleSizeCalculationField
 } from "./fields/protocol/sampleSize";
 import { sexField } from "./fields/protocol/sex";
@@ -73,10 +78,12 @@ export const createProtocolForm: TForm = {
 		sexField,
 		experimentalDesignField,
 		sampleSizeCalculationField,
-		noSampleSizeCalculationDetailsField,
+		sampleSizeCalculationDetailsField,
 		studyArmsField,
 		randomisationField,
 		noRandomisationDetailsField,
+		randomisationMethodUsedField,
+		randomisationDetailsField,
 		blindedInterventionField,
 		blindedInterventionHowField,
 		blindedInterventionPartiallyField,

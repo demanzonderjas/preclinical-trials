@@ -192,5 +192,12 @@
 	"choose_category": "Choose category",
 	"add_faq_item": "Add FAQ Item",
 	"randomisation_method_used": "Method used - If randomisation is applied, please indicate the method used.",
-	"details_randomisation": "Further details on randomisation - Provide further details on randomisation."
+	"details_randomisation": "Further details on randomisation - Provide further details on randomisation.",
+	"computer_generated_random_number_sequence": "Computer generated random number sequence",
+	"random_number_table": "Random number table",
+	"shuffled_blinded_envelopes": "Shuffled blinded envelopes",
+	"coin_toss": "Coin toss",
+	"simple_randomisation": "Simple randomisation",
+	"block_randomisation": "Block randomisation",
+	"stratified_randomisation": "Stratified randomisation"
 }

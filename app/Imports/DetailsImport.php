@@ -52,6 +52,8 @@ class DetailsImport implements ToCollection, WithHeadingRow
             case "randomisation":
             case "has_embargo":
             case "exclusive_animal_use":
+            case "sample_size_calculation":
+            case "placebo_controlled":
                 return strtolower($value);
             case "intervention_type":
             case "study_status":
@@ -250,7 +252,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
     {
         $mappingTable = [
             "sample_size_calculation",
-            "no_sample_size_calculation_details",
+            "sample_size_calculation_details",
         ];
         return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }

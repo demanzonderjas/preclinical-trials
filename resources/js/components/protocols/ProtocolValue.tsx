@@ -34,6 +34,7 @@ export const ProtocolValue: React.FC<{
 		case TFormFieldName.Randomisation:
 		case TFormFieldName.InvestigatorsBlindedIntervention:
 		case TFormFieldName.InvestigatorsBlindedAssesment:
+		case TFormFieldName.SampleSizeCalculation:
 		case TFormFieldName.ExclusiveAnimalUse:
 			return <CombinedValue id={id} value={value} fields={fields} valueMap={valueMap} />;
 		default:
@@ -70,17 +71,19 @@ export const CombinedValue: React.FC<{
 	valueMap: Map<TFormFieldName, any>;
 }> = ({ id, value, fields, valueMap }) => {
 	const { t } = useTranslationStore();
-	const otherValueField = fields.find(
+	const otherValueFields = fields.filter(
 		f => f.showValueIn === id && fieldMeetsDependencies(f, valueMap)
 	);
 
-	if (!otherValueField) {
+	console.log(id, value, otherValueFields);
+
+	if (!otherValueFields.length) {
 		return <p>{t(value)}</p>;
 	}
 
 	return (
 		<p>
-			<strong>{t(value)}</strong> - {t(otherValueField?.value)}
+			<strong>{t(value)}</strong> - {otherValueFields.map(f => t(f.value)).join(" - ")}
 		</p>
 	);
 };

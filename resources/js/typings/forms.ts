@@ -81,7 +81,7 @@ export enum TFormFieldName {
 	Sex = "sex",
 	ExperimentalDesign = "experimental_design",
 	SampleSizeCalculation = "sample_size_calculation",
-	NoSampleSizeCalculationDetails = "no_sample_size_calculation_details",
+	SampleSizeCalculationDetails = "sample_size_calculation_details",
 	SumOfAnimals = "sum_of_animals",
 	StudyArms = "study_arms",
 	Randomisation = "randomisation",

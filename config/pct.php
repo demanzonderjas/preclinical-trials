@@ -24,7 +24,7 @@ return [
 		"strain",
 		"sex",
 		"sample_size_calculation",
-		"no_sample_size_calculation_details",
+		"sample_size_calculation_details",
 		"study_arms",
 		"randomisation",
 		"why_no_randomisation",

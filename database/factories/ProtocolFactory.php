@@ -77,7 +77,7 @@ class ProtocolFactory extends Factory
 			"strain" => $this->faker->sentence(rand(1, 2)),
 			"sex" => $this->selectRandom(config('pct.valid_field_values.sex')),
 			"sample_size_calculation" => $this->selectRandom(config('pct.valid_field_values.sample_size_calculation')),
-			"no_sample_size_calculation_details" => $this->faker->paragraph(),
+			"sample_size_calculation_details" => $this->faker->paragraph(),
 			"study_arms" => [
 				[
 					"type" => $this->selectRandom(config('pct.valid_field_values.study_arm_options')),

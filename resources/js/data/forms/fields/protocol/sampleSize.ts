@@ -13,12 +13,13 @@ export const sampleSizeCalculationField: TFormField = {
 	section: TSectionName.StudyDesign
 };
 
-export const noSampleSizeCalculationDetailsField: TFormField = {
+export const sampleSizeCalculationDetailsField: TFormField = {
 	...otherSpeciesField,
-	id: TFormFieldName.NoSampleSizeCalculationDetails,
+	id: TFormFieldName.SampleSizeCalculationDetails,
+	showValueIn: TFormFieldName.SampleSizeCalculation,
 	label: "details",
 	section: TSectionName.StudyDesign,
-	dependencies: [{ key: TFormFieldName.SampleSizeCalculation, value: "no" }]
+	dependencies: []
 };
 
 export const sumOfAnimalsField: TFormField = {

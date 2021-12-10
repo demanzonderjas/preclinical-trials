@@ -127,7 +127,7 @@ export function convertPRIStoKeyValuePairs(prisData: any) {
 		},
 		{
 			value: "sampleSize.description",
-			target: TFormFieldName.NoSampleSizeCalculationDetails
+			target: TFormFieldName.SampleSizeCalculationDetails
 		},
 		{
 			value: "shortTitle",
