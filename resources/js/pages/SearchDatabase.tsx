@@ -9,7 +9,7 @@ import { createProtocolForm } from "../data/forms/protocol";
 import { searchProtocolsTable } from "../data/tables/protocols";
 import { getViewableProtocolsQuery } from "../queries/protocol";
 import { FilterStore } from "../stores/FilterStore";
-import { TProtocolOverviewType } from "../typings/protocols";
+import { TProtocol, TProtocolOverviewType } from "../typings/protocols";
 import { mapProtocolDetailsToObject } from "../utils/formatting";
 
 export const SearchDatabasePage: React.FC = () => {
@@ -20,7 +20,11 @@ export const SearchDatabasePage: React.FC = () => {
 	useEffect(() => {
 		(async () => {
 			const response = await getViewableProtocolsQuery();
-			setProtocols(response.protocols.map(mapProtocolDetailsToObject));
+			setProtocols(
+				response.protocols
+					.map(mapProtocolDetailsToObject)
+					.filter((p: TProtocol) => !!p.title)
+			);
 		})();
 	}, []);
 

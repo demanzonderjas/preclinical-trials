@@ -62,7 +62,7 @@ export enum TFormFieldName {
 	ContactEmail = "contact_email",
 	StudyCentre = "study_centre",
 	FinancialSupport = "financial_support",
-	OtherSupport = "other_support",
+	OtherFinancialSupport = "other_financial_support",
 	StartDate = "start_date",
 	EndDate = "end_date",
 	Status = "study_status",

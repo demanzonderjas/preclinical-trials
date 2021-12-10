@@ -5,7 +5,7 @@ return [
 		"title",
 		"short_title",
 		"financial_support",
-		"other_support",
+		"other_financial_support",
 		"start_date",
 		"end_date",
 		"study_status",

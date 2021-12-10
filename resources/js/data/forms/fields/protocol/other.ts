@@ -8,7 +8,7 @@ import { firstNameField } from "../account/name";
 
 export const otherSupportField: TFormField = {
 	...firstNameField,
-	id: TFormFieldName.OtherSupport,
+	id: TFormFieldName.OtherFinancialSupport,
 	label: "other",
 	showValueIn: TFormFieldName.FinancialSupport,
 	validate: null,

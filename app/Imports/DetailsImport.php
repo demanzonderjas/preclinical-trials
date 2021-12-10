@@ -50,7 +50,6 @@ class DetailsImport implements ToCollection, WithHeadingRow
             case "randomisation":
             case "sex":
             case "randomisation":
-            case "has_embargo":
             case "exclusive_animal_use":
             case "sample_size_calculation":
             case "placebo_controlled":
@@ -99,7 +98,8 @@ class DetailsImport implements ToCollection, WithHeadingRow
     {
         $mappingTable = [
             "Embargo" => "yes",
-            "No Embargo" => "no"
+            "No Embargo" => "no",
+            "No embargo" => "no"
         ];
         return $mappingTable[$value];
     }
@@ -142,7 +142,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "TI" => "title",
             "CO" => $this->getContactKey($row),
             "SC" => "study_centre",
-            "FU" => "financial_support",
+            "FU" => $this->getFinancialSupportKey("financial_support"),
             "SD" => "start_date",
             "ED" => "end_date",
             "SS" => 'study_status',
@@ -175,6 +175,15 @@ class DetailsImport implements ToCollection, WithHeadingRow
         $keyExists = array_key_exists($row['fieldtag'], $mappingTable);
 
         return $keyExists ? $mappingTable[$row['fieldtag']] : null;
+    }
+
+    public function getFinancialSupportKey($row)
+    {
+        $mappingTable = [
+            "financial_support",
+            "other_financial_support"
+        ];
+        return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
     }
 
     public function getExclusiveAnimalUseKey($row)

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Imports\DetailsImport;
 use App\Models\Detail;
+use App\Models\Protocol;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -43,13 +44,14 @@ class ImportDetails extends Command
         ini_set('memory_limit', '1024M'); // or you could use 1G
         Excel::import(new DetailsImport, 'details.csv');
 
-        // $details = Detail::where(['key' => 'study_arms'])->get();
-        // $details->each(function ($d) {
-        //     $d->value = json_decode($d->value);
-        //     if (!empty($d->value)) {
-        //         $d->save();
-        //     }
-        // });
+        $protocols = Protocol::all();
+        $protocols->each(function ($p) {
+            $totalDetails = $p->details->count();
+            if ($totalDetails === 0) {
+                $p->delete();
+            }
+        });
+
         return 0;
     }
 }
