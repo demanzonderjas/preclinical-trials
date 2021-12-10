@@ -142,7 +142,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
             "TI" => "title",
             "CO" => $this->getContactKey($row),
             "SC" => "study_centre",
-            "FU" => $this->getFinancialSupportKey("financial_support"),
+            "FU" => $this->getFinancialSupportKey($row),
             "SD" => "start_date",
             "ED" => "end_date",
             "SS" => 'study_status',

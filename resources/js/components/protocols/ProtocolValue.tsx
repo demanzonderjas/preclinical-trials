@@ -50,7 +50,8 @@ export const ArrayValueWithOtherField: React.FC<{
 }> = ({ id, value, fields, valueMap }) => {
 	const otherValueField = fields.find(f => f.showValueIn === id);
 	const { t } = useTranslationStore();
-	const needCombinedValue = fieldMeetsDependencies(otherValueField, valueMap);
+	const needCombinedValue =
+		fieldMeetsDependencies(otherValueField, valueMap) || otherValueField.value;
 
 	if (!needCombinedValue) {
 		return <p>{Array.isArray(value) ? value?.map(v => t(v)).join(", ") : t(value)}</p>;
@@ -72,10 +73,8 @@ export const CombinedValue: React.FC<{
 }> = ({ id, value, fields, valueMap }) => {
 	const { t } = useTranslationStore();
 	const otherValueFields = fields.filter(
-		f => f.showValueIn === id && fieldMeetsDependencies(f, valueMap)
+		f => f.showValueIn === id && (fieldMeetsDependencies(f, valueMap) || f.value)
 	);
-
-	console.log(id, value, otherValueFields);
 
 	if (!otherValueFields.length) {
 		return <p>{t(value)}</p>;
