@@ -4,6 +4,8 @@ namespace App\Imports;
 
 use App\Models\Detail;
 use App\Models\Protocol;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -77,7 +79,13 @@ class DetailsImport implements ToCollection, WithHeadingRow
     public function convertDate($value)
     {
         $dateWithoutDoubleSlashes = stripslashes($value);
-        return str_replace("/", "-", $dateWithoutDoubleSlashes);
+        $dateWithHypens = str_replace("/", "-", $dateWithoutDoubleSlashes);
+        try {
+            $carbon = Carbon::create($dateWithHypens);
+        } catch (Exception $e) {
+            return "";
+        }
+        return $carbon->toDateString();
     }
 
     public function convertStudyCentre($value)

@@ -34,6 +34,11 @@ class ProtocolController extends Controller
 	public function get(Request $request)
 	{
 		$protocol = Protocol::where(['id' => $request->protocol_id])->with('details', 'revisions')->firstOrFail();
+
+		if ($protocol->has_embargo && (empty($request->user()) || !$request->user()->is_admin)) {
+			return abort(403, "You are not authorized.");
+		}
+
 		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
 

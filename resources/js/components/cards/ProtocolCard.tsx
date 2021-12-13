@@ -7,6 +7,7 @@ import { useHistory } from "react-router";
 export const ProtocolCard: React.FC<{ protocol: TProtocol }> = ({ protocol }) => {
 	const { t } = useTranslationStore();
 	const { push } = useHistory();
+
 	return (
 		<div className="card-wrapper">
 			<div
