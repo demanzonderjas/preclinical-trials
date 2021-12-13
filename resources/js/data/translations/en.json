@@ -106,6 +106,7 @@
 	"completed_but_not_published": "Completed but not published",
 	"completed_and_published_abstract": "Completed and published (abstract)",
 	"completed_and_published_full_text": "Completed and published (full-text)",
+	"completed_and_published_full-text": "Completed and published (full-text)",
 	"study_interrupted": "Study interrupted",
 	"study_status": "Study status",
 	"study_status_description": "Please indicate what the current status of the study is",
