@@ -12,9 +12,11 @@ export const ProtocolStatus: React.FC = observer(() => {
 				<span className="publish-status">
 					<span className="label">{t("current_status")}:</span> {t(status)}
 				</span>
-				<span className="save-status">
-					<span className="label">{t("last_saved_at")}:</span> {lastUpdatedAt}
-				</span>
+				{lastUpdatedAt && (
+					<span className="save-status">
+						<span className="label">{t("last_saved_at")}:</span> {lastUpdatedAt}
+					</span>
+				)}
 			</div>
 		</div>
 	);

@@ -39,6 +39,7 @@ import { AddFAQItemPage } from "./pages/admin/faq/AddFAQItem";
 import { AdminFAQPage } from "./pages/admin/faq/FAQ";
 import { EditFAQItemPage } from "./pages/admin/faq/EditFAQitem";
 import { EditPagePage } from "./pages/admin/pages/EditPage";
+import { Loader } from "./components/layout/Loader";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -142,6 +143,7 @@ const App: React.FC = () => {
 							</Route>
 						</Switch>
 						<Modal />
+						<Loader />
 					</Router>
 				</ModalStoreProvider>
 			</UserStoreProvider>

@@ -1,0 +1,32 @@
+.Loader {
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+
+	background-color: rgba($color: $primary, $alpha: 0.25);
+	z-index: 20;
+
+	@keyframes breathe {
+		25% {
+			transform: scale(1.1);
+		}
+		50% {
+			transform: scale(1);
+		}
+		75% {
+			transform: scale(1.1);
+		}
+	}
+
+	.ImageWrapper {
+		animation-name: breathe;
+		animation-duration: 3s;
+		animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+		animation-iteration-count: infinite;
+	}
+}
