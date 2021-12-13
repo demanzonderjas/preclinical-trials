@@ -28,5 +28,7 @@
 		animation-duration: 3s;
 		animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
 		animation-iteration-count: infinite;
+		border-radius: 50%;
+		overflow: hidden;
 	}
 }

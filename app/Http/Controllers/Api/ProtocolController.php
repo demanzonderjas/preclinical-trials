@@ -56,7 +56,7 @@ class ProtocolController extends Controller
 
 	public function getViewable()
 	{
-		$protocols = Protocol::where('status', '!=', 'draft')->get();
+		$protocols = Protocol::where('status', 'published')->orderByDesc('created_at')->get();
 		$withoutEmbargo = $protocols->filter(function ($p) {
 			return !$p->has_embargo;
 		});
@@ -100,7 +100,7 @@ class ProtocolController extends Controller
 
 	public function counts()
 	{
-		$protocols = Protocol::all();
+		$protocols = Protocol::where('status', 'published')->get();
 		$withEmbargo = $protocols->filter(function ($p) {
 			return $p->has_embargo;
 		})->count();
@@ -109,7 +109,7 @@ class ProtocolController extends Controller
 
 	public function getViewableForAdmin()
 	{
-		$protocols = Protocol::where('status', '!=', 'draft')->get();
+		$protocols = Protocol::where('status', '!=', 'draft')->orderByDesc('created_at')->get();
 		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
 	}
 }
