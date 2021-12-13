@@ -201,5 +201,9 @@
 	"simple_randomisation": "Simple randomisation",
 	"block_randomisation": "Block randomisation",
 	"stratified_randomisation": "Stratified randomisation",
-	"outcome_assessors_are_blinded_to_the_allocation_of_animals": "Yes"
+	"outcome_assessors_are_blinded_to_the_allocation_of_animals": "Yes",
+	"menu_title": "Menu Title",
+	"content_blocks": "Content blocks",
+	"subtitle": "Subtitle",
+	"section": "Section"
 }

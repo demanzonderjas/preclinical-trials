@@ -13,9 +13,8 @@ class PageController extends Controller
     {
         $page = Page::findOrFail($request->page_id);
         $page->title = $request->title;
-        $page->slug = $request->slug;
         $page->subtitle = $request->subtitle;
-        $page->content = $request->content;
+        $page->content_blocks = $request->content_blocks;
         $page->save();
 
         return response()->json(["page" => $page->toArray()]);
@@ -33,9 +32,9 @@ class PageController extends Controller
         return response()->json(["page" => $page->toArray()]);
     }
 
-    public function getBySlug($slug)
+    public function getBySlug(Request $request)
     {
-        $page = Page::where('slug', $slug)->first();
+        $page = Page::where('slug', $request->slug)->first();
         return response()->json(["page" => $page->toArray()]);
     }
 }

@@ -1,3 +1,4 @@
+import { ContentBlocksField } from "../../../../components/forms/ContentBlocksField";
 import { RichTextField } from "../../../../components/forms/RichTextField";
 import { TFormField, TFormFieldName } from "../../../../typings/forms";
 
@@ -18,4 +19,12 @@ export const contentField: TFormField = {
 	required: true,
 	validate: (value: string) => value && value.length >= 2,
 	value: ""
+};
+
+export const contentBlocksField: TFormField = {
+	id: TFormFieldName.ContentBlocks,
+	Component: ContentBlocksField,
+	required: false,
+	validate: null,
+	value: []
 };

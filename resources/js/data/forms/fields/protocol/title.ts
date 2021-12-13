@@ -24,3 +24,11 @@ export const shortTitleField: TFormField = {
 	required: false,
 	description: "Enter optional acronym/short title for the study"
 };
+
+export const subTitleField: TFormField = {
+	...titleField,
+	id: TFormFieldName.SubTitle,
+	validate: null,
+	required: false,
+	description: null
+};

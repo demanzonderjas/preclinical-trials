@@ -2,7 +2,7 @@ import day from "dayjs";
 import { createFAQItemForm } from "../data/forms/faq";
 import { createNewsItemForm } from "../data/forms/news";
 import { TFaqItem } from "../typings/faq";
-import { TFormFieldName, TSavedFormValue } from "../typings/forms";
+import { TForm, TFormFieldName, TSavedFormValue } from "../typings/forms";
 import { TNewsItem } from "../typings/news";
 import { TDBProtocol, TProtocol } from "../typings/protocols";
 
@@ -76,5 +76,15 @@ export function mapNewsItemToKeyValueArray(newsItem: TNewsItem): TSavedFormValue
 	return createNewsItemForm.fields.map(field => ({
 		key: field.id,
 		value: newsItem[field.id]
+	}));
+}
+
+export function mapModelToKeyValueArray(model: any, form: TForm): TSavedFormValue[] {
+	if (!model) {
+		return null;
+	}
+	return form.fields.map(field => ({
+		key: field.id,
+		value: model[field.id]
 	}));
 }

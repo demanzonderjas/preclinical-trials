@@ -16,6 +16,7 @@ export type TTableCell = {
 
 export enum TTableCellName {
 	Title = "title",
+	MenuTitle = "menu_title",
 	StudyStatus = "study_status",
 	PublishStatus = "publish_status",
 	LastUpdated = "last_updated",

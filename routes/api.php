@@ -36,8 +36,8 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('faq', 'FaqController@getByCategory');
     Route::get('faq-categories', 'FaqController@getCategories');
 
+    Route::post('page/slug', 'PageController@getBySlug');
     Route::get('page/{page_id}', 'PageController@getById');
-    Route::get('page/slug/{slug}', 'PageController@getBySlug');
 
     Route::group(['middleware' => 'admin'], function () {
         Route::get('protocols/admin', 'ProtocolController@getViewableForAdmin');
@@ -55,7 +55,7 @@ Route::group(['namespace' => 'Api'], function () {
         Route::get('faq-item/{itemId}', 'FaqController@get');
         Route::delete('faq-item/{news_item_id}', 'FaqController@delete');
 
-        Route::put('page', 'NewsItemController@update');
-        Route::put('pages', 'NewsItemController@getAll');
+        Route::put('page', 'PageController@update');
+        Route::get('pages', 'PageController@getAll');
     });
 });

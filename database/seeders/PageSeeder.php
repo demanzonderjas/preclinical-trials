@@ -91,7 +91,7 @@ class PageSeeder extends Seeder
             ],
             [
                 "title" => "Disclaimer",
-                "subtitle" => "",
+                "subtitle" => "Terms and Conditions",
                 "menu_title" => "Disclaimer",
                 "slug" => "/disclaimer",
                 "content_blocks" => [

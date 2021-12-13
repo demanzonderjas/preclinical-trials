@@ -57,6 +57,7 @@ export enum TFormFieldName {
 	Token = "token",
 	Title = "title",
 	ShortTitle = "short_title",
+	SubTitle = "subtitle",
 	ContactName = "contact_name",
 	ContactRole = "contact_role",
 	ContactEmail = "contact_email",
@@ -104,6 +105,7 @@ export enum TFormFieldName {
 	StatementOfAccuracy = "statement_of_accuracy",
 	Summary = "summary",
 	Content = "content",
+	ContentBlocks = "content_blocks",
 	PublishStatus = "status",
 	FAQCategoryId = "faq_category_id"
 }
@@ -113,6 +115,7 @@ export enum TFormName {
 	CreateAccount = "create_account",
 	Login = "login",
 	CreateNewsItem = "create_news_item",
+	CreatePage = "create_page",
 	CreateFAQItem = "create_faq_item",
 	ForgotPassword = "forgot_password",
 	ResetPassword = "reset_password"

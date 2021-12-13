@@ -31,13 +31,14 @@ import { UserStoreProvider } from "./contexts/UserContext";
 import { UserStore } from "./stores/UserStore";
 import { ProtocolsPage } from "./pages/admin/Protocols";
 import { AdminIndexPage } from "./pages/admin/AdminIndex";
-import { PagesPage } from "./pages/admin/Pages";
+import { PagesPage } from "./pages/admin/pages/Pages";
 import { StatsPage } from "./pages/admin/Stats";
 import { NewsItemPage } from "./pages/NewsItem";
 import { EditNewsItemPage } from "./pages/admin/news/EditNewsitem";
 import { AddFAQItemPage } from "./pages/admin/faq/AddFAQItem";
 import { AdminFAQPage } from "./pages/admin/faq/FAQ";
 import { EditFAQItemPage } from "./pages/admin/faq/EditFAQitem";
+import { EditPagePage } from "./pages/admin/pages/EditPage";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -132,6 +133,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/admin/pages" exact={true}>
 								<PagesPage />
+							</Route>
+							<Route path="/admin/pages/edit-item/:page_id" exact={true}>
+								<EditPagePage />
 							</Route>
 							<Route path="/admin/stats" exact={true}>
 								<StatsPage />

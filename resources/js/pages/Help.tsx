@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 import { ExpandableText } from "../components/layout/ExpandableText";
 import { PrimaryHeaderPageWithSubMenu, PageWithSubmenu } from "../components/layout/Page";
+import { usePage } from "../hooks/usePage";
 import { getFAQ } from "../queries/faq";
-import { TFaqCategory, TFaqItem, TPublishStatus } from "../typings/faq";
+import { TFaqCategory, TPublishStatus } from "../typings/faq";
 import { TSubMenu } from "../typings/layout";
 
 export const HelpPage: React.FC = () => {
 	const [faqCategories, setFaqCategories] = useState<TFaqCategory[]>([]);
 	const [activeCategory, setActiveCategory] = useState<TFaqCategory>(null);
+	const { page } = usePage();
 
 	useEffect(() => {
 		(async () => {
@@ -25,7 +26,7 @@ export const HelpPage: React.FC = () => {
 	};
 
 	return (
-		<PrimaryHeaderPageWithSubMenu title="Help">
+		<PrimaryHeaderPageWithSubMenu title={page.title}>
 			<PageWithSubmenu subMenu={subMenu}>
 				<div className="HelpPage">
 					{activeCategory?.faq_items

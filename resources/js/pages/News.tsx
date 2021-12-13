@@ -7,10 +7,12 @@ import { FilterStore } from "../stores/FilterStore";
 import { FilterStoreProvider } from "../contexts/FilterStoreContext";
 import { Filter } from "../components/tables/Filter";
 import day from "dayjs";
+import { usePage } from "../hooks/usePage";
 
 export const NewsPage: React.FC = () => {
 	const [newsItems, setNewsItems] = useState<TNewsItem[]>([]);
 	const [filterStore] = useState<FilterStore>(new FilterStore());
+	const { page } = usePage();
 
 	useEffect(() => {
 		(async () => {
@@ -30,10 +32,7 @@ export const NewsPage: React.FC = () => {
 	}, []);
 
 	return (
-		<Page
-			title="News"
-			subtitle="Updates including congresses and workshops where preclinicaltrials.eu is involved"
-		>
+		<Page title={page.title} subtitle={page.subtitle}>
 			<div className="NewsPage border-top" style={{ backgroundColor: "white" }}>
 				<FilterStoreProvider store={filterStore}>
 					<Filter options={dateOptionsToInclude} filterPlaceholder="any_year" />
