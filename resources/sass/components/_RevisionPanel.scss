@@ -37,4 +37,8 @@
 			display: block;
 		}
 	}
+
+	@include respond-to("xs") {
+		position: relative;
+	}
 }

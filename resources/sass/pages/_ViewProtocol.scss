@@ -46,6 +46,7 @@
 			align-items: center;
 			justify-content: space-between;
 			margin: 32px 0;
+
 			.key {
 				width: 300px;
 				text-align: right;
@@ -111,6 +112,29 @@
 	}
 
 	@include respond-to("xs") {
-		left: 15px;
+		left: 0;
+
+		.SectionHeader {
+			width: 100%;
+			text-align: center;
+		}
+
+		.KeyValuePairs {
+			.KeyValue {
+				flex-wrap: wrap;
+				.key,
+				.value {
+					text-align: left;
+					width: 100%;
+					padding-left: 0;
+				}
+			}
+		}
+
+		&.active {
+			.KeyValuePairs {
+				max-height: 10000px;
+			}
+		}
 	}
 }
