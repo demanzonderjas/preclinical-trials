@@ -24,6 +24,7 @@
 	}
 
 	.ImageWrapper {
+		max-width: 250px;
 		animation-name: breathe;
 		animation-duration: 3s;
 		animation-timing-function: cubic-bezier(0, 0, 0.3, 1);

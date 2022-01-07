@@ -37,7 +37,7 @@ export const Loader: React.FC = () => {
 
 	return (
 		<div className="Loader">
-			<Image filename="logo-pct.jpeg" />
+			<Image filename="logo-pct.jpg" />
 		</div>
 	);
 };
