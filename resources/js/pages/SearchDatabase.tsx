@@ -14,7 +14,7 @@ import { mapProtocolDetailsToObject } from "../utils/formatting";
 
 export const SearchDatabasePage: React.FC = () => {
 	const [protocols, setProtocols] = useState([]);
-	const [overviewType, setOverviewType] = useState(TProtocolOverviewType.Cards);
+	const [overviewType, setOverviewType] = useState(TProtocolOverviewType.Table);
 	const [filterStore] = useState(new FilterStore());
 
 	useEffect(() => {
