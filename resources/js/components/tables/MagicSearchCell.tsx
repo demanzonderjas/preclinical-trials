@@ -37,13 +37,11 @@ export const MagicSearchCell: React.FC<{ value: TSearchResult }> = ({ value: res
 
 	const highlight = (start, end) => {
 		return `${startingPosition > 0 ? "..." : ""}
-			${result.value.substring(start, result.position)}
-			<span class="highlight">${t(
-				result.value.substring(result.position, result.position + result.filterValue.length)
-			)}</span>${result.value.substring(
-			result.position + result.filterValue.length,
-			end + 1
-		)}${endPosition < result.value.length - 1 ? "..." : ""}`;
+			${result.value.substring(start, result.position)}<span class="highlight">${t(
+			result.value.substring(result.position, result.position + result.filterValue.length)
+		)}</span>${result.value.substring(result.position + result.filterValue.length, end + 1)}${
+			endPosition < result.value.length - 1 ? "..." : ""
+		}`;
 	};
 
 	return (

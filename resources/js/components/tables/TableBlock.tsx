@@ -21,7 +21,7 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 							row[key]
 								.toString()
 								.toLowerCase()
-								.includes(latestFilter.value)
+								.includes(latestFilter.value.toLowerCase())
 					  );
 				if (!matchingMagicKey || typeof row[matchingMagicKey] === "object") {
 					return null;
