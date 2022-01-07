@@ -102,6 +102,7 @@ $logo-size: 160px;
 	position: relative;
 	transform: translate(-10%, -20%);
 	top: 18px;
+	padding: 10px;
 
 	&:hover {
 		img {
@@ -118,6 +119,7 @@ $logo-size: 160px;
 	@include respond-to("small") {
 		height: 80px;
 		width: 90px;
+		padding: 0px;
 	}
 
 	@include respond-to("xs") {
