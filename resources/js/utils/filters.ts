@@ -3,6 +3,7 @@ import { TNewsItem } from "../typings/news";
 import { TProtocol } from "../typings/protocols";
 import { TFilter } from "../typings/tables";
 import day from "dayjs";
+import { useTranslationStore } from "../hooks/useTranslationStore";
 
 export function protocolMeetsFilters(
 	activeFilterText: string,
@@ -11,18 +12,22 @@ export function protocolMeetsFilters(
 	row: TProtocol
 ) {
 	const activeFilter: TFilter = { value: activeFilterText, key: activeFilterKey };
+	const { t } = useTranslationStore();
 
 	return [activeFilter, ...filters].every(filter => {
 		if (!filter.value) {
 			return true;
 		}
 		if (!filter.key) {
-			return JSON.stringify(row)
-				.toLowerCase()
-				.includes(filter.value.toLowerCase());
+			return Object.keys(row).some(key =>
+				t(row[key])
+					.toString()
+					.toLowerCase()
+					.includes(filter.value.toLowerCase())
+			);
 		}
 		if (filter.key && filter.value && row[filter.key]) {
-			return JSON.stringify(row[filter.key])
+			return JSON.stringify(t(row[filter.key]))
 				.toLowerCase()
 				.includes(filter.value.toLowerCase());
 		}

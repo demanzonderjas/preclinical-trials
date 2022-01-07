@@ -18,7 +18,7 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 				const matchingMagicKey = latestFilter.key
 					? latestFilter.key
 					: Object.keys(row).find(key =>
-							row[key]
+							t(row[key])
 								.toString()
 								.toLowerCase()
 								.includes(latestFilter.value.toLowerCase())
@@ -26,12 +26,12 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 				if (!matchingMagicKey || typeof row[matchingMagicKey] === "object") {
 					return null;
 				}
-				const matchingPosition = row[matchingMagicKey]
+				const matchingPosition = t(row[matchingMagicKey])
 					.toString()
 					.toLowerCase()
 					.indexOf(latestFilter.value.toLowerCase());
 				return {
-					value: row[matchingMagicKey],
+					value: t(row[matchingMagicKey]),
 					key: matchingMagicKey,
 					filterValue: latestFilter.value,
 					position: matchingPosition
