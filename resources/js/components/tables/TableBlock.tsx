@@ -18,12 +18,18 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 				const matchingMagicKey = latestFilter.key
 					? latestFilter.key
 					: Object.keys(row).find(key =>
-							row[key].toString().includes(latestFilter.value)
+							row[key]
+								.toString()
+								.toLowerCase()
+								.includes(latestFilter.value)
 					  );
 				if (!matchingMagicKey || typeof row[matchingMagicKey] === "object") {
 					return null;
 				}
-				const matchingPosition = row[matchingMagicKey].indexOf(latestFilter.value);
+				const matchingPosition = row[matchingMagicKey]
+					.toString()
+					.toLowerCase()
+					.indexOf(latestFilter.value.toLowerCase());
 				return {
 					value: row[matchingMagicKey],
 					key: matchingMagicKey,

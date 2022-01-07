@@ -21,7 +21,7 @@ export function protocolMeetsFilters(
 				.toLowerCase()
 				.includes(filter.value.toLowerCase());
 		}
-		if (filter.key && filter.value) {
+		if (filter.key && filter.value && row[filter.key]) {
 			return JSON.stringify(row[filter.key])
 				.toLowerCase()
 				.includes(filter.value.toLowerCase());
