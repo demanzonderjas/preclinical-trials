@@ -34,7 +34,6 @@ export const AdvisoryBoardPage: React.FC = () => {
 					header="Prof. Thomas Eschenhagen"
 					body="<p>Thomas is a professor of Pharmacology at the University Medical Center Hamburg-Eppendorf, Germany. He is also Director of the department of Experimental Pharmacology and Toxicology. He is also one of the board of Directors of the DZHK, the German center for cardiovascular research.</p>"
 				/>
-				<div dangerouslySetInnerHTML={{ __html: page.content_blocks[0].content }} />
 			</PageWithSubmenu>
 		</PrimaryHeaderPageWithSubMenu>
 	);

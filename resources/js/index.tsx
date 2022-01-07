@@ -40,6 +40,7 @@ import { AdminFAQPage } from "./pages/admin/faq/FAQ";
 import { EditFAQItemPage } from "./pages/admin/faq/EditFAQitem";
 import { EditPagePage } from "./pages/admin/pages/EditPage";
 import { Loader } from "./components/layout/Loader";
+import { BackgroundInfoPage } from "./pages/BackgroundInfo";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -65,6 +66,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/about-pct/advisory-board" exact={true}>
 								<AdvisoryBoardPage />
+							</Route>
+							<Route path="/about-pct/background-information" exact={true}>
+								<BackgroundInfoPage />
 							</Route>
 							<Route path="/database" exact={true}>
 								<SearchDatabasePage />

@@ -3,7 +3,7 @@ import { PageWithSubmenu, PrimaryHeaderPageWithSubMenu } from "../components/lay
 import { aboutUsSubMenu } from "../data/about-us/aboutUsData";
 import { usePage } from "../hooks/usePage";
 
-export const AboutPCTPage: React.FC = () => {
+export const BackgroundInfoPage: React.FC = () => {
 	const { page } = usePage();
 	return (
 		<PrimaryHeaderPageWithSubMenu title={page.title}>

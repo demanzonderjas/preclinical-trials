@@ -56,6 +56,13 @@ class PageSeeder extends Seeder
                 "subtitle" => "",
                 "menu_title" => "Advisory board",
                 "slug" => "/about-pct/advisory-board",
+                "content_blocks" => []
+            ],
+            [
+                "title" => "Background information",
+                "subtitle" => "",
+                "menu_title" => "Background information",
+                "slug" => "/about-pct/background-information",
                 "content_blocks" => [
                     [
                         "type" => "text",
