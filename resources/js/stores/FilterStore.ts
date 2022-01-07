@@ -16,6 +16,15 @@ export class FilterStore {
 		});
 	}
 
+	get latestFilter(): TFilter {
+		if (this.activeFilterText) {
+			return { value: this.activeFilterText, key: this.activeFilterKey };
+		} else if (this.filters.length) {
+			return this.filters[this.filters.length - 1];
+		}
+		return null;
+	}
+
 	setActiveFilterText(value: string) {
 		this.activeFilterText = value;
 	}

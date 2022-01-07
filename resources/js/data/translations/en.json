@@ -44,6 +44,7 @@
 	"no": "No",
 	"yes": "Yes",
 	"experimental_design": "Provide the experimental design/protocol/animal model",
+	"experimental_design_label": "Experimental design",
 	"experimental_design_description": "Provide a description of the design and protocol, e.g. what animal model will be used for the study",
 	"hypothesis": "Hypothesis",
 	"hypothesis_description": "Give the research question/hypothesis or problem the study investigates",
@@ -207,5 +208,9 @@
 	"content_blocks": "Content blocks",
 	"subtitle": "Subtitle",
 	"section": "Section",
-	"total_protocols": "Matching protocols"
+	"total_protocols": "Matching protocols",
+	"magic_search": " ",
+	"other_intervention_type": "Other intervention type",
+	"other_randomisation_method": "Other Randomisation method",
+	"sample_size_calculation_details": "Sample size calculation details"
 }

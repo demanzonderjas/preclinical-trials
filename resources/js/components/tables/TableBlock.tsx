@@ -3,16 +3,34 @@ import React from "react";
 import { useHistory } from "react-router";
 import { useFilter } from "../../hooks/useFilter";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
-import { TTable } from "../../typings/tables";
+import { TTable, TTableCellName } from "../../typings/tables";
 import { protocolMeetsFilters } from "../../utils/filters";
 import cx from "classnames";
 
 export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 	({ table, rows = [] }) => {
 		const { t } = useTranslationStore();
-		const { activeFilterText, activeFilterKey, filters } = useFilter();
+		const { activeFilterText, activeFilterKey, filters, latestFilter } = useFilter();
 		const { push } = useHistory();
+
 		const getMappedValue = (row: any, cellId: string, synonym: string) => {
+			if (cellId == TTableCellName.MagicSearch && latestFilter) {
+				const matchingMagicKey = latestFilter.key
+					? latestFilter.key
+					: Object.keys(row).find(key =>
+							row[key].toString().includes(latestFilter.value)
+					  );
+				if (!matchingMagicKey || typeof row[matchingMagicKey] === "object") {
+					return null;
+				}
+				const matchingPosition = row[matchingMagicKey].indexOf(latestFilter.value);
+				return {
+					value: row[matchingMagicKey],
+					key: matchingMagicKey,
+					filterValue: latestFilter.value,
+					position: matchingPosition
+				};
+			}
 			return row[cellId] || row[synonym];
 		};
 

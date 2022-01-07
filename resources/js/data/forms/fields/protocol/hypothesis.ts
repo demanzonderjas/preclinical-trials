@@ -5,5 +5,6 @@ export const hypothesisField: TFormField = {
 	...firstNameField,
 	id: TFormFieldName.Hypothesis,
 	section: TSectionName.StudyDesign,
+	useAsFilter: true,
 	description: "hypothesis_description"
 };

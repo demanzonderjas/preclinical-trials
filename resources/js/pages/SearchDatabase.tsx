@@ -36,7 +36,7 @@ export const SearchDatabasePage: React.FC = () => {
 					<Filter
 						options={createProtocolForm.fields
 							.filter(f => f.useAsFilter)
-							.map(f => f.id)}
+							.map(f => f.filterLabel || f.id)}
 					/>
 					<TotalProtocols protocols={protocols} />
 					<div

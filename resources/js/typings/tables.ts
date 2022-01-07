@@ -29,10 +29,18 @@ export enum TTableCellName {
 	Intervention = "intervention",
 	Name = "name",
 	City = "city",
-	Country = "country"
+	Country = "country",
+	MagicSearch = "magic_search"
 }
 
 export type TFilter = {
 	key?: string;
 	value: string;
+};
+
+export type TSearchResult = {
+	key?: string;
+	value: string;
+	filterValue: string;
+	position: number;
 };

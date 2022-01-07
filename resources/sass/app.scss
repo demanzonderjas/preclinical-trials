@@ -43,6 +43,11 @@
 	overflow-y: hidden;
 }
 
+.highlight {
+	background-color: $yellow;
+	color: black;
+}
+
 html {
 	scroll-behavior: smooth;
 }

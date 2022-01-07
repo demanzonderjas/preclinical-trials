@@ -3,6 +3,7 @@ import { AdminProtocolActionCell } from "../../../components/tables/AdminProtoco
 import { BooleanCell } from "../../../components/tables/BooleanCell";
 import { CountryCell } from "../../../components/tables/CountryCell";
 import { DateCell } from "../../../components/tables/DateCell";
+import { MagicSearchCell } from "../../../components/tables/MagicSearchCell";
 import { StudyCentreCell } from "../../../components/tables/StudyCentreCell";
 import { TextCell } from "../../../components/tables/TextCell";
 import { TTableCell, TTableCellName } from "../../../typings/tables";
@@ -24,6 +25,12 @@ export const lastUpdatedAtCell: TTableCell = {
 	Component: DateCell,
 	value: "",
 	synonym: "updated_at"
+};
+
+export const magicSearchCell: TTableCell = {
+	id: TTableCellName.MagicSearch,
+	Component: MagicSearchCell,
+	value: ""
 };
 
 export const studyCentreCell: TTableCell = {

@@ -13,7 +13,8 @@ import {
 	studyCentreCell,
 	titleCell,
 	publishStatusCell,
-	adminActionCell
+	adminActionCell,
+	magicSearchCell
 } from "./cells/protocol";
 
 export const adminProtocolsTable: TTable = {
@@ -38,9 +39,14 @@ export const manageProtocolsTable: TTable = {
 };
 
 export const searchProtocolsTable: TTable = {
-	headers: [TTableCellName.Title, TTableCellName.StudyCentre, TTableCellName.StudyStatus],
+	headers: [
+		TTableCellName.Title,
+		TTableCellName.StudyCentre,
+		TTableCellName.StudyStatus,
+		TTableCellName.MagicSearch
+	],
 	targetOnRowClick: "/database/view-protocol",
-	cells: [titleCell, studyCentreCell, studyStatusCell]
+	cells: [titleCell, studyCentreCell, studyStatusCell, magicSearchCell]
 };
 
 export const studyArmsTable: TTable = {
