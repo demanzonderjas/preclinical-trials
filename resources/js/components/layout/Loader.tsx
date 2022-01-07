@@ -22,7 +22,7 @@ export const Loader: React.FC = () => {
 				console.log("remove");
 				setTimeout(() => {
 					setIsLoading(false);
-				}, 1000);
+				}, 500);
 				return config;
 			},
 			error => {

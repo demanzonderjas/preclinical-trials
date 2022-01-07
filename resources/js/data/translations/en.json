@@ -206,5 +206,6 @@
 	"menu_title": "Menu Title",
 	"content_blocks": "Content blocks",
 	"subtitle": "Subtitle",
-	"section": "Section"
+	"section": "Section",
+	"total_protocols": "Matching protocols"
 }

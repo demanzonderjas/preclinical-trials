@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image } from "../components/base/Image";
 import { ProtocolCardsBlock } from "../components/cards/CardsBlock";
 import { Page } from "../components/layout/Page";
+import { TotalProtocols } from "../components/protocols/TotalProtocols";
 import { Filter } from "../components/tables/Filter";
 import { TableBlock } from "../components/tables/TableBlock";
 import { FilterStoreProvider } from "../contexts/FilterStoreContext";
@@ -37,6 +38,7 @@ export const SearchDatabasePage: React.FC = () => {
 							.filter(f => f.useAsFilter)
 							.map(f => f.id)}
 					/>
+					<TotalProtocols protocols={protocols} />
 					<div
 						className="OverviewSwitch layout-wrapper"
 						style={{ display: "flex", justifyContent: "right" }}
