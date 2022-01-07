@@ -23,7 +23,7 @@ export const DashboardPanel: React.FC = observer(() => {
 		<div className="DashboardPanel">
 			<div className="LoginButton" onClick={isLoggedIn ? logout : () => setModal(loginModal)}>
 				<div className="content">
-					<Image filename="login.png" />
+					<Image filename={isLoggedIn ? "logout.png" : "login.png"} />
 					<span>{isLoggedIn ? "Logout" : "Login"}</span>
 				</div>
 			</div>

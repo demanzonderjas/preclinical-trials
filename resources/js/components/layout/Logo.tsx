@@ -6,7 +6,7 @@ export const Logo: React.FC = () => {
 	return (
 		<div className="LogoWrapper">
 			<Link to="/">
-				<Image filename="logo-pct.jpeg" />
+				<Image filename="logo-pct.jpg" />
 			</Link>
 		</div>
 	);

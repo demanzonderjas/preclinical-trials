@@ -5,26 +5,32 @@
 		align-items: center;
 		align-content: center;
 		flex-wrap: wrap;
-		max-width: 90%;
+		max-width: 100%;
 		margin: 50px auto;
 		border-radius: 50%;
 		background-color: $white;
 		height: 775px;
 		width: 875px;
 		overflow: hidden;
-		padding: 30px;
+		padding: 40px;
 	}
 
 	.Partner {
 		display: inline-block;
-		max-width: 175px;
+		max-width: 135px;
 		background-color: white;
-		margin: 10px;
+		margin: 20px;
 		cursor: pointer;
 		transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
 
 		&:hover {
 			transform: scale(1.1);
+		}
+	}
+
+	@include respond-to("small") {
+		.partners {
+			padding: 30px;
 		}
 	}
 
