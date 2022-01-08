@@ -203,7 +203,8 @@ $cardMargin: 50px;
 	@include respond-to("xs") {
 		.body {
 			width: 90%;
-			left: -5%;
+			left: auto;
+			margin-left: 5%;
 
 			.date {
 				width: 50px;
