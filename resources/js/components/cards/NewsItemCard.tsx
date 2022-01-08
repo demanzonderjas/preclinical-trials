@@ -43,7 +43,22 @@ export const NewsItemCard: React.FC<TNewsItem & { single?: boolean }> = ({
 						</div>
 					)}
 					{single && (
-						<div className="content" dangerouslySetInnerHTML={{ __html: content }} />
+						<div className="content-wrapper">
+							{!!image && (
+								<div
+									className="background"
+									style={{
+										backgroundImage: !!image
+											? `url("/images/news/${image}")`
+											: null
+									}}
+								/>
+							)}
+							<div
+								className="content"
+								dangerouslySetInnerHTML={{ __html: content }}
+							/>
+						</div>
 					)}
 					<div className="date">
 						<span>{day(updated_at).format("D MMM YYYY")}</span>

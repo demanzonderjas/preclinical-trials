@@ -101,9 +101,23 @@ $cardMargin: 50px;
 		background-repeat: no-repeat;
 		background-position: center;
 
-		.content {
-			p {
-				margin: 16px 0;
+		.content-wrapper {
+			position: relative;
+
+			.background {
+				margin: -60px -20px 20px;
+				position: relative;
+				height: 300px;
+				width: calc(100% + 40px);
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-position: center;
+			}
+
+			.content {
+				p {
+					margin: 16px 0;
+				}
 			}
 		}
 
