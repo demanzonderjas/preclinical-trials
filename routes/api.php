@@ -39,6 +39,8 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('page/slug', 'PageController@getBySlug');
     Route::get('page/{page_id}', 'PageController@getById');
 
+    Route::post('contact-form', 'ContactFormController@store');
+
     Route::group(['middleware' => 'admin'], function () {
         Route::get('protocols/admin', 'ProtocolController@getViewableForAdmin');
         Route::post('protocol/{protocol_id}/approve', 'ProtocolController@approve');

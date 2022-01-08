@@ -109,7 +109,8 @@ export enum TFormFieldName {
 	ContentBlocks = "content_blocks",
 	PublishStatus = "status",
 	FAQCategoryId = "faq_category_id",
-	UploadNewsImage = "image"
+	UploadNewsImage = "image",
+	Message = "message"
 }
 
 export enum TFormName {
@@ -120,7 +121,8 @@ export enum TFormName {
 	CreatePage = "create_page",
 	CreateFAQItem = "create_faq_item",
 	ForgotPassword = "forgot_password",
-	ResetPassword = "reset_password"
+	ResetPassword = "reset_password",
+	Contact = "contact"
 }
 
 export enum TFormStyle {

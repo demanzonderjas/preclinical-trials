@@ -28,3 +28,14 @@ export const contentBlocksField: TFormField = {
 	validate: null,
 	value: []
 };
+
+export const messageField: TFormField = {
+	id: TFormFieldName.Message,
+	Component: RichTextField,
+	required: true,
+	props: {
+		height: 250
+	},
+	validate: (value: string) => value && value.length >= 2,
+	value: ""
+};

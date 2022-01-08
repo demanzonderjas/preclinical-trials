@@ -1,4 +1,3 @@
-import { InputField } from "../../../../components/forms/InputField";
 import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
 import { emailField } from "../account/email";
 import { firstNameField } from "../account/name";

@@ -1,5 +1,6 @@
 import { InputField } from "../../../../components/forms/InputField";
 import { TFormField, TFormFieldName } from "../../../../typings/forms";
+import { contactNameField } from "../protocol/contact";
 
 export const firstNameField: TFormField = {
 	id: TFormFieldName.FirstName,
@@ -12,4 +13,12 @@ export const firstNameField: TFormField = {
 export const lastNameField: TFormField = {
 	...firstNameField,
 	id: TFormFieldName.LastName
+};
+
+export const contactFormNameField: TFormField = {
+	...contactNameField,
+	Component: InputField,
+	id: TFormFieldName.ContactName,
+	section: null,
+	description: null
 };

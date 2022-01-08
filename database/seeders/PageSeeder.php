@@ -92,7 +92,7 @@ class PageSeeder extends Seeder
                 "content_blocks" => [
                     [
                         "type" => "text",
-                        "content" => "<p>For more information you can contact us at <a href='mailto:info@preclinicaltrials.eu'>info@preclinicaltrials.eu</a></p>"
+                        "content" => "<p>For more information you can also contact us at <a href='mailto:info@preclinicaltrials.eu'>info@preclinicaltrials.eu</a></p>"
                     ]
                 ]
             ],

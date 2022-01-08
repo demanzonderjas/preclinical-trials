@@ -214,5 +214,8 @@
 	"other_randomisation_method": "Other Randomisation method",
 	"sample_size_calculation_details": "Sample size calculation details",
 	"image": "Image (optional)",
-	"upload_image": "Upload image"
+	"upload_image": "Upload image",
+	"send": "Send",
+	"message": "Message",
+	"contact_you_shortly": "We will contact you as soon as possible to answer your query."
 }
