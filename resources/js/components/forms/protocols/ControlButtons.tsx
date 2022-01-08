@@ -9,6 +9,7 @@ import {
 	submitProtocolForPublicationQuery,
 	updateProtocolQuery
 } from "../../../queries/protocol";
+import { TAlignment } from "../../../typings/forms";
 import { TProtocol, TProtocolStatus } from "../../../typings/protocols";
 
 export const ControlButtons: React.FC = observer(() => {
@@ -79,7 +80,11 @@ export const ControlButtons: React.FC = observer(() => {
 	return (
 		<div
 			className="ControlButtons"
-			style={{ display: "flex", justifyContent: !!sections ? "space-between" : "center" }}
+			style={{
+				display: "flex",
+				justifyContent:
+					!!sections || form.align === TAlignment.Left ? "space-between" : "center"
+			}}
 		>
 			{!isFirstSection && !!sections && (
 				<button type="button" className="secondary" onClick={e => saveAsDraft(true)}>

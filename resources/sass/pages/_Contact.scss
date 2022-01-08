@@ -1,0 +1,17 @@
+.ContactPage {
+	.SocialIcons {
+		text-align: center;
+
+		> div {
+			background-color: $primary;
+			padding: 5px 10px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.ImageWrapper {
+			width: 30px;
+			margin-top: 10px;
+		}
+	}
+}
