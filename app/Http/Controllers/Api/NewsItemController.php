@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\NewsItemResource;
 use App\Models\NewsItem;
+use Illuminate\Support\Facades\File;
 
 class NewsItemController extends Controller
 {
@@ -56,5 +57,28 @@ class NewsItemController extends Controller
     {
         NewsItem::destroy($news_item_id);
         return response()->json(["success" => true]);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $imageName = time() . '.' . $request->image->extension();
+
+        $request->image->move(public_path('images'), $imageName);
+
+        return response()->json(["success" => true, "filename" => $imageName]);
+    }
+
+    public function deleteImage(Request $request)
+    {
+        $image_path = public_path('images') . "/" . $request->filename;
+        $fileExists = File::exists($image_path);
+        if ($fileExists) {
+            File::delete($image_path);
+        }
+        return response()->json(["success" => $fileExists]);
     }
 }

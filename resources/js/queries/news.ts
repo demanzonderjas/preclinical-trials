@@ -54,3 +54,24 @@ export async function updateNewsItemQuery(news_item_id: string, newsData: TNewsI
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function uploadImageQuery(image: File) {
+	const data = new FormData();
+	data.append("image", image);
+
+	try {
+		const response = await API.post("/api/news-item/upload-image", data);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function deleteImageQuery(filename: string) {
+	try {
+		const response = await API.post("/api/news-item/delete-image", { filename });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

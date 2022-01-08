@@ -108,7 +108,8 @@ export enum TFormFieldName {
 	Content = "content",
 	ContentBlocks = "content_blocks",
 	PublishStatus = "status",
-	FAQCategoryId = "faq_category_id"
+	FAQCategoryId = "faq_category_id",
+	UploadNewsImage = "image"
 }
 
 export enum TFormName {
