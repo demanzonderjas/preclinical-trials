@@ -33,7 +33,7 @@ export const UploadImageField: React.FC<TFormFieldProps & {
 			{value && (
 				<div className="preview">
 					<div className="image-wrapper">
-						<img src={`/images/${value}`} />
+						<img src={`/images/news/${value}`} />
 						<div className="overlay">
 							<button
 								type="button"

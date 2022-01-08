@@ -67,14 +67,14 @@ class NewsItemController extends Controller
 
         $imageName = time() . '.' . $request->image->extension();
 
-        $request->image->move(public_path('images'), $imageName);
+        $request->image->move(public_path('images/news'), $imageName);
 
         return response()->json(["success" => true, "filename" => $imageName]);
     }
 
     public function deleteImage(Request $request)
     {
-        $image_path = public_path('images') . "/" . $request->filename;
+        $image_path = public_path('images/news/') . $request->filename;
         $fileExists = File::exists($image_path);
         if ($fileExists) {
             File::delete($image_path);
