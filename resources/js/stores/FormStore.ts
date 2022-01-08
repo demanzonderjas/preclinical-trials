@@ -150,7 +150,6 @@ export class FormStore {
 
 	submit = async e => {
 		e.preventDefault();
-		console.log("submit>??");
 		if (this.validate()) {
 			this.setIsSubmitting(true);
 			const keyValuePairs = this.createKeyValuePairs();

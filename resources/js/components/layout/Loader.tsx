@@ -5,10 +5,8 @@ import { Image } from "../base/Image";
 export const Loader: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	useEffect(() => {
-		console.log("set it up");
 		API.interceptors.request.use(
 			config => {
-				console.log("intercept");
 				setIsLoading(true);
 				return config;
 			},
@@ -19,7 +17,6 @@ export const Loader: React.FC = () => {
 
 		API.interceptors.response.use(
 			config => {
-				console.log("remove");
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 500);

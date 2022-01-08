@@ -28,7 +28,6 @@ export class ProtocolStore {
 		if (!this.protocol) {
 			return TProtocolStatus.Draft;
 		}
-		console.log(this.protocol);
 		return this.protocol.status;
 	}
 
