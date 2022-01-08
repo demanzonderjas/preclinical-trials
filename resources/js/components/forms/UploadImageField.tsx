@@ -24,12 +24,18 @@ export const UploadImageField: React.FC<TFormFieldProps & {
 
 	return (
 		<div className={cx("UploadImageField", { with_image: !!value })}>
-			<div className="UploadButton">
-				<button type="button" className="secondary small" onClick={e => e.preventDefault()}>
-					{t("upload_image")}
-				</button>
-				<input type="file" onChange={upload} />
-			</div>
+			{!value && (
+				<div className="UploadButton">
+					<button
+						type="button"
+						className="secondary small"
+						onClick={e => e.preventDefault()}
+					>
+						{t("upload_image")}
+					</button>
+					<input type="file" onChange={upload} />
+				</div>
+			)}
 			{value && (
 				<div className="preview">
 					<div className="image-wrapper">

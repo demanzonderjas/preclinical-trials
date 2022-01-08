@@ -5,6 +5,6 @@ export const uploadNewsImageField: TFormField = {
 	id: TFormFieldName.UploadNewsImage,
 	Component: UploadImageField,
 	required: false,
-	validate: (value: string) => value && !!value.length,
+	validate: null,
 	value: ""
 };

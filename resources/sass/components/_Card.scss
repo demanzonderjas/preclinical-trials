@@ -97,10 +97,37 @@ $cardMargin: 50px;
 		border-bottom: 8px solid $secondary;
 		position: relative;
 		line-height: 24px;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center;
 
 		.content {
 			p {
 				margin: 16px 0;
+			}
+		}
+
+		.summary-wrapper {
+			&.with_image {
+				.overlay {
+					display: block;
+				}
+				.summary {
+					color: $black;
+				}
+			}
+			.summary {
+				position: relative;
+				z-index: 1;
+			}
+			.overlay {
+				display: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba($white, 0.5);
 			}
 		}
 

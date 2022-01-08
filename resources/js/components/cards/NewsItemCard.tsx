@@ -10,6 +10,7 @@ export const NewsItemCard: React.FC<TNewsItem & { single?: boolean }> = ({
 	title,
 	content,
 	summary,
+	image,
 	updated_at,
 	id,
 	single
@@ -26,9 +27,20 @@ export const NewsItemCard: React.FC<TNewsItem & { single?: boolean }> = ({
 				<div className="header">
 					<p>{title}</p>
 				</div>
-				<div className="body">
+				<div
+					className="body"
+					style={{
+						backgroundImage: !single && !!image ? `url("/images/news/${image}")` : null
+					}}
+				>
 					{!single && (
-						<div className="summary" dangerouslySetInnerHTML={{ __html: summary }} />
+						<div className={cx("summary-wrapper", { with_image: !!image })}>
+							<div className="overlay" />
+							<div
+								className="summary"
+								dangerouslySetInnerHTML={{ __html: summary }}
+							/>
+						</div>
 					)}
 					{single && (
 						<div className="content" dangerouslySetInnerHTML={{ __html: content }} />

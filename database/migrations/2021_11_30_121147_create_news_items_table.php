@@ -18,6 +18,7 @@ class CreateNewsItemsTable extends Migration
             $table->string('status')->default('draft');
             $table->string('title')->nullable();
             $table->text('summary')->nullable();
+            $table->string('image')->nullable();
             $table->text('content')->nullable();
             $table->timestamps();
         });

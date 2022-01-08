@@ -17,6 +17,7 @@ class NewsItemController extends Controller
             "title" => $request->title,
             "summary" => $request->summary,
             "content" => $request->content,
+            "image" => $request->image,
             "status" => $request->status
         ]);
         $newsItem->save();
@@ -29,6 +30,7 @@ class NewsItemController extends Controller
         $newsItem->title = $request->title;
         $newsItem->summary = $request->summary;
         $newsItem->content = $request->content;
+        $newsItem->image = $request->image;
         $newsItem->status = $request->status;
         $newsItem->save();
 

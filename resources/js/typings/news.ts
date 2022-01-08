@@ -2,6 +2,7 @@ export type TNewsItem = {
 	id: number;
 	title: string;
 	status: TNewsItemStatus;
+	image?: string;
 	summary: string;
 	content: string;
 	created_at: string;
