@@ -4,7 +4,7 @@ import { confirmModal } from "../../data/modals/confirm";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { approveProtocolQuery, rejectProtocolQuery } from "../../queries/admin";
-import { TProtocol } from "../../typings/protocols";
+import { TProtocol, TProtocolStatus } from "../../typings/protocols";
 
 export const AdminProtocolActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row }) => {
 	const { t } = useTranslationStore();
@@ -29,18 +29,27 @@ export const AdminProtocolActionCell: React.FC<{ value: string; row: TProtocol }
 				<Link to={`/database/view-protocol/${row.id}`} target="_blank">
 					<button className="secondary small">{t("view")}</button>
 				</Link>
-				<button
-					className="tertiary small"
-					onClick={() => setModal({ ...confirmModal, actionOnConfirm: approveProtocol })}
-				>
-					{t("approve")}
-				</button>
-				<button
-					className="danger small"
-					onClick={() => setModal({ ...confirmModal, actionOnConfirm: rejectProtocol })}
-				>
-					{t("reject")}
-				</button>
+				{row.status === TProtocolStatus.Rejected ||
+					(row.status === TProtocolStatus.SubmittedForPublication && (
+						<button
+							className="tertiary small"
+							onClick={() =>
+								setModal({ ...confirmModal, actionOnConfirm: approveProtocol })
+							}
+						>
+							{t("approve")}
+						</button>
+					))}
+				{row.status === TProtocolStatus.SubmittedForPublication && (
+					<button
+						className="danger small"
+						onClick={() =>
+							setModal({ ...confirmModal, actionOnConfirm: rejectProtocol })
+						}
+					>
+						{t("reject")}
+					</button>
+				)}
 			</div>
 		</td>
 	);

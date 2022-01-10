@@ -15,7 +15,6 @@ export const SingleFilter: React.FC<{
 	const { t } = useTranslationStore();
 
 	useEffect(() => {
-		setActiveFilterKey(selectionKey);
 		if (defaultValue) {
 			setActiveFilterText(t(defaultValue));
 		}
@@ -24,7 +23,10 @@ export const SingleFilter: React.FC<{
 	return (
 		<div className="SingleFilter">
 			<GenericSelectField
-				setValue={value => setActiveFilterText(value)}
+				setValue={value => {
+					setActiveFilterKey(selectionKey);
+					setActiveFilterText(value);
+				}}
 				value={activeFilterText || ""}
 				options={[...options]}
 				clearPlaceholder="clear"
