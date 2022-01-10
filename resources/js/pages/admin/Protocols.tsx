@@ -6,13 +6,17 @@ import { FilterStoreProvider } from "../../contexts/FilterStoreContext";
 import { adminProtocolsTable } from "../../data/tables/protocols";
 import { getAdminProtocolsQuery } from "../../queries/admin";
 import { FilterStore } from "../../stores/FilterStore";
-import { TDBProtocol } from "../../typings/protocols";
+import { TDBProtocol, TProtocolStatus } from "../../typings/protocols";
 import { mapProtocolDetailsToObject } from "../../utils/formatting";
 import { createProtocolForm } from "../../data/forms/protocol";
+import { SingleFilter } from "../../components/tables/SingleFilter";
+import { TFormFieldName } from "../../typings/forms";
+import { useTranslationStore } from "../../hooks/useTranslationStore";
 
 export const ProtocolsPage: React.FC = () => {
 	const [protocols, setProtocols] = useState<TDBProtocol[]>([]);
 	const [filterStore] = useState(new FilterStore());
+	const { t } = useTranslationStore();
 
 	useEffect(() => {
 		(async () => {
@@ -21,12 +25,18 @@ export const ProtocolsPage: React.FC = () => {
 		})();
 	}, []);
 
+	console.log(protocols.filter(p => p.status === TProtocolStatus.SubmittedForPublication));
+
 	return (
 		<AdminPage title="Protocols">
 			<FilterStoreProvider store={filterStore}>
-				<Filter
-					justify="left"
-					options={createProtocolForm.fields.filter(f => f.useAsFilter).map(f => f.id)}
+				<SingleFilter
+					selectionKey={TFormFieldName.PublishStatus}
+					options={Object.values(TProtocolStatus)
+						.filter(status => status !== TProtocolStatus.Draft)
+						.map(status => t(status))}
+					filterPlaceholder="any_status"
+					defaultValue="submitted_for_publication"
 				/>
 				<TableBlock rows={protocols} table={adminProtocolsTable}></TableBlock>
 			</FilterStoreProvider>

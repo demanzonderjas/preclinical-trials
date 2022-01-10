@@ -217,5 +217,6 @@
 	"upload_image": "Upload image",
 	"send": "Send",
 	"message": "Message",
-	"contact_you_shortly": "We will contact you as soon as possible to answer your query."
+	"contact_you_shortly": "We will contact you as soon as possible to answer your query.",
+	"any_status": "Any status"
 }
