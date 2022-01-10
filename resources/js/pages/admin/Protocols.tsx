@@ -25,8 +25,6 @@ export const ProtocolsPage: React.FC = () => {
 		})();
 	}, []);
 
-	console.log(protocols.filter(p => p.status === TProtocolStatus.SubmittedForPublication));
-
 	return (
 		<AdminPage title="Protocols">
 			<FilterStoreProvider store={filterStore}>

@@ -27,7 +27,6 @@ export class FilterStore {
 
 	setActiveFilterText(value: string) {
 		this.activeFilterText = value;
-		console.log("active", value);
 	}
 
 	setActiveFilterKey(value: TFormFieldName) {
