@@ -10,7 +10,7 @@ export const RejectModal: React.FC<{ data: any }> = ({ data }) => {
 
 	const sendRejection = async ({ message }) => {
 		await rejectProtocolQuery(data.protocol_id, message);
-		location.reload();
+		// location.reload();
 	};
 
 	return (

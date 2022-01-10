@@ -7,6 +7,7 @@ use App\Http\Resources\ProtocolResource;
 use App\Mail\ProtocolApprovedAndPublished;
 use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
+use App\Models\AdminAction;
 use App\Models\Protocol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -78,18 +79,31 @@ class ProtocolController extends Controller
 		$protocol->status = "published";
 		$protocol->save();
 
+		$this->addAdminAction($protocol_id, "approve", "");
+
 		Mail::to($protocol->user)->send(new ProtocolApprovedAndPublished($protocol));
 		return response()->json(["success" => true]);
 	}
 
-	public function reject($protocol_id)
+	public function reject(Request $request, $protocol_id)
 	{
 		$protocol = Protocol::findOrFail($protocol_id);
 		$protocol->status = "rejected";
 		$protocol->save();
 
+		$this->addAdminAction($protocol_id, "reject", $request->message);
+
 		Mail::to($protocol->user)->send(new ProtocolRejected($protocol));
 		return response()->json(["success" => true]);
+	}
+
+	public function addAdminAction($protocol_id, $action, $message)
+	{
+		$adminAction = new AdminAction();
+		$adminAction->protocol_id = $protocol_id;
+		$adminAction->action = $action;
+		$adminAction->message = $message;
+		$adminAction->save();
 	}
 
 	public function delete($protocol_id)
