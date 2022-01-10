@@ -6,5 +6,6 @@ export const joditConfig = {
 	buttonsSM: listOfButtons,
 	buttonsMD: listOfButtons,
 	buttonsXS: listOfButtons,
-	width: "80%"
+	textAlign: "left",
+	width: "100%"
 };

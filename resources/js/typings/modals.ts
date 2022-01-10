@@ -1,11 +1,13 @@
 export type TModal = {
 	name: TModalName;
-	Component?: React.FC;
+	Component?: React.FC<any>;
 	actionOnConfirm?: Function;
+	data?: any;
 };
 
 export enum TModalName {
 	LoginModal = "login_modal",
 	ForgotPasswordModal = "forgot_password_modal",
-	ConfirmModal = "confirm_modal"
+	ConfirmModal = "confirm_modal",
+	RejectModal = "reject_modal"
 }

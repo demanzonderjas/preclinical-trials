@@ -32,7 +32,9 @@ export class ModalStore {
 	}
 
 	@action.bound confirm() {
-		this.modal.actionOnConfirm();
+		if (this.modal.actionOnConfirm) {
+			this.modal.actionOnConfirm();
+		}
 		this.setModal(null);
 	}
 

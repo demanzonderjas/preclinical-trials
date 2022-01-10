@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { confirmModal } from "../../data/modals/confirm";
+import { rejectModal } from "../../data/modals/reject";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { approveProtocolQuery, rejectProtocolQuery } from "../../queries/admin";
@@ -11,13 +12,6 @@ export const AdminProtocolActionCell: React.FC<{ value: string; row: TProtocol }
 	const { setModal } = useModalStore();
 	const approveProtocol = async () => {
 		const response = await approveProtocolQuery(row.id);
-		if (response.success) {
-			location.reload();
-		}
-	};
-
-	const rejectProtocol = async () => {
-		const response = await rejectProtocolQuery(row.id);
 		if (response.success) {
 			location.reload();
 		}
@@ -43,9 +37,7 @@ export const AdminProtocolActionCell: React.FC<{ value: string; row: TProtocol }
 				{row.status === TProtocolStatus.SubmittedForPublication && (
 					<button
 						className="danger small"
-						onClick={() =>
-							setModal({ ...confirmModal, actionOnConfirm: rejectProtocol })
-						}
+						onClick={() => setModal({ ...rejectModal, data: { protocol_id: row.id } })}
 					>
 						{t("reject")}
 					</button>

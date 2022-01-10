@@ -50,6 +50,7 @@ import { studyArmsField } from "./fields/protocol/studyArms";
 import { supportField } from "./fields/protocol/support";
 import { shortTitleField, titleField } from "./fields/protocol/title";
 import { experimentalDesignField } from "./fields/protocol/experimentalDesign";
+import { messageField } from "./fields/admin/content";
 
 export const createProtocolForm: TForm = {
 	id: TFormName.CreateProtocol,
@@ -104,6 +105,15 @@ export const createProtocolForm: TForm = {
 		accuracyField
 	],
 	align: TAlignment.Left
+};
+
+export const rejectProtocolForm: TForm = {
+	id: TFormName.RejectProtocol,
+	style: TFormStyle.InlinePlaceholder,
+	keepValuesAfterSubmit: false,
+	submitText: "send",
+	fields: [messageField],
+	align: TAlignment.Center
 };
 
 export const protocolSections: TSectionName[] = [

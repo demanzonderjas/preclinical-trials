@@ -14,7 +14,7 @@ export const Modal: React.FC = observer(() => {
 			<div className="Modal">
 				<CloseIcon />
 				<div className="ContentWrapper">
-					<modal.Component />
+					<modal.Component data={modal.data} />
 				</div>
 			</div>
 		</div>

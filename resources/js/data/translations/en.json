@@ -218,5 +218,6 @@
 	"send": "Send",
 	"message": "Message",
 	"contact_you_shortly": "We will contact you as soon as possible to answer your query.",
-	"any_status": "Any status"
+	"any_status": "Any status",
+	"why_reject_protocol": "Please let the user know why you rejected the current version of the protocol."
 }

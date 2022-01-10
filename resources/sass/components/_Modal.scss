@@ -19,6 +19,14 @@
 		background-color: $tertiary;
 		border-radius: 20px;
 
+		.FormBlock {
+			margin: 0 !important;
+		}
+
+		.jodit-container {
+			text-align: left;
+		}
+
 		.ContentWrapper {
 			top: 0;
 			left: 0;

@@ -18,9 +18,9 @@ export async function approveProtocolQuery(protocol_id: string) {
 	}
 }
 
-export async function rejectProtocolQuery(protocol_id: string) {
+export async function rejectProtocolQuery(protocol_id: string, message: string) {
 	try {
-		const response = await API.post(`/api/protocol/${protocol_id}/reject`);
+		const response = await API.post(`/api/protocol/${protocol_id}/reject`, { message });
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };
