@@ -21,7 +21,7 @@ export const InputField: React.FC<TFormFieldProps & {
 		if (textareaRef.current) {
 			const TOTAL_WIDTH = textareaRef.current.clientWidth;
 			const ALLOWED_SENTENCE_LENGTH = TOTAL_WIDTH / 12;
-			const REQUIRED_SENTENCES = Math.ceil(value.length / ALLOWED_SENTENCE_LENGTH);
+			const REQUIRED_SENTENCES = Math.ceil(value?.length / ALLOWED_SENTENCE_LENGTH);
 			setHeight(Math.max(REQUIRED_SENTENCES * LINE_HEIGHT, LINE_HEIGHT));
 		}
 	}, [value]);

@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { useHistory, useParams } from "react-router";
 import { confirmModal } from "../../data/modals/confirm";
@@ -13,7 +14,7 @@ import {
 import { TProtocol, TProtocolStatus } from "../../typings/protocols";
 import { ImportPRIS } from "./ImportPRIS";
 
-export const CreateProtocolPanel: React.FC = () => {
+export const CreateProtocolPanel: React.FC = observer(() => {
 	const { t } = useTranslationStore();
 	const { activeSection, createKeyValuePairs, getSectionByIndex, clearFields } = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
@@ -101,4 +102,4 @@ export const CreateProtocolPanel: React.FC = () => {
 			</div>
 		</>
 	);
-};
+});
