@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { rejectProtocolForm } from "../../data/forms/protocol";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
@@ -7,10 +8,12 @@ import { FormBlock } from "../layout/FormBlock";
 
 export const RejectModal: React.FC<{ data: any }> = ({ data }) => {
 	const { t } = useTranslationStore();
+	const { push } = useHistory();
 
 	const sendRejection = async ({ message }) => {
 		await rejectProtocolQuery(data.protocol_id, message);
-		// location.reload();
+		push("/admin/protocols");
+		location.reload();
 	};
 
 	return (

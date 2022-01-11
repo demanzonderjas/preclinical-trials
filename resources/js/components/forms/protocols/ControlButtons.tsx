@@ -56,12 +56,6 @@ export const ControlButtons: React.FC = observer(() => {
 		}
 	};
 
-	const resubmitForPublication = async () => {
-		const data = createKeyValuePairs() as TProtocol;
-		await updateProtocolQuery(protocol_id, data);
-		submitForPublication();
-	};
-
 	const submitForPublication = async () => {
 		const data = createKeyValuePairs() as TProtocol;
 		if (validate()) {
@@ -87,7 +81,7 @@ export const ControlButtons: React.FC = observer(() => {
 			}}
 		>
 			{!isFirstSection && !!sections && (
-				<button type="button" className="secondary" onClick={e => saveAsDraft(true)}>
+				<button type="button" className="secondary small" onClick={e => saveAsDraft(true)}>
 					{t("go_back")}
 				</button>
 			)}
@@ -105,16 +99,23 @@ export const ControlButtons: React.FC = observer(() => {
 					{t(form.submitText)}
 				</button>
 			)}
-			{!!isLastSection && !!sections && status !== TProtocolStatus.Published && (
-				<button type="button" className="secondary" onClick={submitForPublication}>
+			{!!isLastSection && !!sections && status === TProtocolStatus.Draft && (
+				<button type="button" className="secondary small" onClick={submitForPublication}>
 					{t("submit_for_publication")}
 				</button>
 			)}
-			{!!isLastSection && !!sections && status === TProtocolStatus.SubmittedForPublication && (
-				<button type="button" className="secondary" onClick={resubmitForPublication}>
-					{t("resubmit_for_publication")}
-				</button>
-			)}
+			{!!isLastSection &&
+				!!sections &&
+				(status === TProtocolStatus.SubmittedForPublication ||
+					status === TProtocolStatus.Rejected) && (
+					<button
+						type="button"
+						className="secondary small"
+						onClick={submitForPublication}
+					>
+						{t("resubmit_for_publication")}
+					</button>
+				)}
 		</div>
 	);
 });

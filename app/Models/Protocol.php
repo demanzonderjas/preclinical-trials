@@ -80,6 +80,6 @@ class Protocol extends Model
         $detail = $this->details->first(function ($d) {
             return $d->key === "has_embargo";
         });
-        return !empty($detail) ? $detail->value === "yes" : false;
+        return !empty($detail) ? $detail->value !== "no" : false;
     }
 }

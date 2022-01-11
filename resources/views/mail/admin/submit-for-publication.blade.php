@@ -9,7 +9,7 @@
 </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/database/view-protocol/' . $protocol->id)
+@section('cta-link', env('APP_URL') . '/admin/protocols/' . $protocol->id)
 @section('cta-text', 'View the protocol')
 
 @section('closing')

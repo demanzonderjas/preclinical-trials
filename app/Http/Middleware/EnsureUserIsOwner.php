@@ -19,7 +19,7 @@ class EnsureUserIsOwner
     {
         $targetProtocol = Protocol::findOrFail($request->protocol_id);
 
-        if ($targetProtocol->user->id !== $request->user()->id) {
+        if ($targetProtocol->user->id !== $request->user()->id && !$request->user()->is_admin) {
             return abort(403, 'Not your protocol.');
         }
 
