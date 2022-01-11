@@ -5,10 +5,18 @@
 		background-color: rgba($grey-medium, 0.3);
 		border-radius: 5px;
 		padding: 10px;
+
+		&.child_field {
+			margin: -22px 0 20px;
+			padding-bottom: 20px;
+			padding-top: 12px;
+			border-radius: 0 0 5px 5px;
+		}
 	}
 
 	> .description {
 		margin: 12px 0;
+		line-height: 20px;
 	}
 
 	.error {

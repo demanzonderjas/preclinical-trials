@@ -1,15 +1,13 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { useForm, useFormField } from "../../hooks/useForm";
-import { TFormField, TFormFieldName, TFormStyle } from "../../typings/forms";
+import { TFormField, TFormStyle } from "../../typings/forms";
 import { fieldMeetsDependencies } from "../../utils/validation";
 import cx from "classnames";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
-import { useHistory } from "react-router";
-import { RichTextField } from "./RichTextField";
 
 export const FormField: React.FC<TFormField> = observer(
-	({ id, Component, props, label, hidden, required, description }) => {
+	({ id, Component, props, label, hidden, showValueIn, required, description }) => {
 		const { errors, style } = useForm();
 		const { setValue } = useFormField(id);
 		const { t } = useTranslationStore();
@@ -26,7 +24,10 @@ export const FormField: React.FC<TFormField> = observer(
 
 		return (
 			<div
-				className={cx("FormField", { "with-sections": style === TFormStyle.WithSections })}
+				className={cx("FormField", {
+					"with-sections": style === TFormStyle.WithSections,
+					child_field: !!showValueIn
+				})}
 			>
 				{style !== TFormStyle.InlinePlaceholder && !hidden && (
 					<label>
