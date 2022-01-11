@@ -1,9 +1,11 @@
+import { InputField } from "../../../../components/forms/InputField";
 import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
 import { emailField } from "../account/email";
 import { firstNameField } from "../account/name";
 
 export const contactNameField: TFormField = {
 	...firstNameField,
+	Component: InputField,
 	id: TFormFieldName.ContactName,
 	section: TSectionName.ContactDetails,
 	description: "contact_name_description"

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Image } from "../base/Image";
 import cx from "classnames";
-import { TForm, TFormFieldName, TSectionName } from "../../typings/forms";
+import { TForm, TSectionName } from "../../typings/forms";
 import { FormStoreContext } from "../../contexts/FormStoreContext";
 import { FormStore } from "../../stores/FormStore";
 import { FormFields } from "../forms/FormField";
 import { SuccessMessage } from "../forms/SuccessMessage";
 import { FormSections } from "../forms/FormSections";
 import { ControlButtons } from "../forms/protocols/ControlButtons";
-import { RichTextField } from "../forms/RichTextField";
 
 export const FormBlock: React.FC<{
 	form: TForm;

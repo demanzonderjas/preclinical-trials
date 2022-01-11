@@ -27,6 +27,7 @@ export type TDBProtocol = {
 export enum TProtocolStatus {
 	Draft = "draft",
 	SubmittedForPublication = "submitted_for_publication",
+	ResubmittedForPublication = "resubmitted_for_publication",
 	Published = "published",
 	Rejected = "rejected"
 }

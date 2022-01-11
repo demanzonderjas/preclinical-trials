@@ -36,7 +36,7 @@ class ProtocolController extends Controller
 	{
 		$protocol = Protocol::where(['id' => $request->protocol_id])->with('details', 'revisions')->firstOrFail();
 
-		if ($protocol->has_embargo && (empty($request->user()) || !$request->user()->is_admin)) {
+		if ($protocol->has_embargo && !$request->user()->is_admin && $request->user()->id !== $protocol->user_id) {
 			return abort(403, "You are not authorized.");
 		}
 
@@ -67,7 +67,7 @@ class ProtocolController extends Controller
 	public function submitForPublication(Request $request)
 	{
 		$protocol = Protocol::findOrFail($request->protocol_id);
-		$protocol->status = "submitted_for_publication";
+		$protocol->status = $protocol->status !== "draft" ? "resubmitted_for_publication" : "submitted_for_publication";
 		$protocol->save();
 
 		Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));

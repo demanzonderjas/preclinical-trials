@@ -31,6 +31,8 @@ export const EditProtocolPage: React.FC = () => {
 		return updateProtocolQuery(protocol_id, data);
 	};
 
+	console.log(protocol);
+
 	return (
 		<Page title="Edit Protocol">
 			<div className="AddProtocol border-top">

@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import { loginModal } from "../../data/modals/loginModal";
 import { useIsLoggedIn } from "../../hooks/useLogin";
@@ -16,8 +16,17 @@ export const DashboardPanel: React.FC = observer(() => {
 
 	const logout = async () => {
 		await logoutQuery();
-		location.reload();
+		location.href = "/";
 	};
+
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		if (params.has("login_to") && !isLoggedIn) {
+			setModal(loginModal);
+		} else {
+			setModal(null);
+		}
+	}, [isLoggedIn]);
 
 	return (
 		<div className="DashboardPanel">

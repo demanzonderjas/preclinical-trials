@@ -1,14 +1,12 @@
 import { TLoginCredentials, TResetPasswordData } from "../typings/auth";
 import { API } from "../utils/api";
 
-export async function loginQuery(credentials: TLoginCredentials) {
+export async function loginQuery(credentials: TLoginCredentials, targetUrl: string) {
 	try {
-		const cookieTime = await API.get("/sanctum/csrf-cookie");
-
 		const response = await API.post("login", credentials);
 
 		if (response.data?.success) {
-			location.href = "/dashboard";
+			location.href = targetUrl ? `/${targetUrl}` : "/dashboard";
 		}
 
 		return response.data;

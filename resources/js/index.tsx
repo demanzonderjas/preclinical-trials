@@ -41,6 +41,7 @@ import { EditFAQItemPage } from "./pages/admin/faq/EditFAQitem";
 import { EditPagePage } from "./pages/admin/pages/EditPage";
 import { Loader } from "./components/layout/Loader";
 import { BackgroundInfoPage } from "./pages/BackgroundInfo";
+import { AdminViewProtocolPage } from "./pages/admin/protocols/ViewProtocol";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -117,6 +118,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/admin/protocols" exact={true}>
 								<ProtocolsPage />
+							</Route>
+							<Route path="/admin/protocols/:protocol_id">
+								<AdminViewProtocolPage />
 							</Route>
 							<Route path="/admin/news" exact={true}>
 								<AdminNewsPage />

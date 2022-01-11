@@ -5,11 +5,11 @@
 
 @section('content')
 <p>
-    A new protocol has been submitted for publication.
+    A{{ $protocol->status === "submitted_for_publication " ? "new" : " " }}protocol has been {{ $protocol->status === "submitted_for_publication" ? "submitted" : "resubmitted" }} for publication.
 </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/admin/protocols/' . $protocol->id)
+@section('cta-link', env('APP_URL') . '/database/view-protocol/' . $protocol->id)
 @section('cta-text', 'View the protocol')
 
 @section('closing')

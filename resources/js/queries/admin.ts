@@ -9,7 +9,7 @@ export async function getAdminProtocolsQuery() {
 	}
 }
 
-export async function approveProtocolQuery(protocol_id: string) {
+export async function approveProtocolQuery(protocol_id: number | string) {
 	try {
 		const response = await API.post(`/api/protocol/${protocol_id}/approve`);
 		return response.data;

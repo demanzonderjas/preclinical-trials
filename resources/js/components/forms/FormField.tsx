@@ -50,6 +50,7 @@ export const FormFields: React.FC<{ fields: TFormField[] }> = observer(({ fields
 			{fields
 				.filter(field => fieldMeetsDependencies(field, values))
 				.filter(field => (activeSection ? field.section === activeSection : true))
+				.filter(field => !!field.Component)
 				.map(field => (
 					<FormField key={field.id} {...field} />
 				))}

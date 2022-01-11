@@ -105,7 +105,7 @@ export const ControlButtons: React.FC = observer(() => {
 					{t(form.submitText)}
 				</button>
 			)}
-			{!!isLastSection && !!sections && status === TProtocolStatus.Draft && (
+			{!!isLastSection && !!sections && status !== TProtocolStatus.Published && (
 				<button type="button" className="secondary" onClick={submitForPublication}>
 					{t("submit_for_publication")}
 				</button>
