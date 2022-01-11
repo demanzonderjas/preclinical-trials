@@ -35,7 +35,8 @@
 	input[type="email"],
 	input[type="password"],
 	input[type="date"],
-	input[type="number"] {
+	input[type="number"],
+	textarea {
 		background: #ffffff;
 		font-family: $font-primary;
 		border: 1px solid rgba(0, 0, 0, 0.2);
@@ -44,11 +45,16 @@
 		padding: 8px 16px;
 		text-align: inherit;
 		font-size: 20px;
+		border-radius: 5px;
 		width: 80%;
 
 		&::placeholder {
 			color: #ccc;
 		}
+	}
+
+	textarea {
+		transition: height 0.25s cubic-bezier(0, 0, 0.3, 1);
 	}
 
 	input[type="checkbox"] {
