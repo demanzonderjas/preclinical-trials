@@ -135,7 +135,6 @@ export enum TFormStyle {
 export enum TSectionName {
 	General = "general",
 	ContactDetails = "contact_details",
-	StudyCentreDetails = "study_centre_details",
 	StudyDesign = "study_design",
 	Submit = "submit"
 }

@@ -17,6 +17,6 @@ export const studyCentreField: TFormField = {
 	useAsFilter: true,
 	validate: validateMultiRowField,
 	value: [{ ...studyCentreModel }],
-	section: TSectionName.StudyCentreDetails,
+	section: TSectionName.ContactDetails,
 	description: "study_centre_description"
 };

@@ -120,6 +120,5 @@ export const protocolSections: TSectionName[] = [
 	TSectionName.General,
 	TSectionName.StudyDesign,
 	TSectionName.ContactDetails,
-	TSectionName.StudyCentreDetails,
 	TSectionName.Submit
 ];
