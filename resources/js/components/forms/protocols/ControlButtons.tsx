@@ -86,7 +86,7 @@ export const ControlButtons: React.FC = observer(() => {
 				</button>
 			)}
 			{!isLastSection && (
-				<button type="button" className="secondary" onClick={() => saveAsDraft()}>
+				<button type="button" className="secondary small" onClick={() => saveAsDraft()}>
 					{t(
 						status === TProtocolStatus.Draft
 							? "go_to_next_section_and_save_as_draft"

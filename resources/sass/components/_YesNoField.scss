@@ -12,12 +12,7 @@
 		&.active {
 			color: white;
 			filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
-			&.yes {
-				background-color: $tertiary;
-			}
-			&.no {
-				background-color: $danger-color;
-			}
+			background-color: $secondary;
 		}
 
 		&:first-child {
