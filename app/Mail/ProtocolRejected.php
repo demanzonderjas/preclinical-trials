@@ -12,15 +12,17 @@ class ProtocolRejected extends Mailable
     use Queueable, SerializesModels;
 
     public $protocol;
+    public $note;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Protocol $protocol)
+    public function __construct(Protocol $protocol, string $note)
     {
         $this->protocol = $protocol;
+        $this->note = $note;
     }
 
     /**

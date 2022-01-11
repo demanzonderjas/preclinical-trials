@@ -79,7 +79,7 @@ class ProtocolController extends Controller
 		$protocol->status = "published";
 		$protocol->save();
 
-		$this->addAdminAction($protocol_id, "approve", "");
+		$this->addAdminAction($protocol, "approve", "");
 
 		Mail::to($protocol->user)->send(new ProtocolApprovedAndPublished($protocol));
 		return response()->json(["success" => true]);
@@ -91,19 +91,21 @@ class ProtocolController extends Controller
 		$protocol->status = "rejected";
 		$protocol->save();
 
-		$this->addAdminAction($protocol_id, "reject", $request->message);
-
-		Mail::to($protocol->user)->send(new ProtocolRejected($protocol));
+		$this->addAdminAction($protocol, "reject", $request->message);
 		return response()->json(["success" => true]);
 	}
 
-	public function addAdminAction($protocol_id, $action, $message)
+	public function addAdminAction(Protocol $protocol, $action, $message)
 	{
 		$adminAction = new AdminAction();
-		$adminAction->protocol_id = $protocol_id;
+		$adminAction->protocol_id = $protocol->id;
 		$adminAction->action = $action;
 		$adminAction->message = $message;
 		$adminAction->save();
+
+		if ($action === "reject") {
+			Mail::to($protocol->user)->send(new ProtocolRejected($protocol, $message));
+		}
 	}
 
 	public function delete($protocol_id)

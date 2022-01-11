@@ -5,12 +5,15 @@
 
 @section('content')
 <p>
-    Check out the details of your protocol here:
+    The publication of your protocol has been declined. See the comments below to see what needs to be changed:
 </p>
+<div>
+    {!! $note !!}
+</div>
 @stop
 
-@section('cta-link', env('APP_URL') . '/database/view-protocol/' . $protocol->id)
-@section('cta-text', 'View the protocol')
+@section('cta-link', env('APP_URL') . '/database/edit-protocol/' . $protocol->id)
+@section('cta-text', 'Edit protocol')
 
 @section('closing')
 <p>
