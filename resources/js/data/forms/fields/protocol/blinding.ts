@@ -2,7 +2,7 @@ import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName, TSelectOption } from "../../../../typings/forms";
 import { otherSupportField } from "./other";
 
-export const blindingOptions: string[] = ["no", "yes_how", "yes_partially"];
+export const blindingOptions: string[] = ["no", "yes", "yes_partially"];
 
 export const blindedInterventionField: TFormField = {
 	id: TFormFieldName.InvestigatorsBlindedIntervention,
@@ -23,7 +23,7 @@ export const blindedInterventionHowField: TFormField = {
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "how",
 	section: TSectionName.StudyDesign,
-	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes_how" }]
+	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes" }]
 };
 
 export const blindedInterventionPartiallyField: TFormField = {
@@ -46,7 +46,7 @@ export const blindedAssessmentHowField: TFormField = {
 	...blindedInterventionHowField,
 	id: TFormFieldName.YesBlindedAssessmentHow,
 	showValueIn: TFormFieldName.InvestigatorsBlindedAssesment,
-	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "yes_how" }]
+	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "yes" }]
 };
 
 export const blindedAssessmentPartiallyField: TFormField = {

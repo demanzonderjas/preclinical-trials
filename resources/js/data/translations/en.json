@@ -18,7 +18,6 @@
 	"investigators_blinded_intervention_description": "Are the investigators involved in the experiment blinded to the allocation of the animals to the experimental groups?",
 	"investigators_blinded_assessment_description": "Are the investigators blinded at the time of assessments of outcome(s)?",
 	"how": "How?",
-	"yes_how": "Yes - how?",
 	"partially_because": "Partially, because..",
 	"yes_partially": "Yes partially, because",
 	"application_number_placeholder": "Enter ethics committee number here",
