@@ -107,6 +107,15 @@ export const createProtocolForm: TForm = {
 	align: TAlignment.Left
 };
 
+export const editPublishedProtocolForm: TForm = {
+	id: TFormName.EditPublishedProtocol,
+	style: TFormStyle.RegularLabels,
+	keepValuesAfterSubmit: true,
+	submitText: "update_status",
+	fields: [statusField],
+	align: TAlignment.Left
+};
+
 export const rejectProtocolForm: TForm = {
 	id: TFormName.RejectProtocol,
 	style: TFormStyle.InlinePlaceholder,

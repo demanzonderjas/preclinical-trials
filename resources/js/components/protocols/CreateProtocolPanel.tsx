@@ -14,7 +14,7 @@ import {
 import { TProtocol, TProtocolStatus } from "../../typings/protocols";
 import { ImportPRIS } from "./ImportPRIS";
 
-export const CreateProtocolPanel: React.FC = observer(() => {
+export const CreateProtocolPanel: React.FC<{ hideIntro?: boolean }> = observer(({ hideIntro }) => {
 	const { t } = useTranslationStore();
 	const { activeSection, createKeyValuePairs, getSectionByIndex, clearFields } = useForm();
 	const { protocol_id }: { protocol_id: string } = useParams();
@@ -45,12 +45,14 @@ export const CreateProtocolPanel: React.FC = observer(() => {
 
 	return (
 		<>
-			<p className="intro">
-				Register your study by completing the following form. Notice that the fields with an
-				asterisk are mandatory, whereas other fields are optional. Once the form is
-				submitted it will be checked before publication on this website. Changes made after
-				publication on this site will be recorded with an audit trail.
-			</p>
+			{!hideIntro && (
+				<p className="intro">
+					Register your study by completing the following form. Notice that the fields
+					with an asterisk are mandatory, whereas other fields are optional. Once the form
+					is submitted it will be checked before publication on this website. Changes made
+					after publication on this site will be recorded with an audit trail.
+				</p>
+			)}
 			<div
 				className="flex-wrapper"
 				style={{

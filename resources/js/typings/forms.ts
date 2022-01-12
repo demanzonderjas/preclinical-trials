@@ -123,7 +123,8 @@ export enum TFormName {
 	ForgotPassword = "forgot_password",
 	ResetPassword = "reset_password",
 	Contact = "contact",
-	RejectProtocol = "reject_protocol"
+	RejectProtocol = "reject_protocol",
+	EditPublishedProtocol = "edit_published_protocol"
 }
 
 export enum TFormStyle {

@@ -226,5 +226,6 @@
 	"total_protocols": "Total protocols",
 	"total_under_embargo": "Total under embargo",
 	"total_rejected": "Total rejected protocols",
-	"total_per_month": "Total protocols per month"
+	"total_per_month": "Total protocols per month",
+	"update_status": "Update status"
 }
