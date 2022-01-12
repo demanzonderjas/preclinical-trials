@@ -5,7 +5,7 @@ import { MenuItem } from "../Menu";
 export const Sidebar: React.FC = () => {
 	return (
 		<div className="Sidebar">
-			<Image filename="logo-pct.jpeg" />
+			<Image filename="logo-pct.jpg" />
 			<div className="AdminMenu">
 				<ul>
 					<MenuItem text="Protocols" url="/admin/protocols" />
