@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Video } from "../components/base/Video";
 import { ContentBlock } from "../components/layout/ContentBlock";
@@ -6,19 +6,12 @@ import { Highlight } from "../components/layout/Highlight";
 import { Page, PrimaryHeaderPage } from "../components/layout/Page";
 import { PartnerBlock } from "../components/layout/PartnerBlock";
 import { Leaderboard } from "../components/protocols/Leaderboard";
+import { useEmbargoCounts } from "../hooks/useCounts";
 import { usePage } from "../hooks/usePage";
-import { getProtocolCountsQuery } from "../queries/protocol";
 
 export const HomePage: React.FC = () => {
-	const [counts, setCounts] = useState<{ total: number; with_embargo: number }>(null);
+	const counts = useEmbargoCounts();
 	const { page } = usePage();
-
-	useEffect(() => {
-		(async () => {
-			const countsResponse = await getProtocolCountsQuery();
-			setCounts(countsResponse);
-		})();
-	}, []);
 
 	if (!page) {
 		return null;
@@ -47,7 +40,7 @@ export const HomePage: React.FC = () => {
 						</Link>
 					</div>
 				</ContentBlock>
-				<Leaderboard />
+				<Leaderboard limit={5} />
 				<PartnerBlock />
 			</div>
 		</PrimaryHeaderPage>

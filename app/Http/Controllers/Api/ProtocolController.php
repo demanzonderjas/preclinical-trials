@@ -9,6 +9,7 @@ use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Models\AdminAction;
 use App\Models\Protocol;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -123,7 +124,13 @@ class ProtocolController extends Controller
 		return response()->json(["total" => $protocols->count(), "with_embargo" => $withEmbargo]);
 	}
 
-	public function countsPerCountry()
+	public function countsRejected()
+	{
+		$protocols = Protocol::where('status', 'rejected')->get();
+		return response()->json(["total" => $protocols->count()]);
+	}
+
+	public function countsPerCountry(Request $request)
 	{
 		$protocols = Protocol::where('status', 'published')->get();
 		$countsPerCountry = $protocols->reduce(function ($base, $protocol) {
@@ -138,8 +145,24 @@ class ProtocolController extends Controller
 			return $base;
 		}, []);
 		asort($countsPerCountry);
-		$top5 = array_slice(array_reverse($countsPerCountry), 0, 5);
+		$limit = $request->limit ? $request->limit : count($countsPerCountry);
+		$top5 = array_slice(array_reverse($countsPerCountry), 0, $limit);
 		return response()->json($top5);
+	}
+
+	public function countsPerMonth(Request $request)
+	{
+		$protocols = Protocol::where('status', 'published')->get();
+		$countsPerMonthYear = $protocols->reduce(function ($base, $protocol) {
+			$date = Carbon::createFromDate($protocol->updated_at);
+			$month = $date->month;
+			$year = $date->year;
+			$currentValue = isset($base[$year . "_" . $month]) ? $base[$year . "_" . $month] : 0;
+			$base[$year . "_" . $month] = $currentValue ? $currentValue + 1 : 1;
+			return $base;
+		}, []);
+		ksort($countsPerMonthYear);
+		return response()->json(array_reverse($countsPerMonthYear));
 	}
 
 	public function getViewableForAdmin()

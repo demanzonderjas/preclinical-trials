@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { getProtocolCountsPerCountryQuery } from "../../queries/protocol";
-import { TLeaderboardRow } from "../../typings/leaderboard";
+import { TLeaderboardRow } from "../../typings/stats";
 import { getCountries } from "../../utils/countries";
 
-export const Leaderboard: React.FC = () => {
+export const Leaderboard: React.FC<{ limit?: number }> = ({ limit }) => {
 	const [counts, setCounts] = useState<TLeaderboardRow[]>(null);
 	const countries = getCountries();
 	const { t } = useTranslationStore();
 
 	useEffect(() => {
 		(async () => {
-			const countsPerCountry = await getProtocolCountsPerCountryQuery();
+			const countsPerCountry = await getProtocolCountsPerCountryQuery(limit);
 			setCounts(
 				Object.keys(countsPerCountry).map(countryCode => ({
 					countryCode: countryCode.toLowerCase(),

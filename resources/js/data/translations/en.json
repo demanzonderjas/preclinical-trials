@@ -208,7 +208,7 @@
 	"content_blocks": "Content blocks",
 	"subtitle": "Subtitle",
 	"section": "Section",
-	"total_protocols": "Matching protocols",
+	"matching_protocols": "Matching protocols",
 	"magic_search": " ",
 	"other_intervention_type": "Other intervention type",
 	"other_randomisation_method": "Other Randomisation method",
@@ -222,5 +222,9 @@
 	"why_reject_protocol": "Please let the user know why you rejected the current version of the protocol.",
 	"make_sure_to_check_following_fields": "The PRIS import cannot fully be used to add your new protocol. Make sure to check the following fields.",
 	"leaderboard": "Leaderboard",
-	"leaderboard_description": "Protocols per country"
+	"leaderboard_description": "Protocols per country",
+	"total_protocols": "Total protocols",
+	"total_under_embargo": "Total under embargo",
+	"total_rejected": "Total rejected protocols",
+	"total_per_month": "Total protocols per month"
 }

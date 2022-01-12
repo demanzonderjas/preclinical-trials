@@ -29,7 +29,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('protocol/{protocol_id}/status', 'ProtocolController@getStatus');
     Route::get('protocols', 'ProtocolController@getViewable');
     Route::get('protocols/counts', 'ProtocolController@counts');
-    Route::get('protocols/counts-per-country', 'ProtocolController@countsPerCountry');
+    Route::post('protocols/counts-per-country', 'ProtocolController@countsPerCountry');
 
     Route::get('news-items', 'NewsItemController@getViewable');
     Route::get('news-item/{news_item_id}', 'NewsItemController@get');
@@ -46,6 +46,8 @@ Route::group(['namespace' => 'Api'], function () {
         Route::get('protocols/admin', 'ProtocolController@getViewableForAdmin');
         Route::post('protocol/{protocol_id}/approve', 'ProtocolController@approve');
         Route::post('protocol/{protocol_id}/reject', 'ProtocolController@reject');
+        Route::get('protocols/counts-rejected', 'ProtocolController@countsRejected');
+        Route::get('protocols/counts-per-month', 'ProtocolController@countsPerMonth');
 
         Route::post('news-item', 'NewsItemController@store');
         Route::post('news-item/upload-image', 'NewsItemController@uploadImage');

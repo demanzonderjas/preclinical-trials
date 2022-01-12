@@ -16,7 +16,7 @@ export const TotalProtocols: React.FC<{ protocols: TProtocol[] }> = observer(({ 
 	return (
 		<div className="TotalProtocols layout-wrapper" style={{ textAlign: "center" }}>
 			<h2 style={{ fontSize: "30px", fontWeight: "bold" }}>
-				{t("total_protocols")}: {totalProtocols.length}
+				{t("matching_protocols")}: {totalProtocols.length}
 			</h2>
 		</div>
 	);

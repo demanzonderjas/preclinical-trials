@@ -56,9 +56,27 @@ export async function getProtocolCountsQuery() {
 	}
 }
 
-export async function getProtocolCountsPerCountryQuery() {
+export async function getProtocolCountsPerCountryQuery(limit) {
 	try {
-		const response = await API.get("/api/protocols/counts-per-country");
+		const response = await API.post("/api/protocols/counts-per-country", { limit });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function getProtocolCountsRejectedQuery() {
+	try {
+		const response = await API.get("/api/protocols/counts-rejected");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function getProtocolCountsPerMonthQuery() {
+	try {
+		const response = await API.get("/api/protocols/counts-per-month");
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };
