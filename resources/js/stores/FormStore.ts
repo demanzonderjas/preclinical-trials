@@ -60,7 +60,8 @@ export class FormStore {
 			loadValues: action.bound,
 			getSectionByIndex: action.bound,
 			clearFields: action.bound,
-			validate: action.bound
+			validate: action.bound,
+			getErrors: action.bound
 		});
 	}
 
@@ -146,6 +147,10 @@ export class FormStore {
 			this.setActiveSection(fieldWithError.section);
 		}
 		return !hasError;
+	}
+
+	getErrors() {
+		return this.errors;
 	}
 
 	submit = async e => {

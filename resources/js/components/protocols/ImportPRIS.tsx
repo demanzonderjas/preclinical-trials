@@ -1,14 +1,18 @@
+import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
+import { prisModal } from "../../data/modals/pris";
 import { useForm } from "../../hooks/useForm";
+import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { TFormFieldName } from "../../typings/forms";
 import { fileToJSON } from "../../utils/formatting";
 import { convertPRIStoKeyValuePairs } from "../../utils/pris";
 
-export const ImportPRIS: React.FC = () => {
+export const ImportPRIS: React.FC = observer(() => {
 	const [file, setFile] = useState(null);
 	const { t } = useTranslationStore();
-	const { setFieldValue } = useForm();
+	const { setFieldValue, validate, getErrors } = useForm();
+	const { setModal } = useModalStore();
 
 	useEffect(() => {
 		if (file) {
@@ -18,6 +22,11 @@ export const ImportPRIS: React.FC = () => {
 				Object.keys(keyValuePairs).forEach((key: TFormFieldName) => {
 					setFieldValue(key, keyValuePairs[key]);
 				});
+				validate();
+				const errors = getErrors();
+				if (errors) {
+					setModal({ ...prisModal, data: { errors } });
+				}
 			})();
 		}
 	}, [file]);
@@ -30,4 +39,4 @@ export const ImportPRIS: React.FC = () => {
 			<input type="file" onChange={e => setFile(e.target.files[0])} />
 		</div>
 	);
-};
+});

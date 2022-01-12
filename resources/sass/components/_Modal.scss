@@ -27,6 +27,15 @@
 			text-align: left;
 		}
 
+		ul {
+			list-style: disc;
+			margin: 20px 0 20px 40px;
+
+			ul {
+				list-style: circle;
+			}
+		}
+
 		.ContentWrapper {
 			top: 0;
 			left: 0;
