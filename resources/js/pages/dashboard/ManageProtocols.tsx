@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ContentBlock } from "../../components/layout/ContentBlock";
 import { Page } from "../../components/layout/Page";
+import { Filter } from "../../components/tables/Filter";
 import { TableBlock } from "../../components/tables/TableBlock";
 import { FilterStoreProvider } from "../../contexts/FilterStoreContext";
+import { createProtocolForm } from "../../data/forms/protocol";
 import { manageProtocolsTable } from "../../data/tables/protocols";
 import { getMyProtocolsQuery } from "../../queries/protocol";
 import { FilterStore } from "../../stores/FilterStore";
@@ -30,6 +32,12 @@ export const ManageProtocolsPage: React.FC = () => {
 							and you can view but not edit any record that has been submitted. You
 							can create an updated version of any record that is published.
 						</p>
+						<Filter
+							justify="left"
+							options={createProtocolForm.fields
+								.filter(f => f.useAsFilter)
+								.map(f => f.filterLabel || f.id)}
+						/>
 						<TableBlock table={manageProtocolsTable} rows={protocols} />
 					</ContentBlock>
 				</div>
