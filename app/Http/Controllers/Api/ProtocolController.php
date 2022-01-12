@@ -123,6 +123,25 @@ class ProtocolController extends Controller
 		return response()->json(["total" => $protocols->count(), "with_embargo" => $withEmbargo]);
 	}
 
+	public function countsPerCountry()
+	{
+		$protocols = Protocol::where('status', 'published')->get();
+		$countsPerCountry = $protocols->reduce(function ($base, $protocol) {
+			$studyCentre = $protocol->details->first(function ($d) {
+				return $d->key === "study_centre";
+			});
+			$countryCode = !empty($studyCentre) && !empty($studyCentre->value) ? $studyCentre->value[0]->country : null;
+			if ($countryCode) {
+				$currentValue = isset($base[$countryCode]) ? $base[$countryCode] : 0;
+				$base[$countryCode] = $currentValue ? $currentValue + 1 : 1;
+			}
+			return $base;
+		}, []);
+		asort($countsPerCountry);
+		$top5 = array_slice(array_reverse($countsPerCountry), 0, 5);
+		return response()->json($top5);
+	}
+
 	public function getViewableForAdmin()
 	{
 		$protocols = Protocol::where('status', '!=', 'draft')->orderByDesc('created_at')->get();

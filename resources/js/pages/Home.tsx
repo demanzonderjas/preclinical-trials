@@ -5,6 +5,7 @@ import { ContentBlock } from "../components/layout/ContentBlock";
 import { Highlight } from "../components/layout/Highlight";
 import { Page, PrimaryHeaderPage } from "../components/layout/Page";
 import { PartnerBlock } from "../components/layout/PartnerBlock";
+import { Leaderboard } from "../components/protocols/Leaderboard";
 import { usePage } from "../hooks/usePage";
 import { getProtocolCountsQuery } from "../queries/protocol";
 
@@ -46,6 +47,7 @@ export const HomePage: React.FC = () => {
 						</Link>
 					</div>
 				</ContentBlock>
+				<Leaderboard />
 				<PartnerBlock />
 			</div>
 		</PrimaryHeaderPage>

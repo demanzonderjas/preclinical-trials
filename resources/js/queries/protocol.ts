@@ -56,6 +56,15 @@ export async function getProtocolCountsQuery() {
 	}
 }
 
+export async function getProtocolCountsPerCountryQuery() {
+	try {
+		const response = await API.get("/api/protocols/counts-per-country");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function deleteProtocolQuery(protocol_id: string) {
 	try {
 		const response = await API.delete(`/api/protocol/${protocol_id}`);
