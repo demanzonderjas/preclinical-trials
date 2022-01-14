@@ -37,7 +37,7 @@ class ProtocolController extends Controller
 	{
 		$protocol = Protocol::where(['id' => $request->protocol_id])->with('details', 'revisions')->firstOrFail();
 
-		if ($protocol->has_embargo && !$request->user()->is_admin && $request->user()->id !== $protocol->user_id) {
+		if (($protocol->has_embargo || $protocol->status === 'draft') && !$request->user()->is_admin && $request->user()->id !== $protocol->user_id) {
 			return abort(403, "You are not authorized.");
 		}
 

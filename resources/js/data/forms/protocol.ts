@@ -37,8 +37,10 @@ import {
 } from "./fields/protocol/randomisation";
 import { researchField } from "./fields/protocol/researchField";
 import {
+	noSampleSizeCalculationDetailsField,
 	sampleSizeCalculationDetailsField,
-	sampleSizeCalculationField
+	sampleSizeCalculationField,
+	sumOfAnimalsField
 } from "./fields/protocol/sampleSize";
 import { sexField } from "./fields/protocol/sex";
 import { speciesField } from "./fields/protocol/species";
@@ -51,6 +53,7 @@ import { supportField } from "./fields/protocol/support";
 import { shortTitleField, titleField } from "./fields/protocol/title";
 import { experimentalDesignField } from "./fields/protocol/experimentalDesign";
 import { messageField } from "./fields/admin/content";
+import { additionalInfoField } from "./fields/protocol/additionalInfo";
 
 export const createProtocolForm: TForm = {
 	id: TFormName.CreateProtocol,
@@ -81,6 +84,8 @@ export const createProtocolForm: TForm = {
 		experimentalDesignField,
 		sampleSizeCalculationField,
 		sampleSizeCalculationDetailsField,
+		noSampleSizeCalculationDetailsField,
+		sumOfAnimalsField,
 		studyArmsField,
 		randomisationField,
 		noRandomisationDetailsField,
@@ -96,6 +101,7 @@ export const createProtocolForm: TForm = {
 		placeboControlledField,
 		applicationField,
 		applicationNumberField,
+		additionalInfoField,
 		linkToDataField,
 		embargoField,
 		contactNameField,

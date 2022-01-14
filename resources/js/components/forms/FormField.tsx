@@ -35,7 +35,12 @@ export const FormField: React.FC<TFormField> = observer(
 						{required ? "*" : null}
 					</label>
 				)}
-				{description && <p className="description">{t(description)}</p>}
+				{description && (
+					<div
+						className="description"
+						dangerouslySetInnerHTML={{ __html: t(description) }}
+					/>
+				)}
 				<Component id={id} required={required} label={label} {...props} />
 				{error && <p className="error">{t(error)}</p>}
 			</div>

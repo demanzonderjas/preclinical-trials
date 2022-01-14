@@ -14,6 +14,7 @@ export const interventionFieldOptions: string[] = [
 	"retention",
 	"model_optimalisation",
 	"surgery",
+	"device",
 	"other"
 ];
 

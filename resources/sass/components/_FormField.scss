@@ -17,6 +17,16 @@
 	> .description {
 		margin: 12px 0;
 		line-height: 20px;
+		font-size: 16px;
+
+		ul {
+			list-style: disc;
+			margin: 20px 0 20px 40px;
+
+			ul {
+				list-style: circle;
+			}
+		}
 	}
 
 	.error {

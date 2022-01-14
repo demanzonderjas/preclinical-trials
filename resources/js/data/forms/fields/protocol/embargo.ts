@@ -3,12 +3,12 @@ import { TFormField, TFormFieldName, TRadioButton, TSectionName } from "../../..
 
 export const embargoOptions: TRadioButton[] = [
 	{
-		value: "yes_embargo",
-		description: ""
+		value: "yes",
+		description: "yes_embargo"
 	},
 	{
-		value: "no_embargo",
-		description: ""
+		value: "no",
+		description: "no_embargo"
 	}
 ];
 

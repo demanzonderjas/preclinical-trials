@@ -102,6 +102,7 @@ class ProtocolFactory extends Factory
 			"placebo_controlled" => $this->selectRandom(config("pct.valid_field_values.placebo_controlled")),
 			"original_animal_ethics_committee_application" => $this->faker->url(),
 			"application_number" => rand(10000, 99999),
+			"additional_information" => $this->faker->paragraph(),
 			"link_to_data" => $this->faker->url(),
 			"has_embargo" => $this->selectRandom(config("pct.valid_field_values.has_embargo")),
 			"contact_name" => $this->faker->name(),

@@ -20,7 +20,23 @@ export const sampleSizeCalculationDetailsField: TFormField = {
 	description: null,
 	label: "details",
 	section: TSectionName.StudyDesign,
-	dependencies: []
+	dependencies: [
+		{
+			key: TFormFieldName.SampleSizeCalculation,
+			value: "yes"
+		}
+	]
+};
+
+export const noSampleSizeCalculationDetailsField: TFormField = {
+	...sampleSizeCalculationDetailsField,
+	label: "no_sample_size_details",
+	dependencies: [
+		{
+			key: TFormFieldName.SampleSizeCalculation,
+			value: "no"
+		}
+	]
 };
 
 export const sumOfAnimalsField: TFormField = {

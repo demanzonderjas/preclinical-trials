@@ -47,6 +47,7 @@ return [
 		"contact_role",
 		"contact_email",
 		"study_centre",
+		"additional_information",
 		"statement_of_accuracy"
 	],
 	"valid_field_values" => [
@@ -71,6 +72,7 @@ return [
 			"retention",
 			"model_optimalisation",
 			"surgery",
+			"device",
 			"other"
 		],
 		"study_stage" => [
