@@ -12,7 +12,11 @@ export const RevisionValue: React.FC<{
 }> = observer(({ field, fields, valueMap }) => {
 	const { changes = [], activeRevisionDate, prevRevisionDate } = useRevisions();
 	const { t } = useTranslationStore();
-	const hasChange = changes.find(c => c.key === field.id);
+	const hasChange = changes.find(
+		c =>
+			c.key === field.id ||
+			fields.filter(f => f.showValueIn === field.id).some(f => f.id === c.key)
+	);
 	return (
 		<div className="value">
 			{!!hasChange && <div className="revision label">{activeRevisionDate}</div>}

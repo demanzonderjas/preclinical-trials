@@ -17,16 +17,16 @@ export const ProtocolSection: React.FC<{
 	const [isExpanded, setIsExpanded] = useState(shouldBeOpen);
 	const { t } = useTranslationStore();
 	const { changes = [] } = useRevisions();
-	const changeCount = changes.reduce((base, change) => {
-		const changeBelongsToSection = fields.some(
-			f => f.id === change.key && !f.showValueIn && fieldMeetsDependencies(f, valueMap)
-		);
-		return changeBelongsToSection ? base + 1 : base;
-	}, 0);
 	const valueMap = fields.reduce((base, field) => {
 		base.set(field.id, field.value);
 		return base;
 	}, new Map<TFormFieldName, any>());
+	const changeCount = changes.reduce((base, change) => {
+		const changeBelongsToSection = fields.some(
+			f => f.id === change.key && fieldMeetsDependencies(f, valueMap)
+		);
+		return changeBelongsToSection ? base + 1 : base;
+	}, 0);
 
 	return (
 		<div className={cx("ProtocolSection", { active: isExpanded })}>

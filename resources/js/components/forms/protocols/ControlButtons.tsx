@@ -52,7 +52,6 @@ export const ControlButtons: React.FC = observer(() => {
 			const nextSectionIndex = goBack
 				? getSectionByIndex(activeSection) - 1
 				: getSectionByIndex(activeSection) + 1;
-			// console.log(getSectionByIndex(activeSection));
 			location.href = `/dashboard/edit-protocol/${protocolId}#${nextSectionIndex}`;
 		}
 	};
