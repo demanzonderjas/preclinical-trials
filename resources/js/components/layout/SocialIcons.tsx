@@ -12,7 +12,7 @@ export const SocialIcons: React.FC = () => {
 				}}
 				onClick={() =>
 					window.open(
-						"https://www.linkedin.com/company/preclinicaltrialseu",
+						"https://twitter.com/preclinicaltra1",
 						"_blank",
 						"noreferrer noopener"
 					)
@@ -24,7 +24,7 @@ export const SocialIcons: React.FC = () => {
 				style={{ display: "inline-block", cursor: "pointer" }}
 				onClick={() =>
 					window.open(
-						"https://twitter.com/preclinicaltra1",
+						"https://www.linkedin.com/company/preclinicaltrialseu",
 						"_blank",
 						"noreferrer noopener"
 					)
