@@ -22,7 +22,7 @@ class ImportRevisionHistory extends Command
      *
      * @var string
      */
-    protected $description = 'Import and convert the old revision history';
+    protected $description = 'Import and convert the old revision history from the Metaxis database';
 
     /**
      * Create a new command instance.

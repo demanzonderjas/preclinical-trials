@@ -7,8 +7,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class UsersImport implements ToCollection
+class UsersImport implements ToCollection, WithHeadingRow
 {
     /**
      * @param Collection $collection
@@ -16,13 +17,16 @@ class UsersImport implements ToCollection
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
+            if (!$row['useremail']) {
+                continue;
+            }
             User::create([
-                'id' => $row[0],
-                'email' => $row[1],
+                'id' => $row['userid'],
+                'email' => $row['useremail'],
                 'password' => Hash::make(Str::random(16)),
-                'first_name' => $row[3],
-                'last_name' => $row[4],
-                'institution' => $row[7]
+                'first_name' => $row['firstname'],
+                'last_name' => $row['lastname'],
+                'institution' => $row['institution']
             ]);
         }
     }
