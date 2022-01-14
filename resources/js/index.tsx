@@ -42,6 +42,7 @@ import { EditPagePage } from "./pages/admin/pages/EditPage";
 import { Loader } from "./components/layout/Loader";
 import { BackgroundInfoPage } from "./pages/BackgroundInfo";
 import { AdminViewProtocolPage } from "./pages/admin/protocols/ViewProtocol";
+import { AmbassadorsPage } from "./pages/Ambassadors";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -70,6 +71,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/about-pct/background-information" exact={true}>
 								<BackgroundInfoPage />
+							</Route>
+							<Route path="/about-pct/ambassadors" exact={true}>
+								<AmbassadorsPage />
 							</Route>
 							<Route path="/database" exact={true}>
 								<SearchDatabasePage />

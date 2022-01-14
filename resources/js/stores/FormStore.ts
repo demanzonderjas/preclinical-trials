@@ -159,6 +159,7 @@ export class FormStore {
 			this.setIsSubmitting(true);
 			const keyValuePairs = this.createKeyValuePairs();
 			const { errors, exception } = (await this.handleSubmit(keyValuePairs)) || {};
+			console.log(errors);
 			if (errors) {
 				this.errors = new Map<TFormFieldName, any>(Object.entries(errors) as any);
 				this.setIsSubmitting(false);

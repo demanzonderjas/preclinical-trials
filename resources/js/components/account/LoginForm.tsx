@@ -14,7 +14,7 @@ export const LoginForm: React.FC = () => {
 	const params: any = new URLSearchParams(targetUrl);
 
 	const login = (credentials: TLoginCredentials) => {
-		loginQuery(credentials, params.get("login_to"));
+		return loginQuery(credentials, params.get("login_to"));
 	};
 
 	return (

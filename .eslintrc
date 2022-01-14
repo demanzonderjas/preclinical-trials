@@ -9,6 +9,9 @@
 	"env": {
 		"browser": true
 	},
+	"globals": {
+		"SimplybookWidget": true
+	},
 	"rules": {
 		"react/react-in-jsx-scope": false,
 		"react/jsx-no-bind": [

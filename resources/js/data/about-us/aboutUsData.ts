@@ -16,6 +16,10 @@ export const aboutUsSubMenu: TSubMenu = {
 			target: "/about-pct/advisory-board"
 		},
 		{
+			text: "Ambassadors",
+			target: "/about-pct/ambassadors"
+		},
+		{
 			text: "Background information",
 			target: "/about-pct/background-information"
 		}
