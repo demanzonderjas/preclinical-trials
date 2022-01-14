@@ -50,7 +50,7 @@ class ImportAdminActions extends Command
             }
             $newAction = new AdminAction();
             $newAction->protocol_id = $action->RecordID;
-            $newAction->action = $nextAction === "Published" ? "approve" : "reject";
+            $newAction->action = $nextAction->RecordStatus === "Published" || $nextAction->RecordStatus === "Embargoed" ? "approve" : "reject";
             $newAction->message = $nextAction->Notes;
             $newAction->save();
         });
