@@ -6,8 +6,8 @@ import { fieldMeetsDependencies } from "../../utils/validation";
 import cx from "classnames";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 
-export const FormField: React.FC<TFormField> = observer(
-	({ id, Component, props, label, hidden, showValueIn, required, description }) => {
+export const FormField: React.FC<TFormField & { number: number }> = observer(
+	({ id, Component, props, label, hidden, showValueIn, required, description, number }) => {
 		const { errors, style } = useForm();
 		const { setValue } = useFormField(id);
 		const { t } = useTranslationStore();
@@ -31,6 +31,7 @@ export const FormField: React.FC<TFormField> = observer(
 			>
 				{style !== TFormStyle.InlinePlaceholder && !hidden && (
 					<label>
+						{style === TFormStyle.WithSections && `${number}. `}
 						{t(label || id)}
 						{required ? "*" : null}
 					</label>
@@ -58,7 +59,13 @@ export const FormFields: React.FC<{ fields: TFormField[] }> = observer(({ fields
 				.filter(field => (activeSection ? field.section === activeSection : true))
 				.filter(field => !!field.Component)
 				.map(field => (
-					<FormField key={field.id} {...field} />
+					<FormField
+						key={field.id}
+						{...field}
+						number={
+							fields.filter(f => !f.showValueIn).findIndex(f => f.id === field.id) + 1
+						}
+					/>
 				))}
 		</div>
 	);
