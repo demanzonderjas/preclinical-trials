@@ -7,7 +7,6 @@ export const titleField: TFormField = {
 	required: true,
 	validate: (value: string) => value && value.length >= 2,
 	useAsFilter: true,
-	infoIcon: "title_info",
 	value: "",
 	section: TSectionName.General,
 	description: "title_description"
