@@ -31,7 +31,7 @@ export const FormField: React.FC<TFormField & { number: number }> = observer(
 			>
 				{style !== TFormStyle.InlinePlaceholder && !hidden && (
 					<label>
-						{style === TFormStyle.WithSections && `${number}. `}
+						{style === TFormStyle.WithSections && !showValueIn && `${number}. `}
 						{t(label || id)}
 						{required ? "*" : null}
 					</label>
