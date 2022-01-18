@@ -27,6 +27,7 @@ export type TFormField = {
 	hidden?: boolean;
 	showValueIn?: TFormFieldName;
 	useAsFilter?: boolean;
+	infoIcon?: string;
 	filterLabel?: string;
 	value: any;
 	required?: boolean;

@@ -5,9 +5,21 @@ import { TFormField, TFormStyle } from "../../typings/forms";
 import { fieldMeetsDependencies } from "../../utils/validation";
 import cx from "classnames";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { InfoIcon } from "./InfoIcon";
 
 export const FormField: React.FC<TFormField & { number: number }> = observer(
-	({ id, Component, props, label, hidden, showValueIn, required, description, number }) => {
+	({
+		id,
+		Component,
+		props,
+		label,
+		hidden,
+		showValueIn,
+		required,
+		description,
+		number,
+		infoIcon
+	}) => {
 		const { errors, style } = useForm();
 		const { setValue } = useFormField(id);
 		const { t } = useTranslationStore();
@@ -34,6 +46,7 @@ export const FormField: React.FC<TFormField & { number: number }> = observer(
 						{style === TFormStyle.WithSections && !showValueIn && `${number}. `}
 						{t(label || id)}
 						{required ? "*" : null}
+						{!!infoIcon && <InfoIcon info={infoIcon} />}
 					</label>
 				)}
 				{description && (

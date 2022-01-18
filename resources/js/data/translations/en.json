@@ -238,5 +238,7 @@
 	"no_sample_size_calculation_description": "Please explain why a sample size calculation was not performed",
 	"why_no_blinding": "Please explain why blinding was not performed",
 	"how_blinding": "Explain how the investigators were blinded",
-	"please_elaborate": "Please elaborate"
+	"please_elaborate": "Please elaborate",
+	"i": "i",
+	"title_info": "<p>Give me more information about the title please!</p>"
 }
