@@ -60,4 +60,11 @@ class User extends Authenticatable
             return $role->name === 'admin';
         });
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $url = env('APP_URL') . '/reset-password/' . $token;
+
+        $this->notify(new \App\Notifications\ResetPasswordNotification($url, $this));
+    }
 }
