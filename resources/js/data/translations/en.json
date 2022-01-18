@@ -232,5 +232,11 @@
 	"update_status": "Update status",
 	"additional_information": "Additional information",
 	"additional_information_description": "<p>Please give any other information about the study that is not covered elsewhere in the Form, such as:</p><ul><li>inclusion/exclusion criteria used for animals or experimental units during the experiments and/or for data points during analysis</li><li>Statistical plan (e.g., tests planned, software(s) you will use)</li><li>How to assess whether the data met the assumptions of the statistical approach.</li>",
-	"set_up_an_appointment": "Set up an appointment"
+	"set_up_an_appointment": "Set up an appointment",
+	"additional_animal_use_description": "Please explain what the animals/tissues are used for in addition to the current research question",
+	"yes_sample_size_calculation_description": "Please specify the sample size calculation",
+	"no_sample_size_calculation_description": "Please explain why a sample size calculation was not performed",
+	"why_no_blinding": "Please explain why blinding was not performed",
+	"how_blinding": "Explain how the investigators were blinded",
+	"please_elaborate": "Please elaborate"
 }

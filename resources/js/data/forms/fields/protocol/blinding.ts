@@ -17,11 +17,22 @@ export const blindedInterventionField: TFormField = {
 	section: TSectionName.StudyDesign
 };
 
+export const blindedInterventionNoField: TFormField = {
+	...otherSupportField,
+	id: TFormFieldName.NoBlindedIntervention,
+	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
+	label: "details",
+	description: "why_no_blinding",
+	section: TSectionName.StudyDesign,
+	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "no" }]
+};
+
 export const blindedInterventionHowField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.YesBlindedInterventionHow,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
-	label: "how",
+	label: "details",
+	description: "how_blinding",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes" }]
 };
@@ -30,7 +41,8 @@ export const blindedInterventionPartiallyField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.YesBlindedInterventionPartially,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
-	label: "partially_because",
+	label: "details",
+	description: "please_elaborate",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes_partially" }]
 };
@@ -40,6 +52,13 @@ export const blindedAssessmentField: TFormField = {
 	id: TFormFieldName.InvestigatorsBlindedAssesment,
 	label: "investigators_blinded_assessment",
 	description: "investigators_blinded_assessment_description"
+};
+
+export const blindedAssessmentNoField: TFormField = {
+	...blindedInterventionNoField,
+	id: TFormFieldName.NoBlindedAssesment,
+	showValueIn: TFormFieldName.InvestigatorsBlindedAssesment,
+	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedAssesment, value: "no" }]
 };
 
 export const blindedAssessmentHowField: TFormField = {

@@ -4,9 +4,11 @@ import { applicationField, applicationNumberField } from "./fields/protocol/appl
 import {
 	blindedAssessmentField,
 	blindedAssessmentHowField,
+	blindedAssessmentNoField,
 	blindedAssessmentPartiallyField,
 	blindedInterventionField,
 	blindedInterventionHowField,
+	blindedInterventionNoField,
 	blindedInterventionPartiallyField
 } from "./fields/protocol/blinding";
 import { contactEmailField, contactNameField, contactRoleField } from "./fields/protocol/contact";
@@ -93,9 +95,11 @@ export const createProtocolForm: TForm = {
 		otherRandomisationField,
 		randomisationDetailsField,
 		blindedInterventionField,
+		blindedInterventionNoField,
 		blindedInterventionHowField,
 		blindedInterventionPartiallyField,
 		blindedAssessmentField,
+		blindedAssessmentNoField,
 		blindedAssessmentHowField,
 		blindedAssessmentPartiallyField,
 		placeboControlledField,
