@@ -62,10 +62,7 @@ class ImportRevisionHistory extends Command
                     'VersionID' => $oldVersion->VersionID
                 ])->first();
 
-                $convertedFieldName = $importHelper->convertFieldName([
-                    "fieldtag" => $newValue->FieldTag,
-                    "subtag" => $newValue->Subtag,
-                ]);
+                $convertedFieldName = $importHelper->convertFieldName((array) $newValue);
                 $convertedNewValue = $importHelper->convertFieldValue($convertedFieldName, $newValue->FieldValue);
                 $convertedOldValue = isset($oldValue->FieldValue) ? $importHelper->convertFieldValue($convertedFieldName, $oldValue->FieldValue) : "";
 
