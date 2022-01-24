@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\OldRecordDataImportHelper;
 use App\Imports\DetailsImport;
 use App\Models\Detail;
 use App\Models\Protocol;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ImportDetails extends Command
@@ -41,8 +43,11 @@ class ImportDetails extends Command
      */
     public function handle()
     {
-        ini_set('memory_limit', '1024M'); // or you could use 1G
-        Excel::import(new DetailsImport, 'details.csv');
+        $oldDetails = DB::connection('mysql2')->table('recorddata')->get();
+        $importHelper = new OldRecordDataImportHelper();
+        foreach ($oldDetails as $row) {
+            $importHelper->importDataRow((array) $row);
+        }
 
         $protocols = Protocol::all();
         $protocols->each(function ($p) {

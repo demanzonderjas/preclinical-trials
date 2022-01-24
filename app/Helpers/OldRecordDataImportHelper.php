@@ -12,7 +12,7 @@ class OldRecordDataImportHelper
 
 	public function importDataRow($row)
 	{
-		$protocol = Protocol::find($row["recordid"]);
+		$protocol = Protocol::find($row["RecordID"]);
 		if (empty($protocol)) {
 			return;
 		}
@@ -20,7 +20,7 @@ class OldRecordDataImportHelper
 		if ($fieldName === null) {
 			return;
 		}
-		$value = $this->convertFieldValue($fieldName, $row["fieldvalue"]);
+		$value = $this->convertFieldValue($fieldName, $row["FieldValue"]);
 		if ($value === null) {
 			return;
 		}
@@ -173,9 +173,9 @@ class OldRecordDataImportHelper
 			"TN" => "sum_of_animals",
 			"EO" => "has_embargo"
 		];
-		$keyExists = array_key_exists($row['fieldtag'], $mappingTable);
+		$keyExists = array_key_exists($row['FieldTag'], $mappingTable);
 
-		return $keyExists ? $mappingTable[$row['fieldtag']] : null;
+		return $keyExists ? $mappingTable[$row['FieldTag']] : null;
 	}
 
 	public function getFinancialSupportKey($row)
@@ -184,7 +184,7 @@ class OldRecordDataImportHelper
 			"financial_support",
 			"other_financial_support"
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getExclusiveAnimalUseKey($row)
@@ -193,7 +193,7 @@ class OldRecordDataImportHelper
 			"exclusive_animal_use",
 			"no_exclusive_animal_use_details"
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getSpeciesKey($row)
@@ -202,7 +202,7 @@ class OldRecordDataImportHelper
 			"species",
 			"other_species"
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getContactKey($row)
@@ -212,7 +212,7 @@ class OldRecordDataImportHelper
 			"contact_role",
 			"contact_email"
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getInterventionKey($row)
@@ -221,7 +221,7 @@ class OldRecordDataImportHelper
 			"intervention_type",
 			"other_intervention_type",
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getBlindedAssessmentKey($row)
@@ -234,7 +234,7 @@ class OldRecordDataImportHelper
 			"yes_blinded_assessment_how_details",
 			"yes_blinded_assessment_partially_details",
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getEthicsCommitteeApplicationKey($row)
@@ -243,7 +243,7 @@ class OldRecordDataImportHelper
 			"original_animal_ethics_committee_application",
 			"application_number",
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getRandomisationKey($row)
@@ -255,7 +255,7 @@ class OldRecordDataImportHelper
 			"details_randomisation",
 			"why_no_randomisation",
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 
 	public function getJustifyNumberOfAnimals($row)
@@ -264,6 +264,6 @@ class OldRecordDataImportHelper
 			"sample_size_calculation",
 			"sample_size_calculation_details",
 		];
-		return isset($mappingTable[$row['subtag']]) ? $mappingTable[$row['subtag']] : "";
+		return isset($mappingTable[$row['Subtag']]) ? $mappingTable[$row['Subtag']] : "";
 	}
 }
