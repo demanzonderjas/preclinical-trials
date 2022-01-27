@@ -1,5 +1,6 @@
 import React from "react";
 import cx from "classnames";
+import { Triangle } from "./Triangle";
 
 export const ContentBlock: React.FC<{ maxWidth?: string; withBorder?: boolean }> = ({
 	children,
@@ -11,6 +12,7 @@ export const ContentBlock: React.FC<{ maxWidth?: string; withBorder?: boolean }>
 			<div className="content layout-wrapper" style={{ maxWidth }}>
 				{children}
 			</div>
+			<Triangle />
 		</div>
 	);
 };
