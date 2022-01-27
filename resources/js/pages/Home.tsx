@@ -5,6 +5,7 @@ import { ContentBlock } from "../components/layout/ContentBlock";
 import { Highlight } from "../components/layout/Highlight";
 import { Page, PrimaryHeaderPage } from "../components/layout/Page";
 import { PartnerBlock } from "../components/layout/PartnerBlock";
+import { Triangle } from "../components/layout/Triangle";
 import { Leaderboard } from "../components/protocols/Leaderboard";
 import { useEmbargoCounts } from "../hooks/useCounts";
 import { usePage } from "../hooks/usePage";
@@ -26,6 +27,7 @@ export const HomePage: React.FC = () => {
 						text={`${counts.total} protocols registered already! (${counts.with_embargo} under embargo)`}
 					/>
 				)}
+				<Triangle />
 				<ContentBlock maxWidth="80%">
 					<div className="two-columns">
 						<div dangerouslySetInnerHTML={{ __html: page.content_blocks[0].content }} />
