@@ -6,6 +6,7 @@
 /public/js
 /storage/*.key
 /vendor
+/resources/js/env.ts
 .env
 .env.backup
 .phpunit.result.cache
