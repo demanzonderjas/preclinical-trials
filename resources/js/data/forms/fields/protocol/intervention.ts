@@ -38,6 +38,7 @@ export const placeboControlledField: TFormField = {
 	description: "placebo_controlled_description",
 	value: "",
 	validate: null,
+	showValueIn: TFormFieldName.InterventionType,
 	required: false,
 	section: TSectionName.StudyDesign,
 	dependencies: [

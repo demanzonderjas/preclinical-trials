@@ -8,6 +8,7 @@ export const randomisationField: TFormField = {
 	Component: YesNoField,
 	description: "randomisation_description",
 	value: "",
+	infoIcon: "info_icon_randomisation",
 	validate: value => value != "",
 	required: true,
 	section: TSectionName.StudyDesign

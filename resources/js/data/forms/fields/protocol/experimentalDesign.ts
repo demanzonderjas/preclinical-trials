@@ -5,6 +5,7 @@ export const experimentalDesignField: TFormField = {
 	...researchField,
 	id: TFormFieldName.ExperimentalDesign,
 	filterLabel: "experimental_design_label",
+	infoIcon: "info_icon_experimental_design",
 	label: "",
 	description: "experimental_design_description"
 };

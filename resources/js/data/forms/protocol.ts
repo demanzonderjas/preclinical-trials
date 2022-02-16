@@ -1,6 +1,6 @@
 import { TAlignment, TForm, TFormName, TFormStyle, TSectionName } from "../../typings/forms";
 import { accuracyField } from "./fields/protocol/accuracy";
-import { applicationField, applicationNumberField } from "./fields/protocol/application";
+import { applicationField } from "./fields/protocol/application";
 import {
 	blindedAssessmentField,
 	blindedAssessmentHowField,
@@ -75,6 +75,7 @@ export const createProtocolForm: TForm = {
 		hypothesisField,
 		interventionTypeField,
 		otherInterventionTypeField,
+		placeboControlledField,
 		primaryReadoutParameterField,
 		secondaryReadoutParameterField,
 		animalsExclusiveUseField,
@@ -102,9 +103,7 @@ export const createProtocolForm: TForm = {
 		blindedAssessmentNoField,
 		blindedAssessmentHowField,
 		blindedAssessmentPartiallyField,
-		placeboControlledField,
 		applicationField,
-		applicationNumberField,
 		additionalInfoField,
 		linkToDataField,
 		contactNameField,
