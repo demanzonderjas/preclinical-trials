@@ -81,6 +81,23 @@ export const CombinedValue: React.FC<{
 		return <p>{t(value)}</p>;
 	}
 
+	if (otherValueFields.some(f => f.showAsLink)) {
+		return (
+			<p>
+				<strong>{t(value)}</strong> -{" "}
+				{otherValueFields.map(f => {
+					return f.showAsLink ? (
+						<a target="_blank" key={f.value} href={f.value}>
+							{f.value}
+						</a>
+					) : (
+						t(f.value)
+					);
+				})}
+			</p>
+		);
+	}
+
 	return (
 		<p>
 			<strong>{t(value)}</strong> - {otherValueFields.map(f => t(f.value)).join(" - ")}

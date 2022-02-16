@@ -20,7 +20,7 @@ import {
 } from "./fields/protocol/exclusiveUse";
 import { hypothesisField } from "./fields/protocol/hypothesis";
 import { interventionTypeField, placeboControlledField } from "./fields/protocol/intervention";
-import { linkToDataField } from "./fields/protocol/linkToData";
+import { linkToDataField, linkToPublicationField } from "./fields/protocol/linkToData";
 import {
 	otherInterventionTypeField,
 	otherRandomisationField,
@@ -71,6 +71,7 @@ export const createProtocolForm: TForm = {
 		endDateField,
 		statusField,
 		whyStudyStatusInterruptedField,
+		linkToPublicationField,
 		studyStageField,
 		researchField,
 		hypothesisField,
@@ -122,7 +123,7 @@ export const editPublishedProtocolForm: TForm = {
 	style: TFormStyle.RegularLabels,
 	keepValuesAfterSubmit: true,
 	submitText: "update_status",
-	fields: [statusField, whyStudyStatusInterruptedField, liftEmbargoField],
+	fields: [statusField, whyStudyStatusInterruptedField, linkToPublicationField, liftEmbargoField],
 	align: TAlignment.Left
 };
 
