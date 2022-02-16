@@ -9,6 +9,7 @@ export const blindedInterventionField: TFormField = {
 	description: "investigators_blinded_intervention_description",
 	Component: SelectField,
 	required: true,
+	infoIcon: "info_icon_blinding",
 	props: {
 		options: blindingOptions
 	},

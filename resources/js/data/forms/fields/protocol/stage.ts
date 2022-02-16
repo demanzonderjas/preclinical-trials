@@ -17,6 +17,7 @@ export const studyStageField: TFormField = {
 	description: "study_stage_description",
 	required: true,
 	useAsFilter: true,
+	infoIcon: "info_icon_study_stage",
 	props: {
 		options: studyStageOptions
 	},

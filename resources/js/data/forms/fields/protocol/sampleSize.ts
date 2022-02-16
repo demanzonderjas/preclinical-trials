@@ -8,6 +8,7 @@ export const sampleSizeCalculationField: TFormField = {
 	Component: YesNoField,
 	description: "sample_size_calculation_description",
 	value: "",
+	infoIcon: "info_icon_sample_size_calculation",
 	validate: value => value != "",
 	required: true,
 	section: TSectionName.StudyDesign

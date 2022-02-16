@@ -1,4 +1,4 @@
-import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
+import { TFormField, TFormFieldName } from "../../../../typings/forms";
 import { researchField } from "./researchField";
 
 export const applicationField: TFormField = {
@@ -11,14 +11,4 @@ export const applicationField: TFormField = {
 		placeholder: "application_field_placeholder"
 	},
 	description: "application_field_description"
-};
-
-export const applicationNumberField: TFormField = {
-	...applicationField,
-	id: TFormFieldName.ApplicationNumber,
-	validate: null,
-	props: {
-		placeholder: "application_number_placeholder"
-	},
-	description: ""
 };
