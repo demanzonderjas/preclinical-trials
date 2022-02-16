@@ -122,7 +122,7 @@ export const editPublishedProtocolForm: TForm = {
 	style: TFormStyle.RegularLabels,
 	keepValuesAfterSubmit: true,
 	submitText: "update_status",
-	fields: [statusField],
+	fields: [statusField, whyStudyStatusInterruptedField],
 	align: TAlignment.Left
 };
 
