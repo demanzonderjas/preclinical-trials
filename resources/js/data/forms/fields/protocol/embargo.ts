@@ -1,5 +1,12 @@
 import { RadioButtonsField } from "../../../../components/forms/RadioButtonsField";
-import { TFormField, TFormFieldName, TRadioButton, TSectionName } from "../../../../typings/forms";
+import { YesNoField } from "../../../../components/forms/YesNoField";
+import {
+	TFormField,
+	TFormFieldDependencyType,
+	TFormFieldName,
+	TRadioButton,
+	TSectionName
+} from "../../../../typings/forms";
 
 export const embargoOptions: TRadioButton[] = [
 	{
@@ -23,4 +30,26 @@ export const embargoField: TFormField = {
 	section: TSectionName.Submit,
 	validate: value => value !== "",
 	value: ""
+};
+
+export const liftEmbargoField: TFormField = {
+	id: TFormFieldName.LiftEmbargo,
+	validate: null,
+	value: "",
+	required: false,
+	Component: YesNoField,
+	label: "lift_embargo",
+	description: "lift_embargo_description",
+	section: TSectionName.General,
+	dependencies: [
+		{
+			key: TFormFieldName.HasEmbargo,
+			value: "yes"
+		},
+		{
+			key: TFormFieldName.Status,
+			type: TFormFieldDependencyType.NotEqualTo,
+			value: ["", "not_started", "active", "completed_but_not_published", "study_interrupted"]
+		}
+	]
 };

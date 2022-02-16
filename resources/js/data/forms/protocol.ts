@@ -13,7 +13,7 @@ import {
 } from "./fields/protocol/blinding";
 import { contactEmailField, contactNameField, contactRoleField } from "./fields/protocol/contact";
 import { endDateField, startDateField } from "./fields/protocol/date";
-import { embargoField } from "./fields/protocol/embargo";
+import { embargoField, liftEmbargoField } from "./fields/protocol/embargo";
 import {
 	animalsExclusiveUseField,
 	noExclusiveAnimalUseDetailsField
@@ -122,7 +122,7 @@ export const editPublishedProtocolForm: TForm = {
 	style: TFormStyle.RegularLabels,
 	keepValuesAfterSubmit: true,
 	submitText: "update_status",
-	fields: [statusField, whyStudyStatusInterruptedField],
+	fields: [statusField, whyStudyStatusInterruptedField, liftEmbargoField],
 	align: TAlignment.Left
 };
 
