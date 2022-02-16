@@ -251,5 +251,7 @@
 	"click_button_to_set_up_an_appointment": "Click the button below to set up an appointment with us",
 	"why_study_status_interrupted": "Why was your study interrupted?",
 	"lift_embargo": "Would you like to lift your embargo?",
-	"lift_embargo_description": "You have currently saved your study under embargo. Since your study is now published, can the embargo be lifted?"
+	"lift_embargo_description": "You have currently saved your study under embargo. Since your study is now published, can the embargo be lifted?",
+	"link_to_publication": "Link to publication",
+	"link_to_publication_description": "Please add the link to your online published article."
 }

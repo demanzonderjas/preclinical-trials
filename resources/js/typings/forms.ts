@@ -26,6 +26,7 @@ export type TFormField = {
 	validate: (value: any, values: Map<TFormFieldName, any>) => boolean;
 	hidden?: boolean;
 	showValueIn?: TFormFieldName;
+	showAsLink?: boolean;
 	useAsFilter?: boolean;
 	infoIcon?: string;
 	filterLabel?: string;
@@ -115,7 +116,8 @@ export enum TFormFieldName {
 	PublishStatus = "status",
 	FAQCategoryId = "faq_category_id",
 	UploadNewsImage = "image",
-	Message = "message"
+	Message = "message",
+	LinkToPublication = "link_to_publication"
 }
 
 export enum TFormName {

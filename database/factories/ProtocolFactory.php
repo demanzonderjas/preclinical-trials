@@ -64,6 +64,7 @@ class ProtocolFactory extends Factory
 			"end_date" => $this->faker->dateTimeBetween('now', '+3 years')->format('Y-m-d'),
 			"study_status" => $this->selectRandom(config('pct.valid_field_values.study_status')),
 			"why_study_status_interrupted" => $this->faker->paragraph(),
+			"link_to_publication" => $this->faker->url(),
 			"research_field" => $this->faker->sentence(rand(3, 5)),
 			"hypothesis" => $this->faker->paragraph(),
 			"intervention_type" => $this->selectRandom(config('pct.valid_field_values.intervention_type')),
