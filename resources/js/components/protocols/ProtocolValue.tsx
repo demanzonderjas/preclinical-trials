@@ -36,6 +36,7 @@ export const ProtocolValue: React.FC<{
 		case TFormFieldName.InvestigatorsBlindedAssesment:
 		case TFormFieldName.SampleSizeCalculation:
 		case TFormFieldName.ExclusiveAnimalUse:
+		case TFormFieldName.Status:
 			return <CombinedValue id={id} value={value} fields={fields} valueMap={valueMap} />;
 		default:
 			return <p>{t(value)}</p>;

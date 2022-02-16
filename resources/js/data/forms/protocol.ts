@@ -47,7 +47,7 @@ import {
 import { sexField } from "./fields/protocol/sex";
 import { speciesField } from "./fields/protocol/species";
 import { studyStageField } from "./fields/protocol/stage";
-import { statusField } from "./fields/protocol/status";
+import { statusField, whyStudyStatusInterruptedField } from "./fields/protocol/status";
 import { strainField } from "./fields/protocol/strain";
 import { studyCentreField } from "./fields/protocol/studyCentre";
 import { studyArmsField } from "./fields/protocol/studyArms";
@@ -70,6 +70,7 @@ export const createProtocolForm: TForm = {
 		startDateField,
 		endDateField,
 		statusField,
+		whyStudyStatusInterruptedField,
 		studyStageField,
 		researchField,
 		hypothesisField,

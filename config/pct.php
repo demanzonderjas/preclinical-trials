@@ -9,6 +9,7 @@ return [
 		"start_date",
 		"end_date",
 		"study_status",
+		"why_study_status_interrupted",
 		"research_field",
 		"hypothesis",
 		"intervention_type",
