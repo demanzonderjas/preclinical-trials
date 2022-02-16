@@ -107,6 +107,7 @@ export enum TFormFieldName {
 	AdditionalInformation = "additional_information",
 	LinkToData = "link_to_data",
 	HasEmbargo = "has_embargo",
+	LiftEmbargo = "lift_embargo",
 	StatementOfAccuracy = "statement_of_accuracy",
 	Summary = "summary",
 	Content = "content",

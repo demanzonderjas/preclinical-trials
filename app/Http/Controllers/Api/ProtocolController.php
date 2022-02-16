@@ -8,6 +8,7 @@ use App\Mail\ProtocolApprovedAndPublished;
 use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Models\AdminAction;
+use App\Models\Detail;
 use App\Models\Protocol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -30,6 +31,11 @@ class ProtocolController extends Controller
 			$protocol->saveRevisions($request);
 		}
 		$protocol->saveDetails($request);
+		if ($request->lift_embargo) {
+			$detail = Detail::firstOrNew(['protocol_id' => $protocol->id, 'key' => 'has_embargo']);
+			$detail->value = "no";
+			$protocol->details()->save($detail);
+		}
 		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
 
