@@ -74,7 +74,7 @@ export const CombinedValue: React.FC<{
 }> = ({ id, value, fields, valueMap }) => {
 	const { t } = useTranslationStore();
 	const otherValueFields = fields.filter(
-		f => f.showValueIn === id && (fieldMeetsDependencies(f, valueMap) || f.value)
+		f => f.showValueIn === id && fieldMeetsDependencies(f, valueMap)
 	);
 
 	if (!otherValueFields.length) {
