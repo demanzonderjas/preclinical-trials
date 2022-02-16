@@ -52,7 +52,7 @@ class ProtocolController extends Controller
 
 	public function mine(Request $request)
 	{
-		$protocols = Protocol::where(['user_id' => $request->user()->id])->with('details')->get();
+		$protocols = Protocol::where(['user_id' => $request->user()->id])->with('details')->orderByDesc('updated_at')->get();
 		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
 	}
 

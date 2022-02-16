@@ -69,6 +69,7 @@ export enum TFormFieldName {
 	StartDate = "start_date",
 	EndDate = "end_date",
 	Status = "study_status",
+	WhyStudyStatusInterrupted = "why_study_status_interrupted",
 	ResearchField = "research_field",
 	Hypothesis = "hypothesis",
 	InterventionType = "intervention_type",
