@@ -20,14 +20,14 @@ export const ContactPage: React.FC = () => {
 						dangerouslySetInnerHTML={{ __html: page.content_blocks[0].content }}
 						style={{ textAlign: "center" }}
 					/>
+					<div className="social-icons">
+						<SocialIcons />
+					</div>
 					<FormBlock
 						icon="note.png"
 						form={contactForm}
 						handleSubmit={saveContactFormQuery}
 					></FormBlock>
-					<div className="social-icons">
-						<SocialIcons />
-					</div>
 				</ContentBlock>
 			</div>
 		</Page>
