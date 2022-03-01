@@ -253,5 +253,6 @@
 	"lift_embargo": "Would you like to lift your embargo?",
 	"lift_embargo_description": "You have currently saved your study under embargo. Since your study is now published, can the embargo be lifted?",
 	"link_to_publication": "Link to publication",
-	"link_to_publication_description": "Please add the link to your online published article."
+	"link_to_publication_description": "Please add the link to your online published article.",
+	"help_intro": "Here, you can find several frequently asked questions and their answers in the submenu's to the left. If your question isn't answered here, please contact us or set up an appointment for online live support with our helpdesk: <a target='_blank' rel='noopener norefereer' href='https://preclinicaltrialseu.simplybook.it/v2/#book'>here</a>."
 }
