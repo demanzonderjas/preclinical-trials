@@ -38,6 +38,8 @@ export const ProtocolValue: React.FC<{
 		case TFormFieldName.ExclusiveAnimalUse:
 		case TFormFieldName.Status:
 			return <CombinedValue id={id} value={value} fields={fields} valueMap={valueMap} />;
+		case TFormFieldName.StatementOfAccuracy:
+			return <p>{t("yes")}</p>;
 		default:
 			return <p>{t(value)}</p>;
 	}

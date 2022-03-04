@@ -117,7 +117,8 @@ export enum TFormFieldName {
 	FAQCategoryId = "faq_category_id",
 	UploadNewsImage = "image",
 	Message = "message",
-	LinkToPublication = "link_to_publication"
+	LinkToPublication = "link_to_publication",
+	WhyAmendment = "why_amendment"
 }
 
 export enum TFormName {
@@ -131,7 +132,8 @@ export enum TFormName {
 	ResetPassword = "reset_password",
 	Contact = "contact",
 	RejectProtocol = "reject_protocol",
-	EditPublishedProtocol = "edit_published_protocol"
+	EditPublishedProtocol = "edit_published_protocol",
+	AmendPublishedProtocol = "amend_published_protocol"
 }
 
 export enum TFormStyle {

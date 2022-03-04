@@ -35,3 +35,13 @@ export const whyStudyStatusInterruptedField: TFormField = {
 	section: TSectionName.General,
 	dependencies: [{ key: TFormFieldName.Status, value: "study_interrupted" }]
 };
+
+export const whyAmendmentField: TFormField = {
+	...otherSupportField,
+	id: TFormFieldName.WhyAmendment,
+	showValueIn: null,
+	description: null,
+	label: null,
+	section: TSectionName.Submit,
+	dependencies: []
+};

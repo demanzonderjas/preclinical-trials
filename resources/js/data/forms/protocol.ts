@@ -1,4 +1,11 @@
-import { TAlignment, TForm, TFormName, TFormStyle, TSectionName } from "../../typings/forms";
+import {
+	TAlignment,
+	TForm,
+	TFormFieldName,
+	TFormName,
+	TFormStyle,
+	TSectionName
+} from "../../typings/forms";
 import { accuracyField } from "./fields/protocol/accuracy";
 import { applicationField } from "./fields/protocol/application";
 import {
@@ -47,7 +54,11 @@ import {
 import { sexField } from "./fields/protocol/sex";
 import { speciesField } from "./fields/protocol/species";
 import { studyStageField } from "./fields/protocol/stage";
-import { statusField, whyStudyStatusInterruptedField } from "./fields/protocol/status";
+import {
+	statusField,
+	whyAmendmentField,
+	whyStudyStatusInterruptedField
+} from "./fields/protocol/status";
 import { strainField } from "./fields/protocol/strain";
 import { studyCentreField } from "./fields/protocol/studyCentre";
 import { studyArmsField } from "./fields/protocol/studyArms";
@@ -124,6 +135,19 @@ export const editPublishedProtocolForm: TForm = {
 	keepValuesAfterSubmit: true,
 	submitText: "update_status",
 	fields: [statusField, whyStudyStatusInterruptedField, linkToPublicationField, liftEmbargoField],
+	align: TAlignment.Left
+};
+
+export const amendPublishedProtocolForm: TForm = {
+	id: TFormName.AmendPublishedProtocol,
+	style: TFormStyle.RegularLabels,
+	keepValuesAfterSubmit: true,
+	submitText: "update_status",
+	fields: [
+		...createProtocolForm.fields.filter(f => f.id !== TFormFieldName.StatementOfAccuracy),
+		whyAmendmentField,
+		accuracyField
+	],
 	align: TAlignment.Left
 };
 
