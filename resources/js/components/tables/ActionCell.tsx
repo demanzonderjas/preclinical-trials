@@ -4,7 +4,7 @@ import { confirmModal } from "../../data/modals/confirm";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { deleteProtocolQuery } from "../../queries/protocol";
-import { TProtocol } from "../../typings/protocols";
+import { TProtocol, TProtocolStatus } from "../../typings/protocols";
 
 export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row }) => {
 	const { t } = useTranslationStore();
@@ -15,11 +15,17 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 			location.reload();
 		}
 	};
+
+	console.log(row);
+
 	return (
 		<td className="ActionCell">
 			<div className="actions">
 				<Link to={`/dashboard/edit-protocol/${row.id}`}>
-					<button className="small">{t("edit")}</button>
+					<button className="small">
+						{t(row.status === TProtocolStatus.Published ? "create_amendment" : "edit")}
+					</button>
+					{row.status === TProtocolStatus.Published && <br />}
 				</Link>
 				<Link to={`/database/view-protocol/${row.id}`}>
 					<button className="tertiary small">{t("view")}</button>

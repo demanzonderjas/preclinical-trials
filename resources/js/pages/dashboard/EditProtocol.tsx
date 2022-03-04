@@ -43,7 +43,7 @@ export const EditProtocolPage: React.FC = () => {
 						<FormBlock
 							form={
 								protocol.status === TProtocolStatus.Published
-									? editPublishedProtocolForm
+									? createProtocolForm
 									: createProtocolForm
 							}
 							waitForData={true}
@@ -52,7 +52,7 @@ export const EditProtocolPage: React.FC = () => {
 							icon="edit.png"
 							sections={
 								protocol.status === TProtocolStatus.Published
-									? null
+									? protocolSections
 									: protocolSections
 							}
 						>

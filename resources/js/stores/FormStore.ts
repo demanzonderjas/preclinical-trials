@@ -8,6 +8,7 @@ import {
 	TSectionName
 } from "../typings/forms";
 import { getSectionFromHash } from "../utils/formatting";
+import { fieldMeetsDependencies } from "../utils/validation";
 
 export class FormStore {
 	fields: TFormField[] = [];
@@ -130,16 +131,19 @@ export class FormStore {
 
 	@action.bound validate() {
 		this.errors.clear();
-		this.fields.forEach(field => {
-			const value = this.values.get(field.id);
-			if (field.validate && !field.validate(value, this.values)) {
-				this.errors.set(field.id, "field_not_valid");
-			}
-			if (field.required && value == "") {
-				this.errors.set(field.id, "field_required");
-			}
-		});
+		this.fields
+			.filter(f => fieldMeetsDependencies(f, this.values))
+			.forEach(field => {
+				const value = this.values.get(field.id);
+				if (field.validate && !field.validate(value, this.values)) {
+					this.errors.set(field.id, "field_not_valid");
+				}
+				if (field.required && value == "") {
+					this.errors.set(field.id, "field_required");
+				}
+			});
 		const hasError = [...this.errors.values()].length;
+		console.log(this.errors);
 
 		if (hasError && !!this.sections) {
 			const firstErrorKey = [...this.errors.keys()][0];

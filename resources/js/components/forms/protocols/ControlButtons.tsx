@@ -107,13 +107,18 @@ export const ControlButtons: React.FC = observer(() => {
 			{!!isLastSection &&
 				!!sections &&
 				(status === TProtocolStatus.SubmittedForPublication ||
-					status === TProtocolStatus.Rejected) && (
+					status === TProtocolStatus.Rejected ||
+					status === TProtocolStatus.Published) && (
 					<button
 						type="button"
 						className="secondary small"
 						onClick={submitForPublication}
 					>
-						{t("resubmit_for_publication")}
+						{t(
+							status === TProtocolStatus.Published
+								? "submit_with_amendment"
+								: "resubmit_for_publication"
+						)}
 					</button>
 				)}
 		</div>
