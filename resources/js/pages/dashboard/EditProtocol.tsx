@@ -6,6 +6,7 @@ import { CreateProtocolPanel } from "../../components/protocols/CreateProtocolPa
 import { ProtocolStatus } from "../../components/protocols/ProtocolStatus";
 import { ProtocolStoreProvider } from "../../contexts/ProtocolContext";
 import {
+	amendPublishedProtocolForm,
 	createProtocolForm,
 	editPublishedProtocolForm,
 	protocolSections
@@ -43,7 +44,7 @@ export const EditProtocolPage: React.FC = () => {
 						<FormBlock
 							form={
 								protocol.status === TProtocolStatus.Published
-									? createProtocolForm
+									? amendPublishedProtocolForm
 									: createProtocolForm
 							}
 							waitForData={true}

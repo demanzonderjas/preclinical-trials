@@ -10,6 +10,7 @@ return [
 		"end_date",
 		"study_status",
 		"why_study_status_interrupted",
+		"why_amendment",
 		"link_to_publication",
 		"research_field",
 		"hypothesis",
