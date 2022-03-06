@@ -14,6 +14,12 @@ export const titleCell: TTableCell = {
 	value: ""
 };
 
+export const idCell: TTableCell = {
+	id: TTableCellName.ID,
+	Component: TextCell,
+	value: ""
+};
+
 export const studyStatusCell: TTableCell = {
 	id: TTableCellName.StudyStatus,
 	Component: TextCell,

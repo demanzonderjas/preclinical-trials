@@ -33,8 +33,18 @@ export const ProtocolsPage: React.FC = () => {
 					options={Object.values(TProtocolStatus)
 						.filter(status => status !== TProtocolStatus.Draft)
 						.map(status => t(status))}
+					label={"status"}
 					filterPlaceholder="any_status"
+					filterIndex={0}
 					defaultValue="submitted_for_publication"
+				/>
+				<SingleFilter
+					selectionKey={TFormFieldName.HasEmbargo}
+					label={"has_embargo"}
+					options={["Yes", "No"]}
+					filterIndex={1}
+					filterPlaceholder="any_status"
+					defaultValue=""
 				/>
 				<TableBlock rows={protocols} table={adminProtocolsTable}></TableBlock>
 			</FilterStoreProvider>
