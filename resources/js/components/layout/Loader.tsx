@@ -8,6 +8,9 @@ export const Loader: React.FC = () => {
 		API.interceptors.request.use(
 			config => {
 				setIsLoading(true);
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 2500);
 				return config;
 			},
 			error => {
