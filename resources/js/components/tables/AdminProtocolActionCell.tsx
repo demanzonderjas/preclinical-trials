@@ -10,7 +10,7 @@ export const AdminProtocolActionCell: React.FC<{ value: string; row: TProtocol }
 	return (
 		<td className="ActionCell">
 			<div className="actions">
-				<Link to={`/admin/protocols/${row.id}`}>
+				<Link to={`/admin/protocols/${row.id}`} target="_blank">
 					<button className="secondary small">{t("view")}</button>
 				</Link>
 				<ApproveButton status={row.status} protocol_id={row.id} />

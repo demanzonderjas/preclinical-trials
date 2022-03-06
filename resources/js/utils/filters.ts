@@ -64,3 +64,12 @@ export function newsItemMeetsFilters(
 		}
 	});
 }
+
+export function createQueryStringFromFilters(filters: TFilter[]) {
+	return filters.reduce((base, filter) => {
+		if (!base.length) {
+			return `?${filter.key}=${filter.value}`;
+		}
+		return `${base}&${filter.key}=${filter.value}`;
+	}, "");
+}

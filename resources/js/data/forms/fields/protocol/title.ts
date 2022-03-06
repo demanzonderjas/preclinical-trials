@@ -19,6 +19,7 @@ export const titleWithoutDescriptionField: TFormField = {
 
 export const shortTitleField: TFormField = {
 	...titleField,
+	useAsFilter: false,
 	id: TFormFieldName.ShortTitle,
 	validate: null,
 	required: false,
