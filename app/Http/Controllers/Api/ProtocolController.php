@@ -173,7 +173,7 @@ class ProtocolController extends Controller
 
 	public function getViewableForAdmin()
 	{
-		$protocols = Protocol::where('status', '!=', 'draft')->orderByDesc('created_at')->get();
+		$protocols = Protocol::where('status', '!=', 'draft')->orderByDesc('updated_at')->get();
 		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
 	}
 }
