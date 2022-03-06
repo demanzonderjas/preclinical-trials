@@ -16,14 +16,18 @@ export const GenericSelectField: React.FC<{
 	value: string;
 	setValue: Function;
 	options: string[];
+	minWidth?: number;
 	emptyPlaceholder?: string;
 	clearPlaceholder?: string;
-}> = ({ value, setValue, options, emptyPlaceholder, clearPlaceholder }) => {
+}> = ({ value, setValue, options, emptyPlaceholder, minWidth, clearPlaceholder }) => {
 	const [isActive, setIsActive] = useState(false);
 	const { t } = useTranslationStore();
 
 	return (
-		<div className={cx("SelectField", { active: isActive, absolute: true })}>
+		<div
+			className={cx("SelectField", { active: isActive, absolute: true })}
+			style={{ minWidth: minWidth ? `${minWidth}px` : null }}
+		>
 			<div className="select-wrapper">
 				<div
 					className={cx("active-option", { "with-value": !!value })}

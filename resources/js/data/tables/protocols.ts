@@ -14,18 +14,27 @@ import {
 	titleCell,
 	publishStatusCell,
 	adminActionCell,
-	magicSearchCell
+	magicSearchCell,
+	idCell
 } from "./cells/protocol";
 
 export const adminProtocolsTable: TTable = {
 	headers: [
+		TTableCellName.ID,
 		TTableCellName.Title,
 		TTableCellName.LastUpdated,
 		TTableCellName.PublishStatus,
 		TTableCellName.HasEmbargo,
 		TTableCellName.AdminAction
 	],
-	cells: [titleCell, lastUpdatedAtCell, publishStatusCell, hasEmbargoCell, adminActionCell]
+	cells: [
+		idCell,
+		titleCell,
+		lastUpdatedAtCell,
+		publishStatusCell,
+		hasEmbargoCell,
+		adminActionCell
+	]
 };
 
 export const manageProtocolsTable: TTable = {
