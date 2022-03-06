@@ -43,6 +43,7 @@ export const noSampleSizeCalculationDetailsField: TFormField = {
 
 export const sumOfAnimalsField: TFormField = {
 	...researchField,
+	useAsFilter: false,
 	id: TFormFieldName.SumOfAnimals,
 	description: "sum_of_animals_description"
 };

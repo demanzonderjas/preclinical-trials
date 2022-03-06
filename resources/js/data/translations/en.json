@@ -44,7 +44,7 @@
 	"yes": "Yes",
 	"experimental_design": "Provide the experimental design/protocol/animal model",
 	"experimental_design_label": "Experimental design",
-	"experimental_design_description": "<p>Provide a description of the design and protocol, e.g. what animal model will be used for the study, including:</p><ul><li>What animal model will be used for the study</li><li>Experimental unit (e.g., individual animal, cage, litter, ten molars of one dog)</li><li>Strategy to minimize potential confounders (e.g., order of treatments and measurements, animal/cage location). If there is none, please state so.</li><li>Housing conditions and acclimatisation period(s).</li>",
+	"experimental_design_description": "<p>Provide a description of the design and protocol, including:</p><ul><li>What animal model will be used for the study</li><li>Experimental unit (e.g., individual animal, cage, litter, ten molars of one dog)</li><li>Strategy to minimize potential confounders (e.g., order of treatments and measurements, animal/cage location). If there is none, please state so.</li><li>Housing conditions and acclimatisation period(s).</li>",
 	"hypothesis": "Hypothesis / Research question",
 	"hypothesis_description": "Give the research question/hypothesis or problem the study investigates and state clearly why it is important to carry out this study",
 	"not_applicable": "Not applicable",
