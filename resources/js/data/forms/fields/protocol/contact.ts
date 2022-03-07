@@ -5,7 +5,9 @@ import { firstNameField } from "../account/name";
 
 export const contactNameField: TFormField = {
 	...firstNameField,
+	required: true,
 	Component: InputField,
+	showValueIn: TFormFieldName.Content,
 	id: TFormFieldName.ContactName,
 	section: TSectionName.ContactDetails,
 	description: "contact_name_description"
@@ -13,6 +15,8 @@ export const contactNameField: TFormField = {
 
 export const contactRoleField: TFormField = {
 	...contactNameField,
+	required: true,
+	showValueIn: null,
 	id: TFormFieldName.ContactRole,
 	description: "contact_role_description"
 };

@@ -56,6 +56,8 @@ Route::group(['namespace' => 'Api'], function () {
         Route::get('news-items/admin', 'NewsItemController@getViewableForAdmin');
         Route::delete('news-item/{news_item_id}', 'NewsItemController@delete');
 
+        Route::get('users/counts-total', 'UserController@getCountsTotal');
+
         Route::post('faq-item', 'FaqController@store');
         Route::put('faq-item', 'FaqController@update');
         Route::get('faq-items/admin', 'FaqController@getViewableForAdmin');

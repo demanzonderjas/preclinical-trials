@@ -15,7 +15,8 @@ import {
 	publishStatusCell,
 	adminActionCell,
 	magicSearchCell,
-	idCell
+	idCell,
+	embargoDateCell
 } from "./cells/protocol";
 
 export const adminProtocolsTable: TTable = {
@@ -25,6 +26,7 @@ export const adminProtocolsTable: TTable = {
 		TTableCellName.LastUpdated,
 		TTableCellName.PublishStatus,
 		TTableCellName.HasEmbargo,
+		TTableCellName.EmbargoDate,
 		TTableCellName.AdminAction
 	],
 	cells: [
@@ -33,6 +35,7 @@ export const adminProtocolsTable: TTable = {
 		lastUpdatedAtCell,
 		publishStatusCell,
 		hasEmbargoCell,
+		embargoDateCell,
 		adminActionCell
 	]
 };

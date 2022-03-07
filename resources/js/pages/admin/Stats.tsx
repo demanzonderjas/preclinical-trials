@@ -1,13 +1,19 @@
 import React from "react";
 import { AdminPage } from "../../components/layout/admin/AdminPage";
 import { Leaderboard } from "../../components/protocols/Leaderboard";
-import { useCountsPerMonth, useEmbargoCounts, useRejectedCounts } from "../../hooks/useCounts";
+import {
+	useCountsPerMonth,
+	useEmbargoCounts,
+	useRejectedCounts,
+	useTotalUserAccounts
+} from "../../hooks/useCounts";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 
 export const StatsPage: React.FC = () => {
 	const embargoCounts = useEmbargoCounts();
 	const rejectedCounts = useRejectedCounts();
 	const countsPerMonth = useCountsPerMonth();
+	const totalUsers = useTotalUserAccounts();
 	const { t } = useTranslationStore();
 
 	return (
@@ -22,6 +28,10 @@ export const StatsPage: React.FC = () => {
 				}}
 			>
 				<div className="Stats">
+					<div className="stat">
+						<label>{t("total_users")}</label>
+						<span>{totalUsers?.total}</span>
+					</div>
 					<div className="stat">
 						<label>{t("total_protocols")}</label>
 						<span>{embargoCounts?.total}</span>

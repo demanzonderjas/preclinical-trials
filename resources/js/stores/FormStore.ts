@@ -158,13 +158,10 @@ export class FormStore {
 
 	submit = async e => {
 		e.preventDefault();
-		console.log("submitting");
 		if (this.validate()) {
 			this.setIsSubmitting(true);
 			const keyValuePairs = this.createKeyValuePairs();
-			console.log("sending data", keyValuePairs);
 			const { errors, exception } = (await this.handleSubmit(keyValuePairs)) || {};
-			console.log("errors!", errors);
 			if (errors) {
 				this.errors = new Map<TFormFieldName, any>(Object.entries(errors) as any);
 				this.setIsSubmitting(false);
@@ -179,7 +176,6 @@ export class FormStore {
 
 	setIsSubmitting = isSubmitting => {
 		this.isSubmitting = isSubmitting;
-		console.log("subtmitting??", isSubmitting);
 	};
 
 	createKeyValuePairs() {

@@ -21,11 +21,13 @@ export const SearchDatabasePage: React.FC = () => {
 	useEffect(() => {
 		(async () => {
 			const response = await getViewableProtocolsQuery();
-			setProtocols(
-				response.protocols
-					.map(mapProtocolDetailsToObject)
-					.filter((p: TProtocol) => !!p.title)
-			);
+			const targetProtocols: TProtocol[] = response.protocols
+				.map(mapProtocolDetailsToObject)
+				.filter((p: TProtocol) => !!p.title);
+
+			targetProtocols.sort((a, b) => (a.title > b.title ? 1 : -1));
+
+			setProtocols(targetProtocols);
 		})();
 	}, []);
 

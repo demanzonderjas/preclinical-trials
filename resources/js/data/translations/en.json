@@ -258,5 +258,7 @@
 	"create_amendment": "Create amendment",
 	"submit_with_amendment": "Submit with amendment",
 	"why_amendment": "Why do you amend your published protocol?",
-	"total_found": "Total matching filters"
+	"total_found": "Total matching filters",
+	"embargo_date": "Embargo end date",
+	"total_users": "Total users"
 }

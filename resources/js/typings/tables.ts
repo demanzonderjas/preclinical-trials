@@ -24,6 +24,7 @@ export enum TTableCellName {
 	Action = "action",
 	AdminAction = "admin_action",
 	HasEmbargo = "has_embargo",
+	EmbargoDate = "embargo_date",
 	Type = "type",
 	Number = "number",
 	Intervention = "intervention",
