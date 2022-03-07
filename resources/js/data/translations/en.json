@@ -257,5 +257,6 @@
 	"help_intro": "Here, you can find several frequently asked questions and their answers in the submenu's to the left. If your question isn't answered here, please contact us or set up an appointment for online live support with our helpdesk: <a target='_blank' rel='noopener norefereer' href='https://preclinicaltrialseu.simplybook.it/v2/#book'>here</a>.",
 	"create_amendment": "Create amendment",
 	"submit_with_amendment": "Submit with amendment",
-	"why_amendment": "Why do you amend your published protocol?"
+	"why_amendment": "Why do you amend your published protocol?",
+	"total_found": "Total matching filters"
 }
