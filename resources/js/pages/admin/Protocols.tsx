@@ -12,6 +12,7 @@ import { createProtocolForm } from "../../data/forms/protocol";
 import { SingleFilter } from "../../components/tables/SingleFilter";
 import { TFormFieldName } from "../../typings/forms";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { TotalMatchingFilters } from "../../components/tables/TotalMatchingFilters";
 
 export const ProtocolsPage: React.FC = () => {
 	const [protocols, setProtocols] = useState<TDBProtocol[]>([]);
@@ -46,6 +47,7 @@ export const ProtocolsPage: React.FC = () => {
 					filterPlaceholder="any_status"
 					defaultValue=""
 				/>
+				<TotalMatchingFilters protocols={protocols} />
 				<TableBlock rows={protocols} table={adminProtocolsTable}></TableBlock>
 			</FilterStoreProvider>
 		</AdminPage>
