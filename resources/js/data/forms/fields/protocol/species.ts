@@ -24,6 +24,7 @@ export const speciesField: TFormField = {
 	props: {
 		options: speciesOptions
 	},
+	required: true,
 	useAsFilter: true,
 	section: TSectionName.StudyDesign,
 	Component: SelectField,

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getTotalUserAccountsQuery } from "../queries/account";
 import {
 	getProtocolCountsPerMonthQuery,
 	getProtocolCountsQuery,
@@ -44,6 +45,19 @@ export function useCountsPerMonth() {
 					total: countsResponse[yearMonth]
 				}))
 			);
+		})();
+	}, []);
+
+	return counts;
+}
+
+export function useTotalUserAccounts() {
+	const [counts, setCounts] = useState<{ total: number }>(null);
+
+	useEffect(() => {
+		(async () => {
+			const countsResponse = await getTotalUserAccountsQuery();
+			setCounts(countsResponse);
 		})();
 	}, []);
 

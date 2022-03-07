@@ -16,8 +16,6 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 		}
 	};
 
-	console.log(row);
-
 	return (
 		<td className="ActionCell">
 			<div className="actions">

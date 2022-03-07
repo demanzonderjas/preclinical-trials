@@ -3,6 +3,7 @@ import { AdminProtocolActionCell } from "../../../components/tables/AdminProtoco
 import { BooleanCell } from "../../../components/tables/BooleanCell";
 import { CountryCell } from "../../../components/tables/CountryCell";
 import { DateCell } from "../../../components/tables/DateCell";
+import { EmbargoDateCell } from "../../../components/tables/EmbargoDateCell";
 import { MagicSearchCell } from "../../../components/tables/MagicSearchCell";
 import { StudyCentreCell } from "../../../components/tables/StudyCentreCell";
 import { TextCell } from "../../../components/tables/TextCell";
@@ -100,6 +101,12 @@ export const countryCell: TTableCell = {
 export const hasEmbargoCell: TTableCell = {
 	id: TTableCellName.HasEmbargo,
 	Component: BooleanCell,
+	value: ""
+};
+
+export const embargoDateCell: TTableCell = {
+	id: TTableCellName.EmbargoDate,
+	Component: EmbargoDateCell,
 	value: ""
 };
 

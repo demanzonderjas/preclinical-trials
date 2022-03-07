@@ -17,6 +17,15 @@ export async function createAccountQuery(accountInfo: TAccount) {
 	}
 }
 
+export async function getTotalUserAccountsQuery() {
+	try {
+		const response = await API.get("/api/users/counts-total");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function getUserQuery() {
 	try {
 		const response = await API.get("/api/user");

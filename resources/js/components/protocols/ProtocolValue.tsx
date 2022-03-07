@@ -7,13 +7,15 @@ import { TFormField, TFormFieldName } from "../../typings/forms";
 import { TStudyArm, TStudyCentre } from "../../typings/protocols";
 import { fieldMeetsDependencies } from "../../utils/validation";
 import { TableBlock } from "../tables/TableBlock";
+import { RealTimeValue } from "./RealTimeValue";
 
 export const ProtocolValue: React.FC<{
 	id: TFormFieldName;
 	value: any;
+	offset?: number;
 	fields: TFormField[];
 	valueMap: Map<TFormFieldName, any>;
-}> = ({ id, value, fields, valueMap }) => {
+}> = ({ id, value, fields, offset, valueMap }) => {
 	const { t } = useTranslationStore();
 	switch (id) {
 		case TFormFieldName.StudyArms:
@@ -37,7 +39,15 @@ export const ProtocolValue: React.FC<{
 		case TFormFieldName.SampleSizeCalculation:
 		case TFormFieldName.ExclusiveAnimalUse:
 		case TFormFieldName.Status:
-			return <CombinedValue id={id} value={value} fields={fields} valueMap={valueMap} />;
+			return (
+				<CombinedValue
+					id={id}
+					value={value}
+					fields={fields}
+					valueMap={valueMap}
+					offset={offset}
+				/>
+			);
 		case TFormFieldName.StatementOfAccuracy:
 			return <p>{t("yes")}</p>;
 		default:
@@ -71,9 +81,10 @@ export const ArrayValueWithOtherField: React.FC<{
 export const CombinedValue: React.FC<{
 	id: TFormFieldName;
 	value: any;
+	offset?: number;
 	fields: TFormField[];
 	valueMap: Map<TFormFieldName, any>;
-}> = ({ id, value, fields, valueMap }) => {
+}> = ({ id, value, fields, offset, valueMap }) => {
 	const { t } = useTranslationStore();
 	const otherValueFields = fields.filter(
 		f => f.showValueIn === id && fieldMeetsDependencies(f, valueMap)
@@ -93,7 +104,7 @@ export const CombinedValue: React.FC<{
 							{f.value}
 						</a>
 					) : (
-						t(f.value)
+						<RealTimeValue field={f} fields={fields} offset={offset} />
 					);
 				})}
 			</p>
@@ -102,7 +113,10 @@ export const CombinedValue: React.FC<{
 
 	return (
 		<p>
-			<strong>{t(value)}</strong> - {otherValueFields.map(f => t(f.value)).join(" - ")}
+			<strong>{t(value)}</strong> -{" "}
+			{otherValueFields.map(f => (
+				<RealTimeValue field={f} fields={fields} offset={offset} />
+			))}
 		</p>
 	);
 };
