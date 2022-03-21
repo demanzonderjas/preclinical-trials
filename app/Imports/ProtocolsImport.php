@@ -18,10 +18,12 @@ class ProtocolsImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row) {
             $user = User::find($row["userid"]);
             if (empty($user)) {
+                echo $row['recordid'];
                 continue;
             }
             $status = $this->convertStatus($row["recordstatus"]);
             if ($status === "deleted") {
+                echo $row['recordid'] . " ";
                 continue;
             }
             Protocol::create([
