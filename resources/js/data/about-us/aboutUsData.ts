@@ -30,7 +30,7 @@ export const aboutUsData: TAboutUs[] = [
 	{
 		name: "Julia Menon, Msc",
 		title: "Scientific Daily Director",
-		image: "julia_menon.png",
+		image: "julia_menon.jpg",
 		role: TAboutUsType.DailyDirector
 	},
 	{
@@ -72,7 +72,7 @@ export const aboutUsData: TAboutUs[] = [
 		workLocation: "Animal Welfare Body Utrecht"
 	},
 	{
-		name: "Kimberley Wever PhD",
+		name: "Dr. Kim Wever",
 		image: "kimberley_wever.png",
 		role: TAboutUsType.SteeringCommittee,
 		workLocation:

@@ -23,10 +23,6 @@ export const AdvisoryBoardPage: React.FC = () => {
 					John is a professor of Medicine and Heath Research and Policy at the Standford University School of Medicine and a Professor of Statistics at Standford University School of Humanities and Science. He is also director of Standford Prevention Research Center, co-director of the Meta-Research Innovation Center at Standford (METRICS) and he is editor in chief of the European Journal of Clinical Investigation. </p>"
 				/>
 				<ExpandableText
-					header="Prof. Annelien Bredenoord"
-					body="<p>Annelien is a professor of Ethics of Biomedical Innovation at the University Medical Center of Utrecht, The Netherlands. As of 2015, she us a member of the Dutch Senate (Eerste Kamer) on behalf of D66.</p>"
-				/>
-				<ExpandableText
 					header="Prof. Lina Badimon"
 					body="<p>Lina is the director of the Cardiovascular Research Center (CSIC-ICCC) at the Autonomous University of Barcelona, Spain. She is also and co-founder &amp; chief scientific officer of the European Society of Cardiology (ESC).</p>"
 				/>
