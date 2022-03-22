@@ -254,7 +254,7 @@
 	"lift_embargo_description": "You have currently saved your study under embargo. Since your study is now published, can the embargo be lifted?",
 	"link_to_publication": "Link to publication",
 	"link_to_publication_description": "Please add the link to your online published article.",
-	"help_intro": "Here, you can find several frequently asked questions and their answers in the submenu's to the left. For a step by step approach, please look at our 'How to' <a href='https://drive.google.com/file/d/1JCKhWmLUxHaBcEv1AgUDRHHMdQlsA9KK/view?usp=sharing' target='_blank'>document</a>. If your question isn't answered here, please contact us or set up an appointment for online live support with our helpdesk: here.",
+	"help_intro": "Here, you can find several frequently asked questions and their answers in the submenu's to the left. For a step by step approach, please look at our 'How to' <a href='https://drive.google.com/file/d/1JCKhWmLUxHaBcEv1AgUDRHHMdQlsA9KK/view?usp=sharing' target='_blank'>document</a>. If your question isn't answered here, please contact us or set up an appointment for online live support with our helpdesk: <a href='https://preclinicaltrialseu.simplybook.it/v2/#book' target='_blank'>here</a>.",
 	"create_amendment": "Create amendment",
 	"submit_with_amendment": "Submit with amendment",
 	"why_amendment": "Why do you amend your published protocol?",
