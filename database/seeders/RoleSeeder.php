@@ -15,11 +15,13 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $role = new Role();
+        $role = Role::firstOrNew(['name' => 'admin']);
         $role->name = 'admin';
         $role->save();
 
         $user = User::where('email', 'daan@puzzel.org')->first();
-        $user->roles()->save($role);
+        $user2 = User::where('email', 'julia.menon@heart-institute.nl')->first();
+        $user->roles()->sync($role);
+        $user2->roles()->sync($role);
     }
 }
