@@ -1,4 +1,4 @@
-const listOfButtons = "bold,italic,underline,ul,ol,indent,outdent,left";
+const listOfButtons = "bold,italic,underline,ul,ol,indent,outdent,left,link";
 
 export const joditConfig = {
 	readonly: false,
