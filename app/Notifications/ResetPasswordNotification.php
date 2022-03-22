@@ -45,9 +45,15 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The Preclinical Trials platform has been renewed and so your user accounts needs some refreshing!')
-            ->action('Reset my password', $this->url)
-            ->line('Thank you for using PCT!');
+            ->subject('PCT.eu - new Preclinicaltrials.eu website')
+            ->view(
+                'mail.reset-password',
+                ['url' => $this->url, 'name' => $this->user->first_name]
+            );
+        // return (new MailMessage)
+        //     ->line('The Preclinical Trials platform has been renewed and so your user accounts needs some refreshing!')
+        //     ->action('Reset my password', $this->url)
+        //     ->line('Thank you for using PCT!');
     }
 
     /**
