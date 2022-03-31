@@ -14,6 +14,6 @@ class ProductionDataSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(file_get_contents(storage_path('app/full_prod_db_24012022.sql')));
+        DB::unprepared(file_get_contents(storage_path('app/full-prod-copy-31032022.sql')));
     }
 }
