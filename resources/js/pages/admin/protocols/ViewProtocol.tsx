@@ -49,7 +49,7 @@ export const AdminViewProtocolPage: React.FC = () => {
 						shouldBeOpen={idx === 0}
 					/>
 				))}
-				<RevisionPanel />
+				<RevisionPanel hideBack={true} />
 			</RevisionStoreProvider>
 		</AdminPage>
 	);

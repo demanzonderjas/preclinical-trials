@@ -8,7 +8,7 @@ import day from "dayjs";
 import { getRevisionDate } from "../../utils/formatting";
 import { useUser } from "../../hooks/useUser";
 
-export const RevisionPanel: React.FC = observer(() => {
+export const RevisionPanel: React.FC<{ hideBack?: boolean }> = observer(({ hideBack }) => {
 	const { goBack, push } = useHistory();
 	const { t } = useTranslationStore();
 	const { isMine } = useUser();
@@ -44,9 +44,11 @@ export const RevisionPanel: React.FC = observer(() => {
 						{t("edit")}
 					</button>
 				)}
-				<button className="tertiary small" onClick={back}>
-					{t("go_back")}
-				</button>
+				{!hideBack && (
+					<button className="tertiary small" onClick={back}>
+						{t("go_back")}
+					</button>
+				)}
 			</div>
 			<div className="revisions">
 				{!hasRevisions && <div className="version">{t("current_version")}</div>}
