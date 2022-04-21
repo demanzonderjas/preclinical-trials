@@ -8,6 +8,7 @@ import { RevisionStoreProvider } from "../contexts/RevisionStoreContext";
 import { protocolSections } from "../data/forms/protocol";
 import { getProtocolQuery, saveProtocolQuery, updateProtocolQuery } from "../queries/protocol";
 import { RevisionStore } from "../stores/RevisionStore";
+import { TFormFieldName } from "../typings/forms";
 import { TDBProtocol, TProtocol } from "../typings/protocols";
 import { fillFieldsWithProtocolDetails } from "../utils/protocol";
 
@@ -27,7 +28,9 @@ export const ViewProtocolPage: React.FC = () => {
 		}
 	}, [protocol_id]);
 
-	const fieldsWithValues = fillFieldsWithProtocolDetails(protocol);
+	const fieldsWithValues = fillFieldsWithProtocolDetails(protocol).filter(
+		f => f.id != TFormFieldName.ContactEmail && f.id != TFormFieldName.ContactRole
+	);
 
 	return (
 		<RevisionStoreProvider store={revisionStore}>
