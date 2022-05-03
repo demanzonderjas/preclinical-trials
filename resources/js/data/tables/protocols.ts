@@ -43,11 +43,12 @@ export const adminProtocolsTable: TTable = {
 export const manageProtocolsTable: TTable = {
 	headers: [
 		TTableCellName.Title,
+		TTableCellName.PublishStatus,
 		TTableCellName.LastUpdated,
 		TTableCellName.StudyStatus,
 		TTableCellName.Action
 	],
-	cells: [titleCell, lastUpdatedAtCell, studyStatusCell, actionCell]
+	cells: [titleCell, publishStatusCell, lastUpdatedAtCell, studyStatusCell, actionCell]
 };
 
 export const searchProtocolsTable: TTable = {
