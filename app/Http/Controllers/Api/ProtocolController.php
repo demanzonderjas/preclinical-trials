@@ -7,6 +7,7 @@ use App\Http\Resources\ProtocolResource;
 use App\Mail\ProtocolApprovedAndPublished;
 use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
+use App\Mail\ProtocolSubmittedUser;
 use App\Models\AdminAction;
 use App\Models\Detail;
 use App\Models\Protocol;
@@ -78,6 +79,7 @@ class ProtocolController extends Controller
 		$protocol->save();
 
 		Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
+		Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
 	}
 
 	public function approve($protocol_id)
