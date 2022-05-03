@@ -25,6 +25,12 @@ $cardMargin: 50px;
 		}
 	}
 
+	.card {
+		a {
+			color: $secondary;
+		}
+	}
+
 	&:last-child {
 		padding-bottom: 350px;
 	}
