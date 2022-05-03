@@ -15,12 +15,16 @@ class ProtocolResource extends JsonResource
     public function toArray($request)
     {
 
+        $revisions = !empty($request->user()) && $request->user()->is_admin ? $this->revisions : $this->revisions->filter(function ($r) {
+            return !$r->admin_only;
+        })->toArray();
+
         return [
             "id" => $this->id,
             "user_id" => $this->user_id,
             "status" => $this->status,
             "details" => $this->details,
-            "revisions" => $this->revisions,
+            "revisions" => $revisions,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at
         ];

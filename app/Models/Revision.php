@@ -9,7 +9,7 @@ class Revision extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["protocol_id", "changes", "created_at", "updated_at"];
+    protected $fillable = ["protocol_id", "changes", "admin_only", "created_at", "updated_at"];
     protected $casts = [
         "changes" => 'json'
     ];
