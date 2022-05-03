@@ -23,6 +23,7 @@ export const RevisionValue: React.FC<{
 			c.key === field.id ||
 			fields.filter(f => f.showValueIn === field.id).some(f => f.id === c.key)
 	);
+	console.log("revisions", revisions);
 
 	const futureRevisionChange = revisions
 		.filter((r, index) => index >= activeRevisionNumber)

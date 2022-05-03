@@ -69,7 +69,8 @@ class Protocol extends Model
         if (count($changes) > 0) {
             $this->revisions()->saveMany([
                 new Revision([
-                    "changes" => $changes
+                    "changes" => $changes,
+                    "admin_only" => $this->status != "published"
                 ])
             ]);
         }
