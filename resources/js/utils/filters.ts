@@ -4,6 +4,11 @@ import { TProtocol } from "../typings/protocols";
 import { TFilter } from "../typings/tables";
 import day from "dayjs";
 import { useTranslationStore } from "../hooks/useTranslationStore";
+import translations from "../data/translations/en.json";
+
+const t = (key: string) => {
+	return translations[key] || key;
+};
 
 export function protocolMeetsFilters(
 	activeFilterText: string,
@@ -12,7 +17,6 @@ export function protocolMeetsFilters(
 	row: TProtocol
 ) {
 	const activeFilter: TFilter = { value: activeFilterText, key: activeFilterKey };
-	const { t } = useTranslationStore();
 
 	return [activeFilter, ...filters].every(filter => {
 		if (!filter.value) {
