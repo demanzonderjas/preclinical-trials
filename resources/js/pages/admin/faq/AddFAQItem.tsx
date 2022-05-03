@@ -28,6 +28,7 @@ export const AddFAQItemPage: React.FC = () => {
 			<FormBlock
 				withoutMargin={true}
 				form={createFAQItemForm}
+				width={100}
 				handleSubmit={addFaqItem}
 			></FormBlock>
 		</AdminPage>
