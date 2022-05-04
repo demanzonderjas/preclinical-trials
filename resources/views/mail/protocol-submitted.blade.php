@@ -7,6 +7,9 @@
 <p>
     Your protocol has been {{ $protocol->status === "submitted_for_publication" ? "submitted" : "resubmitted" }} for publication.
 </p>
+<p>
+    Our team will verify your protocol within 10 working days.
+</p>
 @stop
 
 @section('cta-link', env('APP_URL') . '/database/view-protocol/' . $protocol->id)

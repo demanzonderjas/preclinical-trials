@@ -5,7 +5,7 @@
 
 @section('content')
 <p>
-    A{{ $protocol->status === "submitted_for_publication " ? "new" : " " }}protocol has been {{ $protocol->status === "submitted_for_publication" ? "submitted" : "resubmitted" }} for publication.
+    A{{ $protocol->status === "submitted_for_publication " ? " new" : " " }}protocol has been {{ $protocol->status === "submitted_for_publication" ? "submitted" : "resubmitted" }} for publication.
 </p>
 @stop
 
