@@ -25,8 +25,6 @@ export const RealTimeValue: React.FC<{
 		? futureRevisionChange.changes.find(c => c.key === field.id)
 		: null;
 
-	console.log(futureValue, activeRevisionNumber);
-
 	const getRealValue = () => {
 		if (futureValue && activeRevisionNumber > 0) {
 			return futureValue.old_value;
