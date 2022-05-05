@@ -56,7 +56,15 @@ class Protocol extends Model
         $changes = [];
         $currentDetails->each(function ($value, $key) use (&$changes) {
             $detail = Detail::firstOrNew(['protocol_id' => $this->id, 'key' => $key]);
-            if (trim(json_encode($detail->value)) != trim(json_encode($value))) {
+            $valueIsString = is_string($detail->value) && is_string($value);
+
+            if ($valueIsString && str_replace(array("\r", "\n"), '', trim($detail->value)) != str_replace(array("\r", "\n"), '', trim($value))) {
+                $changes[] = [
+                    "key" => $key,
+                    "old_value" => $detail->value,
+                    "new_value" => $value
+                ];
+            } else if (str_replace(array("\r", "\n"), '', trim(json_encode($detail->value), " \t\n\r\0\x0B\"")) != str_replace(array("\r", "\n"), '', trim(json_encode($value), " \t\n\r\0\x0B\""))) {
                 $changes[] = [
                     "key" => $key,
                     "old_value" => $detail->value,
