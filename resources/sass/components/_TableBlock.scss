@@ -61,6 +61,40 @@
 							margin-bottom: 5px;
 						}
 					}
+
+					&.CommentsCell {
+						.comment {
+							background-color: rgba($tertiary, 0.5);
+							margin: 0 0 10px 0;
+							padding: 5px 5px 30px;
+							border-radius: 5px;
+							font-size: 14px;
+							line-height: 16px;
+							position: relative;
+
+							.details {
+								background-color: white;
+								position: absolute;
+								bottom: 0;
+								left: 0;
+								padding: 5px;
+								width: 100%;
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+
+								.action {
+									color: $white;
+									font-weight: bold;
+									background-color: $tertiary;
+									padding: 2px;
+								}
+								.date {
+									color: $black;
+								}
+							}
+						}
+					}
 				}
 			}
 		}

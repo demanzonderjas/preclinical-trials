@@ -33,6 +33,11 @@ class Protocol extends Model
         return $this->hasMany(Revision::class);
     }
 
+    public function adminActions()
+    {
+        return $this->hasMany(AdminAction::class);
+    }
+
     public function saveDetails(Request $request)
     {
         $validKeys = array_filter($request->all(), function ($key) {

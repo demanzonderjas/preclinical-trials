@@ -20,6 +20,7 @@ export type TDBProtocol = {
 	status: TProtocolStatus;
 	details: TDetail[];
 	revisions: TRevision[];
+	comments: TAdminAction[];
 	created_at: string;
 	updated_at: string;
 };
@@ -49,6 +50,14 @@ export type TRevision = {
 	id: number;
 	protocol_id: number;
 	changes: TRevisionChange[];
+	created_at: string;
+};
+
+export type TAdminAction = {
+	id: number;
+	protocol_id: number;
+	action: string;
+	message: string;
 	created_at: string;
 };
 

@@ -1,6 +1,7 @@
 import { ActionCell, EditCell, ViewCell } from "../../../components/tables/ActionCell";
 import { AdminProtocolActionCell } from "../../../components/tables/AdminProtocolActionCell";
 import { BooleanCell } from "../../../components/tables/BooleanCell";
+import { CommentsCell } from "../../../components/tables/CommentsCell";
 import { CountryCell } from "../../../components/tables/CountryCell";
 import { DateCell } from "../../../components/tables/DateCell";
 import { EmbargoDateCell } from "../../../components/tables/EmbargoDateCell";
@@ -120,5 +121,11 @@ export const publishStatusCell: TTableCell = {
 export const adminActionCell: TTableCell = {
 	id: TTableCellName.AdminAction,
 	Component: AdminProtocolActionCell,
+	value: ""
+};
+
+export const commentsCell: TTableCell = {
+	id: TTableCellName.Comments,
+	Component: CommentsCell,
 	value: ""
 };
