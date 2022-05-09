@@ -42,7 +42,8 @@ export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 			id: protocol.id,
 			updated_at: protocol.updated_at,
 			created_at: protocol.created_at,
-			status: protocol.status
+			status: protocol.status,
+			comments: protocol.comments
 		}
 	);
 }

@@ -260,5 +260,6 @@
 	"why_amendment": "Why do you amend your published protocol?",
 	"total_found": "Total matching filters",
 	"embargo_date": "Embargo end date",
-	"total_users": "Total users"
+	"total_users": "Total users",
+	"comments": "Comments"
 }
