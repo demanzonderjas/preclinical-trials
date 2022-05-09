@@ -30,6 +30,10 @@ export const AdvisoryBoardPage: React.FC = () => {
 					header="Prof. Thomas Eschenhagen"
 					body="<p>Thomas is a professor of Pharmacology at the University Medical Center Hamburg-Eppendorf, Germany. He is also Director of the department of Experimental Pharmacology and Toxicology. He is also one of the board of Directors of the DZHK, the German center for cardiovascular research.</p>"
 				/>
+				<ExpandableText
+					header="Dr. Tim Errington"
+					body="<p>Tim is the Senior Director of Research of the Center for Open Science (COS). He is has been involved in COS since its start and is a strong advocate of open science.</p>"
+				/>
 			</PageWithSubmenu>
 		</PrimaryHeaderPageWithSubMenu>
 	);
