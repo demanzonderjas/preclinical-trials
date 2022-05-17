@@ -11,6 +11,15 @@ $cardMargin: 50px;
 
 		.card {
 			width: 1000px;
+			max-width: 90vw;
+
+			&:hover {
+				transform: none;
+			}
+
+			.header {
+				font-size: 28px;
+			}
 		}
 
 		.NewsItemCard {
@@ -106,6 +115,16 @@ $cardMargin: 50px;
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: center;
+
+		.detail {
+			text-align: center;	
+			margin-top: 30px;
+			label {
+				font-weight: bold;
+				margin-bottom: 5px;
+				display: block;
+			}
+		}
 
 		.content-wrapper {
 			position: relative;
