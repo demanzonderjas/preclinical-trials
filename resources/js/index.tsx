@@ -43,6 +43,7 @@ import { Loader } from "./components/layout/Loader";
 import { BackgroundInfoPage } from "./pages/BackgroundInfo";
 import { AdminViewProtocolPage } from "./pages/admin/protocols/ViewProtocol";
 import { AmbassadorsPage } from "./pages/Ambassadors";
+import { ProfilePage } from "./pages/dashboard/Profile";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -107,6 +108,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/dashboard/edit-protocol/:protocol_id">
 								<EditProtocolPage />
+							</Route>
+							<Route path="/dashboard/profile">
+								<ProfilePage />
 							</Route>
 							<Route path="/reset-password/:token">
 								<ResetPasswordPage />
