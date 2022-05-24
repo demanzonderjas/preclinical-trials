@@ -1,3 +1,4 @@
+import { ChangePasswordModal } from "../../components/modals/ChangePasswordModal";
 import { ConfirmPasswordModal } from "../../components/modals/ConfirmPasswordModal";
 import { ForgotPasswordModal } from "../../components/modals/ForgotPasswordModal";
 import { LoginModal } from "../../components/modals/LoginModal";
@@ -16,4 +17,9 @@ export const forgotPasswordModal: TModal = {
 export const confirmPasswordModal: TModal = {
 	Component: ConfirmPasswordModal,
 	name: TModalName.ConfirmPasswordModal
+};
+
+export const changePasswordModal: TModal = {
+	Component: ChangePasswordModal,
+	name: TModalName.ChangePasswordModal
 };

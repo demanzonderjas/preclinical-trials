@@ -14,6 +14,18 @@ export const passwordField: TFormField = {
 	value: ""
 };
 
+export const currentPasswordField: TFormField = {
+	...passwordField,
+	id: TFormFieldName.CurrentPassword,
+	label: "current_password"
+};
+
+export const newPasswordField: TFormField = {
+	...passwordField,
+	id: TFormFieldName.Password,
+	label: "new_password"
+};
+
 export const passwordConfirmField: TFormField = {
 	...passwordField,
 	id: TFormFieldName.PasswordConfirm,

@@ -12,6 +12,21 @@ use Illuminate\Validation\Rules;
 
 class NewPasswordController extends Controller
 {
+
+    public function resetManually(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = $request->user();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()->json(["success" => true]);
+    }
+
     /**
      * Handle an incoming new password request.
      *

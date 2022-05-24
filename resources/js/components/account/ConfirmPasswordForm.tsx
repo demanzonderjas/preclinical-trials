@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FormBlock } from "../layout/FormBlock";
-import { confirmPasswordForm, forgotPasswordForm } from "../../data/forms/login";
-import { confirmPasswordQuery, forgotPasswordQuery } from "../../queries/login";
+import { confirmPasswordForm } from "../../data/forms/login";
+import { confirmPasswordQuery } from "../../queries/login";
 import { observer } from "mobx-react-lite";
 import { useUser } from "../../hooks/useUser";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
@@ -15,9 +15,7 @@ export const ConfirmPasswordForm: React.FC = observer(() => {
 
 	const handleSubmit = async ({ password }) => {
 		setError(false);
-		console.log(password, user.email);
 		const isConfirmed = await confirmPasswordQuery({ password, email: user.email });
-		console.log(isConfirmed);
 		if (isConfirmed) {
 			confirm();
 		} else {

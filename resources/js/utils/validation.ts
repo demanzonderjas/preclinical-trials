@@ -19,7 +19,7 @@ export function validateSamePassword(password: string, values: Map<TFormFieldNam
 	if (!password) {
 		return false;
 	}
-	const passwordConfirmation = values.get(TFormFieldName.PasswordConfirm);
+	const passwordConfirmation = values.get(TFormFieldName.Password);
 	return password === passwordConfirmation;
 }
 
