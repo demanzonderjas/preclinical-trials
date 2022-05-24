@@ -44,6 +44,7 @@ import { BackgroundInfoPage } from "./pages/BackgroundInfo";
 import { AdminViewProtocolPage } from "./pages/admin/protocols/ViewProtocol";
 import { AmbassadorsPage } from "./pages/Ambassadors";
 import { ProfilePage } from "./pages/dashboard/Profile";
+import { EditProfilePage } from "./pages/dashboard/EditProfile";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -111,6 +112,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/dashboard/profile">
 								<ProfilePage />
+							</Route>
+							<Route path="/dashboard/edit-profile">
+								<EditProfilePage />
 							</Route>
 							<Route path="/reset-password/:token">
 								<ResetPasswordPage />

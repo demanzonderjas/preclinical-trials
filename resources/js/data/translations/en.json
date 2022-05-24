@@ -262,5 +262,10 @@
 	"embargo_date": "Embargo end date",
 	"total_users": "Total users",
 	"comments": "Comments",
-	"edit_profile": "Edit profile"
+	"edit_profile": "Edit profile",
+	"update_my_account": "Update my account",
+	"confirm_changes_with_password": "Confirm changes with password",
+	"changes_made_succesfully": "The changes were made succesfully.",
+	"password_is_incorrect": "The given password was not valid.",
+	"confirm_password": "Confirm password"
 }

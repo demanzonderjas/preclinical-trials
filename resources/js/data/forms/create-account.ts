@@ -19,3 +19,11 @@ export const createAccountForm: TForm = {
 	],
 	submitText: "create_my_account"
 };
+
+export const editAccountForm: TForm = {
+	id: TFormName.EditAccount,
+	style: TFormStyle.RegularLabels,
+	align: TAlignment.Left,
+	fields: [firstNameField, lastNameField, emailField, institutionField],
+	submitText: "update_my_account"
+};

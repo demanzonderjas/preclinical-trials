@@ -16,8 +16,6 @@ export const ProfilePage: React.FC = observer(() => {
 		return null;
 	}
 
-	console.log(user);
-
 	return (
 		<Page title="My profile">
 			<div className="ProfilePage">
@@ -48,7 +46,7 @@ export const ProfilePage: React.FC = observer(() => {
 								</div>
 								<div
 									className="read-more"
-									onClick={() => push("dashboard/edit-profile")}
+									onClick={() => push("/dashboard/edit-profile")}
 								>
 									<span>{t("edit_profile")}</span>
 									<div className="arrow">
