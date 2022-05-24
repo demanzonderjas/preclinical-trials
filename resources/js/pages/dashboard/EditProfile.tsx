@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { FormBlock } from "../../components/layout/FormBlock";
 import { Page } from "../../components/layout/Page";
 import { editAccountForm } from "../../data/forms/create-account";
-import { confirmPasswordModal } from "../../data/modals/loginModal";
+import { changePasswordModal, confirmPasswordModal } from "../../data/modals/loginModal";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useUser } from "../../hooks/useUser";
 import { updateProfileQuery } from "../../queries/account";
@@ -12,12 +12,10 @@ import { TSavedFormValue } from "../../typings/forms";
 
 export const EditProfilePage: React.FC = observer(() => {
 	const { user } = useUser();
-	const [data, setData] = useState(null);
 	const { setModal } = useModalStore();
 	const { push } = useHistory();
 
 	const handleSubmit = data => {
-		setData(data);
 		setModal({ ...confirmPasswordModal, actionOnConfirm: () => updateProfileQuery(data) });
 	};
 
@@ -45,19 +43,27 @@ export const EditProfilePage: React.FC = observer(() => {
 				>
 					<div
 						style={{
-							maxWidth: "300px",
+							maxWidth: "200px",
 							textAlign: "right",
-							height: "90px",
+							height: "80px",
 							display: "flex",
 							justifyContent: "space-between",
 							flexDirection: "column",
 							alignItems: "right"
 						}}
 					>
-						<button className="tertiary" onClick={() => push("/dashboard/profile")}>
+						<button
+							className="tertiary small"
+							onClick={() => push("/dashboard/profile")}
+						>
 							Back to profile
 						</button>
-						<button className="secondary">Change password</button>
+						<button
+							className="secondary small"
+							onClick={() => setModal(changePasswordModal)}
+						>
+							Change password
+						</button>
 					</div>
 				</div>
 				<FormBlock

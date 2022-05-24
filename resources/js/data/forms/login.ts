@@ -1,6 +1,11 @@
 import { TAlignment, TForm, TFormName, TFormStyle } from "../../typings/forms";
 import { emailField } from "./fields/account/email";
-import { passwordConfirmField, passwordField } from "./fields/account/password";
+import {
+	currentPasswordField,
+	newPasswordField,
+	passwordConfirmField,
+	passwordField
+} from "./fields/account/password";
 import { tokenField } from "./fields/account/token";
 
 export const loginForm: TForm = {
@@ -35,4 +40,12 @@ export const confirmPasswordForm: TForm = {
 	align: TAlignment.Left,
 	fields: [passwordField],
 	submitText: "confirm_changes_with_password"
+};
+
+export const changePasswordForm: TForm = {
+	id: TFormName.ChangePassword,
+	style: TFormStyle.RegularLabels,
+	align: TAlignment.Left,
+	fields: [currentPasswordField, newPasswordField, passwordConfirmField],
+	submitText: "change_password"
 };

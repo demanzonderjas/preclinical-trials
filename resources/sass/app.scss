@@ -84,13 +84,19 @@ body {
 	margin-right: auto;
 }
 
-.error {
+.error, .success {
 	margin: 12px 0;
 	padding: 8px 25px 8px 8px;
-	background-color: $red;
 	display: inline-block;
 	color: white;
 	font-size: 16px;
+}
+
+.error {
+	background-color: $red;
+}
+.success {
+	background-color: $secondary;
 }
 
 .border-top {

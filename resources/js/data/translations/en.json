@@ -267,5 +267,10 @@
 	"confirm_changes_with_password": "Confirm changes with password",
 	"changes_made_succesfully": "The changes were made succesfully.",
 	"password_is_incorrect": "The given password was not valid.",
-	"confirm_password": "Confirm password"
+	"confirm_password": "Confirm password",
+	"password_could_not_be_changed": "Your password could not be changed. Contact us if this issue persists.",
+	"password_changed_succesfully": "Your password was changed succesfully.",
+	"current_password": "Current password",
+	"change_password": "Change password",
+	"new_password": "New password"
 }

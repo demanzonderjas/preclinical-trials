@@ -17,6 +17,12 @@ export type TResetPasswordData = {
 	token: string;
 };
 
+export type TChangePasswordData = {
+	password: string;
+	password_confirmation: string;
+	email: string;
+};
+
 export type TAccount = {
 	first_name: string;
 	last_name: string;
