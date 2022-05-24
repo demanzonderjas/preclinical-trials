@@ -14,7 +14,7 @@ export const ChangePasswordForm: React.FC = observer(() => {
 
 	const handleSubmit = async ({ current_password, password, password_confirmation }) => {
 		setError(false);
-		setIsSuccess(false);
+		setIsSuccess(null);
 		const isConfirmed = await confirmPasswordQuery({
 			password: current_password,
 			email: user.email
