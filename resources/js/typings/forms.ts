@@ -130,10 +130,12 @@ export enum TFormName {
 	CreateFAQItem = "create_faq_item",
 	ForgotPassword = "forgot_password",
 	ResetPassword = "reset_password",
+	ConfirmPassword = "confirm_password",
 	Contact = "contact",
 	RejectProtocol = "reject_protocol",
 	EditPublishedProtocol = "edit_published_protocol",
-	AmendPublishedProtocol = "amend_published_protocol"
+	AmendPublishedProtocol = "amend_published_protocol",
+	EditAccount = "edit_account"
 }
 
 export enum TFormStyle {

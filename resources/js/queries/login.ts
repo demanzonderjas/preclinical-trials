@@ -33,6 +33,15 @@ export async function forgotPasswordQuery({ email }) {
 	}
 }
 
+export async function confirmPasswordQuery(credentials: TLoginCredentials) {
+	try {
+		const response = await API.post("confirm-password", credentials);
+		return response.data.success;
+	} catch (e) {
+		return false;
+	}
+}
+
 export async function resetPasswordQuery(resetPasswordData: TResetPasswordData) {
 	try {
 		const response = await API.post("reset-password", resetPasswordData);

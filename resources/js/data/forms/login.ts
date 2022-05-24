@@ -28,3 +28,11 @@ export const resetPasswordForm: TForm = {
 	submitText: "reset_password",
 	succesText: "reset_password_success"
 };
+
+export const confirmPasswordForm: TForm = {
+	id: TFormName.ConfirmPassword,
+	style: TFormStyle.RegularLabels,
+	align: TAlignment.Left,
+	fields: [passwordField],
+	submitText: "confirm_changes_with_password"
+};

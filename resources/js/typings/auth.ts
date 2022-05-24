@@ -25,3 +25,10 @@ export type TAccount = {
 	institution: string;
 	terms_conditions: boolean;
 };
+
+export type TUpdateProfileInfo = {
+	first_name: string;
+	last_name: string;
+	email: string;
+	institution: string;
+};

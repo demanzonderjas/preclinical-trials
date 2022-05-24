@@ -19,8 +19,6 @@ export class FormStore {
 
 	errors: Map<TFormFieldName, any> = new Map<TFormFieldName, any>();
 
-	serverSideError: string = null;
-
 	form: TForm = null;
 
 	isDone: boolean = false;
