@@ -273,5 +273,6 @@
 	"current_password": "Current password",
 	"change_password": "Change password",
 	"new_password": "New password",
-	"geo_search": "GeoSearch"
+	"geo_search": "GeoSearch",
+	"add_ambassador": "Add ambassador"
 }
