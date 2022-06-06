@@ -12,6 +12,7 @@ export const AdminAmbassadorActionCell: React.FC<{ value: string; row: TProtocol
 
 	const deleteAmbassador = async () => {
 		const response = await deleteAmbassadorQuery(row.id);
+		console.log(row);
 		if (response.success) {
 			location.reload();
 		}

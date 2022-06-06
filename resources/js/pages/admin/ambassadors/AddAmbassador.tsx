@@ -4,7 +4,6 @@ import { FormBlock } from "../../../components/layout/FormBlock";
 import { Link } from "react-router-dom";
 import { useTranslationStore } from "../../../hooks/useTranslationStore";
 import { useHistory } from "react-router";
-import { createFAQItemQuery } from "../../../queries/faq";
 import { addAmbassadorForm } from "../../../data/forms/ambassadors";
 import { createAmbassadorQuery } from "../../../queries/ambassadors";
 
@@ -30,7 +29,7 @@ export const AddAmbassadorPage: React.FC = () => {
 				form={addAmbassadorForm}
 				width={100}
 				handleSubmit={addAmbassador}
-			></FormBlock>
+			/>
 		</AdminPage>
 	);
 };
