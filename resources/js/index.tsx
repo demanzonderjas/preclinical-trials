@@ -43,8 +43,10 @@ import { Loader } from "./components/layout/Loader";
 import { BackgroundInfoPage } from "./pages/BackgroundInfo";
 import { AdminViewProtocolPage } from "./pages/admin/protocols/ViewProtocol";
 import { AmbassadorsPage } from "./pages/Ambassadors";
+import { AdminAmbassadorsPage } from "./pages/admin/ambassadors/Ambassadors";
 import { ProfilePage } from "./pages/dashboard/Profile";
 import { EditProfilePage } from "./pages/dashboard/EditProfile";
+import { AddAmbassadorPage } from "./pages/admin/ambassadors/AddAmbassador";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -151,6 +153,12 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/admin/faq/edit-item/:faq_item_id" exact={true}>
 								<EditFAQItemPage />
+							</Route>
+							<Route path="/admin/ambassadors" exact={true}>
+								<AdminAmbassadorsPage />
+							</Route>
+							<Route path="/admin/ambassadors/add-ambassador" exact={true}>
+								<AddAmbassadorPage />
 							</Route>
 							<Route path="/admin/pages" exact={true}>
 								<PagesPage />

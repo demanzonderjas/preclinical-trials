@@ -69,4 +69,8 @@ Route::group(['namespace' => 'Api'], function () {
         Route::put('page', 'PageController@update');
         Route::get('pages', 'PageController@getAll');
     });
+
+    Route::fallback(function () {
+        return abort(404, "oops");
+    });
 });

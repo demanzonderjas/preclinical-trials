@@ -10,3 +10,11 @@ export enum TAboutUsType {
 	DailyDirector = "daily_director",
 	SteeringCommittee = "steering_committee"
 }
+
+export type TAmbassador = {
+	id?: number;
+	name: string;
+	description: string;
+	longitude: string;
+	latitude: string;
+};
