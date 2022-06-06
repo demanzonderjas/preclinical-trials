@@ -39,3 +39,14 @@ export const messageField: TFormField = {
 	validate: (value: string) => value && value.length >= 2,
 	value: ""
 };
+
+export const descriptionField: TFormField = {
+	id: TFormFieldName.Description,
+	Component: RichTextField,
+	required: true,
+	props: {
+		height: 150
+	},
+	validate: (value: string) => value && value.length >= 2,
+	value: ""
+};

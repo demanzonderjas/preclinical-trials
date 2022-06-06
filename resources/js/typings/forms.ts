@@ -120,7 +120,11 @@ export enum TFormFieldName {
 	UploadNewsImage = "image",
 	Message = "message",
 	LinkToPublication = "link_to_publication",
-	WhyAmendment = "why_amendment"
+	WhyAmendment = "why_amendment",
+	Longitude = "longitude",
+	Latitude = "latitude",
+	GeoSearch = "geo_search",
+	Description = "description"
 }
 
 export enum TFormName {
@@ -138,7 +142,8 @@ export enum TFormName {
 	RejectProtocol = "reject_protocol",
 	EditPublishedProtocol = "edit_published_protocol",
 	AmendPublishedProtocol = "amend_published_protocol",
-	EditAccount = "edit_account"
+	EditAccount = "edit_account",
+	AddAmbassador = "add_ambassador"
 }
 
 export enum TFormStyle {
