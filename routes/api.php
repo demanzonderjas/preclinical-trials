@@ -39,6 +39,8 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('faq', 'FaqController@getByCategory');
     Route::get('faq-categories', 'FaqController@getCategories');
 
+    Route::get('ambassadors', 'AmbassadorController@getAll');
+
     Route::post('page/slug', 'PageController@getBySlug');
     Route::get('page/{page_id}', 'PageController@getById');
 
@@ -61,7 +63,6 @@ Route::group(['namespace' => 'Api'], function () {
         Route::get('users/counts-total', 'UserController@getCountsTotal');
 
         Route::post('ambassador', 'AmbassadorController@store');
-        Route::get('ambassadors', 'AmbassadorController@getAll');
         Route::delete('ambassador/{ambassador_id}', 'AmbassadorController@delete');
 
         Route::post('faq-item', 'FaqController@store');
