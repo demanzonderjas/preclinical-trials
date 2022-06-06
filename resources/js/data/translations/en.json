@@ -272,5 +272,6 @@
 	"password_changed_succesfully": "Your password was changed succesfully.",
 	"current_password": "Current password",
 	"change_password": "Change password",
-	"new_password": "New password"
+	"new_password": "New password",
+	"geo_search": "GeoSearch"
 }

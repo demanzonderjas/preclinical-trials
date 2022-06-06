@@ -60,6 +60,10 @@ Route::group(['namespace' => 'Api'], function () {
 
         Route::get('users/counts-total', 'UserController@getCountsTotal');
 
+        Route::post('ambassador', 'AmbassadorController@store');
+        Route::get('ambassadors', 'AmbassadorController@getAll');
+        Route::delete('ambassador/{ambassador_id}', 'AmbassadorController@delete');
+
         Route::post('faq-item', 'FaqController@store');
         Route::put('faq-item', 'FaqController@update');
         Route::get('faq-items/admin', 'FaqController@getViewableForAdmin');

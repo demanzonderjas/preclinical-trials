@@ -15,6 +15,7 @@ export type TAmbassador = {
 	id?: number;
 	name: string;
 	description: string;
+	geo_search: string;
 	longitude: string;
 	latitude: string;
 };

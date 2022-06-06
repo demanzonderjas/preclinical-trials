@@ -25,7 +25,7 @@ export const AdminAmbassadorsPage: React.FC = () => {
 	return (
 		<AdminPage title="Ambassadors">
 			<FilterStoreProvider store={filterStore}>
-				<Filter justify="left" options={["name", "description"]} />
+				<Filter justify="left" options={["name", "geo_search"]} />
 				<Link to="/admin/ambassadors/add-ambassador">
 					<button type="button" className="tertiary">
 						{t("add_ambassador")}

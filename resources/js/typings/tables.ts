@@ -33,7 +33,8 @@ export enum TTableCellName {
 	Country = "country",
 	MagicSearch = "magic_search",
 	ID = "id",
-	Comments = "comments"
+	Comments = "comments",
+	GeoSearch = "geo_search"
 }
 
 export type TFilter = {
