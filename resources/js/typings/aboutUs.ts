@@ -19,3 +19,13 @@ export type TAmbassador = {
 	longitude: string;
 	latitude: string;
 };
+
+export type TMapConfig = {
+	accessToken: string;
+	positions: TCoord[];
+};
+
+export type TLangitude = number;
+export type TLongitude = number;
+
+export type TCoord = [TLangitude, TLongitude];
