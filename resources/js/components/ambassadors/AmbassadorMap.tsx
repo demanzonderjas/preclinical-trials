@@ -31,7 +31,7 @@ export default function AmbassadorMap() {
 
 	return (
 		<div className="MapboxMap">
-			<div id="map" style={{ height: "70vh", width: "70vw" }}></div>
+			<div id="map" style={{ height: "70vh", width: "70vw", maxWidth: "100%" }}></div>
 			{ambassadors.map(ambassador => (
 				<Marker key={ambassador.id} map={map} ambassador={ambassador} />
 			))}
