@@ -64,7 +64,7 @@
 
 					&.CommentsCell {
 						.comment {
-							background-color: rgba($tertiary, 0.5);
+							background-color: lighten($tertiary, 90);
 							margin: 0 0 10px 0;
 							padding: 5px 5px 30px;
 							border-radius: 5px;
