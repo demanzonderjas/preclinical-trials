@@ -75,7 +75,9 @@ Route::group(['namespace' => 'Api'], function () {
         Route::get('pages', 'PageController@getAll');
     });
 
+    Route::middleware('iles')->post('iles/protocol', 'ProtocolController@storeILES')->name('iles.protocol');
+
     Route::fallback(function () {
-        return abort(404, "oops");
+        return abort(404, "invalid_api_route");
     });
 });
