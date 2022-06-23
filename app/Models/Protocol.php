@@ -38,11 +38,21 @@ class Protocol extends Model
         return $this->hasMany(AdminAction::class);
     }
 
-    public function saveDetails(Request $request)
+    public static function getValidKeys(array $data)
     {
-        $validKeys = array_filter($request->all(), function ($key) {
+        return array_filter($data, function ($key) {
             return in_array($key, config('pct.valid_protocol_keys'));
         }, ARRAY_FILTER_USE_KEY);
+    }
+
+    public function saveDetails(Request $request)
+    {
+        $validKeys = self::getValidKeys($request->all());
+        $this->addDetailsToDatabase($validKeys);
+    }
+
+    public function addDetailsToDatabase(array $validKeys)
+    {
         $details = collect($validKeys);
         $details->each(function ($value, $key) {
             $detail = Detail::firstOrNew(['protocol_id' => $this->id, 'key' => $key]);

@@ -11,7 +11,9 @@ use App\Mail\ProtocolSubmittedUser;
 use App\Models\AdminAction;
 use App\Models\Detail;
 use App\Models\Protocol;
+use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -177,5 +179,26 @@ class ProtocolController extends Controller
 	{
 		$protocols = Protocol::where('status', '!=', 'draft')->with('adminActions')->orderByDesc('id')->get();
 		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
+	}
+
+	public function storeILES(Request $request)
+	{
+		$user = User::where('email', $request->target_email)->first();
+
+		if (empty($user)) {
+			return response()->json(['success' => false, 'message' => 'pct_user_does_not_exist']);
+		}
+
+		try {
+			$protocol = new Protocol();
+			$user->protocols()->save($protocol);
+			$validKeys = Protocol::getValidKeys($request->data);
+			$protocol->addDetailsToDatabase($validKeys);
+		} catch (Exception $e) {
+			return response()->json(['success' => false, 'message' => 'error_during_saving_in_database']);
+		}
+
+
+		return response()->json(['success' => true, 'message' => 'protocol_stored', 'protocol' => $protocol->fresh(['details'])]);
 	}
 }
