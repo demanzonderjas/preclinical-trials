@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\Json;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

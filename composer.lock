@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9549c7a5963c9bfae42aa95c27757fb3",
+    "content-hash": "82677845ae8f6ae5bd33257fe09d8a52",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -994,68 +994,6 @@
                 }
             ],
             "time": "2021-10-06T17:43:30+00:00"
-        },
-        {
-            "name": "hihaho/laravel-encryptable-trait",
-            "version": "v1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hihaho/laravel-encryptable-trait.git",
-                "reference": "8ecb818ffc7ec74fbdfd4832467b69f53bba75a4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hihaho/laravel-encryptable-trait/zipball/8ecb818ffc7ec74fbdfd4832467b69f53bba75a4",
-                "reference": "8ecb818ffc7ec74fbdfd4832467b69f53bba75a4",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/encryption": "^6.0|^7.0|^8.0",
-                "php": "^7.2|^8.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.3.3",
-                "orchestra/testbench": "^4.0|^5.0|^6.0",
-                "phpunit/phpunit": "^7.5|^8.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "v1.4.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "HiHaHo\\EncryptableTrait\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Robert Boes",
-                    "email": "robert@boes.io"
-                },
-                {
-                    "name": "Mart de Graaf",
-                    "email": "mart@martdegraaf.nl"
-                }
-            ],
-            "description": "Laravel encryptable trait, easily make certain fields for eloquent models encryptable",
-            "homepage": "https://github.com/hihaho/laravel-encryptable-trait",
-            "keywords": [
-                "eloquent",
-                "encryptable",
-                "laravel",
-                "model"
-            ],
-            "support": {
-                "issues": "https://github.com/hihaho/laravel-encryptable-trait/issues",
-                "source": "https://github.com/hihaho/laravel-encryptable-trait/tree/v1.4.0"
-            },
-            "time": "2021-02-11T17:58:09+00:00"
         },
         {
             "name": "laravel/framework",
