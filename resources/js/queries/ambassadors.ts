@@ -33,7 +33,7 @@ export async function deleteAmbassadorQuery(ambassador_id: string) {
 export async function getGeoCoding(query: string) {
 	try {
 		const response = await axios.get(
-			`http://api.positionstack.com/v1/forward?access_key=${env.GEO_SEARCH_API_KEY}&query=${query}`
+			`https://api.positionstack.com/v1/forward?access_key=${env.GEO_SEARCH_API_KEY}&query=${query}`
 		);
 		return response.data;
 	} catch (e) {
