@@ -54,4 +54,10 @@
 			}
 		}
 	}
+
+	@include respond-to('xs') {
+		&.layout-wrapper {
+			max-width: 100% !important;
+		}
+	}
 }
