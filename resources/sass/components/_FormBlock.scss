@@ -96,7 +96,8 @@
 
 	@include respond-to("xs") {
 		padding: 16px 32px 100px;
-		max-width: 90%;
+		margin: 40px auto;
+		max-width: 100%;
 
 		form.left {
 			margin-left: 42px;

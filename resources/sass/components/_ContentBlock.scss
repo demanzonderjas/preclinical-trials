@@ -10,37 +10,6 @@
 		border-top: 10px $secondary solid;
 	}
 
-	// &:nth-child(even) {
-	// 	margin-bottom: 260px;
-	// 	&:after {
-	// 		background: linear-gradient(
-	// 			to bottom right,
-	// 			$primary 0%,
-	// 			$primary 50%,
-	// 			$white 50%,
-	// 			$white 100%
-	// 		);
-	// 		transform: rotateX(180deg);
-	// 	}
-	// }
-
-	// &:after {
-	// 	width: 100%;
-	// 	height: 200px;
-	// 	background: linear-gradient(
-	// 		to bottom right,
-	// 		#fff 0%,
-	// 		#fff 50%,
-	// 		$primary 50%,
-	// 		$primary 100%
-	// 	);
-	// 	display: block;
-	// 	content: "";
-	// 	position: absolute;
-	// 	bottom: -199px;
-	// 	left: 0;
-	// }
-
 	.content {
 		max-width: 70%;
 		margin: 0 auto;
@@ -132,14 +101,15 @@
 
 	@include respond-to("small") {
 		.content {
-			max-width: 80%;
+			max-width: 80% !important;
 		}
 	}
 
 	@include respond-to("xs") {
 		.content {
-			max-width: 100%;
+			max-width: 100% !important;
 			padding: 30px 30px 50px;
+			padding: 10px 10px 20px;
 			font-size: 20px;
 			line-height: 30px;
 		}
