@@ -33,7 +33,10 @@ export async function getProtocolQuery(protocol_id: string) {
 	try {
 		const response = await API.get(`/api/protocol/${protocol_id}`);
 		return response.data;
-	} catch (e) {
+	} catch (error) {
+		if (error.response && error.response.status === 401) {
+			return { success: false, message: "requires_account" };
+		}
 		return { success: false, message: "invalid_request" };
 	}
 }
