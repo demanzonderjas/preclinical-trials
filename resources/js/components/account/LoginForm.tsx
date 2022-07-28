@@ -22,7 +22,7 @@ export const LoginForm: React.FC = () => {
 			<div className="LoginForm">
 				<h3>Login</h3>
 			</div>
-			<Link to="create-account">
+			<Link to="/create-account">
 				<div className="NewRegistration" onClick={() => setModal(null)}>
 					<p>Or register as a new user</p>
 					<Image filename="new-account.png" />

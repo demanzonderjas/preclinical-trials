@@ -11,15 +11,13 @@ export const GeoSearchField: React.FC<{ id: TFormFieldName }> = observer(({ id }
 	const { setValue } = useFormField(id);
 
 	const getGeoCode = async query => {
-		const response = await getGeoCoding(query);
-		console.log(response);
-		if (!response.data.length) {
+		const locations = await getGeoCoding(query);
+		if (!locations.length) {
 			return;
 		}
-		setLongitudeValue(response.data[0].longitude);
-		setLatitudeValue(response.data[0].latitude);
+		setLongitudeValue(locations[0].lon);
+		setLatitudeValue(locations[0].lat);
 		setValue(query);
-		console.log(response[0]);
 	};
 
 	return (
