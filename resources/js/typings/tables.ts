@@ -20,6 +20,7 @@ export enum TTableCellName {
 	StudyStatus = "study_status",
 	PublishStatus = "publish_status",
 	LastUpdated = "last_updated",
+	CreatedAt = "created_at",
 	StudyCentre = "study_centre",
 	Action = "action",
 	AdminAction = "admin_action",
