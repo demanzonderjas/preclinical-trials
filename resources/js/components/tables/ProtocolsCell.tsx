@@ -10,7 +10,6 @@ export const ProtocolsCell: React.FC<{
 }> = ({ row }) => {
 	const protocols =
 		row.protocols.map(mapProtocolDetailsToObject) || (([] as TDBProtocol[]) as any);
-	console.log(protocols);
 
 	return (
 		<td className="CommentsCell">
