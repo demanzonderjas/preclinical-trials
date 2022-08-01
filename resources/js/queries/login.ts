@@ -52,7 +52,6 @@ export async function resetPasswordQuery(resetPasswordData: TResetPasswordData) 
 }
 
 export async function changePasswordQuery(changePasswordData: TChangePasswordData) {
-	console.log(changePasswordData);
 	try {
 		const response = await API.post("change-password", changePasswordData);
 		return response.data.success;
