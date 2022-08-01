@@ -47,6 +47,7 @@ import { AdminAmbassadorsPage } from "./pages/admin/ambassadors/Ambassadors";
 import { ProfilePage } from "./pages/dashboard/Profile";
 import { EditProfilePage } from "./pages/dashboard/EditProfile";
 import { AddAmbassadorPage } from "./pages/admin/ambassadors/AddAmbassador";
+import { UsersPage } from "./pages/admin/Users";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -165,6 +166,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/admin/pages/edit-item/:page_id" exact={true}>
 								<EditPagePage />
+							</Route>
+							<Route path="/admin/users" exact={true}>
+								<UsersPage />
 							</Route>
 							<Route path="/admin/stats" exact={true}>
 								<StatsPage />

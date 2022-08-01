@@ -23,12 +23,14 @@ export function protocolMeetsFilters(
 			return true;
 		}
 		if (!filter.key) {
-			return Object.keys(row).some(key =>
-				t(row[key])
-					.toString()
-					.toLowerCase()
-					.includes(filter.value.toLowerCase())
-			);
+			return Object.keys(row)
+				.filter(key => !!t(row[key]))
+				.some(key =>
+					t(row[key])
+						.toString()
+						.toLowerCase()
+						.includes(filter.value.toLowerCase())
+				);
 		}
 		if (filter.key && filter.value && row[filter.key]) {
 			return JSON.stringify(t(row[filter.key]))

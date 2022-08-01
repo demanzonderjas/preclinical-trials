@@ -26,3 +26,12 @@ export async function rejectProtocolQuery(protocol_id: string, message: string) 
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function getUsersQuery() {
+	try {
+		const response = await API.get(`/api/users`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
