@@ -1,6 +1,12 @@
 import { TTable, TTableCellName } from "../../typings/tables";
 import { idCell, nameCell } from "./cells/protocol";
-import { emailCell, firstNameCell, lastNameCell, protocolsCell } from "./cells/users";
+import {
+	createdAtCell,
+	emailCell,
+	firstNameCell,
+	lastNameCell,
+	protocolsCell
+} from "./cells/users";
 
 export const usersTable: TTable = {
 	headers: [
@@ -8,7 +14,8 @@ export const usersTable: TTable = {
 		TTableCellName.FirstName,
 		TTableCellName.LastName,
 		TTableCellName.Email,
+		TTableCellName.CreatedAt,
 		TTableCellName.Protocols
 	],
-	cells: [idCell, firstNameCell, lastNameCell, emailCell, protocolsCell]
+	cells: [idCell, firstNameCell, lastNameCell, emailCell, createdAtCell, protocolsCell]
 };

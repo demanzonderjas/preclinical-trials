@@ -274,5 +274,8 @@
 	"change_password": "Change password",
 	"new_password": "New password",
 	"geo_search": "GeoSearch",
-	"add_ambassador": "Add ambassador"
+	"add_ambassador": "Add ambassador",
+	"created_at": "Created at",
+	"email": "Email",
+	"protocols": "Protocols"
 }
