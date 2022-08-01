@@ -34,4 +34,10 @@ class UserController extends Controller
 
 		return response()->json(["user" => $targetUser, "success" => true]);
 	}
+
+	public function getAll()
+	{
+		$users = User::with('protocols', 'protocols.details')->get();
+		return response()->json(["users" => $users, "success" => true]);
+	}
 }

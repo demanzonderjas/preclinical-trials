@@ -73,6 +73,9 @@ Route::group(['namespace' => 'Api'], function () {
 
         Route::put('page', 'PageController@update');
         Route::get('pages', 'PageController@getAll');
+
+
+        Route::get('users', 'UserController@getAll');
     });
 
     Route::middleware('iles')->post('iles/protocol', 'ProtocolController@storeILES')->name('iles.protocol');

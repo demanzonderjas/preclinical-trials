@@ -6,6 +6,7 @@ export const firstNameField: TFormField = {
 	id: TFormFieldName.FirstName,
 	Component: InputField,
 	required: true,
+	useAsFilter: true,
 	validate: (value: string) => value && value.length >= 2,
 	value: ""
 };

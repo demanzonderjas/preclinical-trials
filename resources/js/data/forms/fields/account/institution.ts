@@ -5,6 +5,7 @@ export const institutionField: TFormField = {
 	id: TFormFieldName.Institution,
 	Component: InputField,
 	required: false,
+	useAsFilter: true,
 	validate: null,
 	value: ""
 };
