@@ -106,4 +106,12 @@ class Protocol extends Model
         });
         return !empty($detail) ? $detail->value !== "no" : false;
     }
+
+    public function getTitleAttribute()
+    {
+        $detail = $this->details->first(function ($d) {
+            return $d->key === "title";
+        });
+        return !empty($detail) ? $detail->value : "No title was given yet.";
+    }
 }
