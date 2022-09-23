@@ -67,4 +67,9 @@ class User extends Authenticatable
 
         $this->notify(new \App\Notifications\ResetPasswordNotification($url, $this));
     }
+
+    public function getNameAttribute()
+    {
+        return $this->first_name . " " . $this->last_name;
+    }
 }
