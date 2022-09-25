@@ -23,6 +23,7 @@ export const blindedInterventionNoField: TFormField = {
 	id: TFormFieldName.NoBlindedIntervention,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "details",
+	useAsFilter: false,
 	description: "why_no_blinding",
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "no" }]
@@ -34,6 +35,7 @@ export const blindedInterventionHowField: TFormField = {
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "details",
 	description: "how_blinding",
+	useAsFilter: false,
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes" }]
 };
@@ -44,6 +46,7 @@ export const blindedInterventionPartiallyField: TFormField = {
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "details",
 	description: "please_elaborate",
+	useAsFilter: false,
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.InvestigatorsBlindedIntervention, value: "yes_partially" }]
 };

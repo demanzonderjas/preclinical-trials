@@ -13,6 +13,7 @@ export const otherSupportField: TFormField = {
 	showValueIn: TFormFieldName.FinancialSupport,
 	validate: null,
 	required: false,
+	useAsFilter: false,
 	section: TSectionName.General,
 	dependencies: [
 		{
