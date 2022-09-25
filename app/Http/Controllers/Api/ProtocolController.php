@@ -50,7 +50,7 @@ class ProtocolController extends Controller
 			return abort(403, "You are not authorized.");
 		}
 
-		if (!$request->user() || (!$request->user()->is_admin && !$request->user()->is_admin && $request->user()->id !== $protocol->user_id)) {
+		if (!$request->user() || (!$request->user()->is_admin && $request->user()->id !== $protocol->user_id)) {
 			$protocol->hideContactDetails();
 		}
 
