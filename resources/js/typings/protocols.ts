@@ -21,6 +21,7 @@ export type TDBProtocol = {
 	details: TDetail[];
 	revisions: TRevision[];
 	comments: TAdminAction[];
+	title: string;
 	created_at: string;
 	updated_at: string;
 };

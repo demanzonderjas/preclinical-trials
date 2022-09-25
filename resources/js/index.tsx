@@ -48,6 +48,7 @@ import { ProfilePage } from "./pages/dashboard/Profile";
 import { EditProfilePage } from "./pages/dashboard/EditProfile";
 import { AddAmbassadorPage } from "./pages/admin/ambassadors/AddAmbassador";
 import { UsersPage } from "./pages/admin/Users";
+import { ExtendEmbargoPage } from "./pages/dashboard/ExtendEmbargo";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -112,6 +113,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/dashboard/edit-protocol/:protocol_id">
 								<EditProtocolPage />
+							</Route>
+							<Route path="/dashboard/extend-embargo/:protocol_id">
+								<ExtendEmbargoPage />
 							</Route>
 							<Route path="/dashboard/profile">
 								<ProfilePage />
