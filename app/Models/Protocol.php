@@ -106,4 +106,11 @@ class Protocol extends Model
         });
         return !empty($detail) ? $detail->value !== "no" : false;
     }
+
+    public function hideContactDetails()
+    {
+        $this->details = $this->details->filter(function (Detail $d) {
+            return strpos($d->key, "contact_") === false;
+        })->toArray();
+    }
 }
