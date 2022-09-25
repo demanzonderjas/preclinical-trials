@@ -1,4 +1,6 @@
+import { BooleanField } from "../../../../components/forms/BooleanField";
 import { RadioButtonsField } from "../../../../components/forms/RadioButtonsField";
+import { RichTextField } from "../../../../components/forms/RichTextField";
 import { YesNoField } from "../../../../components/forms/YesNoField";
 import {
 	TFormField,
@@ -52,4 +54,28 @@ export const liftEmbargoField: TFormField = {
 			value: ["", "not_started", "active", "completed_but_not_published", "study_interrupted"]
 		}
 	]
+};
+
+export const requestEmbargoExtendField: TFormField = {
+	id: TFormFieldName.TermsConditions,
+	Component: BooleanField,
+	required: true,
+	props: {
+		type: "checkbox",
+		description: "request_embargo_description"
+	},
+	validate: (value: boolean) => !!value,
+	value: false
+};
+
+export const embargoReasonField: TFormField = {
+	id: TFormFieldName.Reason,
+	Component: RichTextField,
+	required: true,
+	description: "embargo_extend_reason",
+	props: {
+		height: 250
+	},
+	validate: (value: string) => value && value.length >= 2,
+	value: ""
 };

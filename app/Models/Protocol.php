@@ -18,6 +18,8 @@ class Protocol extends Model
         "updated_at"
     ];
 
+    protected $appends = ["title"];
+
     public function user()
     {
         return $this->belongsTo(User::class);

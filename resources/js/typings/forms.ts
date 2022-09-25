@@ -124,7 +124,8 @@ export enum TFormFieldName {
 	Longitude = "longitude",
 	Latitude = "latitude",
 	GeoSearch = "geo_search",
-	Description = "description"
+	Description = "description",
+	Reason = "reason"
 }
 
 export enum TFormName {
@@ -143,7 +144,8 @@ export enum TFormName {
 	EditPublishedProtocol = "edit_published_protocol",
 	AmendPublishedProtocol = "amend_published_protocol",
 	EditAccount = "edit_account",
-	AddAmbassador = "add_ambassador"
+	AddAmbassador = "add_ambassador",
+	ExtendEmbargo = "extend_embargo"
 }
 
 export enum TFormStyle {

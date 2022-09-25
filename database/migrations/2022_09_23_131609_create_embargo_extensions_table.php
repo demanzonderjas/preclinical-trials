@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmbargoEndDatesTable extends Migration
+class CreateEmbargoExtensionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateEmbargoEndDatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('embargo_end_dates', function (Blueprint $table) {
+        Schema::create('embargo_extensions', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('protocol_id')->unsigned();
             $table->foreign('protocol_id')->references('id')->on('protocols')->onDelete('cascade');
-            $table->date('date');
-            $table->boolean('is_active')->nullable()->default(true);
-            $table->string('mail_status')->nullable();
+            $table->text('reason')->nullable();
+            $table->string('status')->default('awaiting_approval');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateEmbargoEndDatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('embargo_end_dates');
+        Schema::dropIfExists('embargo_extensions');
     }
 }
