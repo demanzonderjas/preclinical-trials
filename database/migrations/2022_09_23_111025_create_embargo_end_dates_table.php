@@ -18,6 +18,7 @@ class CreateEmbargoEndDatesTable extends Migration
             $table->bigInteger('protocol_id')->unsigned();
             $table->foreign('protocol_id')->references('id')->on('protocols')->onDelete('cascade');
             $table->date('date');
+            $table->boolean('is_active')->nullable()->default(true);
             $table->string('mail_status')->nullable();
             $table->timestamps();
         });
