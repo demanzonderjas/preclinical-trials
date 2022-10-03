@@ -23,3 +23,15 @@ export async function extendEmbargoQuery(protocol_id: string, data: { reason: st
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function getEmbargoExtensions() {
+	try {
+		const response = await API.get("/api/embargo-extensions");
+		return response.data;
+	} catch (error) {
+		if (error.response && error.response.status === 401) {
+			return { success: false, message: "requires_account" };
+		}
+		return { success: false, message: "invalid_request" };
+	}
+}

@@ -49,6 +49,7 @@ import { EditProfilePage } from "./pages/dashboard/EditProfile";
 import { AddAmbassadorPage } from "./pages/admin/ambassadors/AddAmbassador";
 import { UsersPage } from "./pages/admin/Users";
 import { ExtendEmbargoPage } from "./pages/dashboard/ExtendEmbargo";
+import { EmbargoExtensionsPage } from "./pages/admin/EmbargoExtensions";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -140,6 +141,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/admin/protocols/:protocol_id">
 								<AdminViewProtocolPage />
+							</Route>
+							<Route path="/admin/embargo-extensions" exact={true}>
+								<EmbargoExtensionsPage />
 							</Route>
 							<Route path="/admin/news" exact={true}>
 								<AdminNewsPage />

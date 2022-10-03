@@ -10,4 +10,9 @@ class EmbargoExtension extends Model
     use HasFactory;
 
     protected $fillable = ["reason"];
+
+    public function protocol()
+    {
+        return $this->belongsTo(Protocol::class);
+    }
 }
