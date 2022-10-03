@@ -6,6 +6,7 @@ export const extendEmbargoForm: TForm = {
 	style: TFormStyle.InlinePlaceholder,
 	keepValuesAfterSubmit: false,
 	submitText: "send",
+	succesText: "embargo_extension_request_sent",
 	fields: [requestEmbargoExtendField, embargoReasonField],
 	align: TAlignment.Left
 };

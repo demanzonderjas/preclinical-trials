@@ -16,6 +16,7 @@ export const FormField: React.FC<TFormField & { number: number }> = observer(
 		hidden,
 		showValueIn,
 		required,
+		note,
 		description,
 		number,
 		infoIcon
@@ -56,6 +57,7 @@ export const FormField: React.FC<TFormField & { number: number }> = observer(
 					/>
 				)}
 				<Component id={id} required={required} label={label} {...props} />
+				{note && <p className="note">{t(note)}</p>}
 				{error && <p className="error">{t(error)}</p>}
 			</div>
 		);
