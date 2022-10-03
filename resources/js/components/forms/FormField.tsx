@@ -73,7 +73,7 @@ export const FormFields: React.FC<{ fields: TFormField[] }> = observer(({ fields
 				.filter(field => !!field.Component)
 				.map(field => (
 					<FormField
-						key={field.id}
+						key={`${field.id}${field.description || ""}`}
 						{...field}
 						number={
 							fields.filter(f => !f.showValueIn).findIndex(f => f.id === field.id) + 1

@@ -11,7 +11,7 @@ export const emailField: TFormField = {
 		type: "email"
 	},
 	required: true,
-	useAsFilter: true,
+	useAsFilter: false,
 	validate: validateEmail,
 	value: ""
 };

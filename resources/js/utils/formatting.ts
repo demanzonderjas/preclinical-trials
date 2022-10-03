@@ -33,19 +33,20 @@ export function getSectionFromHash(hash: string) {
 }
 
 export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
-	return protocol.details.reduce(
-		(base, detail) => {
-			base[detail.key] = detail.value;
-			return base;
-		},
-		{
-			id: protocol.id,
-			updated_at: protocol.updated_at,
-			created_at: protocol.created_at,
-			status: protocol.status,
-			comments: protocol.comments
-		}
-	);
+	const baseData = {
+		id: protocol.id,
+		updated_at: protocol.updated_at,
+		created_at: protocol.created_at,
+		status: protocol.status,
+		comments: protocol.comments
+	};
+	if (!protocol.details) {
+		return baseData;
+	}
+	return protocol.details.reduce((base, detail) => {
+		base[detail.key] = detail.value;
+		return base;
+	}, baseData);
 }
 
 export function getDateTimeFormat(date: string) {

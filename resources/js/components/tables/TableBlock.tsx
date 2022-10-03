@@ -74,7 +74,7 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 											: undefined
 									}
 								>
-									{table.cells.map(cell => (
+									{table.cells.map((cell, idx) => (
 										<cell.Component
 											key={cell.id}
 											row={row}
