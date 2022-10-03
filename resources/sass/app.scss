@@ -121,3 +121,9 @@ body {
 .margin-20 {
 	margin: 20px 0;
 }
+
+.highlight-secondary {
+	background-color: $secondary;
+	color: $white;
+	padding: 5px;
+}

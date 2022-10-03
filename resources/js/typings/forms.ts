@@ -32,6 +32,7 @@ export type TFormField = {
 	filterLabel?: string;
 	value: any;
 	required?: boolean;
+	note?: string;
 	props?: any;
 	section?: TSectionName;
 	description?: string;

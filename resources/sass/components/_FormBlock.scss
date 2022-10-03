@@ -88,6 +88,10 @@
 		margin: 20px 0;
 		text-align: inherit;
 		color: $white;
+
+		background-color: $primary;
+		padding: 5px;
+
 	}
 
 	@include respond-to("small") {

@@ -73,6 +73,7 @@ export const embargoReasonField: TFormField = {
 	Component: RichTextField,
 	required: true,
 	description: "embargo_extend_reason",
+	note: "embargo_extension_note",
 	props: {
 		height: 250
 	},
