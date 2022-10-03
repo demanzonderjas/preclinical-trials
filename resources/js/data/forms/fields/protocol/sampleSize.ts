@@ -22,6 +22,7 @@ export const sampleSizeCalculationDetailsField: TFormField = {
 	description: "yes_sample_size_calculation_description",
 	label: "details",
 	useAsFilter: false,
+	required: true,
 	section: TSectionName.StudyDesign,
 	dependencies: [
 		{
@@ -35,6 +36,7 @@ export const noSampleSizeCalculationDetailsField: TFormField = {
 	...sampleSizeCalculationDetailsField,
 	label: "details",
 	description: "no_sample_size_calculation_description",
+	required: true,
 	dependencies: [
 		{
 			key: TFormFieldName.SampleSizeCalculation,

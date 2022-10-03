@@ -282,5 +282,8 @@
 	"tick_box": "Please tick the statement below and fill in the free text box to request the extension.",
 	"request_embargo_description": "I demand to extend the embargo of my protocol for an additional year",
 	"embargo_extend_reason": "This demand will be reviewed and approved by one of our administrators, which is why you need to state a reason for the extension.",
-	"embargo_extend_note": "To note: we want to promote transparency as most as possible. Therefore extension request for a 4th year of embargo, i.e. demand for a 3rd extension, will only be approved for specific cases and must be strongly motivated above."
+	"embargo_extend_note": "To note: we want to promote transparency as most as possible. Therefore extension request for a 4th year of embargo, i.e. demand for a 3rd extension, will only be approved for specific cases and must be strongly motivated above.",
+	"the_intervention_was": "the intervention was",
+	"not": " not",
+	"placebo_controlled_label": "placebo-controlled"
 }

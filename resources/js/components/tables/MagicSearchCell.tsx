@@ -21,7 +21,11 @@ export const MagicSearchCell: React.FC<{ value: TSearchResult }> = ({ value: res
 	};
 
 	const findLastWordPosition = (currentPosition: number) => {
-		if (currentPosition >= result.value.length - 1 || currentPosition === -1) {
+		if (
+			currentPosition >= result.value.length - 1 ||
+			currentPosition === -1 ||
+			!result.value[currentPosition]
+		) {
 			return result.value.length - 1;
 		}
 		if (!result.value[currentPosition].match(/\s/)) {
@@ -36,12 +40,21 @@ export const MagicSearchCell: React.FC<{ value: TSearchResult }> = ({ value: res
 	const endPosition = findLastWordPosition(result.position + SUBSTRING_SURROUNDING_TEXT_LENGTH);
 
 	const highlight = (start, end) => {
+		const searchString = result.value.toString();
+		const highlightedValue = t(
+			searchString.substring(result.position, result.position + result.filterValue.length)
+		);
+		const followingValue = searchString.substring(
+			result.position + result.filterValue.length,
+			end + 1
+		);
 		return `${startingPosition > 0 ? "..." : ""}
-			${result.value.substring(start, result.position)}<span class="highlight">${t(
-			result.value.substring(result.position, result.position + result.filterValue.length)
-		)}</span>${result.value.substring(result.position + result.filterValue.length, end + 1)}${
-			endPosition < result.value.length - 1 ? "..." : ""
-		}`;
+			${searchString.substring(
+				start,
+				result.position
+			)}<span class="highlight">${highlightedValue}</span>${
+			followingValue !== highlightedValue ? followingValue : ""
+		}${endPosition < searchString.length - 1 ? "..." : ""}`;
 	};
 
 	return (
