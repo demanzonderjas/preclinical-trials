@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class EmbargoExtension extends Model
 {
     use HasFactory;
+
+    protected $fillable = ["reason"];
 }

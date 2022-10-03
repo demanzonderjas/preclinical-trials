@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmbargoEndDate;
+use App\Models\EmbargoExtension;
 use App\Models\Protocol;
 use Illuminate\Http\Request;
 
@@ -20,5 +21,15 @@ class EmbargoController extends Controller
 		}
 
 		return response()->json(["embargo_end_date" => $embargoEndDate]);
+	}
+
+	public function store(Request $request)
+	{
+		$targetProtocol = Protocol::findOrFail($request->protocol_id);
+		$extension = new EmbargoExtension([
+			"reason" => $request->reason
+		]);
+		$targetProtocol->embargoExtensions()->save($extension);
+		return response()->json(["embargo_extension" => $extension]);
 	}
 }
