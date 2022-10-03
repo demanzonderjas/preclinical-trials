@@ -28,6 +28,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::middleware(['auth:sanctum', 'auth.owner'])->post('protocol/submit-for-publication', 'ProtocolController@submitForPublication');
 
     Route::middleware(['auth:sanctum', 'auth.owner'])->get('embargo-end-date/{protocol_id}', 'EmbargoController@get');
+    Route::middleware(['auth:sanctum', 'auth.owner'])->post('embargo-end-date/{protocol_id}', 'EmbargoController@store');
 
     Route::middleware(['auth:sanctum'])->get('protocol/{protocol_id}', 'ProtocolController@get');
     Route::get('protocol/{protocol_id}/status', 'ProtocolController@getStatus');
