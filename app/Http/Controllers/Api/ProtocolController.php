@@ -50,6 +50,10 @@ class ProtocolController extends Controller
 			return abort(403, "You are not authorized.");
 		}
 
+		if (!$request->user() || (!$request->user()->is_admin && $request->user()->id !== $protocol->user_id)) {
+			$protocol->hideContactDetails();
+		}
+
 		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
 
@@ -70,6 +74,9 @@ class ProtocolController extends Controller
 		$protocols = Protocol::where('status', 'published')->orderByDesc('created_at')->get();
 		$withoutEmbargo = $protocols->filter(function ($p) {
 			return !$p->has_embargo;
+		});
+		$protocols->each(function ($p) {
+			$p->hideContactDetails();
 		});
 		return response()->json(["protocols" => ProtocolResource::collection($withoutEmbargo)]);
 	}
