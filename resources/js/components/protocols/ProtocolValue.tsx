@@ -113,9 +113,19 @@ export const CombinedValue: React.FC<{
 
 	return (
 		<p>
-			<strong>{t(value)}</strong> -{" "}
+			<strong>{t(value)}</strong>
 			{otherValueFields.map(f => (
-				<RealTimeValue field={f} fields={fields} offset={offset} />
+				<>
+					{" "}
+					-{" "}
+					{f.id === TFormFieldName.PlaceboControlled ? (
+						`${t("the_intervention_was")}${f.value === "yes" ? "" : t("not")} ${t(
+							"placebo_controlled_label"
+						)}`
+					) : (
+						<RealTimeValue field={f} fields={fields} offset={offset} />
+					)}
+				</>
 			))}
 		</p>
 	);
