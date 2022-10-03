@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { ApproveButton, RejectButton } from "../../../components/admin/ActionButtons";
+import {
+	ApproveProtocolButton,
+	RejectProtocolButton
+} from "../../../components/admin/ActionButtons";
 import { AdminPage } from "../../../components/layout/admin/AdminPage";
 import { FlexWrapper } from "../../../components/layout/FlexWrapper";
 import { ProtocolSection } from "../../../components/protocols/ProtocolSection";
@@ -36,8 +39,14 @@ export const AdminViewProtocolPage: React.FC = () => {
 				<div className="protocol layout-wrapper">
 					<div style={{ maxWidth: "250px", margin: "30px 0" }}>
 						<FlexWrapper>
-							<ApproveButton status={protocol?.status} protocol_id={protocol?.id} />
-							<RejectButton status={protocol?.status} protocol_id={protocol?.id} />
+							<ApproveProtocolButton
+								status={protocol?.status}
+								protocol_id={protocol?.id}
+							/>
+							<RejectProtocolButton
+								status={protocol?.status}
+								protocol_id={protocol?.id}
+							/>
 						</FlexWrapper>
 					</div>
 				</div>

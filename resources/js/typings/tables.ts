@@ -39,7 +39,8 @@ export enum TTableCellName {
 	Email = "email",
 	Protocols = "protocols",
 	FirstName = "first_name",
-	LastName = "last_name"
+	LastName = "last_name",
+	Reason = "reason"
 }
 
 export type TFilter = {

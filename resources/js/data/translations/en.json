@@ -287,5 +287,8 @@
 	"not": " not",
 	"placebo_controlled_label": "placebo-controlled",
 	"embargo_extension_note": "To note: we want to promote transparency as most as possible. Therefore extension request for a 4th year of embargo, i.e. demand for a 3rd extension, will only be approved for specific cases and must be strongly motivated above.",
-	"embargo_extension_request_sent": "Your request was sent. As soon as it is approved, you will receive a confirmation e-mail. Approval may take a few days."
+	"embargo_extension_request_sent": "Your request was sent. As soon as it is approved, you will receive a confirmation e-mail. Approval may take a few days.",
+	"awaiting_approval": "Awaiting approval",
+	"approved": "Approved",
+	"reason": "Reason"
 }

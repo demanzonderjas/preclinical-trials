@@ -4,10 +4,11 @@ import { confirmModal } from "../../data/modals/confirm";
 import { rejectModal } from "../../data/modals/reject";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
-import { approveProtocolQuery } from "../../queries/admin";
+import { approveEmbargoExtensionQuery, approveProtocolQuery } from "../../queries/admin";
+import { TEmbargoExtensionStatus } from "../../typings/embargo";
 import { TProtocolStatus } from "../../typings/protocols";
 
-export const RejectButton: React.FC<{ status: TProtocolStatus; protocol_id: number }> = ({
+export const RejectProtocolButton: React.FC<{ status: TProtocolStatus; protocol_id: number }> = ({
 	status,
 	protocol_id
 }) => {
@@ -31,7 +32,7 @@ export const RejectButton: React.FC<{ status: TProtocolStatus; protocol_id: numb
 	);
 };
 
-export const ApproveButton: React.FC<{ status: TProtocolStatus; protocol_id: number }> = ({
+export const ApproveProtocolButton: React.FC<{ status: TProtocolStatus; protocol_id: number }> = ({
 	status,
 	protocol_id
 }) => {
@@ -55,6 +56,36 @@ export const ApproveButton: React.FC<{ status: TProtocolStatus; protocol_id: num
 		<button
 			className="tertiary small"
 			onClick={() => setModal({ ...confirmModal, actionOnConfirm: approveProtocol })}
+		>
+			{t("approve")}
+		</button>
+	);
+};
+
+export const ApproveEmbargoExtensionButton: React.FC<{
+	status: TEmbargoExtensionStatus;
+	embargo_extension_id: number;
+}> = ({ status, embargo_extension_id }) => {
+	const { t } = useTranslationStore();
+	const { setModal } = useModalStore();
+	const { push } = useHistory();
+
+	const approveEmbargoExtension = async () => {
+		const response = await approveEmbargoExtensionQuery(embargo_extension_id);
+		if (response.success) {
+			push("/admin/embargo-extensions");
+			location.reload();
+		}
+	};
+
+	if (status === TEmbargoExtensionStatus.Approved) {
+		return null;
+	}
+
+	return (
+		<button
+			className="tertiary small"
+			onClick={() => setModal({ ...confirmModal, actionOnConfirm: approveEmbargoExtension })}
 		>
 			{t("approve")}
 		</button>
