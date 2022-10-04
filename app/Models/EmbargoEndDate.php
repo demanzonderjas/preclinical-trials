@@ -9,6 +9,8 @@ class EmbargoEndDate extends Model
 {
     use HasFactory;
 
+    protected $fillable = ["date"];
+
     public function protocol()
     {
         return $this->belongsTo(Protocol::class);

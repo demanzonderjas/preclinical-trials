@@ -40,6 +40,12 @@ class Protocol extends Model
         return $this->hasMany(AdminAction::class);
     }
 
+    public function embargoEndDates()
+    {
+        return $this->hasMany(EmbargoEndDate::class);
+    }
+
+
     public function embargoExtensions()
     {
         return $this->hasMany(EmbargoExtension::class);
