@@ -18,7 +18,7 @@ class Protocol extends Model
         "updated_at"
     ];
 
-    protected $appends = ["title"];
+    protected $appends = ["title", "pct_id"];
 
     public function user()
     {
@@ -133,5 +133,10 @@ class Protocol extends Model
         $this->details = $this->details->filter(function (Detail $d) {
             return strpos($d->key, "contact_") === false;
         })->toArray();
+    }
+
+    public function getPctIdAttribute()
+    {
+        return "PCTE0000" . $this->id;
     }
 }

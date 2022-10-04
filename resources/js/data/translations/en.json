@@ -290,5 +290,6 @@
 	"embargo_extension_request_sent": "Your request was sent. As soon as it is approved, you will receive a confirmation e-mail. Approval may take a few days.",
 	"awaiting_approval": "Awaiting approval",
 	"approved": "Approved",
-	"reason": "Reason"
+	"reason": "Reason",
+	"pct_id": "PCT ID"
 }

@@ -35,6 +35,7 @@ export function getSectionFromHash(hash: string) {
 export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 	const baseData = {
 		id: protocol.id,
+		pct_id: protocol.pct_id,
 		updated_at: protocol.updated_at,
 		created_at: protocol.created_at,
 		status: protocol.status,

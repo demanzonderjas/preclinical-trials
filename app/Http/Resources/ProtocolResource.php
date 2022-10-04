@@ -27,6 +27,7 @@ class ProtocolResource extends JsonResource
 
         return [
             "id" => $this->id,
+            "pct_id" => $this->pct_id,
             "user_id" => $this->user_id,
             "status" => $this->status,
             "details" => $this->details,

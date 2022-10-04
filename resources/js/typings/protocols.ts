@@ -16,6 +16,7 @@ export type TProtocol = { [K in TFormFieldName]: any };
 
 export type TDBProtocol = {
 	id: number;
+	pct_id: string;
 	user_id: number;
 	status: TProtocolStatus;
 	details: TDetail[];
