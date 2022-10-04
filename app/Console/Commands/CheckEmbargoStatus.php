@@ -54,24 +54,23 @@ class CheckEmbargoStatus extends Command
             $NEEDS_EMBARGO_LIFT = $diffInDays <= 0;
 
             if ($NEEDS_FIRST_REMINDER) {
-                // Mail::to($embargoEndDate->protocol->user)->send(new EmbargoFirstReminder($embargoEndDate));
-                // $embargoEndDate->mail_status = "first_reminder";
-                // $embargoEndDate->save();
+                Mail::to($embargoEndDate->protocol->user)->send(new EmbargoFirstReminder($embargoEndDate));
+                $embargoEndDate->mail_status = "first_reminder";
+                $embargoEndDate->save();
             } else if ($NEEDS_SECOND_REMINDER) {
-                // Mail::to($embargoEndDate->protocol->user)->send(new EmbargoSecondReminder($embargoEndDate));
-                // $embargoEndDate->mail_status = "second_reminder";
-                // $embargoEndDate->save();
+                Mail::to($embargoEndDate->protocol->user)->send(new EmbargoSecondReminder($embargoEndDate));
+                $embargoEndDate->mail_status = "second_reminder";
+                $embargoEndDate->save();
             } else if ($NEEDS_EMBARGO_LIFT) {
-                // $embargoEndDate->mail_status = NULL;
-                // $embargoEndDate->is_active = false;
-                // $embargoEndDate->save();
+                $embargoEndDate->mail_status = NULL;
+                $embargoEndDate->is_active = false;
+                $embargoEndDate->save();
 
-                // $detail = Detail::where(["protocol_id" => $embargoEndDate->protocol->id, "key" => "has_embargo"])->firstOrFail();
-                // $detail->value = "no";
-                // $detail->save();
+                $detail = Detail::where(["protocol_id" => $embargoEndDate->protocol->id, "key" => "has_embargo"])->firstOrFail();
+                $detail->value = "no";
+                $detail->save();
 
-                // Mail::to($embargoEndDate->protocol->user)->send(new EmbargoLifted($embargoEndDate->protocol));
-                echo "\n" . $embargoEndDate->protocol->id . "\n";
+                Mail::to($embargoEndDate->protocol->user)->send(new EmbargoLifted($embargoEndDate->protocol));
             }
         });
     }
