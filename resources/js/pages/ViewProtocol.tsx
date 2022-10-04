@@ -6,6 +6,7 @@ import { Page } from "../components/layout/Page";
 import { ProtocolSection } from "../components/protocols/ProtocolSection";
 import { RevisionPanel } from "../components/protocols/RevisionPanel";
 import { RevisionStoreProvider } from "../contexts/RevisionStoreContext";
+import { pctIdField } from "../data/forms/fields/protocol/id";
 import { protocolSections } from "../data/forms/protocol";
 import { getProtocolQuery } from "../queries/protocol";
 import { RevisionStore } from "../stores/RevisionStore";
@@ -34,9 +35,12 @@ export const ViewProtocolPage: React.FC = () => {
 		}
 	}, [protocol_id]);
 
-	const fieldsWithValues = fillFieldsWithProtocolDetails(protocol).filter(
-		f => f.id != TFormFieldName.ContactEmail && f.id != TFormFieldName.ContactRole
-	);
+	const fieldsWithValues = [
+		{ ...pctIdField, value: protocol?.pct_id },
+		...fillFieldsWithProtocolDetails(protocol).filter(
+			f => f.id != TFormFieldName.ContactEmail && f.id != TFormFieldName.ContactRole
+		)
+	];
 
 	return (
 		<RevisionStoreProvider store={revisionStore}>

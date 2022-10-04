@@ -6,6 +6,7 @@ import { TotalProtocols } from "../components/protocols/TotalProtocols";
 import { Filter } from "../components/tables/Filter";
 import { TableBlock } from "../components/tables/TableBlock";
 import { FilterStoreProvider } from "../contexts/FilterStoreContext";
+import { pctIdField } from "../data/forms/fields/protocol/id";
 import { createProtocolForm } from "../data/forms/protocol";
 import { searchProtocolsTable } from "../data/tables/protocols";
 import { getViewableProtocolsQuery } from "../queries/protocol";
@@ -28,14 +29,17 @@ export const SearchDatabasePage: React.FC = () => {
 		})();
 	}, []);
 
+	console.log(protocols);
+
 	return (
 		<FilterStoreProvider store={filterStore}>
 			<Page title="Search protocols">
 				<div className="SearchDatabase border-top" style={{ background: "white" }}>
 					<Filter
-						options={createProtocolForm.fields
-							.filter(f => f.useAsFilter)
-							.map(f => f.filterLabel || f.id)}
+						options={[
+							pctIdField,
+							...createProtocolForm.fields.filter(f => f.useAsFilter)
+						].map(f => f.filterLabel || f.id)}
 					/>
 					<TotalProtocols protocols={protocols} />
 					<div
