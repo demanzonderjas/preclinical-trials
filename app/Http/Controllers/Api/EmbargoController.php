@@ -74,7 +74,7 @@ class EmbargoController extends Controller
 
 		$protocol = $embargo_extension->protocol;
 
-		$this->addAdminAction($protocol, "reject", $request->message);
+		$this->addAdminAction($protocol, "reject_embargo_extension", $request->message);
 
 		Mail::to($protocol->user)->send(new EmbargoExtensionRejected($protocol, $request->message));
 

@@ -63,6 +63,7 @@
 					}
 
 					&.CommentsCell {
+						min-width: 250px;
 						.comment {
 							background-color: lighten($tertiary, 90);
 							padding: 5px 5px 30px;
@@ -90,6 +91,7 @@
 									color: $white;
 									font-weight: bold;
 									background-color: $tertiary;
+									font-size: 12px;
 									padding: 2px;
 								}
 								.date {
