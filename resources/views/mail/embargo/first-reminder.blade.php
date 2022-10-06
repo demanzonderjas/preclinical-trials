@@ -8,7 +8,7 @@
     <p>
         You registered some times ago your protocol at Preclinicaltrials.eu
         We want to inform you that your embargo will be automatically lifted in 1 month for
-        protocol {{ $protocol->id }}, entitled "{{ $protocol->title }}".
+        protocol {{ $protocol->pct_id }}, entitled "{{ $protocol->title }}".
     </p>
     <p>
         If you wish to extend your embargo, you can request it by clicking the button below

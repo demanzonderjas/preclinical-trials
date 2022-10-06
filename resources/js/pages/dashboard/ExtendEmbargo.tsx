@@ -38,7 +38,7 @@ export const ExtendEmbargoPage: React.FC = () => {
 							icon="login.png"
 						>
 							<p className="margin-20 highlight-secondary">
-								{t("embargo_demand")} {embargoEndDate.protocol.id}: "
+								{t("embargo_demand")} {embargoEndDate.protocol.pct_id}: "
 								{embargoEndDate.protocol.title}"
 							</p>
 							<p className="margin-20">{t("tick_box")}</p>
