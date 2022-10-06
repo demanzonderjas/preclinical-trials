@@ -2,7 +2,7 @@
 
 @section('title', 'PCT.eu - An embargo extension has been requested')
 @section('preheader', 'An embargo extension has been requested.')
-
+@section('name', 'PCT Admin')
 
 @section('content')
     <p>
