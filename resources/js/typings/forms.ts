@@ -148,7 +148,8 @@ export enum TFormName {
 	AmendPublishedProtocol = "amend_published_protocol",
 	EditAccount = "edit_account",
 	AddAmbassador = "add_ambassador",
-	ExtendEmbargo = "extend_embargo"
+	ExtendEmbargo = "extend_embargo",
+	RejectEmbargoExtension = "reject_embargo_extension"
 }
 
 export enum TFormStyle {

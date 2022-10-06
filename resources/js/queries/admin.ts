@@ -36,6 +36,17 @@ export async function approveEmbargoExtensionQuery(embargo_extension_id: number 
 	}
 }
 
+export async function rejectEmbargoExtensionQuery(embargo_extension_id: string, message: string) {
+	try {
+		const response = await API.post(`/api/embargo-extension/${embargo_extension_id}/reject`, {
+			message
+		});
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function getUsersQuery() {
 	try {
 		const response = await API.get(`/api/users`);

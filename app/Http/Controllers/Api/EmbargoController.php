@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Mail\EmbargoExtensionApproved;
+use App\Mail\EmbargoExtensionRejected;
 use App\Mail\EmbargoExtensionRequested;
 use App\Models\AdminAction;
 use App\Models\EmbargoEndDate;
@@ -63,6 +64,20 @@ class EmbargoController extends Controller
 		$currentDate->save();
 
 		Mail::to($protocol->user)->send(new EmbargoExtensionApproved($protocol, $currentDate));
+		return response()->json(["success" => true]);
+	}
+
+	public function reject(EmbargoExtension $embargo_extension, Request $request)
+	{
+		$embargo_extension->status = "rejected";
+		$embargo_extension->save();
+
+		$protocol = $embargo_extension->protocol;
+
+		$this->addAdminAction($protocol, "reject", $request->message);
+
+		Mail::to($protocol->user)->send(new EmbargoExtensionRejected($protocol, $request->message));
+
 		return response()->json(["success" => true]);
 	}
 

@@ -6,7 +6,7 @@ import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { rejectProtocolQuery } from "../../queries/admin";
 import { FormBlock } from "../layout/FormBlock";
 
-export const RejectModal: React.FC<{ data: any }> = ({ data }) => {
+export const RejectProtocolModal: React.FC<{ data: any }> = ({ data }) => {
 	const { t } = useTranslationStore();
 	const { push } = useHistory();
 
