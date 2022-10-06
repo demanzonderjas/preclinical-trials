@@ -31,7 +31,10 @@ class EmbargoDateImport implements ToCollection, WithHeadingRow
             $embargoDate = EmbargoEndDate::firstOrNew([
                 "protocol_id" => $cleanId,
             ]);
-            $embargoDate->date = Carbon::create($row['registration_date'])->addYear()->toDateString();
+            $minimumDate = Carbon::create(2022, 11, 10);
+            $importedEmbargoDate = Carbon::create($row['registration_date'])->addYear();
+            $realDate = $importedEmbargoDate->isBefore($minimumDate) ? $minimumDate : $importedEmbargoDate;
+            $embargoDate->date = $realDate->toDateString();
             $embargoDate->protocol_id = $cleanId;
             $embargoDate->save();
         }
