@@ -18,7 +18,7 @@ class Protocol extends Model
         "updated_at"
     ];
 
-    protected $appends = ["title", "pct_id"];
+    protected $appends = ["title", "pct_id", "embargo_end_date"];
 
     public function user()
     {
@@ -138,5 +138,16 @@ class Protocol extends Model
     public function getPctIdAttribute()
     {
         return "PCTE0000" . $this->id;
+    }
+
+    public function getEmbargoEndDateAttribute()
+    {
+        if (!$this->has_embargo) {
+            return null;
+        }
+        $endDate = $this->embargoEndDates->first(function ($d) {
+            return $d->is_active;
+        });
+        return !empty($endDate) ? $endDate->date : null;
     }
 }

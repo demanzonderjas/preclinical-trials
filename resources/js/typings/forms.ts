@@ -6,6 +6,7 @@ export type TForm = {
 	handleSubmit?: Function;
 	submitText: string;
 	keepValuesAfterSubmit?: boolean;
+	hideFormAfterSubmit?: boolean;
 	succesText?: string;
 };
 

@@ -36,6 +36,7 @@ export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 	const baseData = {
 		id: protocol.id,
 		pct_id: protocol.pct_id,
+		embargo_end_date: protocol.embargo_end_date,
 		updated_at: protocol.updated_at,
 		created_at: protocol.created_at,
 		status: protocol.status,
