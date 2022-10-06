@@ -29,8 +29,6 @@ export const SearchDatabasePage: React.FC = () => {
 		})();
 	}, []);
 
-	console.log(protocols);
-
 	return (
 		<FilterStoreProvider store={filterStore}>
 			<Page title="Search protocols">
