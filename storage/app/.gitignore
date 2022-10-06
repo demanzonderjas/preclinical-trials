@@ -1,6 +1,4 @@
 *
 !public/
-!full_prod_db_24012022.sql
-!full-prod-copy-31032022.sql
 !embargo-dates.csv
 !.gitignore
