@@ -10,6 +10,7 @@ use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
 use App\Models\AdminAction;
 use App\Models\Detail;
+use App\Models\EmbargoEndDate;
 use App\Models\Protocol;
 use App\Models\User;
 use Carbon\Carbon;
@@ -100,7 +101,18 @@ class ProtocolController extends Controller
 		$this->addAdminAction($protocol, "approve", "");
 
 		Mail::to($protocol->user)->send(new ProtocolApprovedAndPublished($protocol));
+
+		$this->addEmbargoEndDate($protocol);
+
 		return response()->json(["success" => true]);
+	}
+
+	public function addEmbargoEndDate(Protocol $protocol)
+	{
+		if ($protocol->has_embargo && empty($protocol->embargo_end_date)) {
+			$endDate = new EmbargoEndDate(['date' => Carbon::now()->addYear()->toDateString()]);
+			$protocol->embargoEndDates()->save($endDate);
+		}
 	}
 
 	public function reject(Request $request, $protocol_id)
