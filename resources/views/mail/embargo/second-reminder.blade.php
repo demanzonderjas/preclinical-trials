@@ -7,7 +7,7 @@
 @section('content')
     <p>
         We want to inform you that your embargo will be automatically lifted in 2 weeks for
-        protocol {{ $protocol->id }}, entitled "{{ $protocol->title }}".
+        protocol {{ $protocol->pct_id }}, entitled "{{ $protocol->title }}".
     </p>
     <p>
         You should have received a 1st reminder two weeks ago. If you forgot to extend your

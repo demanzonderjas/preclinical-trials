@@ -7,7 +7,7 @@
 @section('content')
     <p>
         We hereby confirm that your request to extend your embargo was approved.
-        Therefore, your protocol, {{ $protocol->id }}, entitled "{{ $protocol->title }}", will be under embargo until
+        Therefore, your protocol, {{ $protocol->pct_id }}, entitled "{{ $protocol->title }}", will be under embargo until
         {{ $embargoEndDate->date }}
     </p>
 @stop
