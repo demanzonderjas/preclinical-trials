@@ -3,6 +3,7 @@
 @section('title', 'PCT.eu - Reset password')
 @section('preheader', 'You have requested to reset your password.')
 @section('name', $name);
+
 @section('content')
     <p>
         You have requested to reset your password. Please do so here:

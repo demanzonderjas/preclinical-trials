@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { confirmModal } from "../../data/modals/confirm";
-import { rejectModal } from "../../data/modals/reject";
+import { rejectEmbargoExtensionModal, rejectProtocolModal } from "../../data/modals/reject";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { approveEmbargoExtensionQuery, approveProtocolQuery } from "../../queries/admin";
@@ -25,7 +25,7 @@ export const RejectProtocolButton: React.FC<{ status: TProtocolStatus; protocol_
 	return (
 		<button
 			className="danger small"
-			onClick={() => setModal({ ...rejectModal, data: { protocol_id } })}
+			onClick={() => setModal({ ...rejectProtocolModal, data: { protocol_id } })}
 		>
 			{t("reject")}
 		</button>
@@ -88,6 +88,29 @@ export const ApproveEmbargoExtensionButton: React.FC<{
 			onClick={() => setModal({ ...confirmModal, actionOnConfirm: approveEmbargoExtension })}
 		>
 			{t("approve")}
+		</button>
+	);
+};
+
+export const RejectEmbargoExtensionButton: React.FC<{
+	status: TEmbargoExtensionStatus;
+	embargo_extension_id: number;
+}> = ({ status, embargo_extension_id }) => {
+	const { t } = useTranslationStore();
+	const { setModal } = useModalStore();
+
+	if (status === TEmbargoExtensionStatus.Approved) {
+		return null;
+	}
+
+	return (
+		<button
+			className="danger small"
+			onClick={() =>
+				setModal({ ...rejectEmbargoExtensionModal, data: { embargo_extension_id } })
+			}
+		>
+			{t("reject")}
 		</button>
 	);
 };

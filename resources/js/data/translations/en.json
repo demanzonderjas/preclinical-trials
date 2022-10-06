@@ -222,6 +222,7 @@
 	"contact_you_shortly": "We will contact you as soon as possible to answer your query.",
 	"any_status": "Any status",
 	"why_reject_protocol": "Please let the user know why you rejected the current version of the protocol.",
+	"why_reject_embargo_extension": "Please let the user know why you rejected the current request for embargo extension.",
 	"make_sure_to_check_following_fields": "The PRIS import cannot fully be used to add your new protocol. Make sure to check the following fields.",
 	"leaderboard": "Leaderboard",
 	"leaderboard_description": "Protocols per country",

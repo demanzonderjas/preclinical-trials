@@ -2,7 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { TEmbargoExtension } from "../../typings/embargo";
-import { ApproveEmbargoExtensionButton } from "../admin/ActionButtons";
+import {
+	ApproveEmbargoExtensionButton,
+	RejectEmbargoExtensionButton
+} from "../admin/ActionButtons";
 
 export const AdminEmbargoExtensionActionCell: React.FC<{
 	value: string;
@@ -17,6 +20,7 @@ export const AdminEmbargoExtensionActionCell: React.FC<{
 					<button className="secondary small">{t("view")}</button>
 				</Link>
 				<ApproveEmbargoExtensionButton status={row.status} embargo_extension_id={row.id} />
+				<RejectEmbargoExtensionButton status={row.status} embargo_extension_id={row.id} />
 			</div>
 		</td>
 	);

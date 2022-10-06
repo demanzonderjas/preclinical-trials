@@ -11,6 +11,7 @@ export enum TModalName {
 	ConfirmPasswordModal = "confirm_password_modal",
 	ChangePasswordModal = "change_password_modal",
 	ConfirmModal = "confirm_modal",
-	RejectModal = "reject_modal",
+	RejectProtocolModal = "reject_protocol_modal",
+	RejectEmbargoExtensionModal = "reject_embargo_extension_modal",
 	PRISModal = "pris_modal"
 }

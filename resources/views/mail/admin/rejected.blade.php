@@ -2,6 +2,7 @@
 
 @section('title', 'PCT.eu - Your protocol has been rejected and is not published')
 @section('preheader', 'Your protocol has been rejected and is not published.')
+@section('name', $protocol->user->name)
 
 @section('content')
     <p>

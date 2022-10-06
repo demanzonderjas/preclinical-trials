@@ -2,6 +2,7 @@
 
 @section('title', 'PCT.eu - Your protocol has been approved and published!')
 @section('preheader', 'Your protocol has been approved and published!')
+@section('name', $protocol->user->name)
 
 @section('content')
     <p>
