@@ -30,7 +30,7 @@ class ProtocolResource extends JsonResource
             "pct_id" => $this->pct_id,
             "user_id" => $this->user_id,
             "status" => $this->status,
-            "details" => $this->details,
+            "details" => $this->details->toArray(),
             "revisions" => $revisions,
             "embargo_end_date" => $this->embargo_end_date,
             "comments" => $comments,
