@@ -292,5 +292,6 @@
 	"awaiting_approval": "Awaiting approval",
 	"approved": "Approved",
 	"reason": "Reason",
-	"pct_id": "PCT ID"
+	"pct_id": "PCT ID",
+	"reject_embargo_extension": "Reject embargo extension"
 }
