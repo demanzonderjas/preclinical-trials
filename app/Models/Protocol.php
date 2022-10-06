@@ -132,7 +132,7 @@ class Protocol extends Model
     {
         $this->details = $this->details->filter(function (Detail $d) {
             return strpos($d->key, "contact_") === false;
-        })->toArray();
+        });
     }
 
     public function getPctIdAttribute()
@@ -145,6 +145,7 @@ class Protocol extends Model
         if (!$this->has_embargo) {
             return null;
         }
+
         $endDate = $this->embargoEndDates->first(function ($d) {
             return $d->is_active;
         });
