@@ -25,8 +25,6 @@ export const ExtendEmbargoPage: React.FC = () => {
 		return extendEmbargoQuery(protocol_id, data);
 	};
 
-	console.log(embargoEndDate);
-
 	return (
 		<Page title="Extend Embargo">
 			<div className="EmbargoForm border-top">
