@@ -8,6 +8,8 @@ import { FormFields } from "../forms/FormField";
 import { SuccessMessage } from "../forms/SuccessMessage";
 import { FormSections } from "../forms/FormSections";
 import { ControlButtons } from "../forms/protocols/ControlButtons";
+import { useForm } from "../../hooks/useForm";
+import { observer } from "mobx-react-lite";
 
 export const FormBlock: React.FC<{
 	form: TForm;
@@ -24,7 +26,6 @@ export const FormBlock: React.FC<{
 	sections,
 	form,
 	handleSubmit,
-	width,
 	initialData,
 	waitForData,
 	withoutMargin
@@ -36,8 +37,6 @@ export const FormBlock: React.FC<{
 			setFormStore(new FormStore(form, handleSubmit, sections, initialData));
 		}
 	}, [handleSubmit, initialData]);
-
-	const { align, fields } = form;
 
 	if (!formStore) {
 		return null;
@@ -55,22 +54,37 @@ export const FormBlock: React.FC<{
 						<Image filename={icon} />
 					</div>
 				)}
-				<div
-					className="FormWrapper"
-					style={{ padding: withoutMargin ? "10px 30px 30px" : null }}
-				>
-					<form
-						onSubmit={formStore.submit}
-						style={{ textAlign: align }}
-						className={cx({ [align]: true })}
-					>
-						{children}
-						<FormFields fields={fields} />
-						<ControlButtons />
-						<SuccessMessage />
-					</form>
-				</div>
+				<FormWrapper withoutMargin={withoutMargin}>{children}</FormWrapper>
 			</div>
 		</FormStoreContext.Provider>
 	);
 };
+
+export const FormWrapper: React.FC<{ withoutMargin: boolean }> = observer(
+	({ withoutMargin, children }) => {
+		const { form, submit, isDone } = useForm();
+		const { align, fields, hideFormAfterSubmit } = form;
+
+		return (
+			<div
+				className="FormWrapper"
+				style={{ padding: withoutMargin ? "10px 30px 30px" : null }}
+			>
+				<form
+					onSubmit={submit}
+					style={{ textAlign: align }}
+					className={cx({ [align]: true })}
+				>
+					{(!isDone || !hideFormAfterSubmit) && (
+						<>
+							{children}
+							<FormFields fields={fields} />
+							<ControlButtons />
+						</>
+					)}
+					<SuccessMessage />
+				</form>
+			</div>
+		);
+	}
+);

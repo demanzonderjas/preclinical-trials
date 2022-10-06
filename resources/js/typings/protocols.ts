@@ -18,6 +18,7 @@ export type TDBProtocol = {
 	id: number;
 	pct_id: string;
 	user_id: number;
+	embargo_end_date?: string;
 	status: TProtocolStatus;
 	details: TDetail[];
 	revisions: TRevision[];

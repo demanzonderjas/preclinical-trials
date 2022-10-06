@@ -92,6 +92,12 @@
 		background-color: $primary;
 		padding: 5px;
 
+		&:only-child {
+			font-size: 24px;
+			line-height: 32px;
+			padding: 18px;
+		}
+
 	}
 
 	@include respond-to("small") {

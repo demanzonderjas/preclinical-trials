@@ -32,6 +32,7 @@ class ProtocolResource extends JsonResource
             "status" => $this->status,
             "details" => $this->details,
             "revisions" => $revisions,
+            "embargo_end_date" => $this->embargo_end_date,
             "comments" => $comments,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at
