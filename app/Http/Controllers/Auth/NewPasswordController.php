@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,15 +16,25 @@ class NewPasswordController extends Controller
 
     public function resetManually(Request $request)
     {
+        $user = $request->user();
+        self::changePassword($user, $request);
+    }
+
+    public function resetAsAdmin(Request $request)
+    {
+        $user = User::where('email', $request->email)->firstOrFail();
+        self::changePassword($user, $request);
+    }
+
+    public static function changePassword(User $user, Request $request)
+    {
         $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = $request->user();
         $user->password = Hash::make($request->password);
         $user->save();
-
         return response()->json(["success" => true]);
     }
 

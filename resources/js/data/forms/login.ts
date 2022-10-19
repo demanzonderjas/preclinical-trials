@@ -49,3 +49,17 @@ export const changePasswordForm: TForm = {
 	fields: [currentPasswordField, newPasswordField, passwordConfirmField],
 	submitText: "change_password"
 };
+
+export const changePasswordAsAdminForm: TForm = {
+	id: TFormName.ChangePassword,
+	style: TFormStyle.RegularLabels,
+	align: TAlignment.Left,
+	fields: [
+		emailField,
+		{ ...newPasswordField, props: { type: "text" } },
+		{ ...passwordConfirmField, props: { type: "text" } }
+	],
+	submitText: "change_password",
+	keepValuesAfterSubmit: true,
+	succesText: "password_changed_succesfully"
+};
