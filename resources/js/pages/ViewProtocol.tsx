@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useLocation, useHistory } from "react-router";
 import { LoginForm } from "../components/account/LoginForm";
 import { ContentBlock } from "../components/layout/ContentBlock";
 import { Page } from "../components/layout/Page";
@@ -19,6 +19,8 @@ export const ViewProtocolPage: React.FC = () => {
 	const [protocol, setProtocol] = useState<TDBProtocol>(null);
 	const [requiresAccountError, setRequiresAccountError] = useState<boolean>(false);
 	const [revisionStore, setRevisionStore] = useState<RevisionStore>(null);
+	const { pathname } = useLocation();
+	const { replace } = useHistory();
 
 	useEffect(() => {
 		if (protocol_id) {
@@ -26,6 +28,8 @@ export const ViewProtocolPage: React.FC = () => {
 				const response = await getProtocolQuery(protocol_id);
 				if (response.success === false && response.message === "requires_account") {
 					setRequiresAccountError(true);
+					const loginToUri = encodeURIComponent(pathname.substring(1));
+					replace(`${pathname}?login_to=${loginToUri}`);
 					return;
 				}
 				const data = response.protocol as TDBProtocol;
