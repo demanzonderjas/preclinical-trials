@@ -50,6 +50,7 @@ import { AddAmbassadorPage } from "./pages/admin/ambassadors/AddAmbassador";
 import { UsersPage } from "./pages/admin/Users";
 import { ExtendEmbargoPage } from "./pages/dashboard/ExtendEmbargo";
 import { EmbargoExtensionsPage } from "./pages/admin/EmbargoExtensions";
+import { ChangePasswordPage } from "./pages/admin/ChangePassword";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -180,6 +181,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/admin/stats" exact={true}>
 								<StatsPage />
+							</Route>
+							<Route path="/admin/change-password" exact={true}>
+								<ChangePasswordPage />
 							</Route>
 						</Switch>
 						<Modal />

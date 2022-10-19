@@ -16,6 +16,7 @@ export const Sidebar: React.FC = () => {
 					<MenuItem text="Embargo Extensions" url="/admin/embargo-extensions" />
 					<MenuItem text="Users" url="/admin/users" />
 					<MenuItem text="Stats" url="/admin/stats" />
+					<MenuItem text="Change password" url="/admin/change-password" />
 				</ul>
 			</div>
 		</div>

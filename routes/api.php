@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\NewPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,9 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('contact-form', 'ContactFormController@store');
 
     Route::group(['middleware' => 'admin'], function () {
+
+        Route::post('/admin/change-password', [NewPasswordController::class, 'resetAsAdmin']);
+
         Route::get('protocols/admin', 'ProtocolController@getViewableForAdmin');
         Route::post('protocol/{protocol_id}/approve', 'ProtocolController@approve');
         Route::post('protocol/{protocol_id}/reject', 'ProtocolController@reject');

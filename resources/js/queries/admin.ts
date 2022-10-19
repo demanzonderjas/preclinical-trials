@@ -1,3 +1,4 @@
+import { TChangePasswordData } from "../typings/auth";
 import { API } from "../utils/api";
 
 export async function getAdminProtocolsQuery() {
@@ -53,5 +54,14 @@ export async function getUsersQuery() {
 		return response.data;
 	} catch (e) {
 		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function changePasswordAsAdminQuery(changePasswordData: TChangePasswordData) {
+	try {
+		const response = await API.post("/api/admin/change-password", changePasswordData);
+		return response.data.success;
+	} catch (e) {
+		return false;
 	}
 }
