@@ -293,5 +293,6 @@
 	"approved": "Approved",
 	"reason": "Reason",
 	"pct_id": "PCT ID",
-	"reject_embargo_extension": "Reject embargo extension"
+	"reject_embargo_extension": "Reject embargo extension",
+	"ask_question": "Ask question"
 }

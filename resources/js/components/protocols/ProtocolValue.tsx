@@ -115,7 +115,7 @@ export const CombinedValue: React.FC<{
 		<p>
 			<strong>{t(value)}</strong>
 			{otherValueFields.map(f => (
-				<>
+				<React.Fragment key={f.id}>
 					{" "}
 					-{" "}
 					{f.id === TFormFieldName.PlaceboControlled ? (
@@ -125,7 +125,7 @@ export const CombinedValue: React.FC<{
 					) : (
 						<RealTimeValue field={f} fields={fields} offset={offset} />
 					)}
-				</>
+				</React.Fragment>
 			))}
 		</p>
 	);
