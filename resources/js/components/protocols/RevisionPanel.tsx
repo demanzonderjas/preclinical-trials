@@ -7,12 +7,13 @@ import { GenericSelectField } from "../forms/SelectField";
 import day from "dayjs";
 import { getRevisionDate } from "../../utils/formatting";
 import { useUser } from "../../hooks/useUser";
+import { MessagingContainer } from "../messaging/MessagingContainer";
 
 export const RevisionPanel: React.FC<{ hideBack?: boolean }> = observer(({ hideBack }) => {
 	const { goBack, push } = useHistory();
 	const { t } = useTranslationStore();
 	const { isMine } = useUser();
-	const [showMessaging, setShowMessaging] = useState(false);
+	const [showMessaging, setShowMessaging] = useState(true);
 	const revisionStore = useRevisions();
 
 	const back = (e: any) => {
@@ -68,6 +69,12 @@ export const RevisionPanel: React.FC<{ hideBack?: boolean }> = observer(({ hideB
 					/>
 				)}
 			</div>
+			{showMessaging && (
+				<MessagingContainer
+					close={() => setShowMessaging(false)}
+					protocolId={protocol.id}
+				/>
+			)}
 		</div>
 	);
 });

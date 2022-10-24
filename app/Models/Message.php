@@ -11,9 +11,21 @@ class Message extends Model
 {
     use HasFactory;
 
+    protected $fillable = ["user_id", "text"];
+
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function setTextAttribute($value)
     {
-        $this->attributes['value'] = Crypt::encryptString(json_encode($value));
+        $this->attributes['text'] = Crypt::encryptString(json_encode($value));
     }
 
     public function getTextAttribute($value)
