@@ -13,7 +13,7 @@ export const RevisionPanel: React.FC<{ hideBack?: boolean }> = observer(({ hideB
 	const { goBack, push } = useHistory();
 	const { t } = useTranslationStore();
 	const { isMine } = useUser();
-	const [showMessaging, setShowMessaging] = useState(true);
+	const [showMessaging, setShowMessaging] = useState(false);
 	const revisionStore = useRevisions();
 
 	const back = (e: any) => {

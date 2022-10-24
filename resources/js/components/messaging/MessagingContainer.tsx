@@ -19,7 +19,6 @@ export const MessagingContainer: React.FC<{ close: Function; protocolId: number 
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState<TMessage[]>([]);
 	const [channelId, setChannelId] = useState(null);
-	const [pollId, setPollId] = useState(null);
 
 	useEffect(() => {
 		if (!user || !protocolId) {
@@ -47,8 +46,6 @@ export const MessagingContainer: React.FC<{ close: Function; protocolId: number 
 		}, 20000);
 		getMessages(channelId);
 
-		setPollId(pollId);
-
 		return () => {
 			clearInterval(pollId);
 		};
@@ -57,6 +54,7 @@ export const MessagingContainer: React.FC<{ close: Function; protocolId: number 
 	const sendMessage = async () => {
 		const response = await createMessageQuery(channelId, message);
 		setMessages([...messages, response.message]);
+		setMessage("");
 	};
 
 	return (
@@ -81,7 +79,11 @@ export const MessagingContainer: React.FC<{ close: Function; protocolId: number 
 			<div className="write-message">
 				<textarea value={message} onChange={e => setMessage(e.target.value)} />
 				<div className="button-wrapper">
-					<button className="secondary small" onClick={sendMessage}>
+					<button
+						className="secondary small"
+						onClick={sendMessage}
+						disabled={!message.length}
+					>
 						{t("send_message")}
 					</button>
 				</div>
