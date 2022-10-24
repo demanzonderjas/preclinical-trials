@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { useRevisions } from "../../hooks/useRevisions";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
@@ -12,6 +12,7 @@ export const RevisionPanel: React.FC<{ hideBack?: boolean }> = observer(({ hideB
 	const { goBack, push } = useHistory();
 	const { t } = useTranslationStore();
 	const { isMine } = useUser();
+	const [showMessaging, setShowMessaging] = useState(false);
 	const revisionStore = useRevisions();
 
 	const back = (e: any) => {
@@ -42,6 +43,11 @@ export const RevisionPanel: React.FC<{ hideBack?: boolean }> = observer(({ hideB
 						}}
 					>
 						{t("edit")}
+					</button>
+				)}
+				{!isMine(protocol.user_id) && (
+					<button className="secondary small" onClick={() => setShowMessaging(true)}>
+						{t("ask_question")}
 					</button>
 				)}
 				{!hideBack && (
