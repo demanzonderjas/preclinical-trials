@@ -17,8 +17,8 @@ class CreateMessagesTable extends Migration
             $table->id();
             $table->bigInteger('question_user_id')->unsigned();
             $table->foreign('question_user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->bigInteger('protocol_user_id')->unsigned();
-            $table->foreign('protocol_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('protocol_id')->unsigned();
+            $table->foreign('protocol_id')->references('id')->on('protocols')->onDelete('cascade');
             $table->text('text')->nullable();
             $table->timestamps();
         });

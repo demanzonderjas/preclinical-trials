@@ -11,16 +11,6 @@ class Message extends Model
 {
     use HasFactory;
 
-    public function questionAsker()
-    {
-        return $this->belongsTo(User::class, 'question_user_id');
-    }
-
-    public function protocolOwner()
-    {
-        return $this->belongsTo(User::class, 'protocol_user_id');
-    }
-
     public function setTextAttribute($value)
     {
         $this->attributes['value'] = Crypt::encryptString(json_encode($value));
