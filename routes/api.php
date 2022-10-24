@@ -50,6 +50,13 @@ Route::group(['namespace' => 'Api'], function () {
 
     Route::post('contact-form', 'ContactFormController@store');
 
+    Route::post('channel/id', 'ChannelController@getChannelId');
+
+    Route::group(['middleware' => 'channel'], function () {
+        Route::post('channel/messages', 'ChannelController@getMessages');
+        Route::post('channel/message', 'MessageController@store');
+    });
+
     Route::group(['middleware' => 'admin'], function () {
 
         Route::post('/admin/change-password', [NewPasswordController::class, 'resetAsAdmin']);
