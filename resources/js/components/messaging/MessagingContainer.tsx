@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { useUser } from "../../hooks/useUser";
 import {
@@ -10,18 +10,20 @@ import {
 import { TMessage } from "../../typings/messages";
 import cx from "classnames";
 
-export const MessagingContainer: React.FC<{ close: Function; protocolId: number }> = ({
-	close,
-	protocolId
-}) => {
+export const MessagingContainer: React.FC<{
+	close?: Function;
+	protocolId?: number;
+	initialChannelId?: number;
+}> = ({ close, protocolId, initialChannelId }) => {
 	const { t } = useTranslationStore();
 	const { user } = useUser();
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState<TMessage[]>([]);
-	const [channelId, setChannelId] = useState(null);
+	const [channelId, setChannelId] = useState(initialChannelId);
+	const messagesRef = useRef(null);
 
 	useEffect(() => {
-		if (!user || !protocolId) {
+		if (!user || !protocolId || channelId) {
 			return;
 		}
 
@@ -33,7 +35,12 @@ export const MessagingContainer: React.FC<{ close: Function; protocolId: number 
 
 	const getMessages = async (channelId: number) => {
 		const response = await getProtocolMessagesQuery(channelId);
+		const hasNewMessage = response.messages.length > messages.length;
 		setMessages(response.messages);
+
+		if (hasNewMessage) {
+			scrollDown();
+		}
 	};
 
 	useEffect(() => {
@@ -51,23 +58,30 @@ export const MessagingContainer: React.FC<{ close: Function; protocolId: number 
 		};
 	}, [channelId]);
 
+	const scrollDown = () => {
+		if (messagesRef.current) {
+			messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+		}
+	};
+
 	const sendMessage = async () => {
 		const response = await createMessageQuery(channelId, message);
 		setMessages([...messages, response.message]);
 		setMessage("");
+		scrollDown();
 	};
 
 	return (
-		<div className="MessagingContainer">
+		<div className={cx("MessagingContainer", { full_screen: !!initialChannelId })}>
 			<div className="header">
-				<h2>{t("ask_question")}</h2>
-				<span onClick={() => close()}>{t("x")}</span>
+				<h2>{t("messages")}</h2>
+				{!!close && <span onClick={() => close()}>{t("x")}</span>}
 			</div>
-			<div className="messages">
+			<div className="messages" ref={messagesRef}>
 				{messages.map(m => (
 					<div className={cx("message", { you: !!m.is_mine })} key={m.id}>
 						<div className="content">
-							<h3>{m.name}</h3>
+							<h3>{t(m.name)}</h3>
 							<div className="text" dangerouslySetInnerHTML={{ __html: m.text }} />
 							<div className="timestamp">
 								<span>{dayjs(m.created_at).format("DD/MM/YYYY hh:mm")}</span>

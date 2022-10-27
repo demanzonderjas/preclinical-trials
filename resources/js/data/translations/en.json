@@ -296,5 +296,7 @@
 	"reject_embargo_extension": "Reject embargo extension",
 	"ask_question": "Ask question",
 	"send_message": "Send message",
-	"protocol_owner": "Protocol owner"
+	"protocol_owner": "Protocol owner",
+	"you": "You",
+	"view_conversation": "View conversation"
 }
