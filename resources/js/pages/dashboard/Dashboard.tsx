@@ -41,6 +41,7 @@ export const DashboardPage: React.FC = observer(() => {
 						image="folder.png"
 						link="dashboard/manage-protocols"
 					/>
+					<MenuCircleItem text="Messages" image="note.png" link="dashboard/messages" />
 					<MenuCircleItem
 						text="My profile"
 						image="account.png"

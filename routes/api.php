@@ -51,6 +51,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('contact-form', 'ContactFormController@store');
 
     Route::post('channel/id', 'ChannelController@getChannelId');
+    Route::get('channels/mine', 'ChannelController@mine');
 
     Route::group(['middleware' => 'channel'], function () {
         Route::post('channel/messages', 'ChannelController@getMessages');

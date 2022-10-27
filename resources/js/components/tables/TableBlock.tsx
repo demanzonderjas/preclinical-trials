@@ -77,6 +77,7 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 									{table.cells.map((cell, idx) => (
 										<cell.Component
 											key={cell.id}
+											{...(cell.props || {})}
 											row={row}
 											value={getMappedValue(row, cell.id, cell.synonym)}
 										/>
