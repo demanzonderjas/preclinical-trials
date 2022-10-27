@@ -23,6 +23,16 @@ class Message extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function recipient()
+    {
+        if ($this->channel->questioner->id === $this->user->id) {
+            return $this->channel->protocolOwner();
+        } else if ($this->channel->protocolOwner->id === $this->user->id) {
+            return $this->channel->questioner();
+        }
+        return null;
+    }
+
     public function setTextAttribute($value)
     {
         $this->attributes['text'] = Crypt::encryptString(json_encode($value));

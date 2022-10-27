@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MessageResource;
+use App\Mail\ReceivedMessage;
 use App\Models\Channel;
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class MessageController extends Controller
 {
@@ -20,6 +22,9 @@ class MessageController extends Controller
 		]);
 
 		$channel->messages()->save($message);
+
+		Mail::to($message->recipient)->send(new ReceivedMessage($message->recipient, $message));
+
 		return response()->json(["message" => new MessageResource($message)]);
 	}
 }
