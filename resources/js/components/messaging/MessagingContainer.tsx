@@ -35,6 +35,9 @@ export const MessagingContainer: React.FC<{
 
 	const getMessages = async (channelId: number) => {
 		const response = await getProtocolMessagesQuery(channelId);
+		if (!response.messages || !response.messages.length) {
+			return;
+		}
 		const hasNewMessage = response.messages.length > messages.length;
 		setMessages(response.messages);
 

@@ -24,7 +24,7 @@ class VerifyUserHasChannelAccess
             return $next($request);
         }
 
-        if ($targetChannel->questioner->id !== $request->user()->id && $targetChannel->protocolOwner->id !== $request->user()->id && !$request->user()->is_admin) {
+        if ($targetChannel->questioner->id !== $request->user()->id && $targetChannel->protocolOwner->id !== $request->user()->id) {
             return abort(403, 'Not your channel.');
         }
 
