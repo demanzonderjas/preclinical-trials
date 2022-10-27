@@ -52,6 +52,7 @@ import { ExtendEmbargoPage } from "./pages/dashboard/ExtendEmbargo";
 import { EmbargoExtensionsPage } from "./pages/admin/EmbargoExtensions";
 import { ChangePasswordPage } from "./pages/admin/ChangePassword";
 import { MessagesPage } from "./pages/dashboard/Messages";
+import { ViewConversationPage } from "./pages/dashboard/ViewConversationPage";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -128,6 +129,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/dashboard/messages" exact={true}>
 								<MessagesPage />
+							</Route>
+							<Route path="/dashboard/messages/:channel_id" exact={true}>
+								<ViewConversationPage />
 							</Route>
 							<Route path="/reset-password/:token">
 								<ResetPasswordPage />

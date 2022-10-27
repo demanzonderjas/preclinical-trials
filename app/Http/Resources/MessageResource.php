@@ -13,10 +13,10 @@ class MessageResource extends JsonResource
 	{
 		if ($isMessageOwner) {
 			return "you";
-		} else if ($isProtocolOwner) {
-			return "protocol_owner";
-		} else if (!$isProtocolOwner && !$isMessageOwner) {
+		} else if ($isProtocolOwner && !$isMessageOwner) {
 			return $message->user->name;
+		} else if (!$isProtocolOwner) {
+			return "protocol_owner";
 		}
 		return null;
 	}

@@ -1,4 +1,4 @@
-$send-message-height: 300px;
+$send-message-height: 180px;
 $triangle-size: 10px;
 
 .MessagingContainer {
@@ -10,6 +10,29 @@ $triangle-size: 10px;
 	background-color: #fff;
 	z-index: 100;
 	box-shadow: 0px 4px 4px rgba(179, 177, 177, 0.25);
+
+	&.full_screen {
+		position: relative;
+		top: 0;
+		width: 100%;
+		max-width: 700px;
+		min-height: 400px;
+		max-height: calc(100vh - #{$header-height} - 200px);
+		margin: 40px auto;
+		background-color: $white;
+
+		.header h2 {
+			font-size: 40px;
+		}
+
+		.write-message {
+			.button-wrapper {
+				button {
+					margin-top: 10px;
+				}
+			}
+		}
+	}
 
 	.header {
 		background-color: $tertiary;
@@ -41,6 +64,7 @@ $triangle-size: 10px;
 		height: calc(100% - #{$send-message-height});
 		background-color: $grey-light;
 		padding: 10px;
+		overflow-y: auto;
 
 		.message {
 			margin: 10px 0;
