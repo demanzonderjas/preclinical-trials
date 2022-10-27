@@ -21,6 +21,7 @@ class CreateChannelsTable extends Migration
             $table->foreign('protocol_owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->bigInteger('questioner_id')->unsigned();
             $table->foreign('questioner_id')->references('id')->on('users')->onDelete('cascade');
+            $table->boolean('blocked')->default(false);
         });
     }
 
