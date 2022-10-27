@@ -13,6 +13,11 @@ class Channel extends Model
 
     public $timestamps = false;
 
+    public function protocol()
+    {
+        return $this->belongsTo(Protocol::class);
+    }
+
     public function questioner()
     {
         return $this->belongsTo(User::class, 'questioner_id');

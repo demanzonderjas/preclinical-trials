@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ChannelResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Channel;
 use App\Models\Message;
@@ -24,5 +25,16 @@ class ChannelController extends Controller
 	{
 		$messages = Message::where(['channel_id' => $request->channel_id])->get();
 		return response()->json(["messages" => MessageResource::collection($messages)]);
+	}
+
+	public function mine(Request $request)
+	{
+		$userId = $request->user()->id;
+		$channels = Channel::where('protocol_owner_id', $userId)->orWhere('questioner_id', $userId)->get();
+		$channelsWithMessages = $channels->filter(function ($channel) {
+			return $channel->messages->count() > 0;
+		});
+
+		return response()->json(["channels" => ChannelResource::collection($channelsWithMessages)]);
 	}
 }

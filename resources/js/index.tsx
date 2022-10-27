@@ -51,6 +51,7 @@ import { UsersPage } from "./pages/admin/Users";
 import { ExtendEmbargoPage } from "./pages/dashboard/ExtendEmbargo";
 import { EmbargoExtensionsPage } from "./pages/admin/EmbargoExtensions";
 import { ChangePasswordPage } from "./pages/admin/ChangePassword";
+import { MessagesPage } from "./pages/dashboard/Messages";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -124,6 +125,9 @@ const App: React.FC = () => {
 							</Route>
 							<Route path="/dashboard/edit-profile">
 								<EditProfilePage />
+							</Route>
+							<Route path="/dashboard/messages" exact={true}>
+								<MessagesPage />
 							</Route>
 							<Route path="/reset-password/:token">
 								<ResetPasswordPage />

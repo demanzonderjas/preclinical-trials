@@ -26,3 +26,12 @@ export async function createMessageQuery(channel_id: number, text: string) {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function getMyChannelsQuery() {
+	try {
+		const response = await API.get("/api/channels/mine");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
