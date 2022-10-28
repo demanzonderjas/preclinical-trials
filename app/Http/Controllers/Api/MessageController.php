@@ -27,7 +27,9 @@ class MessageController extends Controller
 
 		$channel->messages()->save($message);
 
-		Mail::to($message->recipient)->send(new ReceivedMessage($message->recipient, $message));
+		if (!$message->recipient->disable_notifications) {
+			Mail::to($message->recipient)->send(new ReceivedMessage($message->recipient, $message));
+		}
 
 		return response()->json(["message" => new MessageResource($message)]);
 	}

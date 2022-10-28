@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 
-export const Slider: React.FC<{ defaultValue: boolean; handleToggle: Function }> = ({
-	defaultValue,
-	handleToggle
-}) => {
+export const Slider: React.FC<{
+	defaultValue: boolean;
+	handleToggle: Function;
+	style?: string;
+}> = ({ defaultValue, handleToggle, style }) => {
 	const [checked, setChecked] = useState<boolean>(defaultValue);
 
 	return (
-		<div className="Slider">
+		<div className={`Slider ${style}`}>
 			<label className="switch">
 				<input
 					type="checkbox"
 					checked={checked}
 					onChange={() => {
+						console.log(!checked);
 						handleToggle(!checked);
 						setChecked(!checked);
 					}}

@@ -301,5 +301,6 @@
 	"view_conversation": "View conversation",
 	"block": "Block",
 	"latest_message": "Latest message",
-	"contact": "Contact"
+	"contact": "Contact",
+	"receive_message_notifications": "I want to receive notifications about new messages"
 }

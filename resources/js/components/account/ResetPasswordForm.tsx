@@ -1,7 +1,7 @@
 import React from "react";
 import { FormBlock } from "../layout/FormBlock";
 import { resetPasswordForm } from "../../data/forms/login";
-import { resetPasswordQuery } from "../../queries/login";
+import { resetPasswordQuery } from "../../queries/user";
 
 export const ResetPasswordForm: React.FC = () => {
 	return (

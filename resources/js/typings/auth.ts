@@ -2,9 +2,19 @@ export type TUser = {
 	id: number;
 	first_name: string;
 	last_name: string;
+	settings: TSetting[];
 	email: string;
 	institution: string;
 };
+
+export type TSetting = {
+	key: TSettingName;
+	value: any;
+};
+
+export enum TSettingName {
+	DisableNotifications = "disable_notifications"
+}
 
 export type TLoginCredentials = {
 	email: string;

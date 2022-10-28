@@ -3,7 +3,7 @@ import { Image } from "../base/Image";
 import { FormBlock } from "../layout/FormBlock";
 import { Link } from "react-router-dom";
 import { loginForm } from "../../data/forms/login";
-import { loginQuery } from "../../queries/login";
+import { loginQuery } from "../../queries/user";
 import { useModalStore } from "../../hooks/useModalStore";
 import { forgotPasswordModal } from "../../data/modals/loginModal";
 import { TLoginCredentials } from "../../typings/auth";
