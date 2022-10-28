@@ -18,6 +18,7 @@ export const MessagingContainer: React.FC<{
 	const { t } = useTranslationStore();
 	const { user } = useUser();
 	const [message, setMessage] = useState("");
+	const [blocked, setBlocked] = useState(true);
 	const [messages, setMessages] = useState<TMessage[]>([]);
 	const [channelId, setChannelId] = useState(initialChannelId);
 	const messagesRef = useRef(null);
@@ -35,6 +36,7 @@ export const MessagingContainer: React.FC<{
 
 	const getMessages = async (channelId: number) => {
 		const response = await getProtocolMessagesQuery(channelId);
+		setBlocked(!!response.blocked);
 		if (!response.messages || !response.messages.length) {
 			return;
 		}
@@ -93,18 +95,20 @@ export const MessagingContainer: React.FC<{
 					</div>
 				))}
 			</div>
-			<div className="write-message">
-				<textarea value={message} onChange={e => setMessage(e.target.value)} />
-				<div className="button-wrapper">
-					<button
-						className="secondary small"
-						onClick={sendMessage}
-						disabled={!message.length}
-					>
-						{t("send_message")}
-					</button>
+			{!blocked && (
+				<div className="write-message">
+					<textarea value={message} onChange={e => setMessage(e.target.value)} />
+					<div className="button-wrapper">
+						<button
+							className="secondary small"
+							onClick={sendMessage}
+							disabled={!message.length}
+						>
+							{t("send_message")}
+						</button>
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

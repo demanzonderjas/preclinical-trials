@@ -35,3 +35,12 @@ export async function getMyChannelsQuery() {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function toggleBlockChannelQuery(channel_id: number) {
+	try {
+		const response = await API.post("/api/channel/block", { channel_id });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

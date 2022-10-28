@@ -8,9 +8,11 @@ export type TMessage = {
 };
 
 export type TChannel = {
+	protocol_owner_id: number;
 	id: number;
 	title: string;
 	contact: string;
 	latest_message: string;
 	updated_at: string;
+	blocked: boolean;
 };

@@ -298,5 +298,8 @@
 	"send_message": "Send message",
 	"protocol_owner": "Protocol owner",
 	"you": "You",
-	"view_conversation": "View conversation"
+	"view_conversation": "View conversation",
+	"block": "Block",
+	"latest_message": "Latest message",
+	"contact": "Contact"
 }

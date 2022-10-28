@@ -20,10 +20,12 @@ class ChannelResource extends JsonResource
 
         return [
             "id" => $this->id,
+            "protocol_owner_id" => $this->protocolOwner->id,
             "title" => $this->protocol->title,
             "contact" => $isProtocolOwner ? $this->questioner->name : "protocol_owner",
             "latest_message" => $latestMessage ? $latestMessage->text : "",
-            "updated_at" => $latestMessage ? $latestMessage->updated_at : ""
+            "updated_at" => $latestMessage ? $latestMessage->updated_at : "",
+            "blocked" => $this->blocked
         ];
 
         return parent::toArray($request);
