@@ -16,6 +16,10 @@ class MessageController extends Controller
 	{
 		$channel = Channel::findOrFail($request->channel_id);
 
+		if ($channel->blocked) {
+			return response()->json(["success" => false, "message" => "Channel is blocked."]);
+		}
+
 		$message = new Message([
 			"user_id" => $request->user()->id,
 			"text" => $request->text
