@@ -23,8 +23,9 @@ class ChannelController extends Controller
 
 	public function getMessages(Request $request)
 	{
+		$channel = Channel::findOrFail($request->channel_id);
 		$messages = Message::where(['channel_id' => $request->channel_id])->get();
-		return response()->json(["messages" => MessageResource::collection($messages)]);
+		return response()->json(["messages" => MessageResource::collection($messages), "blocked" => $channel->blocked]);
 	}
 
 	public function mine(Request $request)
@@ -36,5 +37,17 @@ class ChannelController extends Controller
 		});
 
 		return response()->json(["channels" => ChannelResource::collection($channelsWithMessages)]);
+	}
+
+	public function block(Request $request)
+	{
+		$channel = Channel::findOrFail($request->channel_id);
+		if ($request->user()->id !== $channel->protocol_owner_id) {
+			return response()->json(["success" => false, "message" => "Not the owner of this channel."]);
+		}
+		$channel->blocked = !$channel->blocked;
+		$channel->save();
+
+		return response()->json(["success" => true]);
 	}
 }

@@ -56,6 +56,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::group(['middleware' => 'channel'], function () {
         Route::post('channel/messages', 'ChannelController@getMessages');
         Route::post('channel/message', 'MessageController@store');
+        Route::post('channel/block', 'ChannelController@block');
     });
 
     Route::group(['middleware' => 'admin'], function () {
