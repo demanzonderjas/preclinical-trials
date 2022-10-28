@@ -22,6 +22,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('protocols/mine', 'ProtocolController@mine');
 
     Route::middleware('auth:sanctum')->post('update-profile', 'UserController@updateProfile');
+    Route::middleware('auth:sanctum')->post('update-setting', 'SettingController@update');
 
     Route::middleware('auth:sanctum')->post('protocol', 'ProtocolController@store');
     Route::middleware(['auth:sanctum', 'auth.owner'])->delete('protocol/{protocol_id}', 'ProtocolController@delete');
