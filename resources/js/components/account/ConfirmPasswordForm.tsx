@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FormBlock } from "../layout/FormBlock";
 import { confirmPasswordForm } from "../../data/forms/login";
-import { confirmPasswordQuery } from "../../queries/login";
+import { confirmPasswordQuery } from "../../queries/user";
 import { observer } from "mobx-react-lite";
 import { useUser } from "../../hooks/useUser";
 import { useTranslationStore } from "../../hooks/useTranslationStore";

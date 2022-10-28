@@ -25,6 +25,8 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $with = ['settings'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -49,6 +51,11 @@ class User extends Authenticatable
         return $this->hasMany(Protocol::class);
     }
 
+    public function settings()
+    {
+        return $this->hasMany(Setting::class);
+    }
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);
@@ -71,5 +78,16 @@ class User extends Authenticatable
     public function getNameAttribute()
     {
         return $this->first_name . " " . $this->last_name;
+    }
+
+    public function getDisableNotificationsAttribute()
+    {
+        $setting = $this->settings->first(function ($s) {
+            return $s->key === "disable_notifications";
+        });
+        if (empty($setting)) {
+            return false;
+        }
+        return boolval($setting->value);
     }
 }

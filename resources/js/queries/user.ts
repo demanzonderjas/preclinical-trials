@@ -59,3 +59,12 @@ export async function changePasswordQuery(changePasswordData: TChangePasswordDat
 		return false;
 	}
 }
+
+export async function updateSettingQuery(setting_key: string, value: any) {
+	try {
+		const response = await API.post("/api/update-setting", { setting_key, value });
+		return response.data.success;
+	} catch (e) {
+		return false;
+	}
+}

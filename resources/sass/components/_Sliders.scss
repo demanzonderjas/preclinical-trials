@@ -46,6 +46,16 @@
   input:focus + .slider {
 	box-shadow: 0 0 1px $danger-color;
   }
+
+  .Slider.secondary {
+	input:checked + .slider {
+		background-color: $secondary;
+	  }
+	  
+	  input:focus + .slider {
+		box-shadow: 0 0 1px $secondary;
+	  }	
+  }
   
   input:checked + .slider:before {
 	-webkit-transform: translateX(26px);

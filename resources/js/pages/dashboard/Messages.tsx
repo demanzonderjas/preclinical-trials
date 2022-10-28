@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ContentBlock } from "../../components/layout/ContentBlock";
 import { Page } from "../../components/layout/Page";
+import { NotifyToggle } from "../../components/messaging/NotifyToggle";
 import { TableBlock } from "../../components/tables/TableBlock";
 import { FilterStoreProvider } from "../../contexts/FilterStoreContext";
 import { messagesTable } from "../../data/tables/messages";
@@ -26,6 +27,7 @@ export const MessagesPage: React.FC = () => {
 						<p>
 							Listed below are all conversations that you are currently involved with.
 						</p>
+						<NotifyToggle />
 						<TableBlock table={messagesTable} rows={channels} />
 					</ContentBlock>
 				</div>

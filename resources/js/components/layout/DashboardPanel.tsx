@@ -5,7 +5,7 @@ import { loginModal } from "../../data/modals/loginModal";
 import { useIsLoggedIn } from "../../hooks/useLogin";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
-import { logoutQuery } from "../../queries/login";
+import { logoutQuery } from "../../queries/user";
 import { Image } from "../base/Image";
 
 export const DashboardPanel: React.FC = observer(() => {
