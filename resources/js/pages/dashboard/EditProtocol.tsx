@@ -26,6 +26,7 @@ export const EditProtocolPage: React.FC = () => {
 			(async () => {
 				const response = await getProtocolQuery(protocol_id);
 				const data = response.protocol as TDBProtocol;
+				console.log(data);
 				setProtocol(data);
 			})();
 		}
