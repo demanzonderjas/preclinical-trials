@@ -51,7 +51,7 @@ class CheckEmbargoStatus extends Command
 
             $NEEDS_FIRST_REMINDER = $diffInDays <= 30 && $diffInDays > 0 && $embargoEndDate->mail_status === NULL;
             $NEEDS_SECOND_REMINDER = $diffInDays <= 14 && $diffInDays > 0 && $embargoEndDate->mail_status === "first_reminder";
-            $NEEDS_EMBARGO_LIFT = $diffInDays <= 0;
+            $NEEDS_EMBARGO_LIFT = $diffInDays + 1 <= 0;
 
             if ($NEEDS_FIRST_REMINDER) {
                 Mail::to($embargoEndDate->protocol->user)->send(new EmbargoFirstReminder($embargoEndDate));
