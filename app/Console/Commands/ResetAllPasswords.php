@@ -39,7 +39,7 @@ class ResetAllPasswords extends Command
      */
     public function handle()
     {
-        $users = User::where('email', 'julia.menon@heart-institute.nl')->get();
+        $users = User::where('email', 'daan@puzzel.org')->get();
         foreach ($users as $user) {
             Password::sendResetLink(['email' => $user->email]);
         }
