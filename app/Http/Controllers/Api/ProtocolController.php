@@ -210,9 +210,13 @@ class ProtocolController extends Controller
 
 		try {
 			$protocol = new Protocol();
+			$protocol->status = "submitted_for_publication";
 			$user->protocols()->save($protocol);
 			$validKeys = Protocol::getValidKeys($request->data);
 			$protocol->addDetailsToDatabase($validKeys);
+
+			Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
+			Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
 		} catch (Exception $e) {
 			return response()->json(['success' => false, 'message' => 'error_during_saving_in_database']);
 		}
