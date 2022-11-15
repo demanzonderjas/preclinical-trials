@@ -7,8 +7,5 @@ export const applicationField: TFormField = {
 	required: false,
 	validate: null,
 	useAsFilter: false,
-	props: {
-		placeholder: "application_field_placeholder"
-	},
 	description: "application_field_description"
 };

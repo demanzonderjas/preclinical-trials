@@ -1,3 +1,4 @@
+import { RichTextField } from "../../../../components/forms/RichTextField";
 import { YesNoField } from "../../../../components/forms/YesNoField";
 import { TFormField, TFormFieldName, TSectionName } from "../../../../typings/forms";
 import { otherSpeciesField } from "./other";
@@ -20,6 +21,10 @@ export const sampleSizeCalculationDetailsField: TFormField = {
 	id: TFormFieldName.SampleSizeCalculationDetails,
 	showValueIn: TFormFieldName.SampleSizeCalculation,
 	description: "yes_sample_size_calculation_description",
+	Component: RichTextField,
+	props: {
+		height: 250
+	},
 	label: "details",
 	useAsFilter: false,
 	required: true,

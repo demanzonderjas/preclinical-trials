@@ -51,7 +51,7 @@ export const ProtocolValue: React.FC<{
 		case TFormFieldName.StatementOfAccuracy:
 			return <p>{t("yes")}</p>;
 		default:
-			return <p>{t(value)}</p>;
+			return <div dangerouslySetInnerHTML={{ __html: t(value) }} />;
 	}
 };
 
