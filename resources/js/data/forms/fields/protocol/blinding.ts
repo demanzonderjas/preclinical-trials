@@ -1,3 +1,4 @@
+import { RichTextField } from "../../../../components/forms/RichTextField";
 import { SelectField } from "../../../../components/forms/SelectField";
 import { TFormField, TFormFieldName, TSectionName, TSelectOption } from "../../../../typings/forms";
 import { otherSupportField } from "./other";
@@ -22,7 +23,11 @@ export const blindedInterventionNoField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.NoBlindedIntervention,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
+	Component: RichTextField,
 	label: "details",
+	props: {
+		height: 250
+	},
 	useAsFilter: false,
 	description: "why_no_blinding",
 	section: TSectionName.StudyDesign,
@@ -34,6 +39,10 @@ export const blindedInterventionHowField: TFormField = {
 	id: TFormFieldName.YesBlindedInterventionHow,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "details",
+	Component: RichTextField,
+	props: {
+		height: 250
+	},
 	description: "how_blinding",
 	useAsFilter: false,
 	section: TSectionName.StudyDesign,
@@ -45,6 +54,10 @@ export const blindedInterventionPartiallyField: TFormField = {
 	id: TFormFieldName.YesBlindedInterventionPartially,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "details",
+	Component: RichTextField,
+	props: {
+		height: 250
+	},
 	description: "please_elaborate",
 	useAsFilter: false,
 	section: TSectionName.StudyDesign,
