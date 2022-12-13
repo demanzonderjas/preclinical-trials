@@ -44,7 +44,7 @@ export const otherSpeciesField: TFormField = {
 	dependencies: [{ key: TFormFieldName.Species, value: "other" }]
 };
 
-export const otherRandomisationField: TFormField = {
+export const otherRandomisationMethodField: TFormField = {
 	...otherSupportField,
 	id: TFormFieldName.OtherRandomisationMethod,
 	label: "other",
@@ -52,4 +52,14 @@ export const otherRandomisationField: TFormField = {
 	required: false,
 	section: TSectionName.StudyDesign,
 	dependencies: [{ key: TFormFieldName.RandomisationMethodUsed, value: "other" }]
+};
+
+export const otherRandomisationDetailsField: TFormField = {
+	...otherSupportField,
+	id: TFormFieldName.OtherRandomisationDetails,
+	label: "other",
+	showValueIn: TFormFieldName.Randomisation,
+	required: false,
+	section: TSectionName.StudyDesign,
+	dependencies: [{ key: TFormFieldName.DetailsRandomisation, value: "other" }]
 };
