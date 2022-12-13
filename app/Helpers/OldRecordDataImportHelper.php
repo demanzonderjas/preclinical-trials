@@ -252,6 +252,7 @@ class OldRecordDataImportHelper
 			"randomisation",
 			"randomisation_method_used",
 			"other_randomisation_method",
+			"other_randomisation_details",
 			"details_randomisation",
 			"why_no_randomisation",
 		];

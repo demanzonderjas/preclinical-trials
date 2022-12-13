@@ -214,6 +214,7 @@
 	"magic_search": " ",
 	"other_intervention_type": "Other intervention type",
 	"other_randomisation_method": "Other Randomisation method",
+	"other_randomisation_details": "Other Randomisation details",
 	"sample_size_calculation_details": "Sample size calculation details",
 	"image": "Image (optional)",
 	"upload_image": "Upload image",

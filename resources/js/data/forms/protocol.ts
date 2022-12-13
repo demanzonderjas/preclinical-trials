@@ -30,7 +30,8 @@ import { interventionTypeField, placeboControlledField } from "./fields/protocol
 import { linkToDataField, linkToPublicationField } from "./fields/protocol/linkToData";
 import {
 	otherInterventionTypeField,
-	otherRandomisationField,
+	otherRandomisationDetailsField,
+	otherRandomisationMethodField,
 	otherSpeciesField,
 	otherSupportField
 } from "./fields/protocol/other";
@@ -106,8 +107,9 @@ export const createProtocolForm: TForm = {
 		randomisationField,
 		noRandomisationDetailsField,
 		randomisationMethodUsedField,
-		otherRandomisationField,
+		otherRandomisationMethodField,
 		randomisationDetailsField,
+		otherRandomisationDetailsField,
 		blindedInterventionField,
 		blindedInterventionNoField,
 		blindedInterventionHowField,

@@ -54,11 +54,12 @@ export const randomisationMethodUsedField: TFormField = {
 export const randomisationDetailsOptions = [
 	"simple_randomisation",
 	"block_randomisation",
-	"stratified_randomisation"
+	"stratified_randomisation",
+	"other"
 ];
 
 export const randomisationDetailsField: TFormField = {
-	id: TFormFieldName.DetailsRandomsation,
+	id: TFormFieldName.DetailsRandomisation,
 	Component: SelectField,
 	required: true,
 	props: {

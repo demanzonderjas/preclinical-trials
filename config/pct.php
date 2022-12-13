@@ -33,6 +33,7 @@ return [
 		"why_no_randomisation",
 		"randomisation_method_used",
 		"other_randomisation_method",
+		"other_randomisation_details",
 		"details_randomisation",
 		"experimental_design",
 		"investigators_blinded_intervention",
