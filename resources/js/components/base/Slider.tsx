@@ -14,7 +14,6 @@ export const Slider: React.FC<{
 					type="checkbox"
 					checked={checked}
 					onChange={() => {
-						console.log(!checked);
 						handleToggle(!checked);
 						setChecked(!checked);
 					}}
