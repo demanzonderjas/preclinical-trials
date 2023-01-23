@@ -102,6 +102,10 @@ $triangle-size: 10px;
 						border-width: $triangle-size $triangle-size 0 0;
 						border-color: $secondary transparent transparent transparent;
 					}
+
+					.text {
+						text-align: left;
+					}
 				}
 			}
 

@@ -295,7 +295,7 @@
 	"reason": "Reason",
 	"pct_id": "PCT ID",
 	"reject_embargo_extension": "Reject embargo extension",
-	"ask_question": "Ask question",
+	"ask_question_to_author": "Ask question to author",
 	"send_message": "Send message",
 	"protocol_owner": "Protocol owner",
 	"you": "You",

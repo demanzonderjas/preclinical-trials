@@ -48,7 +48,7 @@ export const RevisionPanel: React.FC<{ hideBack?: boolean }> = observer(({ hideB
 				)}
 				{!isMine(protocol.user_id) && (
 					<button className="secondary small" onClick={() => setShowMessaging(true)}>
-						{t("ask_question")}
+						{t("ask_question_to_author")}
 					</button>
 				)}
 				{!hideBack && (

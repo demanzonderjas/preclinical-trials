@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { useUser } from "../../hooks/useUser";
 import {
@@ -9,6 +9,8 @@ import {
 } from "../../queries/messages";
 import { TMessage } from "../../typings/messages";
 import cx from "classnames";
+import JoditEditor from "jodit-react";
+import { joditConfig } from "../../utils/jodit";
 
 export const MessagingContainer: React.FC<{
 	close?: Function;
@@ -19,9 +21,12 @@ export const MessagingContainer: React.FC<{
 	const { user } = useUser();
 	const [message, setMessage] = useState("");
 	const [blocked, setBlocked] = useState(true);
+	const editor = useRef(null);
 	const [messages, setMessages] = useState<TMessage[]>([]);
 	const [channelId, setChannelId] = useState(initialChannelId);
 	const messagesRef = useRef(null);
+
+	const config = useMemo(() => ({ ...joditConfig, height: `250px` }), []);
 
 	useEffect(() => {
 		if (!user || !protocolId || channelId) {
@@ -97,7 +102,13 @@ export const MessagingContainer: React.FC<{
 			</div>
 			{!blocked && (
 				<div className="write-message">
-					<textarea value={message} onChange={e => setMessage(e.target.value)} />
+					<JoditEditor
+						ref={editor}
+						value={message}
+						config={config}
+						onBlur={newContent => setMessage(newContent)}
+						onChange={newContent => setMessage(newContent)}
+					/>
 					<div className="button-wrapper">
 						<button
 							className="secondary small"
