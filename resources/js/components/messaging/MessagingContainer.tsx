@@ -91,7 +91,7 @@ export const MessagingContainer: React.FC<{
 				{messages.map(m => (
 					<div className={cx("message", { you: !!m.is_mine })} key={m.id}>
 						<div className="content">
-							<h3>{t(m.name)}</h3>
+							{!m.is_mine && <h3>{t(m.name)}</h3>}
 							<div className="text" dangerouslySetInnerHTML={{ __html: m.text }} />
 							<div className="timestamp">
 								<span>{dayjs(m.created_at).format("DD/MM/YYYY hh:mm")}</span>
