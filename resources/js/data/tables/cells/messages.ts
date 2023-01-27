@@ -1,3 +1,4 @@
+import { HTMLCell } from "../../../components/tables/HTMLCell";
 import { MessageActionCell } from "../../../components/tables/MessageActionCell";
 import { TextCell } from "../../../components/tables/TextCell";
 import { TTableCell, TTableCellName } from "../../../typings/tables";
@@ -17,6 +18,6 @@ export const contactCell: TTableCell = {
 
 export const latestMessageCell: TTableCell = {
 	id: TTableCellName.LatestMessage,
-	Component: TextCell,
+	Component: HTMLCell,
 	value: ""
 };
