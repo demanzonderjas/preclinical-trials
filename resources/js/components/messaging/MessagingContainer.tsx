@@ -26,7 +26,7 @@ export const MessagingContainer: React.FC<{
 	const [channelId, setChannelId] = useState(initialChannelId);
 	const messagesRef = useRef(null);
 
-	const config = useMemo(() => ({ ...joditConfig, height: `250px` }), []);
+	const config = useMemo(() => ({ ...joditConfig, height: `200px` }), []);
 
 	useEffect(() => {
 		if (!user || !protocolId || channelId) {
