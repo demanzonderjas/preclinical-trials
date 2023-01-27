@@ -5,7 +5,7 @@ $triangle-size: 10px;
 	position: fixed;
 	top: calc($header-height + 10px);
 	right: 0;
-	height: calc(100vh - #{$header-height});
+	height: calc(100vh - #{$header-height} - 10px);
 	width: 375px;
 	background-color: #fff;
 	z-index: 100;
@@ -28,7 +28,7 @@ $triangle-size: 10px;
 		.write-message {
 			.button-wrapper {
 				button {
-					margin-top: 10px;
+					margin-top: -10px;
 				}
 			}
 		}
@@ -61,7 +61,7 @@ $triangle-size: 10px;
 	}
 
 	.messages {
-		height: calc(100% - #{$send-message-height});
+		height: calc(100% - #{$send-message-height} - 60px);
 		background-color: $grey-light;
 		padding: 10px;
 		overflow-y: auto;
@@ -129,7 +129,7 @@ $triangle-size: 10px;
 	}
 
 	.write-message {
-		background-color: $primary;
+		background-color: $tertiary;
 		height: $send-message-height;
 		position: relative;
 
@@ -147,7 +147,7 @@ $triangle-size: 10px;
 
 		.button-wrapper {
 			text-align: right;
-			margin-top: -5px;
+			margin-top: 5px;
 			
 			button {
 				margin-right: 10px;
