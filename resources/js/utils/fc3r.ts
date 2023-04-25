@@ -12,6 +12,11 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 			value: "Formulaire_Apafis.ProceduresExperimentales.ObjetsVises",
 			target: TFormFieldName.StudyStage,
 			conversion: convertStudyStage
+		},
+		{
+			value: "Formulaire_Apafis.PublishNtsProjectRequest.projectPurposes.purpose",
+			target: TFormFieldName.ResearchField,
+			conversion: convertResearchField
 		}
 	];
 
@@ -41,4 +46,8 @@ function convertStudyStage(object: object) {
 		return null;
 	}
 
+}
+
+function convertResearchField(purposes: string[]) {
+	return purposes.join(", ");
 }
