@@ -69,3 +69,9 @@ export type TPRISConversion = {
 	target: TFormFieldName;
 	conversion?: (value: any) => any;
 };
+
+export type TFC3RConversion = {
+	value: string | string[];
+	target: TFormFieldName;
+	conversion?: (value: any) => any;
+};
