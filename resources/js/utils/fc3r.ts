@@ -1,9 +1,9 @@
 import { TFormFieldName } from "../typings/forms";
-import { TPRISConversion } from "../typings/protocols";
+import { TFC3RConversion } from "../typings/protocols";
 import { getNestedValue } from "./pris";
 
 export function convertFC3RtoKeyValuePairs(data: any) {
-	const PRISfields: TPRISConversion[] = [
+	const PRISfields: TFC3RConversion[] = [
 		{
 			value: "Formulaire_Apafis.InformationsGenerales.TitreProjet",
 			target: TFormFieldName.Title
@@ -45,11 +45,23 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 		{
 			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.OrigineAnimaux.ElevesAFinExperimentale.OuiEleves.OuiElevesAFinExperimentale.AnimauxFournis",
 			target: TFormFieldName.Strain
+		},
+		{
+			value: [
+				"Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Projet.DescriptionProjet2.DerouleDuProjet",
+				"Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Projet.StrategieExperimentations",
+			],
+			target: TFormFieldName.ExperimentalDesign
 		}
 	];
 
 	return PRISfields.reduce((base, next) => {
-		const value = getNestedValue(next.value, data);
+		let value;
+		if(typeof next.value === "string") {
+			value = getNestedValue(next.value, data);
+		} else if(Array.isArray(next.value)) {
+			value = next.value.map((keyToMap) => getNestedValue(keyToMap, data)).join("<br /><br />")
+		}
 		base[next.target] = next.conversion ? next.conversion(value) : value;
 		return base;
 	}, {});
@@ -77,6 +89,9 @@ function convertStudyStage(object: object) {
 }
 
 function convertResearchField(purposes: string[]) {
+	if(!purposes || !Array.isArray(purposes)) {
+		return null;
+	}
 	return purposes.join(", ");
 }
 
