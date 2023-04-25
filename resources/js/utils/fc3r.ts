@@ -31,6 +31,16 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.OrigineAnimaux.AnimauxReutilisesProjetPrecedent",
 			target: TFormFieldName.NoExclusiveAnimalUseDetails,
 			conversion: convertExclusiveAnimalUseDetails
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.ListeAnimaux",
+			target: TFormFieldName.Species,
+			conversion: convertSpecies
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.ListeAnimaux",
+			target: TFormFieldName.OtherSpecies,
+			conversion: convertOtherSpecies
 		}
 	];
 
@@ -78,6 +88,66 @@ function convertExclusiveAnimalUseDetails(wasReused: string) {
 	if(wasReused === "true") {
 		return "animals used in a previous project";
 	}  else {
+		return null;
+	}
+}
+
+function convertSpecies(object: object) {
+
+	const usedSpecies = Object.keys(object).find((species) => object[species] === "true");
+	
+	switch(usedSpecies) {
+		case "Chats":
+			return "cat";
+		case "Chiens":
+			return "dog";
+		case "Furets":
+			return "ferret";
+		case "Caprins":
+			return "goat"
+		case "Cobayes":
+			return "guinea_pig"
+		case "HamstersSyriens":
+		case "HamstersChinois":
+			return "hamster"
+		case "Chevaux":
+			return "horse";
+		case "Souris":
+			return "mouse";
+		case "Prosimien":
+		case "Ouistitis":
+		case "SingeCynomologue":
+		case "SingeRhesus":
+		case "Vervets":
+		case "Babouins":
+		case "Sairimis":
+		case "AutresSingesAncienMonde":
+		case "AutresSingesNouveauMonde":
+		case "AutresPrimateNonHumain":
+		case "SingesAntropoides":
+			return "monkey";
+		case "Porcs":
+			return "pig";
+		case "Lapins":
+			return "rabbit";
+		case "Rats":
+			return "rat";
+		case "Ovins":
+			return "sheep";
+		default:
+			return "other";
+	}
+
+}
+
+function convertOtherSpecies(object: object) {
+	const species = convertSpecies(object);
+
+	if(species === "other") {
+		const usedSpecies = Object.keys(object).find((species) => object[species] === "true");
+		return usedSpecies ? usedSpecies.split(/(?=[A-Z])/).join(" ") : null;
+
+	} else {
 		return null;
 	}
 }
