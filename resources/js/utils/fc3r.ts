@@ -61,6 +61,14 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 		{
 			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.AnimauxUtilises.JustificationUtilisationEspeces",
 			target: TFormFieldName.SampleSizeCalculationDetails
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.AnimauxUtilises.NombreAnimauxUtilises",
+			target: TFormFieldName.SumOfAnimals
+		}
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.EtablissementUtilisateur.AgrementUE.NumeroAgrement",
+			target: TFormFieldName.OriginalAnimalEthicsCommitteeApplication
 		}
 	];
 
