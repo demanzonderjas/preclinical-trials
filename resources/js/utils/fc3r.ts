@@ -52,6 +52,15 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 				"Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Projet.StrategieExperimentations",
 			],
 			target: TFormFieldName.ExperimentalDesign
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.AnimauxUtilises.JustificationUtilisationEspeces",
+			target: TFormFieldName.SampleSizeCalculation,
+			conversion: convertSampleSizeCalculation
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.AnimauxUtilises.JustificationUtilisationEspeces",
+			target: TFormFieldName.SampleSizeCalculationDetails
 		}
 	];
 
@@ -169,4 +178,8 @@ function convertOtherSpecies(object: object) {
 	} else {
 		return null;
 	}
+}
+
+function convertSampleSizeCalculation(calcDetails: string) {
+	return calcDetails ? "yes" : "no";
 }
