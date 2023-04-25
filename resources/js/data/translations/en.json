@@ -303,5 +303,6 @@
 	"block": "Block",
 	"latest_message": "Latest message",
 	"contact": "Contact",
-	"receive_message_notifications": "I want to receive notifications about new messages"
+	"receive_message_notifications": "I want to receive notifications about new messages",
+	"import_fc3r": "Import FC3R (.XML)"
 }

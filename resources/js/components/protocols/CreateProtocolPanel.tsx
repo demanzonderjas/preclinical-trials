@@ -13,6 +13,7 @@ import {
 } from "../../queries/protocol";
 import { TProtocol, TProtocolStatus } from "../../typings/protocols";
 import { ImportPRIS } from "./ImportPRIS";
+import { ImportFC3R } from "./ImportFC3R";
 
 export const CreateProtocolPanel: React.FC<{ hideIntro?: boolean }> = observer(({ hideIntro }) => {
 	const { t } = useTranslationStore();
@@ -79,6 +80,7 @@ export const CreateProtocolPanel: React.FC<{ hideIntro?: boolean }> = observer((
 				{status === TProtocolStatus.Draft && (
 					<>
 						<ImportPRIS />
+						<ImportFC3R />
 						<button
 							type="button"
 							className="danger small"
