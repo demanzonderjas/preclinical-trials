@@ -17,6 +17,20 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 			value: "Formulaire_Apafis.PublishNtsProjectRequest.projectPurposes.purpose",
 			target: TFormFieldName.ResearchField,
 			conversion: convertResearchField
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Projet.DescriptionProjet2.ObjectifsDuProjet",
+			target: TFormFieldName.Hypothesis
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.OrigineAnimaux.AnimauxReutilisesProjetPrecedent",
+			target: TFormFieldName.ExclusiveAnimalUse,
+			conversion: convertExclusiveAnimalUse
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.OrigineAnimaux.AnimauxReutilisesProjetPrecedent",
+			target: TFormFieldName.NoExclusiveAnimalUseDetails,
+			conversion: convertExclusiveAnimalUseDetails
 		}
 	];
 
@@ -50,4 +64,20 @@ function convertStudyStage(object: object) {
 
 function convertResearchField(purposes: string[]) {
 	return purposes.join(", ");
+}
+
+function convertExclusiveAnimalUse(wasReused: string) {
+	if(wasReused === "true") {
+		return "no";
+	} else {
+		return "yes";
+	}
+}
+
+function convertExclusiveAnimalUseDetails(wasReused: string) {
+	if(wasReused === "true") {
+		return "animals used in a previous project";
+	}  else {
+		return null;
+	}
 }
