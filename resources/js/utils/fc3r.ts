@@ -41,6 +41,10 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.ListeAnimaux",
 			target: TFormFieldName.OtherSpecies,
 			conversion: convertOtherSpecies
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.OrigineAnimaux.ElevesAFinExperimentale.OuiEleves.OuiElevesAFinExperimentale.AnimauxFournis",
+			target: TFormFieldName.Strain
 		}
 	];
 
