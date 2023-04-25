@@ -22,6 +22,7 @@ export const ImportFC3R: React.FC = observer(() => {
 				console.log("DATA", data);
 
 				const keyValuePairs = convertFC3RtoKeyValuePairs(data);
+				keyValuePairs[TFormFieldName.Status] = "not_started";
 				Object.keys(keyValuePairs).forEach((key: TFormFieldName) => {
 					setFieldValue(key, keyValuePairs[key]);
 				});
