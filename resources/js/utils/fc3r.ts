@@ -65,10 +65,23 @@ export function convertFC3RtoKeyValuePairs(data: any) {
 		{
 			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.AnimauxUtilises.NombreAnimauxUtilises",
 			target: TFormFieldName.SumOfAnimals
-		}
+		},
 		{
 			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.EtablissementUtilisateur.AgrementUE.NumeroAgrement",
 			target: TFormFieldName.OriginalAnimalEthicsCommitteeApplication
+		},
+		{
+			value: [
+				"Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Animaux.PointsLimitesAdaptes",
+				"Formulaire_Apafis.ProceduresExperimentales.ExplicationsProcedures.Procedure.DescriptionDetaillee.MethodeSuppressionDouleur",
+				"Formulaire_Apafis.ProceduresExperimentales.ExplicationsProcedures.Procedure.DescriptionDetaillee.MethodeSuppressionSouffrance"
+			],
+			target: TFormFieldName.AdditionalInformation
+		},
+		{
+			value: "Formulaire_Apafis.InformationsAdministrativesEtReglementaires.EtablissementUtilisateur.ResponsablesMiseEnOeuvre.CoordonneesResponsablesMiseEnOeuvre",
+			target: TFormFieldName.ContactEmail,
+			conversion: convertContactEmail
 		}
 	];
 
@@ -190,4 +203,14 @@ function convertOtherSpecies(object: object) {
 
 function convertSampleSizeCalculation(calcDetails: string) {
 	return calcDetails ? "yes" : "no";
+}
+
+function convertContactEmail(contact: object & { Email: string} | object & { Email: string }[]) {
+	if(Array.isArray(contact)) {
+		return contact[0].Email;
+	} else if(!!contact && typeof contact === "object") {
+		return contact.Email;
+	} else {
+		return null;
+	}
 }
