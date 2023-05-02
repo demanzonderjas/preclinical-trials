@@ -112,3 +112,12 @@ export async function getViewableProtocolsQuery() {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function translateContentQuery(text_to_translate: string) {
+	try {
+		const response = await API.post("/api/translate", { text_to_translate });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

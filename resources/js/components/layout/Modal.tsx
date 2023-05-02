@@ -11,9 +11,15 @@ export const Modal: React.FC = observer(() => {
 
 	return (
 		<div className="ModalWrapper">
-			<div className="Modal">
+			<div className="Modal" style={{ maxHeight: modal.isBig ? "90vh" : null }}>
 				<CloseIcon />
-				<div className="ContentWrapper">
+				<div
+					className="ContentWrapper"
+					style={{
+						display: modal.isBig ? "block" : null,
+						padding: modal.isBig ? "20px 0" : null
+					}}
+				>
 					<modal.Component data={modal.data} />
 				</div>
 			</div>

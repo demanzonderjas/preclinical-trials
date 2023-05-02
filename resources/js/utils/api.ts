@@ -3,7 +3,7 @@ import { env } from "../env";
 
 export const API: AxiosInstance = axios.create({
 	baseURL: `${env.BASE_URL}/`,
-	timeout: 5000,
+	timeout: 120000,
 	headers: {
 		"X-CSRF-TOKEN": getMeta("csrf-token"),
 		"Content-Type": "application/json",

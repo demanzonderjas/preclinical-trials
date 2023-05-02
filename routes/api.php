@@ -60,6 +60,8 @@ Route::group(['namespace' => 'Api'], function () {
         Route::post('channel/block', 'ChannelController@block');
     });
 
+    Route::post('translate', 'AIController@translate');
+
     Route::group(['middleware' => 'admin'], function () {
 
         Route::post('/admin/change-password', [NewPasswordController::class, 'resetAsAdmin']);

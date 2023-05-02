@@ -3,6 +3,7 @@ export type TModal = {
 	Component?: React.FC<any>;
 	actionOnConfirm?: Function;
 	data?: any;
+	isBig?: boolean;
 };
 
 export enum TModalName {
@@ -13,5 +14,6 @@ export enum TModalName {
 	ConfirmModal = "confirm_modal",
 	RejectProtocolModal = "reject_protocol_modal",
 	RejectEmbargoExtensionModal = "reject_embargo_extension_modal",
-	PRISModal = "pris_modal"
+	PRISModal = "pris_modal",
+	FC3RModal = "fc3r_modal"
 }

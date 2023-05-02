@@ -225,6 +225,7 @@
 	"why_reject_protocol": "Please let the user know why you rejected the current version of the protocol.",
 	"why_reject_embargo_extension": "Please let the user know why you rejected the current request for embargo extension.",
 	"make_sure_to_check_following_fields": "The import cannot fully be used to add your new protocol. Make sure to check the following fields.",
+	"fc3r_import_description": "Your data were uploaded and translated, please fill the remaining empty fields in English.",
 	"leaderboard": "Leaderboard",
 	"leaderboard_description": "Protocols per country",
 	"total_protocols": "Total protocols",
