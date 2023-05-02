@@ -74,4 +74,5 @@ export type TFC3RConversion = {
 	value: string | string[];
 	target: TFormFieldName;
 	conversion?: (value: any) => any;
+	needsTranslation?: boolean;
 };

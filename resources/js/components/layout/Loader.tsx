@@ -41,3 +41,11 @@ export const Loader: React.FC = () => {
 		</div>
 	);
 };
+
+export const SimpleLoader: React.FC = () => {
+	return (
+		<div className="Loader">
+			<Image filename="logo-pct.jpg" />
+		</div>
+	);
+};
