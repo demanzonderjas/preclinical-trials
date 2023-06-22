@@ -56,10 +56,8 @@ export const FC3Rfields: TFC3RConversion[] = [
 		needsTranslation: true
 	},
 	{
-		value: [
+		value:
 			"Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Projet.DescriptionProjet2.DerouleDuProjet",
-			"Formulaire_Apafis.InformationsAdministrativesEtReglementaires.Projet.StrategieExperimentations"
-		],
 		target: TFormFieldName.ExperimentalDesign,
 		needsTranslation: true
 	},
@@ -119,9 +117,16 @@ function convertStudyStage(object: object) {
 	const prefix = "Point";
 	const exploratory = ["A", "D", "E", "F", "G"];
 	const confirmatory = ["B", "C"];
+	const all = [...exploratory, ...confirmatory];
 
-	const isExploratory = exploratory.some(point => object[`${prefix}${point}`] === "true");
-	const isConfirmatory = confirmatory.some(point => object[`${prefix}${point}`] === "true");
+	const isExploratory =
+		exploratory.some(point => object[`${prefix}${point}`] === "true") ||
+		all.every(point => object[`${prefix}${point}`] === "false");
+	const isConfirmatory =
+		confirmatory.some(point => object[`${prefix}${point}`] === "true") ||
+		all.every(point => object[`${prefix}${point}`] === "true");
+
+	console.log(all, isExploratory, isConfirmatory);
 
 	if ((isExploratory && isConfirmatory) || (!isExploratory && !isConfirmatory)) {
 		return null;
