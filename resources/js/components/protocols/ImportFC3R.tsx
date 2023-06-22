@@ -24,11 +24,15 @@ export const ImportFC3R: React.FC = observer(() => {
 				const data: any = await xmlToJSON(file);
 
 				const keyValuePairs = convertFC3RtoKeyValuePairs(data);
+				keyValuePairs[TFormFieldName.Status] = "not_started";
 				const keysToTranslate = Object.keys(keyValuePairs).filter(key =>
 					FC3Rfields.some(
 						field =>
 							field.target === key && field.needsTranslation && keyValuePairs[key]
 					)
+				);
+				const otherKeys = Object.keys(keyValuePairs).filter(key =>
+					keysToTranslate.every(_key => _key !== key)
 				);
 
 				const translations = await Promise.all(
@@ -41,7 +45,10 @@ export const ImportFC3R: React.FC = observer(() => {
 					})
 				);
 
-				keyValuePairs[TFormFieldName.Status] = "not_started";
+				otherKeys.forEach((key: TFormFieldName) => {
+					setFieldValue(key, keyValuePairs[key]);
+				});
+
 				translations.forEach(response => {
 					setFieldValue(response.target, response.translation);
 				});
