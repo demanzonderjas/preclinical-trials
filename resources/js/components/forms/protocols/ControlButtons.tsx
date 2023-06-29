@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
 import { useForm } from "../../../hooks/useForm";
 import { useProtocol } from "../../../hooks/useProtocol";
@@ -28,6 +28,7 @@ export const ControlButtons: React.FC = observer(() => {
 	const { protocol_id }: { protocol_id: string } = useParams();
 	const { t } = useTranslationStore();
 	const { status } = useProtocol();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const saveAsDraft = async (goBack?: boolean) => {
 		if (status !== TProtocolStatus.Draft) {
@@ -57,6 +58,7 @@ export const ControlButtons: React.FC = observer(() => {
 	};
 
 	const submitForPublication = async () => {
+		setIsSubmitting(true);
 		const data = createKeyValuePairs() as TProtocol;
 		if (validate()) {
 			if (protocol_id) {
@@ -69,7 +71,10 @@ export const ControlButtons: React.FC = observer(() => {
 				location.href = `/database/view-protocol/${response.protocol_id}`;
 			}
 		}
+		setIsSubmitting(false);
 	};
+
+	console.log("submitting", isSubmitting);
 
 	return (
 		<div
@@ -100,7 +105,12 @@ export const ControlButtons: React.FC = observer(() => {
 				</button>
 			)}
 			{!!isLastSection && !!sections && status === TProtocolStatus.Draft && (
-				<button type="button" className="secondary small" onClick={submitForPublication}>
+				<button
+					type="button"
+					disabled={isSubmitting}
+					className="secondary small"
+					onClick={submitForPublication}
+				>
 					{t("submit_for_publication")}
 				</button>
 			)}
@@ -111,6 +121,7 @@ export const ControlButtons: React.FC = observer(() => {
 					status === TProtocolStatus.Published) && (
 					<button
 						type="button"
+						disabled={isSubmitting}
 						className="secondary small"
 						onClick={submitForPublication}
 					>
