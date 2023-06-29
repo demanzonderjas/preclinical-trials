@@ -23,6 +23,9 @@ class UserController extends Controller
 			'first_name' => ['required', 'string', 'max:255'],
 			'last_name' => ['required', 'string', 'max:255'],
 			'institution' => ['required', 'string', 'max:255'],
+			'country' => ['required', 'string', 'max:255'],
+			'city' => ['required', 'string', 'max:255'],
+			'role' => ['required', 'string', 'max:255'],
 			'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $targetUser->id],
 		]);
 
@@ -30,6 +33,9 @@ class UserController extends Controller
 		$targetUser->last_name = $request->last_name;
 		$targetUser->institution = $request->institution;
 		$targetUser->email = $request->email;
+		$targetUser->country = $request->country;
+		$targetUser->city = $request->city;
+		$targetUser->role = $request->role;
 		$targetUser->save();
 
 		return response()->json(["user" => $targetUser, "success" => true]);

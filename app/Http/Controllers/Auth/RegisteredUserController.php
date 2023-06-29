@@ -28,6 +28,9 @@ class RegisteredUserController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'institution' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'country' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'role' => ['required', 'string', 'max:255'],
             'password' => ['required', Rules\Password::defaults()],
             'terms_conditions' => ['required', 'boolean']
         ]);
@@ -37,6 +40,9 @@ class RegisteredUserController extends Controller
             'last_name' => $request->last_name,
             'institution' => $request->institution,
             'email' => $request->email,
+            'country' => $request->country,
+            'city' => $request->city,
+            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 
