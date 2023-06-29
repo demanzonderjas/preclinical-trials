@@ -5,6 +5,9 @@ export type TUser = {
 	settings: TSetting[];
 	email: string;
 	institution: string;
+	city: string;
+	country: string;
+	role: string;
 };
 
 export type TSetting = {

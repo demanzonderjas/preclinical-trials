@@ -28,6 +28,8 @@ export const EditProfilePage: React.FC = observer(() => {
 		value: user[field.id]
 	}));
 
+	console.log(initialData);
+
 	return (
 		<Page title="Edit profile">
 			<div className="EditProfile border-top">

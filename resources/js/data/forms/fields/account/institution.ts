@@ -1,5 +1,8 @@
 import { InputField } from "../../../../components/forms/InputField";
+import { SelectField } from "../../../../components/forms/SelectField";
+import { CountrySelectField } from "../../../../components/forms/profile/CountrySelectField";
 import { TFormField, TFormFieldName } from "../../../../typings/forms";
+import { getCountrySelectOptions } from "../../../../utils/countries";
 
 export const institutionField: TFormField = {
 	id: TFormFieldName.Institution,
@@ -12,9 +15,10 @@ export const institutionField: TFormField = {
 
 export const countryField: TFormField = {
 	id: TFormFieldName.Country,
-	Component: InputField,
 	required: true,
-	validate: (value: string) => value && value.length >= 2,
+	useAsFilter: true,
+	Component: CountrySelectField,
+	validate: value => value != "",
 	value: ""
 };
 
