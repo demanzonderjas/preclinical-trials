@@ -126,8 +126,6 @@ function convertStudyStage(object: object) {
 		confirmatory.some(point => object[`${prefix}${point}`] === "true") ||
 		all.every(point => object[`${prefix}${point}`] === "true");
 
-	console.log(all, isExploratory, isConfirmatory);
-
 	if ((isExploratory && isConfirmatory) || (!isExploratory && !isConfirmatory)) {
 		return null;
 	} else if (isExploratory) {

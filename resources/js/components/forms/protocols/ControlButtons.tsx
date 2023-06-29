@@ -74,8 +74,6 @@ export const ControlButtons: React.FC = observer(() => {
 		setIsSubmitting(false);
 	};
 
-	console.log("submitting", isSubmitting);
-
 	return (
 		<div
 			className="ControlButtons"
