@@ -41,7 +41,8 @@ class SendUpdateProfileEmail extends Command
     public function handle()
     {
 
-        $users = User::where('email', 'julia.menon@heart-institute.nl')->get();
+        $users = User::where('email', 'daan@puzzel.org')->get();
+
 
         foreach ($users as $user) {
             Mail::to($user)->queue(new UpdateProfileEmail($user));
