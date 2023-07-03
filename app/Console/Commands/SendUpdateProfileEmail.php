@@ -41,13 +41,18 @@ class SendUpdateProfileEmail extends Command
     public function handle()
     {
 
-        $users = User::where('email', 'daan@puzzel.org')->get();
+        $users = User::all();
 
+        $batchNumber = $this->ask('What batch would you like to start?');
+        $size = 450;
+        $start = $size * intval($batchNumber);
+        $end = $size * (intval($batchNumber) + 1);
+        $this->info($start . " - " . $end);
 
-        foreach ($users as $user) {
+        for ($i = $start; $i < $end; $i++) {
+            $user = $users[$i];
             Mail::to($user)->queue(new UpdateProfileEmail($user));
+            $this->info('Mail to ' . $user->email . ' has been queued.');
         }
-
-        return 0;
     }
 }
