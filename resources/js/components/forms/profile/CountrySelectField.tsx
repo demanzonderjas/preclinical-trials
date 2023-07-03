@@ -9,7 +9,7 @@ export const CountrySelectField: React.FC<{ id: TFormFieldName }> = observer(({ 
 
 	return (
 		<select
-			value={value}
+			value={value || ""}
 			onChange={e => setValue(e.target.value)}
 			style={{ fontSize: "18px", padding: "10px" }}
 		>
