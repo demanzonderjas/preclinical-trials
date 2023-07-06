@@ -30,7 +30,7 @@ export const partnerData: TPartner[] = [
 		url: "https://paasp.net/"
 	},
 	{
-		image: "pris-logo.png",
+		image: "pris-logo-new.png",
 		url: "https://www.pris.nl/"
 	},
 	{
