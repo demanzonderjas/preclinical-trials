@@ -76,3 +76,14 @@ export type TFC3RConversion = {
 	conversion?: (value: any) => any;
 	needsTranslation?: boolean;
 };
+
+export type TImportLog = {
+	project_id: number;
+	type: TImportLogType;
+};
+
+export enum TImportLogType {
+	PRIS = "pris",
+	FC3R = "fc3r",
+	ILES = "iles"
+}

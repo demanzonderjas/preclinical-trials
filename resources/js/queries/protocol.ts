@@ -121,3 +121,12 @@ export async function translateContentQuery(text_to_translate: string) {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function getImportLogsQuery() {
+	try {
+		const response = await API.get("/api/import-logs");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

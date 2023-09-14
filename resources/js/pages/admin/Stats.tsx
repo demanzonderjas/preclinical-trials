@@ -4,16 +4,19 @@ import { Leaderboard } from "../../components/protocols/Leaderboard";
 import {
 	useCountsPerMonth,
 	useEmbargoCounts,
+	useImportLogs,
 	useRejectedCounts,
 	useTotalUserAccounts
 } from "../../hooks/useCounts";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { TImportLogType } from "../../typings/protocols";
 
 export const StatsPage: React.FC = () => {
 	const embargoCounts = useEmbargoCounts();
 	const rejectedCounts = useRejectedCounts();
 	const countsPerMonth = useCountsPerMonth();
 	const totalUsers = useTotalUserAccounts();
+	const logs = useImportLogs();
 	const { t } = useTranslationStore();
 
 	return (
@@ -39,6 +42,18 @@ export const StatsPage: React.FC = () => {
 					<div className="stat">
 						<label>{t("total_under_embargo")}</label>
 						<span>{embargoCounts?.with_embargo}</span>
+					</div>
+					<div className="stat">
+						<label>{t("imported_via_pris")}</label>
+						<span>{logs.filter(l => l.type === TImportLogType.PRIS).length}</span>
+					</div>
+					<div className="stat">
+						<label>{t("imported_via_fc3r")}</label>
+						<span>{logs.filter(l => l.type === TImportLogType.FC3R).length}</span>
+					</div>
+					<div className="stat">
+						<label>{t("imported_via_iles")}</label>
+						<span>{logs.filter(l => l.type === TImportLogType.ILES).length}</span>
 					</div>
 					<div className="stat">
 						<label>{t("total_rejected")}</label>
