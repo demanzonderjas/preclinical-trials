@@ -64,7 +64,7 @@ export const ImportFC3R: React.FC = observer(() => {
 
 	return (
 		<div className="ImportFC3R UploadButton">
-			<button className="secondary small" onClick={e => e.preventDefault()}>
+			<button className="primary small" onClick={e => e.preventDefault()}>
 				{t("import_fc3r")}
 			</button>
 			<input type="file" onChange={e => setFile(e.target.files[0])} />
