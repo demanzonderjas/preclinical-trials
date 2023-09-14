@@ -33,7 +33,7 @@ export const ImportPRIS: React.FC = observer(() => {
 
 	return (
 		<div className="ImportPRIS UploadButton">
-			<button className="secondary small" onClick={e => e.preventDefault()}>
+			<button className="primary small" onClick={e => e.preventDefault()}>
 				{t("import_pris")}
 			</button>
 			<input type="file" onChange={e => setFile(e.target.files[0])} />
