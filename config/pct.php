@@ -52,7 +52,7 @@ return [
 		"contact_email",
 		"study_centre",
 		"additional_information",
-		"statement_of_accuracy"
+		"statement_of_accuracy",
 	],
 	"valid_field_values" => [
 		"financial_support" => [

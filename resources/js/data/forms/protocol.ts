@@ -68,6 +68,7 @@ import { shortTitleField, titleField } from "./fields/protocol/title";
 import { experimentalDesignField } from "./fields/protocol/experimentalDesign";
 import { messageField } from "./fields/admin/content";
 import { additionalInfoField } from "./fields/protocol/additionalInfo";
+import { importTypeField } from "./fields/protocol/import";
 
 export const createProtocolForm: TForm = {
 	id: TFormName.CreateProtocol,
@@ -126,7 +127,8 @@ export const createProtocolForm: TForm = {
 		contactEmailField,
 		studyCentreField,
 		embargoField,
-		accuracyField
+		accuracyField,
+		importTypeField
 	],
 	align: TAlignment.Left
 };

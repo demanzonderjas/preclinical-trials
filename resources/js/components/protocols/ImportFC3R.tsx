@@ -52,6 +52,7 @@ export const ImportFC3R: React.FC = observer(() => {
 				translations.forEach(response => {
 					setFieldValue(response.target, response.translation);
 				});
+				setFieldValue(TFormFieldName.ImportType, "fc3r");
 				validate();
 				setIsLoading(false);
 				const errors = getErrors();

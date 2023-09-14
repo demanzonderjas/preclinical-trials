@@ -132,7 +132,8 @@ export enum TFormFieldName {
 	Latitude = "latitude",
 	GeoSearch = "geo_search",
 	Description = "description",
-	Reason = "reason"
+	Reason = "reason",
+	ImportType = "import_type"
 }
 
 export enum TFormName {
