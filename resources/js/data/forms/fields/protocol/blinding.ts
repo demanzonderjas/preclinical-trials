@@ -21,6 +21,7 @@ export const blindedInterventionField: TFormField = {
 
 export const blindedInterventionNoField: TFormField = {
 	...otherSupportField,
+	required: true,
 	id: TFormFieldName.NoBlindedIntervention,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	Component: RichTextField,
@@ -36,6 +37,7 @@ export const blindedInterventionNoField: TFormField = {
 
 export const blindedInterventionHowField: TFormField = {
 	...otherSupportField,
+	required: true,
 	id: TFormFieldName.YesBlindedInterventionHow,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "details",
@@ -51,6 +53,7 @@ export const blindedInterventionHowField: TFormField = {
 
 export const blindedInterventionPartiallyField: TFormField = {
 	...otherSupportField,
+	required: true,
 	id: TFormFieldName.YesBlindedInterventionPartially,
 	showValueIn: TFormFieldName.InvestigatorsBlindedIntervention,
 	label: "details",
