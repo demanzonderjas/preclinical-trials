@@ -12,6 +12,7 @@
         <meta name="session-id" content={{ rand() }}>
     @endunless
     <link rel="stylesheet" href="/css/app.css?t={{ time() }}">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>{{ env('APP_NAME') }}</title>
 </head>
 
