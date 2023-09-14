@@ -22,6 +22,7 @@ export const ImportPRIS: React.FC = observer(() => {
 				Object.keys(keyValuePairs).forEach((key: TFormFieldName) => {
 					setFieldValue(key, keyValuePairs[key]);
 				});
+				setFieldValue(TFormFieldName.ImportType, "pris");
 				validate();
 				const errors = getErrors();
 				if (errors) {

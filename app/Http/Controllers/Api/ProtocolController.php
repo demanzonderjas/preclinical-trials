@@ -11,6 +11,7 @@ use App\Mail\ProtocolSubmittedUser;
 use App\Models\AdminAction;
 use App\Models\Detail;
 use App\Models\EmbargoEndDate;
+use App\Models\ImportLog;
 use App\Models\Protocol;
 use App\Models\User;
 use Carbon\Carbon;
@@ -25,6 +26,7 @@ class ProtocolController extends Controller
 		$protocol = new Protocol();
 		$request->user()->protocols()->save($protocol);
 		$protocol->saveDetails($request);
+
 		return response()->json(["protocol_id" => $protocol->id]);
 	}
 
@@ -214,6 +216,10 @@ class ProtocolController extends Controller
 			$user->protocols()->save($protocol);
 			$validKeys = Protocol::getValidKeys($request->data);
 			$protocol->addDetailsToDatabase($validKeys);
+
+			$log = ImportLog::firstOrNew(['protocol_id' => $protocol->id]);
+			$log->type = "iles";
+			$log->save();
 
 			Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
 			Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
