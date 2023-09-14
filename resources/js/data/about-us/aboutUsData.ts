@@ -53,7 +53,7 @@ export const aboutUsData: TAboutUs[] = [
 		workLocation: "Erasmus University Medical Center"
 	},
 	{
-		name: "Mira van der Naald, MD",
+		name: "Dr. Mira van der Naald",
 		image: "mira_van_der_naald.png",
 		role: TAboutUsType.SteeringCommittee,
 		workLocation:
