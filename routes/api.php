@@ -71,6 +71,7 @@ Route::group(['namespace' => 'Api'], function () {
         Route::post('protocol/{protocol_id}/reject', 'ProtocolController@reject');
         Route::get('protocols/counts-rejected', 'ProtocolController@countsRejected');
         Route::get('protocols/counts-per-month', 'ProtocolController@countsPerMonth');
+        Route::get('import-logs', 'ProtocolController@getImportLogs');
 
         Route::post('news-item', 'NewsItemController@store');
         Route::post('news-item/upload-image', 'NewsItemController@uploadImage');

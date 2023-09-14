@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { getTotalUserAccountsQuery } from "../queries/account";
 import {
+	getImportLogsQuery,
 	getProtocolCountsPerMonthQuery,
 	getProtocolCountsQuery,
 	getProtocolCountsRejectedQuery
 } from "../queries/protocol";
 import { TStatsPerMonth } from "../typings/stats";
+import { TImportLog } from "../typings/protocols";
 
 export function useEmbargoCounts() {
 	const [counts, setCounts] = useState<{ total: number; with_embargo: number }>(null);
@@ -62,4 +64,17 @@ export function useTotalUserAccounts() {
 	}, []);
 
 	return counts;
+}
+
+export function useImportLogs() {
+	const [logs, setLogs] = useState<TImportLog[]>([]);
+
+	useEffect(() => {
+		(async () => {
+			const response = await getImportLogsQuery();
+			setLogs(response);
+		})();
+	}, []);
+
+	return logs;
 }

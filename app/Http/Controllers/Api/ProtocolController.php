@@ -230,4 +230,9 @@ class ProtocolController extends Controller
 
 		return response()->json(['success' => true, 'message' => 'protocol_stored', 'protocol' => $protocol->fresh(['details'])]);
 	}
+
+	public function getImportLogs()
+	{
+		return response()->json(ImportLog::all());
+	}
 }
