@@ -34,5 +34,10 @@ export const RealTimeValue: React.FC<{
 			return field.value;
 		}
 	};
-	return <>{t(getRealValue())}</>;
+	return (
+		<div
+			style={{ display: "inline-block" }}
+			dangerouslySetInnerHTML={{ __html: t(getRealValue()) }}
+		/>
+	);
 };
