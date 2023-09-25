@@ -42,6 +42,8 @@ return [
 		"investigators_blinded_assessment",
 		"yes_blinded_assessment_how_details",
 		"yes_blinded_assessment_partially_details",
+		"no_blinded_assessment",
+		"no_blinded_intervention_details",
 		"placebo_controlled",
 		"original_animal_ethics_committee_application",
 		"application_number",
