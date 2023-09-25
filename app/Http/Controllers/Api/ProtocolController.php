@@ -222,9 +222,9 @@ class ProtocolController extends Controller
 			$log->save();
 
 			Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
-			Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
+			Mail::to($user)->send(new ProtocolSubmittedUser($protocol));
 		} catch (Exception $e) {
-			return response()->json(['success' => false, 'message' => 'error_during_saving_in_database']);
+			return response()->json(['success' => false, 'message' => 'error_during_saving_in_database', 'exception' => $e]);
 		}
 
 
