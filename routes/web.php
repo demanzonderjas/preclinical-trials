@@ -25,6 +25,10 @@ Route::fallback(function () {
     return view('index');
 });
 
+Route::get('/verify-email', function () {
+    return view('index');
+})->where('any', '.*')->middleware(['auth', 'verified'])->name('verify.email');
+
 Route::get('/dashboard{any}', function () {
     return view('index');
 })->where('any', '.*')->middleware(['auth', 'verified'])->name('dashboard');
