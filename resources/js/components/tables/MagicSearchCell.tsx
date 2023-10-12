@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { TSearchResult } from "../../typings/tables";
+import xss from "xss";
 
 export const MagicSearchCell: React.FC<{ value: TSearchResult }> = ({ value: result }) => {
 	const { t } = useTranslationStore();
@@ -60,7 +61,9 @@ export const MagicSearchCell: React.FC<{ value: TSearchResult }> = ({ value: res
 	return (
 		<td className="TextCell">
 			<strong>{t(result.key)}</strong>:{" "}
-			<span dangerouslySetInnerHTML={{ __html: highlight(startingPosition, endPosition) }} />
+			<span
+				dangerouslySetInnerHTML={{ __html: xss(highlight(startingPosition, endPosition)) }}
+			/>
 		</td>
 	);
 };

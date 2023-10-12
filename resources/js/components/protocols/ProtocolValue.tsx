@@ -8,6 +8,7 @@ import { TStudyArm, TStudyCentre } from "../../typings/protocols";
 import { fieldMeetsDependencies } from "../../utils/validation";
 import { TableBlock } from "../tables/TableBlock";
 import { RealTimeValue } from "./RealTimeValue";
+import xss from "xss";
 
 export const ProtocolValue: React.FC<{
 	id: TFormFieldName;
@@ -51,7 +52,7 @@ export const ProtocolValue: React.FC<{
 		case TFormFieldName.StatementOfAccuracy:
 			return <p>{t("yes")}</p>;
 		default:
-			return <div dangerouslySetInnerHTML={{ __html: t(value) }} />;
+			return <div dangerouslySetInnerHTML={{ __html: xss(t(value)) }} />;
 	}
 };
 
@@ -91,7 +92,7 @@ export const CombinedValue: React.FC<{
 	);
 
 	if (!otherValueFields.length) {
-		return <p dangerouslySetInnerHTML={{ __html: t(value) }} />;
+		return <p dangerouslySetInnerHTML={{ __html: xss(value) }} />;
 	}
 
 	if (otherValueFields.some(f => f.showAsLink)) {

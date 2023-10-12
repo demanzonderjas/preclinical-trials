@@ -3,6 +3,7 @@ import React from "react";
 import { TUser } from "../../typings/auth";
 import { TDBProtocol } from "../../typings/protocols";
 import { mapProtocolDetailsToObject } from "../../utils/formatting";
+import xss from "xss";
 
 export const ProtocolsCell: React.FC<{
 	value: string;
@@ -20,7 +21,7 @@ export const ProtocolsCell: React.FC<{
 					style={{ cursor: "pointer" }}
 					onClick={() => window.open(`/admin/protocols/${p.id}`, "_blank")}
 				>
-					<p className="message" dangerouslySetInnerHTML={{ __html: p.title }} />
+					<p className="message" dangerouslySetInnerHTML={{ __html: xss(p.title) }} />
 					<div className="details">
 						<span className="action">{p.status}</span>
 						<span className="date">{dayjs(p.created_at).format("DD/MM/YYYY")}</span>

@@ -2,6 +2,7 @@ import React from "react";
 import { useRevisions } from "../../hooks/useRevisions";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { TFormField } from "../../typings/forms";
+import xss from "xss";
 
 export const RealTimeValue: React.FC<{
 	field: TFormField;
@@ -37,7 +38,7 @@ export const RealTimeValue: React.FC<{
 	return (
 		<div
 			style={{ display: "inline-block" }}
-			dangerouslySetInnerHTML={{ __html: t(getRealValue()) }}
+			dangerouslySetInnerHTML={{ __html: xss(t(getRealValue())) }}
 		/>
 	);
 };

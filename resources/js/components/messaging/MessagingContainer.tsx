@@ -11,6 +11,7 @@ import { TMessage } from "../../typings/messages";
 import cx from "classnames";
 import JoditEditor from "jodit-react";
 import { joditConfig } from "../../utils/jodit";
+import xss from "xss";
 
 export const MessagingContainer: React.FC<{
 	close?: Function;
@@ -92,7 +93,10 @@ export const MessagingContainer: React.FC<{
 					<div className={cx("message", { you: !!m.is_mine })} key={m.id}>
 						<div className="content">
 							{!m.is_mine && <h3>{t(m.name)}</h3>}
-							<div className="text" dangerouslySetInnerHTML={{ __html: m.text }} />
+							<div
+								className="text"
+								dangerouslySetInnerHTML={{ __html: xss(m.text) }}
+							/>
 							<div className="timestamp">
 								<span>{dayjs(m.created_at).format("DD/MM/YYYY hh:mm")}</span>
 							</div>
