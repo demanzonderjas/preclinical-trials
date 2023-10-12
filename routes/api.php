@@ -21,18 +21,18 @@ Route::group(['namespace' => 'Api'], function () {
     });
     Route::get('protocols/mine', 'ProtocolController@mine');
 
-    Route::middleware('auth:sanctum')->post('update-profile', 'UserController@updateProfile');
-    Route::middleware('auth:sanctum')->post('update-setting', 'SettingController@update');
+    Route::middleware(['auth:sanctum', 'verified'])->post('update-profile', 'UserController@updateProfile');
+    Route::middleware(['auth:sanctum', 'verified'])->post('update-setting', 'SettingController@update');
 
-    Route::middleware('auth:sanctum')->post('protocol', 'ProtocolController@store');
-    Route::middleware(['auth:sanctum', 'auth.owner'])->delete('protocol/{protocol_id}', 'ProtocolController@delete');
-    Route::middleware(['auth:sanctum', 'auth.owner'])->put('protocol', 'ProtocolController@update');
-    Route::middleware(['auth:sanctum', 'auth.owner'])->post('protocol/submit-for-publication', 'ProtocolController@submitForPublication');
+    Route::middleware(['auth:sanctum', 'verified'])->post('protocol', 'ProtocolController@store');
+    Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->delete('protocol/{protocol_id}', 'ProtocolController@delete');
+    Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->put('protocol', 'ProtocolController@update');
+    Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('protocol/submit-for-publication', 'ProtocolController@submitForPublication');
 
-    Route::middleware(['auth:sanctum', 'auth.owner'])->get('embargo-end-date/{protocol_id}', 'EmbargoController@get');
-    Route::middleware(['auth:sanctum', 'auth.owner'])->post('embargo-end-date/{protocol_id}', 'EmbargoController@store');
+    Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->get('embargo-end-date/{protocol_id}', 'EmbargoController@get');
+    Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('embargo-end-date/{protocol_id}', 'EmbargoController@store');
 
-    Route::middleware(['auth:sanctum'])->get('protocol/{protocol_id}', 'ProtocolController@get');
+    Route::middleware(['auth:sanctum', 'verified'])->get('protocol/{protocol_id}', 'ProtocolController@get');
     Route::get('protocol/{protocol_id}/status', 'ProtocolController@getStatus');
     Route::get('protocols', 'ProtocolController@getViewable');
     Route::get('protocols/counts', 'ProtocolController@counts');
