@@ -39,7 +39,7 @@ export const AddProtocolPage: React.FC = observer(() => {
 	}, [user]);
 
 	return (
-		<Page title="Add Protocol">
+		<Page title="Add Protocol" needsVerification={true}>
 			<div className="AddProtocol border-top">
 				<ProtocolStoreProvider store={protocolStore}>
 					<ProtocolStatus />

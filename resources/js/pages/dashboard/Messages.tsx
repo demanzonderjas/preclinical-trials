@@ -21,7 +21,7 @@ export const MessagesPage: React.FC = () => {
 
 	return (
 		<FilterStoreProvider store={filterStore}>
-			<Page title="Messages">
+			<Page title="Messages" needsVerification={true}>
 				<div className="Messages">
 					<ContentBlock maxWidth="80%">
 						<p>

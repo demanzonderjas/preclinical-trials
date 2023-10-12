@@ -26,7 +26,7 @@ export const ExtendEmbargoPage: React.FC = () => {
 	};
 
 	return (
-		<Page title="Extend Embargo">
+		<Page title="Extend Embargo" needsVerification={true}>
 			<div className="EmbargoForm border-top">
 				{embargoEndDate && (
 					<>

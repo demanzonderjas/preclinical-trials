@@ -23,7 +23,7 @@ export const ManageProtocolsPage: React.FC = () => {
 
 	return (
 		<FilterStoreProvider store={filterStore}>
-			<Page title="Manage protocols">
+			<Page title="Manage protocols" needsVerification={true}>
 				<div className="ManageProtocolsPage">
 					<ContentBlock maxWidth="80%">
 						<p>
