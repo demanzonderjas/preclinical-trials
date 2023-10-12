@@ -68,3 +68,13 @@ export async function updateSettingQuery(setting_key: string, value: any) {
 		return false;
 	}
 }
+
+export async function verifyEmail() {
+	try {
+		const response = await API.post("/email/verification-notification");
+
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

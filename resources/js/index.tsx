@@ -53,6 +53,7 @@ import { EmbargoExtensionsPage } from "./pages/admin/EmbargoExtensions";
 import { ChangePasswordPage } from "./pages/admin/ChangePassword";
 import { MessagesPage } from "./pages/dashboard/Messages";
 import { ViewConversationPage } from "./pages/dashboard/ViewConversationPage";
+import { VerifyEmailPage } from "./pages/VerifyEmail";
 
 const App: React.FC = () => {
 	const [translationStore] = useState(new TranslationStore());
@@ -69,7 +70,9 @@ const App: React.FC = () => {
 							<Route path="/" exact={true}>
 								<HomePage />
 							</Route>
-
+							<Route path="/verify-email" exact={true}>
+								<VerifyEmailPage />
+							</Route>
 							<Route path="/about-pct" exact={true}>
 								<AboutPCTPage />
 							</Route>

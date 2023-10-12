@@ -308,5 +308,6 @@
 	"import_fc3r": "Import FC3R (.XML)",
 	"imported_via_pris": "Imported via PRIS",
 	"imported_via_fc3r": "Imported via FC3R",
-	"imported_via_iles": "Imported via ILES"
+	"imported_via_iles": "Imported via ILES",
+	"resend_email_verification": "Re-send email verification"
 }
