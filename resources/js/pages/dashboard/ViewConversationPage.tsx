@@ -12,7 +12,7 @@ export const ViewConversationPage: React.FC = () => {
 	const { t } = useTranslationStore();
 
 	return (
-		<Page title="View conversation" headerStyle={THeaderStyle.Primary}>
+		<Page title="View conversation" headerStyle={THeaderStyle.Primary} needsVerification={true}>
 			<div className="ViewConversation">
 				<ContentBlock>
 					<div className="button-wrapper" style={{ textAlign: "center" }}>

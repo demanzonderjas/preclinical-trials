@@ -1,18 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Page } from "../components/layout/Page";
 import { useTranslationStore } from "../hooks/useTranslationStore";
 import { verifyEmail as verifyEmailQuery } from "../queries/user";
 import { ContentBlock } from "../components/layout/ContentBlock";
+import { useUser } from "../hooks/useUser";
 
 export const VerifyEmailPage: React.FC = () => {
 	const { t } = useTranslationStore();
 	const [isVerifying, setIsVerifying] = useState(false);
+	const [emailHasBeenSent, setEmailHasBeenSent] = useState(false);
+	const { user } = useUser();
 
 	const verify = async () => {
 		setIsVerifying(true);
-		const response = await verifyEmailQuery();
-		console.log(response);
+		await verifyEmailQuery();
+		setEmailHasBeenSent(true);
 	};
+
+	useEffect(() => {
+		if (user && user.is_verified) {
+			location.href = "/dashboard";
+		}
+	}, [user]);
 
 	return (
 		<Page title="Verify Email">
@@ -27,6 +36,12 @@ export const VerifyEmailPage: React.FC = () => {
 					>
 						{t("resend_email_verification")}
 					</button>
+					{!!emailHasBeenSent && (
+						<p>
+							The email has been sent to your email address:{" "}
+							<strong>{user.email}</strong>
+						</p>
+					)}
 				</div>
 			</ContentBlock>
 		</Page>

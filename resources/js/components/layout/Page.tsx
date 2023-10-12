@@ -1,24 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { THeaderStyle, TSubMenu, TSubMenuItem } from "../../typings/layout";
 import { ContentBlock } from "./ContentBlock";
 import { PageFooter } from "./PageFooter";
 import { PageHeader } from "./PageHeader";
 import { SubMenu } from "./SubMenu";
+import { observer } from "mobx-react-lite";
+import { useUser } from "../../hooks/useUser";
 
-export const Page: React.FC<{ title: string; subtitle?: string; headerStyle?: THeaderStyle }> = ({
-	children,
-	title,
-	subtitle,
-	headerStyle = THeaderStyle.White
-}) => {
-	return (
-		<div className="Page">
-			<PageHeader title={title} subtitle={subtitle} style={headerStyle} />
-			<div className="PageContent">{children}</div>
-			<PageFooter />
-		</div>
-	);
-};
+export const Page: React.FC<{
+	title: string;
+	subtitle?: string;
+	headerStyle?: THeaderStyle;
+	needsVerification?: boolean;
+}> = observer(
+	({ children, title, needsVerification, subtitle, headerStyle = THeaderStyle.White }) => {
+		const { user } = useUser();
+
+		useEffect(() => {
+			if (user && !user.is_verified && needsVerification) {
+				location.href = "/verify-email";
+			}
+		}, [user]);
+
+		return (
+			<div className="Page">
+				<PageHeader title={title} subtitle={subtitle} style={headerStyle} />
+				<div className="PageContent">{children}</div>
+				<PageFooter />
+			</div>
+		);
+	}
+);
 
 export const PrimaryHeaderPageWithSubMenu: React.FC<{
 	children;

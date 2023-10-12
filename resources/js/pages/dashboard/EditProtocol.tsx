@@ -36,7 +36,7 @@ export const EditProtocolPage: React.FC = () => {
 	};
 
 	return (
-		<Page title="Edit Protocol">
+		<Page title="Edit Protocol" needsVerification={true}>
 			<div className="AddProtocol border-top">
 				<ProtocolStoreProvider store={protocolStore}>
 					<ProtocolStatus />

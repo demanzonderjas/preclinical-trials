@@ -38,6 +38,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
+    protected $appends = [
+        'is_verified'
+    ];
+
     /**
      * The attributes that should be cast.
      *
@@ -74,6 +78,11 @@ class User extends Authenticatable implements MustVerifyEmail
         $url = env('APP_URL') . '/reset-password/' . $token;
 
         $this->notify(new \App\Notifications\ResetPasswordNotification($url, $this));
+    }
+
+    public function getIsVerifiedAttribute()
+    {
+        return !empty($this->email_verified_at);
     }
 
     public function getNameAttribute()

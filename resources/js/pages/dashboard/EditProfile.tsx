@@ -29,7 +29,7 @@ export const EditProfilePage: React.FC = observer(() => {
 	}));
 
 	return (
-		<Page title="Edit profile">
+		<Page title="Edit profile" needsVerification={true}>
 			<div className="EditProfile border-top">
 				<div
 					className="layout-wrapper"

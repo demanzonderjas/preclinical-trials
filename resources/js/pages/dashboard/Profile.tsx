@@ -17,7 +17,7 @@ export const ProfilePage: React.FC = observer(() => {
 	}
 
 	return (
-		<Page title="My profile">
+		<Page title="My profile" needsVerification={true}>
 			<div className="ProfilePage">
 				<ContentBlock maxWidth="80%" withBorder={true}>
 					<p>

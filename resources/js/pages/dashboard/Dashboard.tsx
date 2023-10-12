@@ -10,7 +10,7 @@ export const DashboardPage: React.FC = observer(() => {
 	const { t } = useTranslationStore();
 
 	return (
-		<Page title="Dashboard">
+		<Page title="Dashboard" needsVerification={true}>
 			<div className="Dashboard border-top">
 				{user && (
 					<div className="UserBar">

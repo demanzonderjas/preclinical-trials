@@ -8,6 +8,7 @@ export type TUser = {
 	city: string;
 	country: string;
 	role: string;
+	is_verified: boolean;
 };
 
 export type TSetting = {
