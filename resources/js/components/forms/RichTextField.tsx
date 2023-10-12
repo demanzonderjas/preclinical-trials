@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { useFormField } from "../../hooks/useForm";
 import { TFormFieldName } from "../../typings/forms";
 import { joditConfig } from "../../utils/jodit";
+import xss from "xss";
 
 export const RichTextField: React.FC<{ id: TFormFieldName; height?: number }> = observer(
 	({ id, height = 500 }) => {
@@ -19,9 +20,9 @@ export const RichTextField: React.FC<{ id: TFormFieldName; height?: number }> = 
 			<div className="RichTextField">
 				<JoditEditor
 					ref={editor}
-					value={value}
+					value={xss(value)}
 					config={config}
-					onBlur={newContent => setValue(newContent)}
+					onBlur={newContent => setValue(xss(newContent))}
 				/>
 			</div>
 		);
