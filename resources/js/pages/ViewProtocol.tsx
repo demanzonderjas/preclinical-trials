@@ -48,7 +48,7 @@ export const ViewProtocolPage: React.FC = () => {
 
 	return (
 		<RevisionStoreProvider store={revisionStore}>
-			<Page title="View Protocol">
+			<Page title="View Protocol" needsVerification={true}>
 				<div className="ViewProtocol border-top">
 					<ContentBlock maxWidth="90%">
 						<div className="protocol layout-wrapper">
