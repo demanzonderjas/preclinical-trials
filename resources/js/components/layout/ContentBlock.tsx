@@ -6,7 +6,7 @@ export const ContentBlock: React.FC<{
 	maxWidth?: string;
 	withBorder?: boolean;
 	padding?: string;
-}> = ({ children, maxWidth, withBorder, padding }) => {
+}> = ({ children, maxWidth = "1100px", withBorder, padding }) => {
 	return (
 		<div className={cx("ContentBlock", { "with-border": withBorder })}>
 			<div
