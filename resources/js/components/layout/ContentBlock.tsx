@@ -10,9 +10,9 @@ export const ContentBlock: React.FC<{
 	return (
 		<div className={cx("ContentBlock", { "with-border": withBorder })}>
 			<div
-				className="content layout-wrapper"
+				className="content"
 				style={{
-					maxWidth: maxWidth ? `${maxWidth} !important` : null,
+					maxWidth: maxWidth,
 					padding: padding || null
 				}}
 			>
