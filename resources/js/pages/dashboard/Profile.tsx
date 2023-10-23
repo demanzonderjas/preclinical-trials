@@ -19,7 +19,7 @@ export const ProfilePage: React.FC = observer(() => {
 	return (
 		<Page title="My profile" needsVerification={true}>
 			<div className="ProfilePage">
-				<ContentBlock maxWidth="80%" withBorder={true}>
+				<ContentBlock withBorder={true}>
 					<p>
 						Here you can find all of the information kept in your profile. You can
 						change any of the information whenever you want to.
