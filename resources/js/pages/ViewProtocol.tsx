@@ -51,7 +51,7 @@ export const ViewProtocolPage: React.FC = () => {
 			<Page title="View Protocol" needsVerification={true}>
 				<div className="ViewProtocol border-top">
 					<ContentBlock maxWidth="90%" padding="50px 0">
-						<div className="protocol layout-wrapper">
+						<div className="protocol" style={{ margin: "0 auto", maxWidth: "1800px" }}>
 							{!requiresAccountError && (
 								<>
 									{protocolSections.map((section, idx) => (
