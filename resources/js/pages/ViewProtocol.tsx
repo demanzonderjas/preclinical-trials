@@ -50,7 +50,7 @@ export const ViewProtocolPage: React.FC = () => {
 		<RevisionStoreProvider store={revisionStore}>
 			<Page title="View Protocol" needsVerification={true}>
 				<div className="ViewProtocol border-top">
-					<ContentBlock maxWidth="90%">
+					<ContentBlock maxWidth="90%" padding="50px 0">
 						<div className="protocol layout-wrapper">
 							{!requiresAccountError && (
 								<>
