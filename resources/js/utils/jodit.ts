@@ -7,5 +7,7 @@ export const joditConfig = {
 	buttonsMD: listOfButtons,
 	buttonsXS: listOfButtons,
 	textAlign: "left",
-	width: "100%"
+	width: "100%",
+	askBeforePasteHTML: false,
+	askBeforePasteFromWord: false
 };
