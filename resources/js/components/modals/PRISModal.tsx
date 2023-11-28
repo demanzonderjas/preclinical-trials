@@ -9,7 +9,13 @@ export const PRISModal: React.FC<{ data: any }> = ({ data }) => {
 	return (
 		<div
 			className="PRISModal"
-			style={{ fontSize: "20px", lineHeight: "25px", maxWidth: "80%", margin: "0 auto" }}
+			style={{
+				fontSize: "20px",
+				padding: "20px 0",
+				lineHeight: "25px",
+				maxWidth: "80%",
+				margin: "0 auto"
+			}}
 		>
 			<p style={{ color: "white " }}>{t("make_sure_to_check_following_fields")}</p>
 			<ul>

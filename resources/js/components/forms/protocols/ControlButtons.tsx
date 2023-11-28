@@ -11,6 +11,8 @@ import {
 } from "../../../queries/protocol";
 import { TAlignment } from "../../../typings/forms";
 import { TProtocol, TProtocolStatus } from "../../../typings/protocols";
+import { useModalStore } from "../../../hooks/useModalStore";
+import { prisModal } from "../../../data/modals/pris";
 
 export const ControlButtons: React.FC = observer(() => {
 	const {
@@ -21,6 +23,7 @@ export const ControlButtons: React.FC = observer(() => {
 		goToPrevSection,
 		createKeyValuePairs,
 		validate,
+		errors,
 		sections,
 		getSectionByIndex,
 		activeSection
@@ -29,6 +32,7 @@ export const ControlButtons: React.FC = observer(() => {
 	const { t } = useTranslationStore();
 	const { status } = useProtocol();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { setModal } = useModalStore();
 
 	const saveAsDraft = async (goBack?: boolean) => {
 		if (status !== TProtocolStatus.Draft) {
@@ -70,6 +74,8 @@ export const ControlButtons: React.FC = observer(() => {
 				await submitProtocolForPublicationQuery(response.protocol_id);
 				location.href = `/database/view-protocol/${response.protocol_id}`;
 			}
+		} else {
+			setModal({ ...prisModal, data: { errors } });
 		}
 		setIsSubmitting(false);
 	};
