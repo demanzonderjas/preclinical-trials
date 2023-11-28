@@ -18,5 +18,6 @@ export const studyArmsField: TFormField = {
 	validate: validateMultiRowField,
 	value: [{ ...studyArmModel }],
 	section: TSectionName.StudyDesign,
-	description: "study_arms_description"
+	description: "study_arms_description",
+	infoIcon: "study_arms_extra_info"
 };
