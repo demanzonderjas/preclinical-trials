@@ -104,14 +104,16 @@
 			}
 		}
 
-		td,
-		th {
-			&:first-child {
-				padding-left: max(calc((100vw - #{$layout-width}) / 2), 20px);
-			}
+		&:not(.small) {
+			td,
+			th {
+				&:first-child {
+					padding-left: max(calc((100vw - #{$layout-width}) / 2), 20px);
+				}
 
-			&:last-child {
-				padding-right: max(calc((100vw - #{$layout-width}) / 2), 20px);
+				&:last-child {
+					padding-right: max(calc((100vw - #{$layout-width}) / 2), 20px);
+				}
 			}
 		}
 	}
