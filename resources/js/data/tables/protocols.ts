@@ -49,9 +49,17 @@ export const manageProtocolsTable: TTable = {
 		TTableCellName.PublishStatus,
 		TTableCellName.LastUpdated,
 		TTableCellName.StudyStatus,
+		TTableCellName.Comments,
 		TTableCellName.Action
 	],
-	cells: [titleCell, publishStatusCell, lastUpdatedAtCell, studyStatusCell, actionCell]
+	cells: [
+		titleCell,
+		publishStatusCell,
+		lastUpdatedAtCell,
+		studyStatusCell,
+		commentsCell,
+		actionCell
+	]
 };
 
 export const searchProtocolsTable: TTable = {
