@@ -46,7 +46,7 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 
 		return (
 			<div className="TableBlock">
-				<table>
+				<table className="small">
 					<thead>
 						<tr>
 							{table.headers.map(header => (

@@ -72,12 +72,14 @@ export const SearchDatabasePage: React.FC = () => {
 							/>
 						</div>
 					</div>
-					{overviewType === TProtocolOverviewType.Table && (
-						<TableBlock table={searchProtocolsTable} rows={protocols} />
-					)}
-					{overviewType === TProtocolOverviewType.Cards && (
-						<ProtocolCardsBlock protocols={protocols} />
-					)}
+					<div className="layout-wrapper">
+						{overviewType === TProtocolOverviewType.Table && (
+							<TableBlock table={searchProtocolsTable} rows={protocols} />
+						)}
+						{overviewType === TProtocolOverviewType.Cards && (
+							<ProtocolCardsBlock protocols={protocols} />
+						)}
+					</div>
 				</div>
 			</Page>
 		</FilterStoreProvider>
