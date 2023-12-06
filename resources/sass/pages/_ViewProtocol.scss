@@ -65,6 +65,7 @@
 				line-height: 26px;
 				width: calc(100% - 300px - 50px);
 				text-align: left;
+				word-break: break-word;
 
 				.label {
 					background-color: $primary;
