@@ -28,7 +28,7 @@ export const UsersPage: React.FC = () => {
 						.filter(f => f.useAsFilter)
 						.map(f => f.filterLabel || f.id)}
 				/>
-				<TableBlock rows={users} table={usersTable}></TableBlock>
+				<TableBlock showTotal={true} rows={users} table={usersTable}></TableBlock>
 			</FilterStoreProvider>
 		</AdminPage>
 	);

@@ -7,8 +7,8 @@ import { TTable, TTableCellName } from "../../typings/tables";
 import { protocolMeetsFilters } from "../../utils/filters";
 import cx from "classnames";
 
-export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
-	({ table, rows = [] }) => {
+export const TableBlock: React.FC<{ table: TTable; rows: any[]; showTotal?: boolean }> = observer(
+	({ table, rows = [], showTotal = false }) => {
 		const { t } = useTranslationStore();
 		const { activeFilterText, activeFilterKey, filters, latestFilter } = useFilter();
 		const { push } = useHistory();
@@ -44,8 +44,18 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 			return null;
 		}
 
+		const rowsToShow = rows.filter(row =>
+			protocolMeetsFilters(activeFilterText, activeFilterKey, filters, row)
+		);
+		const totalRows = rowsToShow.length;
+
 		return (
 			<div className="TableBlock">
+				{!!showTotal && (
+					<label>
+						{totalRows} {t(totalRows === 1 ? "result" : "results")}
+					</label>
+				)}
 				<table className="small">
 					<thead>
 						<tr>
@@ -55,35 +65,26 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[] }> = observer(
 						</tr>
 					</thead>
 					<tbody>
-						{rows
-							.filter(row =>
-								protocolMeetsFilters(
-									activeFilterText,
-									activeFilterKey,
-									filters,
-									row
-								)
-							)
-							.map((row, idx) => (
-								<tr
-									key={idx}
-									className={cx({ clickable: !!table.targetOnRowClick })}
-									onClick={
-										table.targetOnRowClick
-											? () => push(`${table.targetOnRowClick}/${row.id}`)
-											: undefined
-									}
-								>
-									{table.cells.map((cell, idx) => (
-										<cell.Component
-											key={cell.id}
-											{...(cell.props || {})}
-											row={row}
-											value={getMappedValue(row, cell.id, cell.synonym)}
-										/>
-									))}
-								</tr>
-							))}
+						{rowsToShow.map((row, idx) => (
+							<tr
+								key={idx}
+								className={cx({ clickable: !!table.targetOnRowClick })}
+								onClick={
+									table.targetOnRowClick
+										? () => push(`${table.targetOnRowClick}/${row.id}`)
+										: undefined
+								}
+							>
+								{table.cells.map((cell, idx) => (
+									<cell.Component
+										key={cell.id}
+										{...(cell.props || {})}
+										row={row}
+										value={getMappedValue(row, cell.id, cell.synonym)}
+									/>
+								))}
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</div>
