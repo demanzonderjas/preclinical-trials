@@ -50,3 +50,12 @@ export async function updateProfileQuery(profileInfo: TUpdateProfileInfo) {
 		}
 	}
 }
+
+export async function getRegionSpecificStatsQuery() {
+	try {
+		const response = await API.get("/api/users/regions");
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

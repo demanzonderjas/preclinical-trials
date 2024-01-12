@@ -81,6 +81,7 @@ Route::group(['namespace' => 'Api'], function () {
         Route::delete('news-item/{news_item_id}', 'NewsItemController@delete');
 
         Route::get('users/counts-total', 'UserController@getCountsTotal');
+        Route::get('users/regions', 'UserController@getRegionSpecificStats');
 
         Route::post('ambassador', 'AmbassadorController@store');
         Route::delete('ambassador/{ambassador_id}', 'AmbassadorController@delete');

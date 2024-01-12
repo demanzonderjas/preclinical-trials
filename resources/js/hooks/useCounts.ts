@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTotalUserAccountsQuery } from "../queries/account";
+import { getRegionSpecificStatsQuery, getTotalUserAccountsQuery } from "../queries/account";
 import {
 	getImportLogsQuery,
 	getProtocolCountsPerMonthQuery,
@@ -59,6 +59,19 @@ export function useTotalUserAccounts() {
 	useEffect(() => {
 		(async () => {
 			const countsResponse = await getTotalUserAccountsQuery();
+			setCounts(countsResponse);
+		})();
+	}, []);
+
+	return counts;
+}
+
+export function useRegionSpecificStats() {
+	const [counts, setCounts] = useState(null);
+
+	useEffect(() => {
+		(async () => {
+			const countsResponse = await getRegionSpecificStatsQuery();
 			setCounts(countsResponse);
 		})();
 	}, []);
