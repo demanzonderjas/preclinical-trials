@@ -310,5 +310,10 @@
 	"imported_via_pris": "Imported via PRIS",
 	"imported_via_fc3r": "Imported via FC3R",
 	"imported_via_iles": "Imported via ILES",
-	"resend_email_verification": "Re-send email verification"
+	"resend_email_verification": "Re-send email verification",
+	"specific_protocol_numbers": "Specific protocol numbers",
+	"dutch_users": "Dutch users",
+	"utrecht_users": "Utrecht users",
+	"nijmegen_users": "Nijmegen users",
+	"nijmegen_utrecht_protocols": "Utrecht/Nijmegen protocols"
 }

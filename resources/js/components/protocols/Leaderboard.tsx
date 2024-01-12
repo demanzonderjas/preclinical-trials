@@ -4,7 +4,10 @@ import { getProtocolCountsPerCountryQuery } from "../../queries/protocol";
 import { TLeaderboardRow } from "../../typings/stats";
 import { getCountries } from "../../utils/countries";
 
-export const Leaderboard: React.FC<{ limit?: number }> = ({ limit }) => {
+export const Leaderboard: React.FC<{ limit?: number; centered?: boolean }> = ({
+	limit,
+	centered = true
+}) => {
 	const [counts, setCounts] = useState<TLeaderboardRow[]>(null);
 	const countries = getCountries();
 	const { t } = useTranslationStore();
@@ -26,7 +29,10 @@ export const Leaderboard: React.FC<{ limit?: number }> = ({ limit }) => {
 	}
 
 	return (
-		<div className="Leaderboard layout-wrapper">
+		<div
+			className="Leaderboard layout-wrapper"
+			style={{ marginLeft: centered ? "auto" : 0, marginRight: centered ? "auto" : 0 }}
+		>
 			<div className="header">
 				<h2>{t("leaderboard")}</h2>
 				<p>{t("leaderboard_description")}</p>
