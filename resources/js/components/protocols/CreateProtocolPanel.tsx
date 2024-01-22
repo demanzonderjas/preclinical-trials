@@ -63,7 +63,7 @@ export const CreateProtocolPanel: React.FC<{ hideIntro?: boolean }> = observer((
 					margin: "16px 0"
 				}}
 			>
-				{status === TProtocolStatus.Draft && (
+				{(status === TProtocolStatus.Draft || status === TProtocolStatus.Rejected) && (
 					<button className="secondary small" type="button" onClick={saveAsDraft}>
 						{t("save_changes")}
 					</button>
