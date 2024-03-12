@@ -21,6 +21,7 @@ export type TDBProtocol = {
 	embargo_end_date?: string;
 	status: TProtocolStatus;
 	details: TDetail[];
+	linked: TProtocol[];
 	revisions: TRevision[];
 	comments: TAdminAction[];
 	title: string;

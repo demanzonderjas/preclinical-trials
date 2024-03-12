@@ -10,7 +10,8 @@ import { ProtocolSection } from "../../../components/protocols/ProtocolSection";
 import { RevisionPanel } from "../../../components/protocols/RevisionPanel";
 import { RevisionStoreProvider } from "../../../contexts/RevisionStoreContext";
 import { pctIdField } from "../../../data/forms/fields/protocol/id";
-import { protocolSections } from "../../../data/forms/protocol";
+import { linkedProtocolsField } from "../../../data/forms/fields/protocol/linked";
+import { viewableProtocolSections } from "../../../data/forms/protocol";
 import { getProtocolQuery } from "../../../queries/protocol";
 import { RevisionStore } from "../../../stores/RevisionStore";
 import { TDBProtocol } from "../../../typings/protocols";
@@ -34,6 +35,7 @@ export const AdminViewProtocolPage: React.FC = () => {
 
 	const fieldsWithValues = [
 		{ ...pctIdField, value: protocol?.pct_id },
+		{ ...linkedProtocolsField, value: protocol?.linked },
 		...fillFieldsWithProtocolDetails(protocol)
 	];
 
@@ -54,7 +56,7 @@ export const AdminViewProtocolPage: React.FC = () => {
 						</FlexWrapper>
 					</div>
 				</div>
-				{protocolSections.slice(0, -1).map((section, idx) => (
+				{viewableProtocolSections.map((section, idx) => (
 					<ProtocolSection
 						key={section}
 						name={section}

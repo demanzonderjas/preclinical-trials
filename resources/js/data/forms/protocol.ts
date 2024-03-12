@@ -170,3 +170,10 @@ export const protocolSections: TSectionName[] = [
 	TSectionName.ContactDetails,
 	TSectionName.Submit
 ];
+
+export const viewableProtocolSections: TSectionName[] = [
+	TSectionName.General,
+	TSectionName.StudyDesign,
+	TSectionName.ContactDetails,
+	TSectionName.LinkedProtocols
+];

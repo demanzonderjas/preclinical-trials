@@ -133,7 +133,8 @@ export enum TFormFieldName {
 	GeoSearch = "geo_search",
 	Description = "description",
 	Reason = "reason",
-	ImportType = "import_type"
+	ImportType = "import_type",
+	LinkedProtocols = "linked_protocols"
 }
 
 export enum TFormName {
@@ -167,7 +168,8 @@ export enum TSectionName {
 	General = "general",
 	ContactDetails = "contact_details",
 	StudyDesign = "study_design",
-	Submit = "submit"
+	Submit = "submit",
+	LinkedProtocols = "linked_protocols"
 }
 
 export type TProtocolSection = {

@@ -9,6 +9,7 @@ import { fieldMeetsDependencies } from "../../utils/validation";
 import { TableBlock } from "../tables/TableBlock";
 import { RealTimeValue } from "./RealTimeValue";
 import xss from "xss";
+import { LinkedProtocols } from "./LinkedProtocols";
 
 export const ProtocolValue: React.FC<{
 	id: TFormFieldName;
@@ -19,6 +20,8 @@ export const ProtocolValue: React.FC<{
 }> = ({ id, value, fields, offset, valueMap }) => {
 	const { t } = useTranslationStore();
 	switch (id) {
+		case TFormFieldName.LinkedProtocols:
+			return <LinkedProtocols protocols={value} />;
 		case TFormFieldName.StudyArms:
 			return <StudyArmsValue value={value} />;
 		case TFormFieldName.StudyCentre:

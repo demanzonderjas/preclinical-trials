@@ -273,8 +273,7 @@ class ProtocolController extends Controller
 	public function getLinked($protocol_id)
 	{
 		$protocol = Protocol::findOrFail($protocol_id);
-		$linked = $protocol->linkedTo->merge($protocol->linkedFrom);
 
-		return response()->json(["success" => true, "protocols" => $linked]);
+		return response()->json(["success" => true, "protocols" => $protocol->linked]);
 	}
 }
