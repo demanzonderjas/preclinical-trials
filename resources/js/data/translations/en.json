@@ -315,5 +315,6 @@
 	"dutch_users": "Dutch users",
 	"utrecht_users": "Utrecht users",
 	"nijmegen_users": "Nijmegen users",
-	"nijmegen_utrecht_protocols": "Utrecht/Nijmegen protocols"
+	"nijmegen_utrecht_protocols": "Utrecht/Nijmegen protocols",
+	"duplicate": "Duplicate"
 }

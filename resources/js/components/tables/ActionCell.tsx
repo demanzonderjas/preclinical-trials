@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { confirmModal } from "../../data/modals/confirm";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
-import { deleteProtocolQuery } from "../../queries/protocol";
+import { deleteProtocolQuery, duplicateProtocolQuery } from "../../queries/protocol";
 import { TProtocol, TProtocolStatus } from "../../typings/protocols";
 
 export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row }) => {
@@ -11,6 +11,13 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 	const { setModal } = useModalStore();
 	const deleteProtocol = async () => {
 		const response = await deleteProtocolQuery(row.id);
+		if (response.success) {
+			location.reload();
+		}
+	};
+
+	const duplicateProtocol = async () => {
+		const response = await duplicateProtocolQuery(row.id);
 		if (response.success) {
 			location.reload();
 		}
@@ -28,6 +35,14 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 				<Link to={`/database/view-protocol/${row.id}`}>
 					<button className="tertiary small">{t("view")}</button>
 				</Link>
+				<button
+					className="tertiary small"
+					onClick={() =>
+						setModal({ ...confirmModal, actionOnConfirm: duplicateProtocol })
+					}
+				>
+					{t("duplicate")}
+				</button>
 				<button
 					className="danger small"
 					onClick={() => setModal({ ...confirmModal, actionOnConfirm: deleteProtocol })}
