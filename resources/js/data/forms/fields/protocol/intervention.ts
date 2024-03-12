@@ -25,10 +25,11 @@ export const interventionTypeField: TFormField = {
 	Component: SelectField,
 	required: true,
 	props: {
-		options: interventionFieldOptions
+		options: interventionFieldOptions,
+		allowMulti: true
 	},
 	validate: value => value != "",
-	value: "",
+	value: [],
 	section: TSectionName.StudyDesign
 };
 
