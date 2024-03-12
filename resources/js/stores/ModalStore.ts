@@ -17,13 +17,17 @@ export class ModalStore {
 		return !!this.modal;
 	}
 
-	setModal(modal: TModal) {
+	@action.bound setModal(modal: TModal) {
 		this.modal = modal;
 
 		if (this.isActive) {
 			document.body.classList.add("block-scroll");
 		} else {
 			document.body.classList.remove("block-scroll");
+		}
+
+		if (modal && modal.data) {
+			this.setModalData(modal.data);
 		}
 	}
 

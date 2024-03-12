@@ -96,3 +96,45 @@
 		flex-wrap: wrap;
 	}
 }
+
+.LinkProtocolsModal {
+	padding: 4em;
+	color: $white;
+
+	label {
+		font-weight: bold;
+		font-size: 20px;
+	}
+
+	select {
+		padding: 0.5em;
+		font-size: 18px;
+	}
+
+	ul.protocols {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		gap: 0.5em;
+		margin: 1em 0;
+		padding: 0;
+
+		li {
+			display: flex;
+			background-color: $secondary;
+			justify-content: space-between;
+			padding: 0.25em 1em;
+			gap: 1em;
+		}
+	}
+
+	p {
+		font-size: 18px;
+		display: block;
+		margin: 16px 0;
+	}
+
+	.FlexWrapper {
+		flex-wrap: wrap;
+	}
+}

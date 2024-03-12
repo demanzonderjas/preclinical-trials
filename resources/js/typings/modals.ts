@@ -15,5 +15,6 @@ export enum TModalName {
 	RejectProtocolModal = "reject_protocol_modal",
 	RejectEmbargoExtensionModal = "reject_embargo_extension_modal",
 	PRISModal = "pris_modal",
-	FC3RModal = "fc3r_modal"
+	FC3RModal = "fc3r_modal",
+	LinkProtocols = "link_protocols"
 }
