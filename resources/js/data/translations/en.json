@@ -235,7 +235,7 @@
 	"total_per_month": "Total protocols per month",
 	"update_status": "Update status",
 	"additional_information": "Additional information",
-	"additional_information_description": "<p>Please give any other information about the study that is not covered elsewhere in the Form, such as:</p><ul><li>inclusion/exclusion criteria used for animals or experimental units during the experiments and/or for data points during analysis</li><li>Statistical plan (e.g., tests planned, software(s) you will use)</li><li>How to assess whether the data met the assumptions of the statistical approach.</li>",
+	"additional_information_description": "<p>Please give any other information about the study that is not covered elsewhere in the Form, such as:</p><ul><li>inclusion/exclusion criteria used for animals or experimental units during the experiments and/or for data points during analysis</li><li>Statistical plan (e.g., tests planned, software(s) you will use)</li><li>How to assess whether the data met the assumptions of the statistical approach.</li><li>The strategy used for refinement</li></ul>",
 	"set_up_an_appointment": "Set up an appointment",
 	"additional_animal_use_description": "Please explain what the animals/tissues are used for in addition to the current research question",
 	"yes_sample_size_calculation_description": "Please specify the sample size calculation",
