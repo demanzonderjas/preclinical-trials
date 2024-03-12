@@ -20,6 +20,8 @@ Route::group(['namespace' => 'Api'], function () {
         return $request->user();
     });
     Route::get('protocols/mine', 'ProtocolController@mine');
+    Route::get('protocols/mine-published', 'ProtocolController@minePublished');
+    Route::get('protocols/linked/{protocol_id}', 'ProtocolController@getLinked');
 
     Route::middleware(['auth:sanctum', 'verified'])->post('update-profile', 'UserController@updateProfile');
     Route::middleware(['auth:sanctum', 'verified'])->post('update-setting', 'SettingController@update');
@@ -29,6 +31,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('protocol/duplicate/{protocol_id}', 'ProtocolController@duplicate');
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->put('protocol', 'ProtocolController@update');
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('protocol/submit-for-publication', 'ProtocolController@submitForPublication');
+    Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('protocols/link', 'ProtocolController@link');
 
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->get('embargo-end-date/{protocol_id}', 'EmbargoController@get');
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('embargo-end-date/{protocol_id}', 'EmbargoController@store');

@@ -113,6 +113,33 @@ export async function getMyProtocolsQuery() {
 	}
 }
 
+export async function getMyPublishedProtocolsQuery() {
+	try {
+		const response = await API.get(`/api/protocols/mine-published`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function getLinkedProtocolsQuery(protocol_id: number) {
+	try {
+		const response = await API.get(`/api/protocols/linked/${protocol_id}`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
+export async function updateLinkedProtocolsQuery(protocol_id: number, linked: number[]) {
+	try {
+		const response = await API.post("/api/protocols/link", { protocol_id, linked });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function getViewableProtocolsQuery() {
 	try {
 		const response = await API.get(`/api/protocols`);

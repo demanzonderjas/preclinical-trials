@@ -72,6 +72,12 @@ class ProtocolController extends Controller
 		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
 	}
 
+	public function minePublished(Request $request)
+	{
+		$protocols = Protocol::where(['user_id' => $request->user()->id, 'status' => 'published'])->with('details')->orderByDesc('updated_at')->get();
+		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
+	}
+
 	public function getViewable()
 	{
 		$protocols = Protocol::where('status', 'published')->orderByDesc('created_at')->get();
@@ -249,5 +255,26 @@ class ProtocolController extends Controller
 	public function getImportLogs()
 	{
 		return response()->json(ImportLog::all());
+	}
+
+	public function link(Request $request)
+	{
+		$ownedLinks = collect($request->linked)->filter(function ($idToLink) use ($request) {
+			$p = Protocol::findOrFail($idToLink);
+			return $p->user_id === $request->user()->id;
+		});
+		$protocol = Protocol::findOrFail($request->protocol_id);
+		$protocol->linkedTo()->sync($ownedLinks);
+		$protocol->linkedFrom()->sync($ownedLinks);
+
+		return response()->json(["success" => true]);
+	}
+
+	public function getLinked($protocol_id)
+	{
+		$protocol = Protocol::findOrFail($protocol_id);
+		$linked = $protocol->linkedTo->merge($protocol->linkedFrom);
+
+		return response()->json(["success" => true, "protocols" => $linked]);
 	}
 }

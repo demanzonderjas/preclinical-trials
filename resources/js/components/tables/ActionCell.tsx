@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { confirmModal } from "../../data/modals/confirm";
+import { linkProtocolsModal } from "../../data/modals/linkProtocols";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { deleteProtocolQuery, duplicateProtocolQuery } from "../../queries/protocol";
@@ -43,6 +44,16 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 				>
 					{t("duplicate")}
 				</button>
+				{row.status === "published" && (
+					<button
+						className="tertiary small"
+						onClick={() =>
+							setModal({ ...linkProtocolsModal, data: { protocol_id: row.id } })
+						}
+					>
+						{t("link")}
+					</button>
+				)}
 				<button
 					className="danger small"
 					onClick={() => setModal({ ...confirmModal, actionOnConfirm: deleteProtocol })}

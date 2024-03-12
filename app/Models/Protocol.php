@@ -25,6 +25,16 @@ class Protocol extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function linkedTo()
+    {
+        return $this->belongsToMany(Protocol::class, 'linked_protocols', 'protocol_id', 'linked_protocol_id');
+    }
+
+    public function linkedFrom()
+    {
+        return $this->belongsToMany(Protocol::class, 'linked_protocols', 'linked_protocol_id', 'protocol_id');
+    }
+
     public function details()
     {
         return $this->hasMany(Detail::class);
