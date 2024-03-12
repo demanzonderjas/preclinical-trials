@@ -71,19 +71,21 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options, 
 	const [isActive, setIsActive] = useState(false);
 	const { t } = useTranslationStore();
 
+	const compatibleValue = allowMulti && !Array.isArray(value) ? [value] : value;
+
 	const setMultiValue = (target: string) => {
-		const existingIndex = value.indexOf(target);
+		const existingIndex = compatibleValue.indexOf(target);
 		if (existingIndex > -1) {
-			const newValue = [...value];
+			const newValue = [...compatibleValue];
 			newValue.splice(existingIndex, 1);
 			setValue(newValue);
 		} else {
-			setValue([...value, target]);
+			setValue([...compatibleValue, target]);
 		}
 	};
 
 	const getActiveValue = (value: any) => {
-		if (allowMulti) {
+		if (allowMulti && Array.isArray(value)) {
 			return value.map(v => t(v)).join(", ");
 		} else {
 			return value;
@@ -94,19 +96,27 @@ export const SelectField: React.FC<SelectFieldProps> = observer(({ id, options, 
 		<div className={cx("SelectField", { active: isActive })}>
 			<div className="select-wrapper">
 				<div
-					className={cx("active-option", { "with-value": !!value })}
+					className={cx("active-option", { "with-value": !!compatibleValue })}
 					onClick={() => {
 						setIsActive(!isActive);
 					}}
 				>
-					<SelectOption value={!value ? t("select_option") : getActiveValue(value)} />
+					<SelectOption
+						value={
+							!compatibleValue ? t("select_option") : getActiveValue(compatibleValue)
+						}
+					/>
 					<Image filename="arrow-down-white.svg" />
 				</div>
 				<div className="dropdown with-custom-scrollbar">
 					{options.map(option => (
 						<SelectOption
 							key={option}
-							isSelected={allowMulti ? value.indexOf(option) > -1 : option === value}
+							isSelected={
+								allowMulti
+									? compatibleValue.indexOf(option) > -1
+									: option === compatibleValue
+							}
 							value={option}
 							handleClick={() => {
 								if (allowMulti) {
