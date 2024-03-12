@@ -316,5 +316,9 @@
 	"utrecht_users": "Utrecht users",
 	"nijmegen_users": "Nijmegen users",
 	"nijmegen_utrecht_protocols": "Utrecht/Nijmegen protocols",
-	"duplicate": "Duplicate"
+	"duplicate": "Duplicate",
+	"linked_protocols": "Linked protocols",
+	"current_protocol": "Current protocol",
+	"add_linked_protocol": "Add linked protocol",
+	"save_links": "Save links"
 }
