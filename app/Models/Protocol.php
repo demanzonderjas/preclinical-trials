@@ -167,4 +167,9 @@ class Protocol extends Model
         });
         return !empty($endDate) ? $endDate->date : null;
     }
+
+    public function getLinkedAttribute()
+    {
+        return $this->linkedTo->merge($this->linkedFrom);
+    }
 }

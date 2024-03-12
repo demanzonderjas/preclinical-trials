@@ -7,7 +7,8 @@ import { ProtocolSection } from "../components/protocols/ProtocolSection";
 import { RevisionPanel } from "../components/protocols/RevisionPanel";
 import { RevisionStoreProvider } from "../contexts/RevisionStoreContext";
 import { pctIdField } from "../data/forms/fields/protocol/id";
-import { protocolSections } from "../data/forms/protocol";
+import { linkedProtocolsField } from "../data/forms/fields/protocol/linked";
+import { viewableProtocolSections } from "../data/forms/protocol";
 import { getProtocolQuery } from "../queries/protocol";
 import { RevisionStore } from "../stores/RevisionStore";
 import { TFormFieldName } from "../typings/forms";
@@ -41,6 +42,7 @@ export const ViewProtocolPage: React.FC = () => {
 
 	const fieldsWithValues = [
 		{ ...pctIdField, value: protocol?.pct_id },
+		{ ...linkedProtocolsField, value: protocol?.linked },
 		...fillFieldsWithProtocolDetails(protocol).filter(
 			f => f.id != TFormFieldName.ContactEmail && f.id != TFormFieldName.ContactRole
 		)
@@ -54,7 +56,7 @@ export const ViewProtocolPage: React.FC = () => {
 						<div className="protocol" style={{ margin: "0 auto", maxWidth: "1800px" }}>
 							{!requiresAccountError && (
 								<>
-									{protocolSections.map((section, idx) => (
+									{viewableProtocolSections.map((section, idx) => (
 										<ProtocolSection
 											key={section}
 											name={section}
