@@ -26,6 +26,7 @@ Route::group(['namespace' => 'Api'], function () {
 
     Route::middleware(['auth:sanctum', 'verified'])->post('protocol', 'ProtocolController@store');
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->delete('protocol/{protocol_id}', 'ProtocolController@delete');
+    Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('protocol/duplicate/{protocol_id}', 'ProtocolController@duplicate');
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->put('protocol', 'ProtocolController@update');
     Route::middleware(['auth:sanctum', 'auth.owner', 'verified'])->post('protocol/submit-for-publication', 'ProtocolController@submitForPublication');
 

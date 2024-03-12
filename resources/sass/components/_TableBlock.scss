@@ -55,6 +55,11 @@
 
 					&.ActionCell {
 						vertical-align: middle;
+						.actions {
+							display: flex;
+							flex-wrap: wrap;
+							gap: 0.5em;
+						}
 						button {
 							background-color: $secondary;
 							font-size: 18px;

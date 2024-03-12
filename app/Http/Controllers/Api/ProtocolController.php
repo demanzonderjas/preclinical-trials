@@ -146,6 +146,21 @@ class ProtocolController extends Controller
 		return response()->json(["success" => true]);
 	}
 
+	public function duplicate($protocol_id)
+	{
+		$protocol = Protocol::findOrFail($protocol_id);
+		$copy = $protocol->replicate();
+		$copy->status = "draft";
+		$copy->push();
+
+		foreach ($protocol->details as $detail) {
+			$detailCopy = $detail->replicate();
+			$copy->details()->save($detailCopy);
+		}
+
+		return response()->json(["success" => true, "copy" => $copy]);
+	}
+
 	public function counts()
 	{
 		$protocols = Protocol::where('status', 'published')->get();

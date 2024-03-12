@@ -95,6 +95,15 @@ export async function deleteProtocolQuery(protocol_id: string) {
 	}
 }
 
+export async function duplicateProtocolQuery(protocol_id: string) {
+	try {
+		const response = await API.post(`/api/protocol/duplicate/${protocol_id}`);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function getMyProtocolsQuery() {
 	try {
 		const response = await API.get(`/api/protocols/mine`);
