@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class SendTestEndDateReminder extends Command
+class SendEndDateTestEmail extends Command
 {
     /**
      * The name and signature of the console command.
