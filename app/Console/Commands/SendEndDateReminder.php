@@ -58,7 +58,7 @@ class SendEndDateReminder extends Command
 
             echo "[" . $diffInDays . " " . $protocol->id . "]";
 
-            $NEEDS_REMINDER = $diffInDays === 90;
+            $NEEDS_REMINDER = $diffInDays === -90;
 
             if ($NEEDS_REMINDER) {
                 Mail::to($protocol->user)->send(new ProtocolEndDateReminder($protocol));

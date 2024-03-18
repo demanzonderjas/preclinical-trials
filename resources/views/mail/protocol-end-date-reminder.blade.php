@@ -21,7 +21,7 @@
             Open Science Framework, GitHub).
         </li>
     </ul>
-    <p style='background-color:#ff6e38;padding:5px'>
+    <p style='background-color:#FFC5AF;padding:5px'>
         If you have unpublished results, we highly recommend you submit them on the <a
             href='https://www.fc3r.com/en/FC3R-short-notes.php'><strong>FC3R Short Note website</strong></a> – a
         peer-reviewed platform disseminating unpublished results. You'll get the same recognition as a peer-reviewed
