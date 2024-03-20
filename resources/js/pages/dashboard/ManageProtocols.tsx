@@ -32,6 +32,13 @@ export const ManageProtocolsPage: React.FC = () => {
 							and you can view but not edit any record that has been submitted. You
 							can create an updated version of any record that is published.
 						</p>
+						<p>
+							You may also duplicate your record to gain time when writing several
+							protocols with similar methodologies. Once they are published, you may
+							also link them if they are part of the same project using the "link"
+							button. This link will be mentioned at the bottom of the published
+							protocols
+						</p>
 						<Filter
 							justify="left"
 							options={createProtocolForm.fields
