@@ -34,12 +34,6 @@ export const aboutUsData: TAboutUs[] = [
 		role: TAboutUsType.DailyDirector
 	},
 	{
-		name: "Annemarie Scholman-Végh, Msc",
-		title: "Project Manager",
-		image: "annemarie_scholman_vegh.png",
-		role: TAboutUsType.DailyDirector
-	},
-	{
 		name: "Rose Cuten",
 		title: "Project Manager",
 		image: "rose.jpeg",
