@@ -39,7 +39,12 @@ export const aboutUsData: TAboutUs[] = [
 		image: "annemarie_scholman_vegh.png",
 		role: TAboutUsType.DailyDirector
 	},
-
+	{
+		name: "Rose Cuten",
+		title: "Project Manager",
+		image: "rose.jpg",
+		role: TAboutUsType.DailyDirector
+	},
 	{
 		name: "Prof. Dr. Steven Chamuleau",
 		image: "steve_chamuleau.png",
