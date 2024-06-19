@@ -42,7 +42,7 @@ export const aboutUsData: TAboutUs[] = [
 	{
 		name: "Rose Cuten",
 		title: "Project Manager",
-		image: "rose.jpg",
+		image: "rose.jpeg",
 		role: TAboutUsType.DailyDirector
 	},
 	{
