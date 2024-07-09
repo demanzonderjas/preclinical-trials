@@ -66,6 +66,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Role::class);
     }
 
+    public function emails()
+    {
+        return $this->hasMany(EmailLog::class);
+    }
+
     public function getIsAdminAttribute()
     {
         return $this->roles->contains(function ($role) {
@@ -99,5 +104,12 @@ class User extends Authenticatable implements MustVerifyEmail
             return false;
         }
         return boolval($setting->value);
+    }
+
+    public function hasProtocolFeedbackEmail()
+    {
+        return $this->emails->contains(function (EmailLog $email) {
+            return $email->name === 'first_protocol_feedback' && $email->sent;
+        });
     }
 }
