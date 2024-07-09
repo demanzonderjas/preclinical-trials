@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProtocolResource;
+use App\Mail\FirstProtocolFeedback;
 use App\Mail\ProtocolApprovedAndPublished;
 use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
 use App\Models\AdminAction;
 use App\Models\Detail;
+use App\Models\EmailLog;
 use App\Models\EmbargoEndDate;
 use App\Models\ImportLog;
 use App\Models\Protocol;
@@ -110,9 +112,23 @@ class ProtocolController extends Controller
 
 		Mail::to($protocol->user)->send(new ProtocolApprovedAndPublished($protocol));
 
+		$this->sendFeedbackEmail($protocol->user);
+
 		$this->addEmbargoEndDate($protocol);
 
 		return response()->json(["success" => true]);
+	}
+
+	public function sendFeedbackEmail(User $user)
+	{
+		if (!$user->hasProtocolFeedbackEmail()) {
+			try {
+				Mail::to($user)->send(new FirstProtocolFeedback($user));
+				$user->emails()->save(new EmailLog(['name' => 'first_protocol_feedback', 'sent' => true]));
+			} catch (Exception $e) {
+				$user->emails()->save(new EmailLog(['name' => 'first_protocol_feedback', 'sent' => false]));
+			}
+		}
 	}
 
 	public function addEmbargoEndDate(Protocol $protocol)
