@@ -103,9 +103,9 @@ export const CombinedValue: React.FC<{
 			<p>
 				<strong>{t(value)}</strong> -{" "}
 				{otherValueFields.map(f => {
-					return f.showAsLink ? (
-						<a target="_blank" key={f.value} href={f.value}>
-							{f.value}
+					return f.showAsLink && f.value ? (
+						<a target="_blank" key={f.value} href={f.value.replace(/<[^>]*>/g, "")}>
+							{f.value.replace(/<[^>]*>/g, "")}
 						</a>
 					) : (
 						<RealTimeValue field={f} fields={fields} offset={offset} />
