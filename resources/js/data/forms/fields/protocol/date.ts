@@ -20,3 +20,10 @@ export const endDateField: TFormField = {
 	id: TFormFieldName.EndDate,
 	description: "end_date_description"
 };
+
+export const publishDateField: TFormField = {
+	...startDateField,
+	section: null,
+	id: TFormFieldName.PublishDate,
+	description: null
+};

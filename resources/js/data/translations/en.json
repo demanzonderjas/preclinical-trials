@@ -320,5 +320,6 @@
 	"linked_protocols": "Linked protocols",
 	"current_protocol": "Current protocol",
 	"add_linked_protocol": "Add linked protocol",
-	"save_links": "Save links"
+	"save_links": "Save links",
+	"publish_date": "Publish date"
 }

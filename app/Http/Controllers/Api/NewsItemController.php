@@ -18,6 +18,7 @@ class NewsItemController extends Controller
             "summary" => $request->summary,
             "content" => $request->content,
             "image" => $request->image,
+            "publish_date" => $request->publish_date,
             "status" => $request->status
         ]);
         $newsItem->save();
@@ -31,6 +32,7 @@ class NewsItemController extends Controller
         $newsItem->summary = $request->summary;
         $newsItem->content = $request->content;
         $newsItem->image = $request->image;
+        $newsItem->publish_date = $request->publish_date;
         $newsItem->status = $request->status;
         $newsItem->save();
 

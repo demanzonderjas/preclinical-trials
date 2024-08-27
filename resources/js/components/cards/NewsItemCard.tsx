@@ -11,6 +11,7 @@ export const NewsItemCard: React.FC<TNewsItem & { single?: boolean }> = ({
 	content,
 	summary,
 	image,
+	publish_date,
 	updated_at,
 	id,
 	single
@@ -61,7 +62,7 @@ export const NewsItemCard: React.FC<TNewsItem & { single?: boolean }> = ({
 						</div>
 					)}
 					<div className="date">
-						<span>{day(updated_at).format("D MMM YYYY")}</span>
+						<span>{day(publish_date || updated_at).format("D MMM YYYY")}</span>
 					</div>
 					<div className="read-more">
 						<span>{t("read_more")}</span>
