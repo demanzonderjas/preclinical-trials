@@ -14,6 +14,7 @@ import { RevisionStore } from "../stores/RevisionStore";
 import { TFormFieldName } from "../typings/forms";
 import { TDBProtocol } from "../typings/protocols";
 import { fillFieldsWithProtocolDetails } from "../utils/protocol";
+import { registrationDateField } from "../data/forms/fields/protocol/date";
 
 export const ViewProtocolPage: React.FC = () => {
 	const { protocol_id }: { protocol_id: string } = useParams();
@@ -40,8 +41,11 @@ export const ViewProtocolPage: React.FC = () => {
 		}
 	}, [protocol_id]);
 
+	console.log(protocol);
+
 	const fieldsWithValues = [
 		{ ...pctIdField, value: protocol?.pct_id },
+		{ ...registrationDateField, value: protocol?.registration_date },
 		{ ...linkedProtocolsField, value: protocol?.linked },
 		...fillFieldsWithProtocolDetails(protocol).filter(
 			f => f.id != TFormFieldName.ContactEmail && f.id != TFormFieldName.ContactRole

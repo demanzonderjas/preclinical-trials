@@ -16,6 +16,7 @@ export type TProtocol = { [K in TFormFieldName]: any };
 
 export type TDBProtocol = {
 	id: number;
+	registration_date: string;
 	pct_id: string;
 	user_id: number;
 	embargo_end_date?: string;
