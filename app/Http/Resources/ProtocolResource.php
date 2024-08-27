@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProtocolResource extends JsonResource
@@ -28,6 +29,7 @@ class ProtocolResource extends JsonResource
         return [
             "id" => $this->id,
             "pct_id" => $this->pct_id,
+            "registration_date" => !empty($this->registration_date) ? Carbon::createFromDate($this->registration_date)->toDateString() : null,
             "user_id" => $this->user_id,
             "status" => $this->status,
             "details" => $this->details->toArray(),

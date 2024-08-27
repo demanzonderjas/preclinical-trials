@@ -135,7 +135,8 @@ export enum TFormFieldName {
 	Reason = "reason",
 	ImportType = "import_type",
 	LinkedProtocols = "linked_protocols",
-	PublishDate = "publish_date"
+	PublishDate = "publish_date",
+	RegistrationDate = "registration_date"
 }
 
 export enum TFormName {

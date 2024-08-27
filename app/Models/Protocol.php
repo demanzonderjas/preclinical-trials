@@ -18,7 +18,7 @@ class Protocol extends Model
         "updated_at"
     ];
 
-    protected $appends = ["title", "pct_id", "embargo_end_date"];
+    protected $appends = ["title", "pct_id", "embargo_end_date", "registration_date"];
 
     public function user()
     {
@@ -171,5 +171,17 @@ class Protocol extends Model
     public function getLinkedAttribute()
     {
         return $this->linkedTo->merge($this->linkedFrom);
+    }
+
+    public function getRegistrationDateAttribute()
+    {
+        if (!count($this->adminActions)) {
+            return null;
+        }
+
+        $approveAction = $this->adminActions->first(function (AdminAction $a) {
+            return $a->action === 'approve';
+        });
+        return !empty($approveAction) ? $approveAction->created_at : null;
     }
 }

@@ -27,3 +27,10 @@ export const publishDateField: TFormField = {
 	id: TFormFieldName.PublishDate,
 	description: null
 };
+
+export const registrationDateField: TFormField = {
+	...startDateField,
+	id: TFormFieldName.RegistrationDate,
+	section: TSectionName.General,
+	description: null
+};
