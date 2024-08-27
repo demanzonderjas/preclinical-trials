@@ -22,7 +22,6 @@ export const LinkProtocolsModal: React.FC = () => {
 			const response = await getMyPublishedProtocolsQuery();
 			setProtocols(response.protocols.map(mapProtocolDetailsToObject));
 			const linkedResponse = await getLinkedProtocolsQuery(data.protocol_id);
-			console.log(linkedResponse);
 			setLinked(linkedResponse.protocols.map(mapProtocolDetailsToObject));
 		})();
 	}, [data?.protocol_id]);
@@ -32,7 +31,6 @@ export const LinkProtocolsModal: React.FC = () => {
 			data.protocol_id,
 			linked.map(p => p.id)
 		);
-		console.log(response);
 	};
 
 	const addLinkedProtocol = () => {

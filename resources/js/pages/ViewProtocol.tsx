@@ -41,8 +41,6 @@ export const ViewProtocolPage: React.FC = () => {
 		}
 	}, [protocol_id]);
 
-	console.log(protocol);
-
 	const fieldsWithValues = [
 		{ ...pctIdField, value: protocol?.pct_id },
 		{ ...registrationDateField, value: protocol?.registration_date },
