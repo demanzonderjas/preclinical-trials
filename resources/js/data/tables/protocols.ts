@@ -17,7 +17,8 @@ import {
 	magicSearchCell,
 	idCell,
 	embargoDateCell,
-	commentsCell
+	commentsCell,
+	pctIdCell
 } from "./cells/protocol";
 
 export const adminProtocolsTable: TTable = {
@@ -45,6 +46,7 @@ export const adminProtocolsTable: TTable = {
 
 export const manageProtocolsTable: TTable = {
 	headers: [
+		TTableCellName.PctId,
 		TTableCellName.Title,
 		TTableCellName.PublishStatus,
 		TTableCellName.LastUpdated,
@@ -53,6 +55,7 @@ export const manageProtocolsTable: TTable = {
 		TTableCellName.Action
 	],
 	cells: [
+		pctIdCell,
 		titleCell,
 		publishStatusCell,
 		lastUpdatedAtCell,
