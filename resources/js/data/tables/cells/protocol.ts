@@ -129,3 +129,9 @@ export const commentsCell: TTableCell = {
 	Component: CommentsCell,
 	value: ""
 };
+
+export const pctIdCell: TTableCell = {
+	id: TTableCellName.PctId,
+	Component: TextCell,
+	value: ""
+};

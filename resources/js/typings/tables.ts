@@ -42,7 +42,8 @@ export enum TTableCellName {
 	LastName = "last_name",
 	Reason = "reason",
 	LatestMessage = "latest_message",
-	Contact = "contact"
+	Contact = "contact",
+	PctId = "pct_id"
 }
 
 export type TFilter = {
