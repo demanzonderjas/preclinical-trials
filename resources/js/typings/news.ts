@@ -5,6 +5,7 @@ export type TNewsItem = {
 	image?: string;
 	summary: string;
 	content: string;
+	publish_date?: string;
 	created_at: string;
 	updated_at: string;
 };

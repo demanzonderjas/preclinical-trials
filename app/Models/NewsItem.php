@@ -13,6 +13,7 @@ class NewsItem extends Model
         "title",
         "status",
         "summary",
-        "content"
+        "content",
+        "publish_date"
     ];
 }
