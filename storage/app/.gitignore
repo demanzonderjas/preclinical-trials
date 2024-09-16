@@ -2,4 +2,5 @@
 !public/
 !embargo-dates.csv
 !radboud_import.csv
+!registration-dates.csv
 !.gitignore
