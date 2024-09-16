@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AdminAction extends Model
 {
     use HasFactory;
+
+    protected $fillable = ["protocol_id", "action"];
 }
