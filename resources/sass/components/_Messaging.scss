@@ -92,13 +92,16 @@ $triangle-size: 10px;
 				}
 			}
 
-
 			&.you {
 				text-align: right;
 
 				.content {
 					background-color: $secondary;
 					color: white;
+
+					a {
+						color: $primary;
+					}
 
 					&:after {
 						left: auto;
@@ -152,11 +155,10 @@ $triangle-size: 10px;
 		.button-wrapper {
 			text-align: right;
 			margin-top: 5px;
-			
+
 			button {
 				margin-right: 10px;
 			}
 		}
-
 	}
 }
