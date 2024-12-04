@@ -18,6 +18,15 @@ export async function getChannelIdQuery(protocol_id: number, questioner_id: numb
 	}
 }
 
+export async function getProtocolIdViaChannelQuery(channel_id: number) {
+	try {
+		const response = await API.post("/api/channel/get-protocol-id", { channel_id });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}
+
 export async function createMessageQuery(channel_id: number, text: string) {
 	try {
 		const response = await API.post("/api/channel/message", { channel_id, text });

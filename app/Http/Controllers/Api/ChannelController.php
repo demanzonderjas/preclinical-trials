@@ -21,6 +21,14 @@ class ChannelController extends Controller
 		return response()->json(["channel_id" => $channel->id]);
 	}
 
+	public function getProtocolId(Request $request)
+	{
+		$channel = Channel::findOrFail($request->channel_id);
+		$protocol_id = $channel->protocol_id;
+
+		return response()->json(["protocol_id" => $protocol_id]);
+	}
+
 	public function getMessages(Request $request)
 	{
 		$channel = Channel::findOrFail($request->channel_id);
