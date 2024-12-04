@@ -85,7 +85,9 @@ export const MessagingContainer: React.FC<{
 	return (
 		<div className={cx("MessagingContainer", { full_screen: !!initialChannelId })}>
 			<div className="header">
-				<h2>{t("messages")}</h2>
+				<h2>
+					{t("messages")} (PCTE0000{protocolId})
+				</h2>
 				{!!close && <span onClick={() => close()}>{t("x")}</span>}
 			</div>
 			<div className="messages" ref={messagesRef}>
