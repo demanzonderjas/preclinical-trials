@@ -44,7 +44,7 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 				>
 					{t("duplicate")}
 				</button>
-				{row.status === "published" && (
+				{row.status === TProtocolStatus.Published && (
 					<button
 						className="tertiary small"
 						onClick={() =>
@@ -54,12 +54,16 @@ export const ActionCell: React.FC<{ value: string; row: TProtocol }> = ({ row })
 						{t("link")}
 					</button>
 				)}
-				<button
-					className="danger small"
-					onClick={() => setModal({ ...confirmModal, actionOnConfirm: deleteProtocol })}
-				>
-					{t("delete")}
-				</button>
+				{row.status === TProtocolStatus.Draft && (
+					<button
+						className="danger small"
+						onClick={() =>
+							setModal({ ...confirmModal, actionOnConfirm: deleteProtocol })
+						}
+					>
+						{t("delete")}
+					</button>
+				)}
 			</div>
 		</td>
 	);

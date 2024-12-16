@@ -92,7 +92,7 @@ export const CreateProtocolPanel: React.FC<{ hideIntro?: boolean }> = observer((
 						</button>
 					</>
 				)}
-				{!!protocol_id && (
+				{!!protocol_id && status === TProtocolStatus.Draft && (
 					<button
 						type="button"
 						className="danger small"

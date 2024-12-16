@@ -164,8 +164,13 @@ class ProtocolController extends Controller
 
 	public function delete($protocol_id)
 	{
-		Protocol::destroy($protocol_id);
-		return response()->json(["success" => true]);
+		$p = Protocol::findOrFail($protocol_id);
+		if ($p->status === "draft") {
+			Protocol::destroy($protocol_id);
+			return response()->json(["success" => true]);
+		} else {
+			return response()->json(["success" => false, "message" => "protocol_not_draft"]);
+		}
 	}
 
 	public function duplicate($protocol_id)
