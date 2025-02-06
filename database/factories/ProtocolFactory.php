@@ -97,8 +97,9 @@ class ProtocolFactory extends Factory
 			"experimental_design" => $this->faker->paragraph(),
 			"investigators_blinded_intervention" => $this->selectRandom(config('pct.valid_field_values.investigators_blinded_intervention')),
 			"yes_blinded_intervention_how_details" => $this->faker->paragraph(),
+			"no_blinded_assessment" => $this->faker->paragraph(),
+			"no_blinded_intervention_details" => $this->faker->paragraph(),
 			"yes_blinded_intervention_partially_details" => $this->faker->paragraph(),
-
 			"sum_of_animals" => $this->selectRandom(config("pct.valid_field_values.investigators_blinded_assessment")),
 			"investigators_blinded_assessment" => $this->selectRandom(config("pct.valid_field_values.investigators_blinded_assessment")),
 			"yes_blinded_assessment_how_details" => $this->faker->paragraph(),
