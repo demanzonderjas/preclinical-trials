@@ -71,7 +71,10 @@ export const TableBlock: React.FC<{ table: TTable; rows: any[]; showTotal?: bool
 								className={cx({ clickable: !!table.targetOnRowClick })}
 								onClick={
 									table.targetOnRowClick
-										? () => push(`${table.targetOnRowClick}/${row.id}`)
+										? typeof table.targetOnRowClick === "function"
+											? //@ts-ignore
+											  () => table.targetOnRowClick(row.id)
+											: () => push(`${table.targetOnRowClick}/${row.id}`)
 										: undefined
 								}
 							>

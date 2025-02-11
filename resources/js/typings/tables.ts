@@ -2,7 +2,7 @@ import { TFormFieldName } from "./forms";
 
 export type TTable = {
 	headers: TTableCellName[];
-	targetOnRowClick?: string;
+	targetOnRowClick?: Function | string;
 	cells: TTableCell[];
 };
 
@@ -43,7 +43,9 @@ export enum TTableCellName {
 	Reason = "reason",
 	LatestMessage = "latest_message",
 	Contact = "contact",
-	PctId = "pct_id"
+	PctId = "pct_id",
+	Empty = "empty",
+	Select = "selected"
 }
 
 export type TFilter = {

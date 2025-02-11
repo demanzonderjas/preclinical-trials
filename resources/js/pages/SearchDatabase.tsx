@@ -8,16 +8,21 @@ import { TableBlock } from "../components/tables/TableBlock";
 import { FilterStoreProvider } from "../contexts/FilterStoreContext";
 import { pctIdField } from "../data/forms/fields/protocol/id";
 import { createProtocolForm } from "../data/forms/protocol";
-import { searchProtocolsTable } from "../data/tables/protocols";
+import { searchProtocolsTable, selectProtocolsTable } from "../data/tables/protocols";
 import { getViewableProtocolsQuery } from "../queries/protocol";
 import { FilterStore } from "../stores/FilterStore";
 import { TProtocol, TProtocolOverviewType } from "../typings/protocols";
 import { mapProtocolDetailsToObject } from "../utils/formatting";
+import { useTranslationStore } from "../hooks/useTranslationStore";
+import { toggle } from "../utils/arrays";
 
 export const SearchDatabasePage: React.FC = () => {
 	const [protocols, setProtocols] = useState([]);
 	const [overviewType, setOverviewType] = useState(TProtocolOverviewType.Table);
+	const [isSelectingForExport, setIsSelectingForExport] = useState(false);
+	const [selectedProtocols, setSelectedProtocols] = useState([]);
 	const [filterStore] = useState(new FilterStore());
+	const { t } = useTranslationStore();
 
 	useEffect(() => {
 		(async () => {
@@ -40,6 +45,7 @@ export const SearchDatabasePage: React.FC = () => {
 						].map(f => f.filterLabel || f.id)}
 					/>
 					<TotalProtocols protocols={protocols} />
+
 					<div
 						className="OverviewSwitch layout-wrapper"
 						style={{ display: "flex", justifyContent: "right" }}
@@ -72,9 +78,48 @@ export const SearchDatabasePage: React.FC = () => {
 							/>
 						</div>
 					</div>
+					<div
+						className="margin-1 layout-wrapper"
+						style={
+							isSelectingForExport
+								? {
+										position: "sticky",
+										padding: "10px 0",
+										top: "0px",
+										backgroundColor: "#fff"
+								  }
+								: {}
+						}
+					>
+						<button
+							className="tertiary small"
+							onClick={() => {
+								setIsSelectingForExport(!isSelectingForExport);
+								setSelectedProtocols([]);
+							}}
+						>
+							{t(isSelectingForExport ? "deselect_all" : "select_for_export")}
+						</button>
+					</div>
 					<div className="layout-wrapper">
 						{overviewType === TProtocolOverviewType.Table && (
-							<TableBlock table={searchProtocolsTable} rows={protocols} />
+							<TableBlock
+								table={
+									isSelectingForExport
+										? {
+												...selectProtocolsTable,
+												targetOnRowClick: id =>
+													setSelectedProtocols(
+														toggle(selectedProtocols, id)
+													)
+										  }
+										: searchProtocolsTable
+								}
+								rows={protocols.map(p => ({
+									...p,
+									selected: selectedProtocols.includes(p.id)
+								}))}
+							/>
 						)}
 						{overviewType === TProtocolOverviewType.Cards && (
 							<ProtocolCardsBlock protocols={protocols} />

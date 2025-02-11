@@ -322,5 +322,8 @@
 	"add_linked_protocol": "Add linked protocol",
 	"save_links": "Save links",
 	"publish_date": "Publish date",
-	"registration_date": "Date of registration"
+	"registration_date": "Date of registration",
+	"select_for_export": "Select for export",
+	"deselect_all": "Deselect all",
+	"empty": " "
 }

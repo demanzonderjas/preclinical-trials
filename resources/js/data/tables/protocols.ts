@@ -18,7 +18,8 @@ import {
 	idCell,
 	embargoDateCell,
 	commentsCell,
-	pctIdCell
+	pctIdCell,
+	selectCell
 } from "./cells/protocol";
 
 export const adminProtocolsTable: TTable = {
@@ -74,6 +75,11 @@ export const searchProtocolsTable: TTable = {
 	],
 	targetOnRowClick: "/database/view-protocol",
 	cells: [titleCell, studyCentreCell, studyStatusCell, magicSearchCell]
+};
+
+export const selectProtocolsTable: TTable = {
+	headers: [TTableCellName.Empty, ...searchProtocolsTable.headers],
+	cells: [selectCell, ...searchProtocolsTable.cells]
 };
 
 export const studyArmsTable: TTable = {

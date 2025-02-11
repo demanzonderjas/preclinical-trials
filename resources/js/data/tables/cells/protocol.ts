@@ -6,9 +6,16 @@ import { CountryCell } from "../../../components/tables/CountryCell";
 import { DateCell } from "../../../components/tables/DateCell";
 import { EmbargoDateCell } from "../../../components/tables/EmbargoDateCell";
 import { MagicSearchCell } from "../../../components/tables/MagicSearchCell";
+import { SelectCell } from "../../../components/tables/SelectCell";
 import { StudyCentreCell } from "../../../components/tables/StudyCentreCell";
 import { TextCell } from "../../../components/tables/TextCell";
 import { TTableCell, TTableCellName } from "../../../typings/tables";
+
+export const selectCell: TTableCell = {
+	id: TTableCellName.Select,
+	Component: SelectCell,
+	value: ""
+};
 
 export const titleCell: TTableCell = {
 	id: TTableCellName.Title,
