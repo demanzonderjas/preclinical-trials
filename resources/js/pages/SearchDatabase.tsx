@@ -44,12 +44,20 @@ export const SearchDatabasePage: React.FC = () => {
 			"statement_of_accuracy"
 		];
 
+		const columnsWithObjects = ["financial_support", "study_arms", "study_centre"];
+
 		const protocolsToExport = selectedProtocols.map(id => {
 			const protocol = protocols.find(p => p.id == id);
 			const copy = { ...protocol };
-			for (let column of columnsToExclude) {
-				delete copy[column];
-			}
+			Object.keys(copy).forEach(column => {
+				if (columnsToExclude.includes(column)) {
+					delete copy[column];
+				} else if (columnsWithObjects.includes(column)) {
+					copy[column] = copy[column].toString();
+				} else {
+					copy[column] = t(copy[column]);
+				}
+			});
 			return copy;
 		});
 
