@@ -325,5 +325,6 @@
 	"registration_date": "Date of registration",
 	"select_for_export": "Select for export",
 	"deselect_all": "Deselect all",
-	"empty": " "
+	"empty": " ",
+	"export_protocols": "Export protocols"
 }

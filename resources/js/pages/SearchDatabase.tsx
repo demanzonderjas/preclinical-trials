@@ -15,6 +15,7 @@ import { TProtocol, TProtocolOverviewType } from "../typings/protocols";
 import { mapProtocolDetailsToObject } from "../utils/formatting";
 import { useTranslationStore } from "../hooks/useTranslationStore";
 import { toggle } from "../utils/arrays";
+import { exportProtocolsToExcel } from "../utils/excel";
 
 export const SearchDatabasePage: React.FC = () => {
 	const [protocols, setProtocols] = useState([]);
@@ -33,6 +34,27 @@ export const SearchDatabasePage: React.FC = () => {
 			setProtocols(targetProtocols);
 		})();
 	}, []);
+
+	async function exportProtocols() {
+		const columnsToExclude = [
+			"why_amendment",
+			"embargo_end_date",
+			"comments",
+			"has_embargo",
+			"statement_of_accuracy"
+		];
+
+		const protocolsToExport = selectedProtocols.map(id => {
+			const protocol = protocols.find(p => p.id == id);
+			const copy = { ...protocol };
+			for (let column of columnsToExclude) {
+				delete copy[column];
+			}
+			return copy;
+		});
+
+		await exportProtocolsToExcel(protocolsToExport);
+	}
 
 	return (
 		<FilterStoreProvider store={filterStore}>
@@ -92,7 +114,7 @@ export const SearchDatabasePage: React.FC = () => {
 						}
 					>
 						<button
-							className="tertiary small"
+							className="tertiary small margin-10"
 							onClick={() => {
 								setIsSelectingForExport(!isSelectingForExport);
 								setSelectedProtocols([]);
@@ -100,6 +122,13 @@ export const SearchDatabasePage: React.FC = () => {
 						>
 							{t(isSelectingForExport ? "deselect_all" : "select_for_export")}
 						</button>
+						{!!isSelectingForExport && !!selectedProtocols.length && (
+							<div className="margin-10">
+								<button className="secondary small" onClick={exportProtocols}>
+									{t("export_protocols")}
+								</button>
+							</div>
+						)}
 					</div>
 					<div className="layout-wrapper">
 						{overviewType === TProtocolOverviewType.Table && (
