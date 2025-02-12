@@ -16,6 +16,7 @@ import { mapProtocolDetailsToObject } from "../utils/formatting";
 import { useTranslationStore } from "../hooks/useTranslationStore";
 import { toggle } from "../utils/arrays";
 import { exportProtocolsToExcel } from "../utils/excel";
+import { useUser } from "../hooks/useUser";
 
 export const SearchDatabasePage: React.FC = () => {
 	const [protocols, setProtocols] = useState([]);
@@ -24,6 +25,7 @@ export const SearchDatabasePage: React.FC = () => {
 	const [selectedProtocols, setSelectedProtocols] = useState([]);
 	const [filterStore] = useState(new FilterStore());
 	const { t } = useTranslationStore();
+	const { user } = useUser();
 
 	useEffect(() => {
 		(async () => {
@@ -108,36 +110,38 @@ export const SearchDatabasePage: React.FC = () => {
 							/>
 						</div>
 					</div>
-					<div
-						className="margin-1 layout-wrapper"
-						style={
-							isSelectingForExport
-								? {
-										position: "sticky",
-										padding: "10px 0",
-										top: "0px",
-										backgroundColor: "#fff"
-								  }
-								: {}
-						}
-					>
-						<button
-							className="tertiary small margin-10"
-							onClick={() => {
-								setIsSelectingForExport(!isSelectingForExport);
-								setSelectedProtocols([]);
-							}}
+					{!!user && (
+						<div
+							className="margin-1 layout-wrapper"
+							style={
+								isSelectingForExport
+									? {
+											position: "sticky",
+											padding: "10px 0",
+											top: "0px",
+											backgroundColor: "#fff"
+									  }
+									: {}
+							}
 						>
-							{t(isSelectingForExport ? "deselect_all" : "select_for_export")}
-						</button>
-						{!!isSelectingForExport && !!selectedProtocols.length && (
-							<div className="margin-10">
-								<button className="secondary small" onClick={exportProtocols}>
-									{t("export_protocols")}
-								</button>
-							</div>
-						)}
-					</div>
+							<button
+								className="tertiary small margin-10"
+								onClick={() => {
+									setIsSelectingForExport(!isSelectingForExport);
+									setSelectedProtocols([]);
+								}}
+							>
+								{t(isSelectingForExport ? "deselect_all" : "select_for_export")}
+							</button>
+							{!!isSelectingForExport && !!selectedProtocols.length && (
+								<div className="margin-10">
+									<button className="secondary small" onClick={exportProtocols}>
+										{t("export_protocols")}
+									</button>
+								</div>
+							)}
+						</div>
+					)}
 					<div className="layout-wrapper">
 						{overviewType === TProtocolOverviewType.Table && (
 							<TableBlock
