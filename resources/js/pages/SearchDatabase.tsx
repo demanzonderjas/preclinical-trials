@@ -53,7 +53,7 @@ export const SearchDatabasePage: React.FC = () => {
 				if (columnsToExclude.includes(column)) {
 					delete copy[column];
 				} else if (columnsWithObjects.includes(column)) {
-					copy[column] = copy[column].toString();
+					copy[column] = JSON.stringify(copy[column]);
 				} else {
 					copy[column] = t(copy[column]);
 				}
