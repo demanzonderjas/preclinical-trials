@@ -4,7 +4,7 @@ import { Video } from "../components/base/Video";
 import { ContentBlock } from "../components/layout/ContentBlock";
 import { Highlight } from "../components/layout/Highlight";
 import { Page, PrimaryHeaderPage } from "../components/layout/Page";
-import { PartnerBlock } from "../components/layout/PartnerBlock";
+import { PartnerBlock, SponsorsBlock } from "../components/layout/PartnerBlock";
 import { Triangle } from "../components/layout/Triangle";
 import { Leaderboard } from "../components/protocols/Leaderboard";
 import { useEmbargoCounts } from "../hooks/useCounts";
@@ -43,6 +43,7 @@ export const HomePage: React.FC = () => {
 					</div>
 				</ContentBlock>
 				<Leaderboard limit={5} />
+				<SponsorsBlock />
 				<PartnerBlock />
 			</div>
 		</PrimaryHeaderPage>

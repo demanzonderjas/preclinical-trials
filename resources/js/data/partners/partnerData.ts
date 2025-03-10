@@ -1,5 +1,17 @@
 import { TPartner } from "../../typings/partners";
 
+export const sponsorsData: TPartner[] = [
+	{
+		image: "lnnv.png",
+		url:
+			"https://www.rijksoverheid.nl/ministeries/ministerie-van-landbouw-visserij-voedselzekerheid-en-natuur"
+	},
+	{
+		image: "sgf.png",
+		url: "http://www.gezondheidsfondsen.nl/"
+	}
+];
+
 export const partnerData: TPartner[] = [
 	{
 		image: "awc.png",
@@ -36,10 +48,6 @@ export const partnerData: TPartner[] = [
 	{
 		image: "rrp.png",
 		url: "https://www.responsibleresearchinpractice.co.uk/"
-	},
-	{
-		image: "sgf.png",
-		url: "http://www.gezondheidsfondsen.nl/"
 	},
 	{
 		image: "sit.png",
