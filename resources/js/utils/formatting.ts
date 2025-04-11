@@ -5,7 +5,7 @@ import { TFaqItem } from "../typings/faq";
 import { TForm, TFormFieldName, TSavedFormValue } from "../typings/forms";
 import { TNewsItem } from "../typings/news";
 import { TDBProtocol, TProtocol } from "../typings/protocols";
-import { parseString } from "xml2js"
+import { parseString } from "xml2js";
 
 export function slugify(str: string) {
 	str = str.replace(/^\s+|\s+$/g, ""); // trim
@@ -37,6 +37,7 @@ export function mapProtocolDetailsToObject(protocol: TDBProtocol) {
 	const baseData = {
 		id: protocol.id,
 		pct_id: protocol.pct_id,
+		registration_date: protocol.registration_date,
 		embargo_end_date: protocol.embargo_end_date,
 		updated_at: protocol.updated_at,
 		created_at: protocol.created_at,
@@ -73,9 +74,13 @@ export async function xmlToJSON(file: File) {
 	return new Promise((resolve, reject) => {
 		const fileReader = new FileReader();
 		fileReader.onload = event => {
-			return parseString(event.target.result as string, {explicitArray: false}, (err, result) => {
-				resolve(result);
-			});
+			return parseString(
+				event.target.result as string,
+				{ explicitArray: false },
+				(err, result) => {
+					resolve(result);
+				}
+			);
 		};
 		fileReader.onerror = error => reject(error);
 		fileReader.readAsText(file);

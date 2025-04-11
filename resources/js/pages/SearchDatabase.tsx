@@ -43,7 +43,9 @@ export const SearchDatabasePage: React.FC = () => {
 			"embargo_end_date",
 			"comments",
 			"has_embargo",
-			"statement_of_accuracy"
+			"statement_of_accuracy",
+			"created_at",
+			"updated_at"
 		];
 
 		const columnsWithObjects = ["financial_support", "study_arms", "study_centre"];
@@ -51,6 +53,7 @@ export const SearchDatabasePage: React.FC = () => {
 		const protocolsToExport = selectedProtocols.map(id => {
 			const protocol = protocols.find(p => p.id == id);
 			const copy = { ...protocol };
+			console.log(copy);
 			Object.keys(copy).forEach(column => {
 				if (columnsToExclude.includes(column)) {
 					delete copy[column];
