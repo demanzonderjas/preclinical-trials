@@ -36,6 +36,8 @@ export function fieldMeetsDependencies(field: TFormField, values: Map<TFormField
 			return dependency.value.every(value => value !== activeValue);
 		} else if (dependency.type === TFormFieldDependencyType.InArray) {
 			return activeValue?.includes(dependency.value);
+		} else if (dependency.type === TFormFieldDependencyType.ArrayHasOverlap) {
+			return activeValue?.some(val => dependency.value.some(_val => val == _val));
 		}
 		return dependency.value === activeValue;
 	});

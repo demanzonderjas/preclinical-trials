@@ -326,5 +326,7 @@
 	"select_for_export": "Select for export",
 	"deselect_all": "Deselect all",
 	"empty": " ",
-	"export_protocols": "Export protocols"
+	"export_protocols": "Export protocols",
+	"funder_question": "Please provide the name of the funder/industry supporting this study.",
+	"funder": "Funder / Industry"
 }

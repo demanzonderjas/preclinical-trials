@@ -63,7 +63,7 @@ import {
 import { strainField } from "./fields/protocol/strain";
 import { studyCentreField } from "./fields/protocol/studyCentre";
 import { studyArmsField } from "./fields/protocol/studyArms";
-import { supportField } from "./fields/protocol/support";
+import { funderField, supportField } from "./fields/protocol/support";
 import { shortTitleField, titleField } from "./fields/protocol/title";
 import { experimentalDesignField } from "./fields/protocol/experimentalDesign";
 import { messageField } from "./fields/admin/content";
@@ -79,6 +79,7 @@ export const createProtocolForm: TForm = {
 		titleField,
 		shortTitleField,
 		supportField,
+		funderField,
 		otherSupportField,
 		startDateField,
 		endDateField,

@@ -6,6 +6,7 @@ return [
 		"short_title",
 		"financial_support",
 		"other_financial_support",
+		"funder",
 		"start_date",
 		"end_date",
 		"study_status",
@@ -58,7 +59,10 @@ return [
 	],
 	"valid_field_values" => [
 		"financial_support" => [
-			"industry", "investigator_driven", "grants", "other"
+			"industry",
+			"investigator_driven",
+			"grants",
+			"other"
 		],
 		"study_status" => [
 			"not_started",
@@ -69,7 +73,9 @@ return [
 			"study_interrupted"
 		],
 		"sex" => [
-			"male", "female", "both"
+			"male",
+			"female",
+			"both"
 		],
 		"intervention_type" => [
 			"not_applicable",

@@ -136,7 +136,8 @@ export enum TFormFieldName {
 	ImportType = "import_type",
 	LinkedProtocols = "linked_protocols",
 	PublishDate = "publish_date",
-	RegistrationDate = "registration_date"
+	RegistrationDate = "registration_date",
+	Funder = "funder"
 }
 
 export enum TFormName {
@@ -183,6 +184,7 @@ export type TProtocolSection = {
 export enum TFormFieldDependencyType {
 	Truthful = "truthful",
 	InArray = "in_array",
+	ArrayHasOverlap = "array_has_overlap",
 	NotEqualTo = "not_equal_to"
 }
 

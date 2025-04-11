@@ -28,6 +28,7 @@ export const ViewProtocolPage: React.FC = () => {
 		if (protocol_id) {
 			(async () => {
 				const response = await getProtocolQuery(protocol_id);
+				console.log(response);
 				if (response.success === false && response.message === "requires_account") {
 					setRequiresAccountError(true);
 					const loginToUri = encodeURIComponent(pathname.substring(1));
