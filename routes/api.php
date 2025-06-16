@@ -108,6 +108,7 @@ Route::group(['namespace' => 'Api'], function () {
     });
 
     Route::middleware('iles')->post('iles/protocol', 'ProtocolController@storeILES')->name('iles.protocol');
+    Route::middleware('external-api')->get('external/viewable-protocols', 'ProtocolController@getViewable')->name('external-api.viewable');
 
     Route::fallback(function () {
         return abort(404, "invalid_api_route");
