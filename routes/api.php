@@ -53,7 +53,9 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('page/slug', 'PageController@getBySlug');
     Route::get('page/{page_id}', 'PageController@getById');
 
-    Route::post('contact-form', 'ContactFormController@store');
+    Route::group(['middleware' => 'throttle:10,1'], function () {
+        Route::post('contact-form', 'ContactFormController@store');
+    });
 
     Route::post('channel/id', 'ChannelController@getChannelId');
     Route::post('channel/get-protocol-id', 'ChannelController@getProtocolId');

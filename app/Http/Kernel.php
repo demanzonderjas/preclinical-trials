@@ -7,6 +7,7 @@ use App\Http\Middleware\VerifyExternalApiKey;
 use App\Http\Middleware\VerifyExternalApiToken;
 use App\Http\Middleware\VerifyILESToken;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 
 class Kernel extends HttpKernel
 {
@@ -34,6 +35,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            ThrottleRequests::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
