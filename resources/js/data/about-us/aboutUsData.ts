@@ -5,76 +5,76 @@ export const aboutUsSubMenu: TSubMenu = {
 	items: [
 		{
 			text: "Goals",
-			target: "/about-pct",
+			target: "/about-pct"
 		},
 		{
 			text: "Team",
-			target: "/about-pct/team",
+			target: "/about-pct/team"
 		},
 		{
 			text: "Advisory board",
-			target: "/about-pct/advisory-board",
+			target: "/about-pct/advisory-board"
 		},
 		{
 			text: "Ambassadors",
-			target: "/about-pct/ambassadors",
+			target: "/about-pct/ambassadors"
 		},
 		{
 			text: "Background information",
-			target: "/about-pct/background-information",
-		},
-	],
+			target: "/about-pct/background-information"
+		}
+	]
 };
 
 export const aboutUsData: TAboutUs[] = [
 	{
 		name: "Julia Menon, Msc",
 		title: "Scientific Daily Director",
-		image: "julia_menon.jpg",
-		role: TAboutUsType.DailyDirector,
+		image: "julia.jpg",
+		role: TAboutUsType.DailyDirector
 	},
 	{
 		name: "Bente Verbruggen",
 		title: "Project Manager",
 		image: "bente.jpg",
-		role: TAboutUsType.DailyDirector,
+		role: TAboutUsType.DailyDirector
 	},
 	{
 		name: "Prof. Dr. Steven Chamuleau",
-		image: "steve_chamuleau.png",
+		image: "steven.jpg",
 		role: TAboutUsType.SteeringCommittee,
-		workLocation: "Amsterdam University Medical Center",
+		workLocation: "Amsterdam University Medical Center"
 	},
 	{
 		name: "Prof. Dr. Dirk Duncker",
-		image: "dirk_duncker.png",
+		image: "dirk.jpg",
 		role: TAboutUsType.SteeringCommittee,
-		workLocation: "Erasmus University Medical Center",
+		workLocation: "Erasmus University Medical Center"
 	},
 	{
 		name: "Dr. Mira van der Naald",
-		image: "mira_van_der_naald.png",
+		image: "mira.jpg",
 		role: TAboutUsType.SteeringCommittee,
 		workLocation:
-			"University Medical Center Utrecht, the Netherlands - Member of the Transnational AllianCe for regenerative Therapies In Cardiovascular Syndromes (TACTICS)",
+			"University Medical Center Utrecht, the Netherlands - Member of the Transnational AllianCe for regenerative Therapies In Cardiovascular Syndromes (TACTICS)"
 	},
 	{
 		name: "Dr. Judith de Haan",
-		image: "dr_judith_de_haan.png",
+		image: "judith.jpg",
 		role: TAboutUsType.SteeringCommittee,
-		workLocation: "Open Science Programme (Utrecht University)",
+		workLocation: "Open Science Programme (Utrecht University)"
 	},
 	{
 		name: "Wim de Leeuw",
-		image: "wim_de_leeuw.png",
+		image: "wim.jpeg",
 		role: TAboutUsType.SteeringCommittee,
-		workLocation: "Animal Welfare Body Utrecht",
+		workLocation: "Animal Welfare Body Utrecht"
 	},
 	{
 		name: "Dr. Kim Wever",
-		image: "kimberley_wever.png",
+		image: "kim.jpg",
 		role: TAboutUsType.SteeringCommittee,
 		workLocation:
-			"Systematic Review Center for Laboratory animal Experimentation (SYRCLE), Department of Health Evidence, Radboud university medical center, Nijmegen, The Netherlands",
-	},
+			"Systematic Review Center for Laboratory animal Experimentation (SYRCLE), Department of Health Evidence, Radboud university medical center, Nijmegen, The Netherlands"
+	}
 ];
