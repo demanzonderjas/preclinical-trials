@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
-@section('title', 'PCT.eu - Your protocol has been rejected and is not published')
-@section('preheader', 'Your protocol has been rejected and is not published.')
+@section('title', 'Your PCT registration: additional details needed before we can publish your protocol')
+@section('preheader', 'Your PCT registration: additional details needed before we can publish your protocol')
 @section('name', $protocol->user->name)
 
 @section('content')
