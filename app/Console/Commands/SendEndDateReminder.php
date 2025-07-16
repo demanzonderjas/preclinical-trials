@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\ProtocolEndDateReminder;
+use App\Mail\ProtocolEndDateReminderFollowUp;
 use App\Models\Protocol;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -56,12 +57,14 @@ class SendEndDateReminder extends Command
 
             $diffInDays = Carbon::now()->diffInDays(new Carbon($end_date), false);
 
-            echo "[" . $diffInDays . " " . $protocol->id . "]";
-
             $NEEDS_REMINDER = $diffInDays === -90;
+            $NEEDS_SECOND_REMINDER = $diffInDays === -365;
+            $NEEDS_THIRD_REMINDER = $diffInDays === -730;
 
             if ($NEEDS_REMINDER) {
                 Mail::to($protocol->user)->send(new ProtocolEndDateReminder($protocol));
+            } else if($NEEDS_SECOND_REMINDER || $NEEDS_THIRD_REMINDER) {
+                Mail::to($protocol->user)->send(new ProtocolEndDateReminderFollowUp($protocol)); 
             }
         });
     }

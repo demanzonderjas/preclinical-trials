@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ProtocolEndDateReminder extends Mailable
+class ProtocolEndDateReminderFollowUp extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -32,6 +32,6 @@ class ProtocolEndDateReminder extends Mailable
     {
         return $this
             ->subject("PCT.eu - The end date of your protocol has its anticipated completion date passed")
-            ->view('mail.protocol-end-date-reminder');
+            ->view('mail.protocol-end-date-reminder-follow-up');
     }
 }
