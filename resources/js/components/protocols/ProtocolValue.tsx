@@ -95,7 +95,7 @@ export const CombinedValue: React.FC<{
 	);
 
 	if (!otherValueFields.length) {
-		return <p dangerouslySetInnerHTML={{ __html: xss(value) }} />;
+		return <p dangerouslySetInnerHTML={{ __html: xss(t(value)) }} />;
 	}
 
 	if (otherValueFields.some(f => f.showAsLink)) {
