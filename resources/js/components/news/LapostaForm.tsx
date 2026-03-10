@@ -22,6 +22,7 @@ export default function LapostaForm() {
 			style={{
 				paddingBottom: "2rem",
 				display: "flex",
+				fontWeight: "bold",
 				flexDirection: "column",
 				alignItems: "center",
 				justifyContent: "center",
