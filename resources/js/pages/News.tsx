@@ -8,6 +8,7 @@ import { FilterStoreProvider } from "../contexts/FilterStoreContext";
 import { Filter } from "../components/tables/Filter";
 import day from "dayjs";
 import { usePage } from "../hooks/usePage";
+import LapostaForm from "../components/news/LapostaForm";
 
 export const NewsPage: React.FC = () => {
 	const [newsItems, setNewsItems] = useState<TNewsItem[]>([]);
@@ -33,8 +34,9 @@ export const NewsPage: React.FC = () => {
 
 	return (
 		<Page title={page.title} subtitle={page.subtitle}>
-			<div className="NewsPage border-top" style={{ backgroundColor: "white" }}>
+			<div className="NewsPage" style={{ backgroundColor: "white" }}>
 				<FilterStoreProvider store={filterStore}>
+					<LapostaForm />
 					<Filter options={dateOptionsToInclude} filterPlaceholder="any_year" />
 					<NewsCardsBlock newsItems={newsItems} />
 				</FilterStoreProvider>
