@@ -31,8 +31,6 @@ export default function LapostaForm() {
 			}}
 			ref={lapostaRef}
 			id="laposta-form"
-		>
-			<p style={{ textAlign: "center" }}>{t("newsletter_intro")}</p>
-		</div>
+		></div>
 	);
 }
