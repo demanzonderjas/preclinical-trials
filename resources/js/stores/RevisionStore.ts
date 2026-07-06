@@ -1,5 +1,6 @@
 import { action, computed, makeAutoObservable } from "mobx";
 import { TDBProtocol, TRevision } from "../typings/protocols";
+import { TFormFieldName } from "../typings/forms";
 import day from "dayjs";
 import { getRevisionDate } from "../utils/formatting";
 
@@ -16,8 +17,28 @@ export class RevisionStore {
 			activeRevisionDate: computed,
 			changes: computed,
 			activeRevisionNumber: computed,
-			prevRevisionDate: computed
+			prevRevisionDate: computed,
+			activeVersion: computed
 		});
+	}
+
+	get activeVersion() {
+		return this.activeRevisionNumber === 0 ? this.revisions.length : this.activeRevisionNumber;
+	}
+
+	getInitialValue(fieldId: TFormFieldName): any {
+		const detail = this.protocol?.details.find(d => d.key === fieldId);
+		return detail ? detail.value : (this.protocol?.[fieldId as keyof TDBProtocol] ?? null);
+	}
+
+	getValueAtVersion(fieldId: TFormFieldName, version: number): any {
+		let val = this.getInitialValue(fieldId);
+		const M = this.revisions.length;
+		for (let i = M - 1; i >= version; i--) {
+			const change = this.revisions[i].changes.find(c => c.key === fieldId);
+			if (change) val = change.old_value;
+		}
+		return val;
 	}
 
 	get activeRevisionNumber() {

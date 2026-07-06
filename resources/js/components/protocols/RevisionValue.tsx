@@ -10,13 +10,13 @@ export const RevisionValue: React.FC<{
 	fields: TFormField[];
 	valueMap: Map<TFormFieldName, any>;
 }> = observer(({ field, fields, valueMap }) => {
+	const revisionStore = useRevisions();
 	const {
 		changes = [],
 		activeRevisionDate,
 		activeRevisionNumber,
-		prevRevisionDate,
-		revisions = []
-	} = useRevisions();
+		prevRevisionDate
+	} = revisionStore || {};
 	const { t } = useTranslationStore();
 	const hasChange = changes.find(
 		c =>
@@ -24,23 +24,23 @@ export const RevisionValue: React.FC<{
 			fields.filter(f => f.showValueIn === field.id).some(f => f.id === c.key)
 	);
 
-	const futureRevisionChange = revisions
-		.filter((r, index) => index >= activeRevisionNumber)
-		.find(r => r.changes.some(c => c.key === field.id));
-
-	const futureValue = futureRevisionChange
-		? futureRevisionChange.changes.find(c => c.key === field.id)
-		: null;
-
 	const getRealValue = () => {
-		if (futureValue && activeRevisionNumber > 0) {
-			return futureValue.old_value;
-		} else if (!!hasChange) {
-			return hasChange.new_value;
-		} else {
-			return field.value;
+		if (revisionStore) {
+			return revisionStore.getValueAtVersion(field.id, revisionStore.activeVersion);
 		}
+		return field.value;
 	};
+
+	const valueMapPrev = React.useMemo(() => {
+		if (!revisionStore) return valueMap;
+		const prevVersion = revisionStore.activeVersion - 1;
+		return fields.reduce((base, f) => {
+			base.set(f.id, revisionStore.getValueAtVersion(f.id, prevVersion));
+			return base;
+		}, new Map<TFormFieldName, any>());
+	}, [revisionStore, fields, valueMap]);
+
+	const prevVersion = revisionStore ? revisionStore.activeVersion - 1 : 0;
 
 	return (
 		<div className="value">
@@ -55,10 +55,10 @@ export const RevisionValue: React.FC<{
 			{!!hasChange && (
 				<ProtocolValue
 					id={field.id}
-					value={hasChange.old_value}
+					value={revisionStore ? revisionStore.getValueAtVersion(field.id, prevVersion) : null}
 					offset={1}
 					fields={fields}
-					valueMap={valueMap}
+					valueMap={valueMapPrev}
 				/>
 			)}
 		</div>
