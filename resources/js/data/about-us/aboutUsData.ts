@@ -65,8 +65,8 @@ export const aboutUsData: TAboutUs[] = [
 		workLocation: "Open Science Programme (Utrecht University)"
 	},
 	{
-		name: "Wim de Leeuw",
-		image: "wim.jpeg",
+		name: "Dr. Nelleke Verhave",
+		image: "nelleke.jpg",
 		role: TAboutUsType.SteeringCommittee,
 		workLocation: "Animal Welfare Body Utrecht"
 	},
