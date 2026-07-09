@@ -28,14 +28,14 @@ export class RevisionStore {
 
 	getInitialValue(fieldId: TFormFieldName): any {
 		const detail = this.protocol?.details.find(d => d.key === fieldId);
-		return detail ? detail.value : (this.protocol?.[fieldId as keyof TDBProtocol] ?? null);
+		return detail ? detail.value : this.protocol?.[fieldId as keyof TDBProtocol] ?? null;
 	}
 
 	getValueAtVersion(fieldId: TFormFieldName, version: number): any {
 		let val = this.getInitialValue(fieldId);
 		const M = this.revisions.length;
 		for (let i = M - 1; i >= version; i--) {
-			const change = this.revisions[i].changes.find(c => c.key === fieldId);
+			const change = this.revisions[i]?.changes.find(c => c.key === fieldId);
 			if (change) val = change.old_value;
 		}
 		return val;
