@@ -53,7 +53,6 @@ export const SearchDatabasePage: React.FC = () => {
 		const protocolsToExport = selectedProtocols.map(id => {
 			const protocol = protocols.find(p => p.id == id);
 			const copy = { ...protocol };
-			console.log(copy);
 			Object.keys(copy).forEach(column => {
 				if (columnsToExclude.includes(column)) {
 					delete copy[column];
@@ -72,7 +71,10 @@ export const SearchDatabasePage: React.FC = () => {
 	return (
 		<FilterStoreProvider store={filterStore}>
 			<Page title="Search protocols">
-				<div className="SearchDatabase border-top" style={{ background: "white" }}>
+				<div
+					className="SearchDatabase border-top"
+					style={{ background: "white", paddingBottom: "20px" }}
+				>
 					<Filter
 						options={[
 							pctIdField,

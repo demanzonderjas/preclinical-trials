@@ -65,21 +65,12 @@ export const ArrayValueWithOtherField: React.FC<{
 	fields: TFormField[];
 	valueMap: Map<TFormFieldName, any>;
 }> = ({ id, value, fields, valueMap }) => {
-	const otherValueField = fields.find(f => f.showValueIn === id);
 	const { t } = useTranslationStore();
-	const needCombinedValue =
-		fieldMeetsDependencies(otherValueField, valueMap) || otherValueField.value;
-
-	if (!needCombinedValue) {
-		return <p>{Array.isArray(value) ? value?.map(v => t(v)).join(", ") : t(value)}</p>;
-	}
-
-	return (
-		<p>
-			<strong>{Array.isArray(value) ? value?.map(v => t(v)).join(", ") : t(value)}</strong>-{" "}
-			{t(otherValueField?.value)}
-		</p>
-	);
+	const other = fields.find(f => f.showValueIn === id);
+	const otherVal = other ? valueMap.get(other.id) : null;
+	const show = other && (fieldMeetsDependencies(other, valueMap) || otherVal);
+	const label = Array.isArray(value) ? value?.map(v => t(v)).join(", ") : t(value);
+	return show ? <p><strong>{label}</strong>- {t(otherVal)}</p> : <p>{label}</p>;
 };
 
 export const CombinedValue: React.FC<{
@@ -95,7 +86,7 @@ export const CombinedValue: React.FC<{
 	);
 
 	if (!otherValueFields.length) {
-		return <p dangerouslySetInnerHTML={{ __html: xss(value) }} />;
+		return <p dangerouslySetInnerHTML={{ __html: xss(t(value)) }} />;
 	}
 
 	if (otherValueFields.some(f => f.showAsLink)) {
@@ -103,9 +94,10 @@ export const CombinedValue: React.FC<{
 			<p>
 				<strong>{t(value)}</strong> -{" "}
 				{otherValueFields.map(f => {
-					return f.showAsLink && f.value ? (
-						<a target="_blank" key={f.value} href={f.value.replace(/<[^>]*>/g, "")}>
-							{f.value.replace(/<[^>]*>/g, "")}
+					const fValue = valueMap.get(f.id);
+					return f.showAsLink && fValue ? (
+						<a target="_blank" key={fValue} href={fValue.replace(/<[^>]*>/g, "")}>
+							{fValue.replace(/<[^>]*>/g, "")}
 						</a>
 					) : (
 						<RealTimeValue field={f} fields={fields} offset={offset} />
@@ -123,7 +115,7 @@ export const CombinedValue: React.FC<{
 					{" "}
 					-{" "}
 					{f.id === TFormFieldName.PlaceboControlled ? (
-						`${t("the_intervention_was")}${f.value === "yes" ? "" : t("not")} ${t(
+						`${t("the_intervention_was")}${valueMap.get(f.id) === "yes" ? "" : t("not")} ${t(
 							"placebo_controlled_label"
 						)}`
 					) : (

@@ -35,7 +35,7 @@ class ProtocolController extends Controller
 	public function update(Request $request)
 	{
 		$protocol = Protocol::findOrFail($request->protocol_id);
-		if ($protocol->status != "draft") {
+		if ($protocol->status === 'published' || $protocol->status === 'resubmitted_for_publication') {
 			$protocol->saveRevisions($request);
 		}
 		$protocol->saveDetails($request);

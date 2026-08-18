@@ -16,9 +16,14 @@ export const ProtocolSection: React.FC<{
 }> = observer(({ name, fields, shouldBeOpen }) => {
 	const [isExpanded, setIsExpanded] = useState(shouldBeOpen);
 	const { t } = useTranslationStore();
-	const { changes = [] } = useRevisions();
+	const revisionStore = useRevisions();
+	const changes = revisionStore?.changes ?? [];
+	const activeVersion = revisionStore?.activeVersion ?? 0;
 	const valueMap = fields.reduce((base, field) => {
-		base.set(field.id, field.value);
+		const val = revisionStore
+			? revisionStore.getValueAtVersion(field.id, activeVersion)
+			: field.value;
+		base.set(field.id, val);
 		return base;
 	}, new Map<TFormFieldName, any>());
 	const changeCount = changes.reduce((base, change) => {

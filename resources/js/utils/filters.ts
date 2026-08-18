@@ -24,13 +24,26 @@ export function protocolMeetsFilters(
 		}
 		if (!filter.key) {
 			return Object.keys(row)
-				.filter(key => !!t(row[key]))
-				.some(key =>
-					t(row[key])
+				.filter(key => !!t(row[key]) || !!row[key])
+				.some(key => {
+					if (key === "study_centre") {
+						return JSON.stringify(row[key])
+							.toLowerCase()
+							.includes(filter.value.toLowerCase());
+					}
+
+					const hasTranslatedValue = t(row[key])
 						.toString()
 						.toLowerCase()
-						.includes(filter.value.toLowerCase())
-				);
+						.includes(filter.value.toLowerCase());
+
+					const hasOriginalValue = row[key]
+						.toString()
+						.toLowerCase()
+						.includes(filter.value.toLowerCase());
+
+					return hasTranslatedValue || hasOriginalValue;
+				});
 		}
 		if (filter.key && filter.value && row[filter.key]) {
 			return JSON.stringify(t(row[filter.key]))
