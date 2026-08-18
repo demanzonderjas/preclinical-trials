@@ -118,6 +118,7 @@ export enum TFormFieldName {
 	LinkToData = "link_to_data",
 	HasEmbargo = "has_embargo",
 	LiftEmbargo = "lift_embargo",
+	EmbargoEndDate = "embargo_end_date",
 	StatementOfAccuracy = "statement_of_accuracy",
 	Summary = "summary",
 	Content = "content",
@@ -158,6 +159,7 @@ export enum TFormName {
 	EditAccount = "edit_account",
 	AddAmbassador = "add_ambassador",
 	ExtendEmbargo = "extend_embargo",
+	ExtendEmbargoAsAdmin = "extend_embargo_as_admin",
 	RejectEmbargoExtension = "reject_embargo_extension"
 }
 

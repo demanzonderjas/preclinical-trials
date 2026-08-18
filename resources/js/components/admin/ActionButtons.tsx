@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { confirmModal } from "../../data/modals/confirm";
+import { extendEmbargoModal } from "../../data/modals/embargo";
 import { rejectEmbargoExtensionModal, rejectProtocolModal } from "../../data/modals/reject";
 import { useModalStore } from "../../hooks/useModalStore";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
@@ -111,6 +112,31 @@ export const RejectEmbargoExtensionButton: React.FC<{
 			}
 		>
 			{t("reject")}
+		</button>
+	);
+};
+
+export const ExtendEmbargoButton: React.FC<{
+	embargo_end_date: string;
+	protocol_id: number;
+}> = ({ embargo_end_date, protocol_id }) => {
+	const { t } = useTranslationStore();
+	const { setModal } = useModalStore();
+
+	console.log(embargo_end_date);
+
+	if (!embargo_end_date) {
+		return null;
+	}
+
+	return (
+		<button
+			className="tertiary small"
+			onClick={() =>
+				setModal({ ...extendEmbargoModal, data: { protocol_id, embargo_end_date } })
+			}
+		>
+			{t("extend_embargo")}
 		</button>
 	);
 };

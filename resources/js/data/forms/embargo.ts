@@ -1,6 +1,10 @@
 import { TAlignment, TForm, TFormName, TFormStyle } from "../../typings/forms";
 import { messageField } from "./fields/admin/content";
-import { embargoReasonField, requestEmbargoExtendField } from "./fields/protocol/embargo";
+import {
+	embargoReasonField,
+	newEmbargoEndDateField,
+	requestEmbargoExtendField
+} from "./fields/protocol/embargo";
 
 export const extendEmbargoForm: TForm = {
 	id: TFormName.ExtendEmbargo,
@@ -19,5 +23,15 @@ export const rejectEmbargoExtensionForm: TForm = {
 	keepValuesAfterSubmit: false,
 	submitText: "send",
 	fields: [messageField],
+	align: TAlignment.Center
+};
+
+export const extendEmbargoAsAdminForm: TForm = {
+	id: TFormName.ExtendEmbargoAsAdmin,
+	style: TFormStyle.RegularLabels,
+	keepValuesAfterSubmit: true,
+	submitText: "extend_embargo",
+	succesText: "embargo_extended",
+	fields: [newEmbargoEndDateField],
 	align: TAlignment.Center
 };

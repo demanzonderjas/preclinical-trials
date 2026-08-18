@@ -1,4 +1,5 @@
 import { BooleanField } from "../../../../components/forms/BooleanField";
+import { InputField } from "../../../../components/forms/InputField";
 import { RadioButtonsField } from "../../../../components/forms/RadioButtonsField";
 import { RichTextField } from "../../../../components/forms/RichTextField";
 import { YesNoField } from "../../../../components/forms/YesNoField";
@@ -76,6 +77,18 @@ export const embargoReasonField: TFormField = {
 	note: "embargo_extension_note",
 	props: {
 		height: 250
+	},
+	validate: (value: string) => value && value.length >= 2,
+	value: ""
+};
+
+export const newEmbargoEndDateField: TFormField = {
+	id: TFormFieldName.EmbargoEndDate,
+	Component: InputField,
+	required: true,
+	label: "new_embargo_end_date",
+	props: {
+		type: "date"
 	},
 	validate: (value: string) => value && value.length >= 2,
 	value: ""

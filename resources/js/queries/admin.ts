@@ -65,3 +65,24 @@ export async function changePasswordAsAdminQuery(changePasswordData: TChangePass
 		return false;
 	}
 }
+
+export async function extendEmbargoAsAdminQuery(
+	protocol_id: number | string,
+	data: { embargo_end_date: string }
+) {
+	try {
+		const response = await API.post(`/api/embargo-end-date/${protocol_id}/extend`, data);
+		return response.data;
+	} catch (error) {
+		const errors = error.response?.data?.errors;
+		if (errors) {
+			return {
+				errors: Object.entries(errors).reduce((base, [key, value]) => {
+					base[key] = Array.isArray(value) ? value[0] : value;
+					return base;
+				}, {})
+			};
+		}
+		return { errors: { embargo_end_date: "invalid_request" } };
+	}
+}

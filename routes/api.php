@@ -105,6 +105,7 @@ Route::group(['namespace' => 'Api'], function () {
         Route::get('embargo-extensions', 'EmbargoController@all');
         Route::post('embargo-extension/{embargo_extension}/approve', 'EmbargoController@approve');
         Route::post('embargo-extension/{embargo_extension}/reject', 'EmbargoController@reject');
+        Route::post('embargo-end-date/{protocol_id}/extend', 'EmbargoController@extendAsAdmin');
 
         Route::get('users', 'UserController@getAll');
     });

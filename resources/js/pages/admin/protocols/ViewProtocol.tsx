@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {
 	ApproveProtocolButton,
+	ExtendEmbargoButton,
 	RejectProtocolButton
 } from "../../../components/admin/ActionButtons";
 import { AdminPage } from "../../../components/layout/admin/AdminPage";
@@ -51,6 +52,10 @@ export const AdminViewProtocolPage: React.FC = () => {
 							/>
 							<RejectProtocolButton
 								status={protocol?.status}
+								protocol_id={protocol?.id}
+							/>
+							<ExtendEmbargoButton
+								embargo_end_date={protocol?.embargo_end_date}
 								protocol_id={protocol?.id}
 							/>
 						</FlexWrapper>

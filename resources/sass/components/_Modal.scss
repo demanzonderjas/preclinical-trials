@@ -138,3 +138,19 @@
 		flex-wrap: wrap;
 	}
 }
+
+.ExtendEmbargoModal {
+	padding: 2em;
+	color: $white;
+
+	p {
+		font-size: 18px;
+		display: block;
+		margin: 16px 0;
+		text-align: center;
+	}
+
+	label {
+		color: $white;
+	}
+}

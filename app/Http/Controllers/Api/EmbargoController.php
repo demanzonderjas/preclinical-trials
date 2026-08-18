@@ -81,6 +81,35 @@ class EmbargoController extends Controller
 		return response()->json(["success" => true]);
 	}
 
+	public function extendAsAdmin(Request $request)
+	{
+		$request->validate([
+			"embargo_end_date" => "required|date|after:today"
+		]);
+
+		$protocol = Protocol::findOrFail($request->protocol_id);
+		$embargoEndDate = EmbargoEndDate::where(['protocol_id' => $protocol->id, 'is_active' => true])->first();
+
+		if (!$embargoEndDate) {
+			return response()->json(["errors" => ["embargo_end_date" => "no_active_embargo"]], 422);
+		}
+
+		$newDate = Carbon::parse($request->embargo_end_date)->toDateString();
+		$embargoEndDate->date = $newDate;
+		$embargoEndDate->mail_status = NULL;
+		$embargoEndDate->save();
+
+		$protocol->embargoExtensions()
+			->where('status', 'awaiting_approval')
+			->update(['status' => 'approved']);
+
+		$this->addAdminAction($protocol, "extend_embargo", "Embargo extended until " . $newDate);
+
+		Mail::to($protocol->user)->send(new EmbargoExtensionApproved($protocol, $embargoEndDate));
+
+		return response()->json(["success" => true, "embargo_end_date" => $embargoEndDate]);
+	}
+
 	public function addAdminAction(Protocol $protocol, $action, $message)
 	{
 		$adminAction = new AdminAction();
