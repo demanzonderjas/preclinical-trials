@@ -27,6 +27,7 @@ export type TFormField = {
 	validate: (value: any, values: Map<TFormFieldName, any>) => boolean;
 	hidden?: boolean;
 	showValueIn?: TFormFieldName;
+	showsImages?: boolean;
 	showAsLink?: boolean;
 	useAsFilter?: boolean;
 	infoIcon?: string;
@@ -93,8 +94,10 @@ export enum TFormFieldName {
 	Strain = "strain",
 	Sex = "sex",
 	ExperimentalDesign = "experimental_design",
+	ExperimentalDesignImage = "experimental_design_image",
 	SampleSizeCalculation = "sample_size_calculation",
 	SampleSizeCalculationDetails = "sample_size_calculation_details",
+	SampleSizeCalculationImage = "sample_size_calculation_image",
 	SumOfAnimals = "sum_of_animals",
 	StudyArms = "study_arms",
 	Randomisation = "randomisation",
@@ -115,6 +118,7 @@ export enum TFormFieldName {
 	OriginalAnimalEthicsCommitteeApplication = "original_animal_ethics_committee_application",
 	ApplicationNumber = "application_number",
 	AdditionalInformation = "additional_information",
+	AdditionalInformationImages = "additional_information_images",
 	LinkToData = "link_to_data",
 	HasEmbargo = "has_embargo",
 	LiftEmbargo = "lift_embargo",

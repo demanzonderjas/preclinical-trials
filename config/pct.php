@@ -29,6 +29,7 @@ return [
 		"sex",
 		"sample_size_calculation",
 		"sample_size_calculation_details",
+		"sample_size_calculation_image",
 		"study_arms",
 		"randomisation",
 		"why_no_randomisation",
@@ -37,6 +38,7 @@ return [
 		"other_randomisation_details",
 		"details_randomisation",
 		"experimental_design",
+		"experimental_design_image",
 		"investigators_blinded_intervention",
 		"yes_blinded_intervention_how_details",
 		"yes_blinded_intervention_partially_details",
@@ -55,6 +57,7 @@ return [
 		"contact_email",
 		"study_centre",
 		"additional_information",
+		"additional_information_images",
 		"statement_of_accuracy",
 	],
 	"valid_field_values" => [

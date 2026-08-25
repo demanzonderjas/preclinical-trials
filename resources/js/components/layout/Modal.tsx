@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
+import cx from "classnames";
 import { useModalStore } from "../../hooks/useModalStore";
 
 export const Modal: React.FC = observer(() => {
@@ -11,7 +12,10 @@ export const Modal: React.FC = observer(() => {
 
 	return (
 		<div className="ModalWrapper">
-			<div className="Modal" style={{ maxHeight: modal.isBig ? "90vh" : null }}>
+			<div
+				className={cx("Modal", modal.className)}
+				style={{ maxHeight: modal.isBig ? "90vh" : null }}
+			>
 				<CloseIcon />
 				<div
 					className="ContentWrapper"

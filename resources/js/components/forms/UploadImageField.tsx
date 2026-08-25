@@ -5,6 +5,7 @@ import { deleteImageQuery, uploadImageQuery } from "../../queries/news";
 import { TFormFieldName, TFormFieldProps } from "../../typings/forms";
 import cx from "classnames";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
+import { ImagePreview } from "./ImagePreview";
 
 export const UploadImageField: React.FC<TFormFieldProps & {
 	id: TFormFieldName;
@@ -17,7 +18,7 @@ export const UploadImageField: React.FC<TFormFieldProps & {
 		setValue(response.filename);
 	};
 
-	const deleteImage = async e => {
+	const deleteImage = async () => {
 		await deleteImageQuery(value);
 		setValue(null);
 	};
@@ -36,22 +37,7 @@ export const UploadImageField: React.FC<TFormFieldProps & {
 					<input type="file" onChange={upload} />
 				</div>
 			)}
-			{value && (
-				<div className="preview">
-					<div className="image-wrapper">
-						<img src={`/images/news/${value}`} />
-						<div className="overlay">
-							<button
-								type="button"
-								className="small delete danger"
-								onClick={deleteImage}
-							>
-								{t("delete")}
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
+			{value && <ImagePreview src={`/images/news/${value}`} onDelete={deleteImage} />}
 		</div>
 	);
 });

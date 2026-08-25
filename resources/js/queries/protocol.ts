@@ -166,3 +166,24 @@ export async function getImportLogsQuery() {
 		return { success: false, message: "invalid_request" };
 	}
 }
+
+export async function uploadProtocolImageQuery(image: File) {
+	const data = new FormData();
+	data.append("image", image);
+
+	try {
+		const response = await API.post("/api/protocol/upload-image", data);
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "image_upload_failed" };
+	}
+}
+
+export async function deleteProtocolImageQuery(filename: string) {
+	try {
+		const response = await API.post("/api/protocol/delete-image", { filename });
+		return response.data;
+	} catch (e) {
+		return { success: false, message: "invalid_request" };
+	}
+}

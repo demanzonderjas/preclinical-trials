@@ -4,6 +4,7 @@ export type TModal = {
 	actionOnConfirm?: Function;
 	data?: any;
 	isBig?: boolean;
+	className?: string;
 };
 
 export enum TModalName {
@@ -17,5 +18,6 @@ export enum TModalName {
 	ExtendEmbargoModal = "extend_embargo_modal",
 	PRISModal = "pris_modal",
 	FC3RModal = "fc3r_modal",
-	LinkProtocols = "link_protocols"
+	LinkProtocols = "link_protocols",
+	ImageModal = "image_modal"
 }

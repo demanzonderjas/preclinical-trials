@@ -4,6 +4,7 @@ import { useRevisions } from "../../hooks/useRevisions";
 import { useTranslationStore } from "../../hooks/useTranslationStore";
 import { TFormField, TFormFieldName } from "../../typings/forms";
 import { ProtocolValue } from "./ProtocolValue";
+import { ProtocolImages } from "./ProtocolImages";
 
 export const RevisionValue: React.FC<{
 	field: TFormField;
@@ -41,6 +42,7 @@ export const RevisionValue: React.FC<{
 	}, [revisionStore, fields, valueMap]);
 
 	const prevVersion = revisionStore ? revisionStore.activeVersion - 1 : 0;
+	const imageField = fields.find(f => f.showValueIn === field.id && f.showsImages);
 
 	return (
 		<div className="value">
@@ -51,6 +53,7 @@ export const RevisionValue: React.FC<{
 				fields={fields}
 				valueMap={valueMap}
 			/>
+			{!!imageField && <ProtocolImages field={imageField} />}
 			{!!hasChange && <div className="current label">{prevRevisionDate}</div>}
 			{!!hasChange && (
 				<ProtocolValue
@@ -61,6 +64,7 @@ export const RevisionValue: React.FC<{
 					valueMap={valueMapPrev}
 				/>
 			)}
+			{!!hasChange && !!imageField && <ProtocolImages field={imageField} offset={1} />}
 		</div>
 	);
 });

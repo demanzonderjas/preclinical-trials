@@ -69,6 +69,11 @@ import { experimentalDesignField } from "./fields/protocol/experimentalDesign";
 import { messageField } from "./fields/admin/content";
 import { additionalInfoField } from "./fields/protocol/additionalInfo";
 import { importTypeField } from "./fields/protocol/import";
+import {
+	additionalInformationImagesField,
+	experimentalDesignImageField,
+	sampleSizeCalculationImageField
+} from "./fields/protocol/images";
 
 export const createProtocolForm: TForm = {
 	id: TFormName.CreateProtocol,
@@ -101,9 +106,11 @@ export const createProtocolForm: TForm = {
 		strainField,
 		sexField,
 		experimentalDesignField,
+		experimentalDesignImageField,
 		sampleSizeCalculationField,
 		sampleSizeCalculationDetailsField,
 		noSampleSizeCalculationDetailsField,
+		sampleSizeCalculationImageField,
 		sumOfAnimalsField,
 		studyArmsField,
 		randomisationField,
@@ -122,6 +129,7 @@ export const createProtocolForm: TForm = {
 		blindedAssessmentPartiallyField,
 		applicationField,
 		additionalInfoField,
+		additionalInformationImagesField,
 		linkToDataField,
 		contactNameField,
 		contactRoleField,

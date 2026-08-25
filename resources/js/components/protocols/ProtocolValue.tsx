@@ -66,7 +66,7 @@ export const ArrayValueWithOtherField: React.FC<{
 	valueMap: Map<TFormFieldName, any>;
 }> = ({ id, value, fields, valueMap }) => {
 	const { t } = useTranslationStore();
-	const other = fields.find(f => f.showValueIn === id);
+	const other = fields.find(f => f.showValueIn === id && !f.showsImages);
 	const otherVal = other ? valueMap.get(other.id) : null;
 	const show = other && (fieldMeetsDependencies(other, valueMap) || otherVal);
 	const label = Array.isArray(value) ? value?.map(v => t(v)).join(", ") : t(value);
@@ -82,7 +82,7 @@ export const CombinedValue: React.FC<{
 }> = ({ id, value, fields, offset, valueMap }) => {
 	const { t } = useTranslationStore();
 	const otherValueFields = fields.filter(
-		f => f.showValueIn === id && fieldMeetsDependencies(f, valueMap)
+		f => f.showValueIn === id && !f.showsImages && fieldMeetsDependencies(f, valueMap)
 	);
 
 	if (!otherValueFields.length) {

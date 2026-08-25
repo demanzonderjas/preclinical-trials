@@ -335,5 +335,14 @@
 	"export_protocols": "Export protocols",
 	"funder_question": "Please provide the name of the funder/industry supporting this study.",
 	"funder": "Funder / Industry",
-	"newsletter_intro": "Follow PCT's updates by registering for the newsletter or browsing the news below"
+	"newsletter_intro": "Follow PCT's updates by registering for the newsletter or browsing the news below",
+	"supporting_image": "Supporting image (optional)",
+	"supporting_images": "Supporting images (optional)",
+	"upload_images": "Upload images",
+	"upload_image_note": "Accepted formats: JPG, PNG or GIF. Maximum file size: 2 MB per image.",
+	"image_upload_failed": "This image could not be uploaded. Please make sure it is a JPG, PNG or GIF of no more than 2 MB.",
+	"experimental_design_image_description": "<p>You may upload one image to support this item. Relevant images could be:</p><ul><li>An experimental timeline/flowchart, e.g. showing acclimatisation period, treatment order, measurements/assessment time points, end of study.</li><li>Cage or rack layout diagram, e.g. showing planned spatial distribution of groups/cages, to support your confounder control strategy.</li><li>Randomisation or allocation diagram, e.g. showing how animals (or cages/litters) will be assigned to groups.</li></ul><p>If more than one visual would help, use item 25 for the rest.</p>",
+	"sample_size_calculation_image_description": "<p>You may upload one image to support this item. Relevant images could be:</p><ul><li>Screenshot of your power calculation, e.g. G-Power screenshot.</li></ul>",
+	"additional_information_images_description": "<p>You may upload up to three images to support this item or other items without an image upload function. Relevant images could be:</p><ul><li>An image of your ethical score sheet or humane endpoint table. If it is too large, you may upload it via 2 pictures.</li></ul>",
+	"open_image_in_new_tab": "Open image in a new tab"
 }

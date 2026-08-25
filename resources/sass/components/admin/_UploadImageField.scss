@@ -1,6 +1,10 @@
-.UploadImageField {
+.UploadImageField,
+.UploadImagesField {
 	.preview {
 		max-width: 80%;
+		display: inline-block;
+		vertical-align: top;
+		margin-right: 20px;
 
 		.image-wrapper {
 			position: relative;
@@ -35,6 +39,64 @@
 					transform: translate(-50%, -50%);
 				}
 			}
+		}
+	}
+}
+
+.UploadImagesField {
+	.preview .image-wrapper img {
+		max-width: 240px;
+		max-height: 100px;
+	}
+
+	.delete {
+		font-size: 12px;
+		padding: 4px 10px;
+	}
+
+	.error {
+		margin-top: 10px;
+	}
+}
+
+.ProtocolImages {
+	margin: 10px 0;
+
+	img {
+		max-width: 400px;
+		max-height: 200px;
+		margin: 0 10px 10px 0;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+}
+
+.Modal.ImageModalWrapper {
+	max-width: 95vw;
+	width: 95vw;
+	height: 90vh;
+	max-height: 90vh;
+	background-color: $tertiary;
+
+	.ImageModal {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+		max-width: 100%;
+		max-height: 100%;
+		padding: 60px 20px 20px;
+		box-sizing: border-box;
+
+		img {
+			max-width: 100%;
+			max-height: calc(90vh - 130px);
+			object-fit: contain;
+			border-radius: 5px;
+		}
+
+		a {
+			color: $white;
 		}
 	}
 }
