@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Protocol;
 use App\Models\User;
+use App\Services\UserRegions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class UsersController extends Controller
             'users' => $users,
             'filters' => ['filter' => $filter, 'q' => $q],
             'counts' => collect(self::FILTERS)->mapWithKeys(fn ($f) => [$f => $this->filtered(User::query(), $f)->count()]),
-            'regions' => $this->regions(),
+            'regions' => UserRegions::figures(),
             'selected' => $selected ? $this->details($selected) : null,
             'temporaryPassword' => $request->session()->get('temporary_password'),
         ]);
@@ -100,20 +101,6 @@ class UsersController extends Controller
         };
     }
 
-    /** The legacy region figures (UserController::getRegionSpecificStats). */
-    private function regions(): array
-    {
-        $utrecht = fn (Builder $q) => $q->where('institution', 'LIKE', '%Utrecht%')->orWhereIn('institution', ['uu', 'hu', 'uumc']);
-        $nijmegen = fn (Builder $q) => $q->where('institution', 'LIKE', '%Radboud%');
-
-        return [
-            'total' => User::count(),
-            'dutch' => User::where('country', 'NL')->count(),
-            'utrecht' => User::where($utrecht)->count(),
-            'nijmegen' => User::where($nijmegen)->count(),
-            'utrecht_nijmegen_protocols' => Protocol::whereHas('user', fn (Builder $q) => $q->where(fn ($q) => $utrecht($q))->orWhere(fn ($q) => $nijmegen($q)))->count(),
-        ];
-    }
 
     private function details(User $user): array
     {

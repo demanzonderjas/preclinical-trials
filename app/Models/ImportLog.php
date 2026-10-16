@@ -10,4 +10,9 @@ class ImportLog extends Model
     use HasFactory;
 
     protected $fillable = ["protocol_id"];
+
+    public function protocol()
+    {
+        return $this->belongsTo(Protocol::class);
+    }
 }

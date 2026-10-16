@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use App\Services\PublicRegister;
 use App\Services\RegisterSearch;
+use App\Support\Csv;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -57,14 +58,6 @@ class DatabaseController extends Controller
             'Link' => fn ($row) => url("/database/view-protocol/{$row['id']}"),
         ];
 
-        return response()->streamDownload(function () use ($results, $columns) {
-            $out = fopen('php://output', 'w');
-            fwrite($out, "\xEF\xBB\xBF"); // UTF-8 BOM, so Excel shows accents correctly.
-            fputcsv($out, array_keys($columns), escape: '');
-            foreach ($results as $row) {
-                fputcsv($out, array_map(fn ($column) => is_callable($column) ? $column($row) : ($row[$column] ?? ''), $columns), escape: '');
-            }
-            fclose($out);
-        }, 'preclinicaltrials-protocols-'.now()->format('Y-m-d').'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+        return Csv::download('preclinicaltrials-protocols-'.now()->format('Y-m-d').'.csv', $columns, $results);
     }
 }
