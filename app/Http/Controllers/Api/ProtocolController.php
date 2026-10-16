@@ -4,18 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProtocolResource;
-use App\Mail\FirstProtocolFeedback;
-use App\Mail\ProtocolApprovedAndPublished;
-use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
-use App\Models\AdminAction;
+use App\Models\ActivityLog;
 use App\Models\Detail;
-use App\Models\EmailLog;
-use App\Models\EmbargoEndDate;
 use App\Models\ImportLog;
 use App\Models\Protocol;
 use App\Models\User;
+use App\Services\ProtocolWorkflow;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -32,10 +28,12 @@ class ProtocolController extends Controller
 		return response()->json(["protocol_id" => $protocol->id]);
 	}
 
-	public function update(Request $request)
+	public function update(Request $request, ProtocolWorkflow $workflow)
 	{
 		$protocol = Protocol::findOrFail($request->protocol_id);
-		if ($protocol->status === 'published' || $protocol->status === 'resubmitted_for_publication') {
+		$changed = $protocol->changedKeys($request->all());
+		$amending = $protocol->status === 'published' || $protocol->status === 'resubmitted_for_publication';
+		if ($amending) {
 			$protocol->saveRevisions($request);
 		}
 		$protocol->saveDetails($request);
@@ -43,6 +41,10 @@ class ProtocolController extends Controller
 			$detail = Detail::firstOrNew(['protocol_id' => $protocol->id, 'key' => 'has_embargo']);
 			$detail->value = "no";
 			$protocol->details()->save($detail);
+		}
+		$workflow->markAddressed($protocol, $changed);
+		if ($amending && array_diff($changed, ['why_amendment'])) {
+			ActivityLog::record($protocol, 'amended', ['fields' => array_values(array_diff($changed, ['why_amendment']))], $request->user());
 		}
 		return response()->json(["protocol" => new ProtocolResource($protocol)]);
 	}
@@ -92,75 +94,27 @@ class ProtocolController extends Controller
 		return response()->json(["protocols" => ProtocolResource::collection($withoutEmbargo)]);
 	}
 
-	public function submitForPublication(Request $request)
+	public function submitForPublication(Request $request, ProtocolWorkflow $workflow)
 	{
-		$protocol = Protocol::findOrFail($request->protocol_id);
-		$protocol->status = $protocol->status !== "draft" ? "resubmitted_for_publication" : "submitted_for_publication";
-		$protocol->save();
-
-		Mail::to(config('pct.admin_mail'))->send(new ProtocolSubmittedForPublication($protocol));
-		Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
+		$workflow->submit(Protocol::findOrFail($request->protocol_id), $request->user());
 	}
 
-	public function approve($protocol_id)
+	public function approve(Request $request, ProtocolWorkflow $workflow, $protocol_id)
 	{
-		$protocol = Protocol::findOrFail($protocol_id);
-		$protocol->status = "published";
-		$protocol->save();
-
-		$this->addAdminAction($protocol, "approve", "");
-
-		Mail::to($protocol->user)->send(new ProtocolApprovedAndPublished($protocol));
-
-		$this->sendFeedbackEmail($protocol->user);
-
-		$this->addEmbargoEndDate($protocol);
+		$workflow->approve(Protocol::findOrFail($protocol_id), $request->user());
 
 		return response()->json(["success" => true]);
 	}
 
-	public function sendFeedbackEmail(User $user)
-	{
-		if (!$user->hasProtocolFeedbackEmail()) {
-			try {
-				Mail::to($user)->send(new FirstProtocolFeedback($user));
-				$user->emails()->save(new EmailLog(['name' => 'first_protocol_feedback', 'sent' => true]));
-			} catch (Exception $e) {
-				$user->emails()->save(new EmailLog(['name' => 'first_protocol_feedback', 'sent' => false]));
-			}
-		}
-	}
 
-	public function addEmbargoEndDate(Protocol $protocol)
-	{
-		if ($protocol->has_embargo && empty($protocol->embargo_end_date)) {
-			$endDate = new EmbargoEndDate(['date' => Carbon::now()->addYear()->toDateString()]);
-			$protocol->embargoEndDates()->save($endDate);
-		}
-	}
 
-	public function reject(Request $request, $protocol_id)
+	public function reject(Request $request, ProtocolWorkflow $workflow, $protocol_id)
 	{
-		$protocol = Protocol::findOrFail($protocol_id);
-		$protocol->status = "rejected";
-		$protocol->save();
+		$workflow->returnWithFeedback(Protocol::findOrFail($protocol_id), $request->user(), $request->message);
 
-		$this->addAdminAction($protocol, "reject", $request->message);
 		return response()->json(["success" => true]);
 	}
 
-	public function addAdminAction(Protocol $protocol, $action, $message)
-	{
-		$adminAction = new AdminAction();
-		$adminAction->protocol_id = $protocol->id;
-		$adminAction->action = $action;
-		$adminAction->message = $message;
-		$adminAction->save();
-
-		if ($action === "reject") {
-			Mail::to($protocol->user)->send(new ProtocolRejected($protocol, $message));
-		}
-	}
 
 	public function delete($protocol_id)
 	{
@@ -262,6 +216,9 @@ class ProtocolController extends Controller
 			$log = ImportLog::firstOrNew(['protocol_id' => $protocol->id]);
 			$log->type = "iles";
 			$log->save();
+
+			$protocol->reviewRounds()->create(['number' => 1, 'submitted_at' => now()]);
+			ActivityLog::record($protocol, 'imported', ['source' => 'ILES'], $user);
 
 			Mail::to(config('pct.admin_mail'))->send(new ProtocolSubmittedForPublication($protocol));
 			Mail::to($user)->send(new ProtocolSubmittedUser($protocol));

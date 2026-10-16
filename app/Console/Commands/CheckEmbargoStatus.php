@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\EmbargoFirstReminder;
 use App\Mail\EmbargoLifted;
 use App\Mail\EmbargoSecondReminder;
+use App\Models\ActivityLog;
 use App\Models\Detail;
 use App\Models\EmbargoEndDate;
 use Carbon\Carbon;
@@ -70,6 +71,7 @@ class CheckEmbargoStatus extends Command
                 $detail->value = "no";
                 $detail->save();
 
+                ActivityLog::record($embargoEndDate->protocol, 'embargo_lifted');
                 Mail::to($embargoEndDate->protocol->user)->send(new EmbargoLifted($embargoEndDate->protocol));
             }
         });

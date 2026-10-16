@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\EmbargoExtensionApproved;
 use App\Mail\EmbargoExtensionRejected;
 use App\Mail\EmbargoExtensionRequested;
+use App\Models\ActivityLog;
 use App\Models\AdminAction;
 use App\Models\EmbargoEndDate;
 use App\Models\EmbargoExtension;
@@ -36,6 +37,7 @@ class EmbargoController extends Controller
 			"reason" => $request->reason
 		]);
 		$targetProtocol->embargoExtensions()->save($extension);
+		ActivityLog::record($targetProtocol, 'extension_requested', [], $request->user());
 
 		Mail::to(config('pct.admin_mail'))->send(new EmbargoExtensionRequested($extension));
 
@@ -63,6 +65,8 @@ class EmbargoController extends Controller
 		$currentDate->mail_status = NULL;
 		$currentDate->save();
 
+		ActivityLog::record($protocol, 'embargo_extended', ['until' => $newDate]);
+
 		Mail::to($protocol->user)->send(new EmbargoExtensionApproved($protocol, $currentDate));
 		return response()->json(["success" => true]);
 	}
@@ -76,6 +80,7 @@ class EmbargoController extends Controller
 
 		$message = (string) $request->input('message', '');
 		$this->addAdminAction($protocol, "reject_embargo_extension", $message);
+		ActivityLog::record($protocol, 'extension_rejected', [], $request->user());
 
 		Mail::to($protocol->user)->send(new EmbargoExtensionRejected($protocol, $message));
 
@@ -105,6 +110,7 @@ class EmbargoController extends Controller
 			->update(['status' => 'approved']);
 
 		$this->addAdminAction($protocol, "extend_embargo", "Embargo extended until " . $newDate);
+		ActivityLog::record($protocol, 'embargo_extended', ['until' => $newDate], $request->user());
 
 		Mail::to($protocol->user)->send(new EmbargoExtensionApproved($protocol, $embargoEndDate));
 

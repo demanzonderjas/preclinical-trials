@@ -66,6 +66,21 @@ class Protocol extends Model
     }
 
 
+    public function reviewRounds()
+    {
+        return $this->hasMany(ReviewRound::class)->orderBy('number');
+    }
+
+    public function feedbackPoints()
+    {
+        return $this->hasMany(FeedbackPoint::class);
+    }
+
+    public function activity()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
     public function embargoExtensions()
     {
         return $this->hasMany(EmbargoExtension::class);
@@ -99,6 +114,24 @@ class Protocol extends Model
             $detail->value = $value;
             $this->details()->save($detail);
         });
+    }
+
+    /**
+     * The valid keys in $values whose value differs from what is stored.
+     *
+     * @param  array<string, mixed>  $values
+     * @return array<int, string>
+     */
+    public function changedKeys(array $values): array
+    {
+        $normalise = fn ($value) => str_replace(["\r", "\n"], '', trim(json_encode($value), " \t\n\r\0\x0B\""));
+        $stored = $this->details()->get()->mapWithKeys(fn (Detail $detail) => [$detail->key => $detail->value]);
+
+        return collect(self::getValidKeys($values))
+            ->filter(fn ($value, $key) => $normalise($stored->get($key)) !== $normalise($value))
+            ->keys()
+            ->values()
+            ->all();
     }
 
     public function saveRevisions(Request $request)
