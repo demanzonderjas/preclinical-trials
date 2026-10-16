@@ -49,7 +49,7 @@ export default function Messages({ conversations, archived, conversation, notifi
 					</div>
 				</div>
 
-				<div className="mt-8 grid overflow-hidden rounded-panel border border-line bg-white lg:min-h-[720px] lg:grid-cols-[384px_minmax(0,1fr)]">
+				<div className="mt-8 grid grid-cols-[minmax(0,1fr)] overflow-hidden rounded-panel border border-line bg-white lg:min-h-[720px] lg:grid-cols-[384px_minmax(0,1fr)]">
 					<ConversationList conversations={conversations} archived={archived} selected={conversation?.id ?? null} hidden={!!conversation} />
 					{conversation ? (
 						<ConversationView key={conversation.id} conversation={conversation} archived={archived.some(item => item.id === conversation.id)} myProtocols={myProtocols} />
@@ -72,7 +72,7 @@ function ConversationList({ conversations, archived, selected, hidden }: { conve
 	const [query, setQuery] = useState("");
 
 	const filters: { key: Filter; label: string; count?: number; peach?: boolean }[] = [
-		{ key: "all", label: "All", count: conversations.length },
+		{ key: "all", label: "All" },
 		{ key: "unread", label: "Unread", count: conversations.filter(item => item.unread).length, peach: true },
 		{ key: "researchers", label: "Researchers" },
 		{ key: "team", label: "PCT team" },
@@ -108,14 +108,15 @@ function ConversationList({ conversations, archived, selected, hidden }: { conve
 						className="h-12 w-full rounded-full bg-white pr-4 pl-11.5 text-[15.5px] shadow-[inset_0_0_0_1.5px_var(--color-line-strong)] placeholder:text-ink-subtle focus:shadow-[inset_0_0_0_2px_var(--color-teal-500)] focus:outline-none"
 					/>
 				</label>
-				<div role="group" aria-label="Filter conversations" className="mt-3.5 flex flex-wrap gap-1.5">
+				{/* One line; with Archived as a fifth filter the row scrolls instead of wrapping. */}
+				<div role="group" aria-label="Filter conversations" className="-mx-1 mt-3.5 flex overflow-x-auto px-1 [scrollbar-width:none]">
 					{filters.map(item => (
 						<button
 							key={item.key}
 							type="button"
 							aria-pressed={filter === item.key}
 							onClick={() => setFilter(item.key)}
-							className={cn("inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[15px] font-bold", filter === item.key ? "bg-ink text-white" : "hover:bg-mist")}
+							className={cn("inline-flex h-10 shrink-0 items-center gap-1 rounded-full px-2.5 text-[14.5px] font-bold whitespace-nowrap", filter === item.key ? "bg-ink text-white" : "hover:bg-mist")}
 						>
 							{item.label}
 							{item.count !== undefined && item.count > 0 && (
