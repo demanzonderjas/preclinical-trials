@@ -194,4 +194,14 @@ XML;
             ->assertSessionHasErrors('file');
         $this->assertSame(0, Protocol::count());
     }
+
+    public function test_answers_are_encrypted_at_rest(): void
+    {
+        $user = $this->makeUser();
+        $id = $this->actingAs($user)->postJson('/dashboard/protocols', ['values' => ['title' => 'A secret plan']])->json('id');
+
+        $raw = \Illuminate\Support\Facades\DB::table('details')->where(['protocol_id' => $id, 'key' => 'title'])->value('value');
+        $this->assertStringNotContainsString('A secret plan', $raw);
+        $this->assertSame('A secret plan', Protocol::find($id)->title);
+    }
 }

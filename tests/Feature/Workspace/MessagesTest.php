@@ -117,4 +117,13 @@ class MessagesTest extends TestCase
         $this->actingAs($this->owner)->post('/dashboard/messages/notifications', ['enabled' => true]);
         $this->assertFalse($this->owner->fresh()->disable_notifications);
     }
+
+    public function test_no_mail_when_the_recipient_turned_notifications_off(): void
+    {
+        $this->actingAs($this->asker)->post('/dashboard/messages/notifications', ['enabled' => false]);
+
+        $this->actingAs($this->owner)->post("/dashboard/messages/{$this->channel->id}", ['text' => 'Infarct size.'])->assertRedirect();
+
+        Mail::assertNotSent(ReceivedMessage::class);
+    }
 }

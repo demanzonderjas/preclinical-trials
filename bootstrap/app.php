@@ -1,11 +1,9 @@
 <?php
 
 use App\Http\Middleware\CheckIfUserIsAdmin;
-use App\Http\Middleware\EnsureUserIsOwner;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\VerifyExternalApiKey;
 use App\Http\Middleware\VerifyILESToken;
-use App\Http\Middleware\VerifyUserHasChannelAccess;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,18 +17,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Pages built in the A2 design are Inertia responses.
+        // Every page is an Inertia response.
         // AuthenticateSession ends other sessions after "log out on all devices" or a password change.
         $middleware->web(append: [\Illuminate\Session\Middleware\AuthenticateSession::class, \App\Http\Middleware\TrackLastActivity::class, HandleInertiaRequests::class]);
 
-        // The legacy SPA authenticates API calls with the session cookie (Sanctum).
-        $middleware->statefulApi();
         $middleware->throttleApi();
 
         $middleware->alias([
             'admin' => CheckIfUserIsAdmin::class,
-            'auth.owner' => EnsureUserIsOwner::class,
-            'channel' => VerifyUserHasChannelAccess::class,
             'iles' => VerifyILESToken::class,
             'external-api' => VerifyExternalApiKey::class,
         ]);

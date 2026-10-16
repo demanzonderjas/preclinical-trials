@@ -139,4 +139,15 @@ class ReviewTest extends TestCase
         $this->actingAs($this->admin)->get('/admin/protocols')->assertInertia(fn (Assert $page) => $page->where('admin', ['awaiting_review' => 1, 'embargo_requests' => 0]));
         $this->actingAs($this->makeUser())->get('/dashboard')->assertInertia(fn (Assert $page) => $page->where('admin', null));
     }
+
+    public function test_approval_sets_the_registration_date_and_the_embargo_end_date(): void
+    {
+        $protocol = $this->makeProtocol($this->makeUser(), 'submitted_for_publication', ['has_embargo' => 'yes']);
+
+        $this->actingAs($this->admin)->post("/admin/protocols/{$protocol->id}/decision", ['decision' => 'approve'])->assertRedirect();
+
+        $fresh = $protocol->fresh(['details', 'adminActions', 'embargoEndDates']);
+        $this->assertSame(now()->toDateString(), \Carbon\Carbon::parse($fresh->registration_date)->toDateString());
+        $this->assertSame(now()->addYear()->toDateString(), $fresh->embargo_end_date);
+    }
 }

@@ -50,7 +50,7 @@ class ProtocolWorkflowTest extends TestCase
         $species = $round->points()->create(['protocol_id' => $protocol->id, 'field_key' => 'species', 'body' => 'Which strain?']);
         $workflow->returnWithFeedback($protocol, $admin, 'Two points');
 
-        $this->actingAs($owner)->putJson('/api/protocol', ['protocol_id' => $protocol->id, 'title' => 'A new title', 'species' => 'mouse'])->assertOk();
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$protocol->id}/answers", ['values' => ['title' => 'A new title', 'species' => 'mouse']])->assertOk();
 
         $this->assertSame(FeedbackPoint::ADDRESSED, $title->fresh()->status);
         $this->assertSame(FeedbackPoint::OPEN, $species->fresh()->status, 'species did not change');
@@ -69,11 +69,10 @@ class ProtocolWorkflowTest extends TestCase
         $owner = $this->makeUser();
         $protocol = $this->makePublishedProtocol($owner);
 
-        $this->actingAs($owner)->putJson('/api/protocol', [
-            'protocol_id' => $protocol->id,
-            'sum_of_animals' => '36',
+        $this->actingAs($owner)->post("/dashboard/protocols/{$protocol->id}/amend", [
+            'values' => ['sum_of_animals' => '36'],
             'why_amendment' => 'Pilot results',
-        ])->assertOk();
+        ])->assertRedirect();
 
         $log = ActivityLog::where('type', 'amended')->firstOrFail();
         $this->assertSame(['sum_of_animals'], $log->data['fields']);
@@ -84,7 +83,7 @@ class ProtocolWorkflowTest extends TestCase
     {
         $protocol = $this->makeProtocol($this->makeUser(), 'submitted_for_publication');
 
-        $this->actingAs($this->makeAdmin())->postJson("/api/protocol/{$protocol->id}/reject", ['message' => 'No'])->assertOk();
+        $this->actingAs($this->makeAdmin())->post("/admin/protocols/{$protocol->id}/decision", ['decision' => 'return', 'message' => 'No'])->assertRedirect();
 
         $this->assertSame(1, $protocol->reviewRounds()->count());
         $this->assertSame('returned', $protocol->reviewRounds()->first()->decision);

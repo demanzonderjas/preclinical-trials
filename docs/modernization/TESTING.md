@@ -6,9 +6,11 @@ pages in a browser (38 journeys at the end of phase 5; phase 7 extends it).
 
 ## 1. Backend tests (PHPUnit)
 
-`tests/Feature/Characterization/*` pins down how the platform behaves today: the protocol lifecycle,
-visibility, embargo, messaging, admin access, content and the external API contract. The
-same tests must pass after the port.
+`tests/Feature/Characterization/*` pinned down the legacy behaviour for the Laravel 13 port.
+What remains after the cutover: the external API contract, the scheduled embargo and end-date
+commands, mail rendering and admin access (every `/admin` route, read from the router). The
+behaviour of the former JSON API is tested through the A2 pages in `tests/Feature/Frontend`,
+`Workspace` and `Admin`.
 
 - **Database:** MySQL database `pct_testing`. Create it once with
   `CREATE DATABASE pct_testing`. Credentials come from your `.env`; `phpunit.xml` only

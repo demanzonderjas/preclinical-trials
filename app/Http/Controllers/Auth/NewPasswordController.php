@@ -15,30 +15,6 @@ use Illuminate\Validation\Rules;
 class NewPasswordController extends Controller
 {
 
-    public function resetManually(Request $request)
-    {
-        $user = $request->user();
-        self::changePassword($user, $request);
-    }
-
-    public function resetAsAdmin(Request $request)
-    {
-        $user = User::where('email', $request->email)->firstOrFail();
-        return self::changePassword($user, $request);
-    }
-
-    public static function changePassword(User $user, Request $request)
-    {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user->password = Hash::make($request->password);
-        $user->save();
-        return response()->json(["success" => true]);
-    }
-
     /**
      * Handle an incoming new password request.
      *

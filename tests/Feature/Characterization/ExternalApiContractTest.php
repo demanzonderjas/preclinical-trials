@@ -213,11 +213,13 @@ class ExternalApiContractTest extends TestCase
 		$this->makePublishedProtocol($owner);
 		$this->makePublishedProtocol($owner, true);
 
-		$external = $this->withHeaders(['Authorization' => 'Bearer test-external-key'])
-			->getJson('/api/external/viewable-protocols')->json('protocols');
-		$public = $this->getJson('/api/protocols')->json('protocols');
+		$external = collect($this->withHeaders(['Authorization' => 'Bearer test-external-key'])
+			->getJson('/api/external/viewable-protocols')->json('protocols'))->pluck('id')->sort()->values()->all();
+		// The public register on the website (the former /api/protocols was removed in phase 6).
+		$public = collect(app(\App\Services\PublicRegister::class)->summaries())->pluck('id')->sort()->values()->all();
 
 		$this->assertSame($public, $external);
+		$this->assertCount(2, $external);
 	}
 
 	protected static function flatStructure(): array

@@ -48,164 +48,6 @@ class EmbargoTest extends TestCase
 		return $extension->fresh();
 	}
 
-	public function test_owner_requests_an_extension_and_admin_is_mailed()
-	{
-		$owner = $this->makeUser();
-		$protocol = $this->makePublishedProtocol($owner, true);
-
-		$this->actingAs($owner)
-			->postJson("/api/embargo-end-date/{$protocol->id}", ['reason' => 'Patent pending'])
-			->assertOk()
-			->assertJsonPath('embargo_extension.reason', 'Patent pending');
-
-		$extension = EmbargoExtension::where('protocol_id', $protocol->id)->firstOrFail();
-		$this->assertSame('awaiting_approval', $extension->status);
-		$this->assertSame('Patent pending', $extension->reason);
-		Mail::assertSent(EmbargoExtensionRequested::class, function ($m) {
-			return $m->hasTo('admin@pct.test');
-		});
-	}
-
-	public function test_non_owners_cannot_request_an_extension()
-	{
-		$protocol = $this->makePublishedProtocol($this->makeUser(), true);
-
-		$this->actingAs($this->makeUser())
-			->postJson("/api/embargo-end-date/{$protocol->id}", ['reason' => 'Mine now'])
-			->assertForbidden();
-
-		$this->assertSame(0, EmbargoExtension::count());
-		Mail::assertNothingSent();
-	}
-
-	public function test_admin_approval_extends_the_end_date_by_a_year()
-	{
-		$owner = $this->makeUser();
-		$protocol = $this->makePublishedProtocol($owner, true, '2026-11-01');
-		$endDate = $this->endDateOf($protocol);
-		$endDate->mail_status = 'second_reminder';
-		$endDate->save();
-		$extension = $this->requestExtension($protocol);
-
-		$this->actingAs($this->makeAdmin())
-			->postJson("/api/embargo-extension/{$extension->id}/approve")
-			->assertOk()->assertExactJson(['success' => true]);
-
-		$this->assertSame('approved', $extension->fresh()->status);
-		$endDate = $this->endDateOf($protocol);
-		$this->assertSame('2027-11-01', Carbon::parse($endDate->date)->toDateString());
-		$this->assertNull($endDate->mail_status);
-		$this->assertTrue(AdminAction::where(['protocol_id' => $protocol->id, 'action' => 'approve_embargo_extension'])->exists());
-		Mail::assertSent(EmbargoExtensionApproved::class, function ($m) use ($owner) {
-			return $m->hasTo($owner->email);
-		});
-	}
-
-	public function test_admin_rejection_stores_the_message_and_mails_the_owner()
-	{
-		$owner = $this->makeUser();
-		$protocol = $this->makePublishedProtocol($owner, true, '2026-11-01');
-		$extension = $this->requestExtension($protocol);
-
-		$this->actingAs($this->makeAdmin())
-			->postJson("/api/embargo-extension/{$extension->id}/reject", ['message' => 'Not justified.'])
-			->assertOk()->assertExactJson(['success' => true]);
-
-		$this->assertSame('rejected', $extension->fresh()->status);
-		$action = AdminAction::where(['protocol_id' => $protocol->id, 'action' => 'reject_embargo_extension'])->firstOrFail();
-		$this->assertSame('Not justified.', $action->message);
-		$this->assertSame('2026-11-01', Carbon::parse($this->endDateOf($protocol)->date)->toDateString());
-		Mail::assertSent(EmbargoExtensionRejected::class, function ($m) use ($owner) {
-			return $m->hasTo($owner->email) && $m->note === 'Not justified.';
-		});
-	}
-
-	public function test_rejecting_without_a_message_still_notifies_the_researcher()
-	{
-		$protocol = $this->makePublishedProtocol($this->makeUser(), true);
-		$extension = $this->requestExtension($protocol);
-
-		$this->actingAs($this->makeAdmin())
-			->postJson("/api/embargo-extension/{$extension->id}/reject")
-			->assertOk();
-
-		$this->assertSame('rejected', $extension->fresh()->status);
-		Mail::assertSent(EmbargoExtensionRejected::class);
-	}
-
-	public function test_admin_extend_requires_a_date_after_today()
-	{
-		$protocol = $this->makePublishedProtocol($this->makeUser(), true);
-		$admin = $this->makeAdmin();
-
-		$this->actingAs($admin)
-			->postJson("/api/embargo-end-date/{$protocol->id}/extend", ['embargo_end_date' => '2026-10-16'])
-			->assertStatus(422)->assertJsonValidationErrors('embargo_end_date');
-		$this->actingAs($admin)
-			->postJson("/api/embargo-end-date/{$protocol->id}/extend", [])
-			->assertStatus(422)->assertJsonValidationErrors('embargo_end_date');
-	}
-
-	public function test_admin_extend_without_active_embargo_is_rejected()
-	{
-		$protocol = $this->makePublishedProtocol($this->makeUser());
-
-		$this->actingAs($this->makeAdmin())
-			->postJson("/api/embargo-end-date/{$protocol->id}/extend", ['embargo_end_date' => '2028-01-01'])
-			->assertStatus(422)
-			->assertExactJson(['errors' => ['embargo_end_date' => 'no_active_embargo']]);
-	}
-
-	public function test_admin_extend_sets_the_date_and_approves_pending_requests()
-	{
-		$owner = $this->makeUser();
-		$protocol = $this->makePublishedProtocol($owner, true, '2026-11-01');
-		$endDate = $this->endDateOf($protocol);
-		$endDate->mail_status = 'first_reminder';
-		$endDate->save();
-		$pending = $this->requestExtension($protocol);
-
-		$this->actingAs($this->makeAdmin())
-			->postJson("/api/embargo-end-date/{$protocol->id}/extend", ['embargo_end_date' => '2028-03-15'])
-			->assertOk()
-			->assertJsonPath('success', true)
-			->assertJsonPath('embargo_end_date.date', '2028-03-15');
-
-		$endDate = $this->endDateOf($protocol);
-		$this->assertSame('2028-03-15', Carbon::parse($endDate->date)->toDateString());
-		$this->assertNull($endDate->mail_status);
-		$this->assertSame('approved', $pending->fresh()->status);
-		$action = AdminAction::where(['protocol_id' => $protocol->id, 'action' => 'extend_embargo'])->firstOrFail();
-		$this->assertSame('Embargo extended until 2028-03-15', $action->message);
-		Mail::assertSent(EmbargoExtensionApproved::class, function ($m) use ($owner) {
-			return $m->hasTo($owner->email);
-		});
-	}
-
-	public function test_admin_can_read_the_embargo_end_date()
-	{
-		$protocol = $this->makePublishedProtocol($this->makeUser(), true, '2027-02-01');
-
-		$this->actingAs($this->makeAdmin())->getJson("/api/embargo-end-date/{$protocol->id}")
-			->assertOk()->assertJsonPath('embargo_end_date.date', '2027-02-01');
-	}
-
-	public function test_other_users_cannot_read_the_embargo_end_date()
-	{
-		$protocol = $this->makePublishedProtocol($this->makeUser(), true);
-
-		$this->actingAs($this->makeUser())->getJson("/api/embargo-end-date/{$protocol->id}")->assertForbidden();
-	}
-
-	public function test_owner_can_read_their_embargo_end_date()
-	{
-		$owner = $this->makeUser();
-		$protocol = $this->makePublishedProtocol($owner, true, '2027-02-01');
-
-		$this->actingAs($owner)->getJson("/api/embargo-end-date/{$protocol->id}")
-			->assertOk()->assertJsonPath('embargo_end_date.date', '2027-02-01');
-	}
-
 	public function test_check_sends_first_reminder_within_30_days()
 	{
 		$owner = $this->makeUser();
@@ -271,27 +113,6 @@ class EmbargoTest extends TestCase
 		Mail::assertNothingSent();
 		$this->assertSame('first_reminder', $this->endDateOf($first)->mail_status);
 		$this->assertSame('second_reminder', $this->endDateOf($second)->mail_status);
-	}
-
-	public function test_check_lifts_the_embargo_after_the_end_date()
-	{
-		$owner = $this->makeUser();
-		$protocol = $this->makePublishedProtocol($owner, true, '2026-10-15');
-		$this->endDateOf($protocol)->forceFill(['mail_status' => 'second_reminder'])->save();
-
-		$this->artisan('embargo:check')->assertExitCode(0);
-
-		$endDate = $this->endDateOf($protocol);
-		$this->assertFalse((bool) $endDate->is_active);
-		$this->assertNull($endDate->mail_status);
-		$this->assertSame('no', $this->detailValue($protocol, 'has_embargo'));
-		Mail::assertSent(EmbargoLifted::class, function ($m) use ($owner) {
-			return $m->hasTo($owner->email);
-		});
-
-		// The protocol now shows up in the public list.
-		$ids = collect($this->getJson('/api/protocols')->json('protocols'))->pluck('id')->all();
-		$this->assertEquals([$protocol->id], $ids);
 	}
 
 	public function test_check_keeps_the_embargo_on_the_end_date_itself()
@@ -366,5 +187,25 @@ class EmbargoTest extends TestCase
 		$this->artisan('enddate:reminder')->assertExitCode(0);
 
 		Mail::assertSent(ProtocolEndDateReminder::class, 2);
+	}
+
+	public function test_check_lifts_the_embargo_after_the_end_date()
+	{
+		$owner = $this->makeUser();
+		$protocol = $this->makePublishedProtocol($owner, true, '2026-10-15');
+		$this->endDateOf($protocol)->forceFill(['mail_status' => 'second_reminder'])->save();
+
+		$this->artisan('embargo:check')->assertExitCode(0);
+
+		$endDate = $this->endDateOf($protocol);
+		$this->assertFalse((bool) $endDate->is_active);
+		$this->assertNull($endDate->mail_status);
+		$this->assertSame('no', $this->detailValue($protocol, 'has_embargo'));
+		Mail::assertSent(EmbargoLifted::class, function ($m) use ($owner) {
+			return $m->hasTo($owner->email);
+		});
+
+		// The protocol now shows up in the public register.
+		$this->get('/database')->assertInertia(fn ($page) => $page->where('results.data.0.id', $protocol->id));
 	}
 }

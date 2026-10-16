@@ -92,3 +92,13 @@ npm ci && npm run build                                   # A2 pages → public/
   copied there are unused. Static images of the A2 pages are in `public/static` (in git).
 - Unknown URLs, and pages a user may not open, show the A2 error page; API and JSON requests
   keep JSON errors.
+- **The JSON API of the former SPA is removed** (phase 6b). Only the two integrations remain:
+  `POST /api/iles/protocol` (ILES token) and `GET /api/external/viewable-protocols` (API key),
+  unchanged. Every other `/api/*` path now answers 404 `invalid_api_route`, e.g.
+  `/api/protocol*`, `/api/protocols*`, `/api/channel*`, `/api/news-item*`, `/api/faq*`,
+  `/api/page*`, `/api/ambassador*`, `/api/embargo-*`, `/api/users*`, `/api/translate`,
+  `/api/contact-form`, `/api/update-profile`, `/api/update-setting` and `/api/user`. If another
+  system turns out to call one of them, restore it from git (commit "Phase 6b").
+- `POST /change-password` (which did not ask for the current password) is gone; users change
+  their password on the profile page, admins help through Admin → Users.
+- Laravel Sanctum is removed. The `personal_access_tokens` table can stay or be dropped.

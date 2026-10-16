@@ -7,81 +7,20 @@ use App\Http\Resources\ProtocolResource;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
 use App\Models\ActivityLog;
-use App\Models\Detail;
 use App\Models\ImportLog;
 use App\Models\Protocol;
 use App\Models\User;
-use App\Services\ProtocolWorkflow;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * The two external integrations. Their responses are a contract with other systems: keep
+ * them byte-compatible (tests/Feature/Characterization/ExternalApiContractTest.php).
+ */
 class ProtocolController extends Controller
 {
-	public function store(Request $request)
-	{
-		$protocol = new Protocol();
-		$request->user()->protocols()->save($protocol);
-		$protocol->saveDetails($request);
-
-		return response()->json(["protocol_id" => $protocol->id]);
-	}
-
-	public function update(Request $request, ProtocolWorkflow $workflow)
-	{
-		$protocol = Protocol::findOrFail($request->protocol_id);
-		$changed = $protocol->changedKeys($request->all());
-		$amending = $protocol->status === 'published' || $protocol->status === 'resubmitted_for_publication';
-		if ($amending) {
-			$protocol->saveRevisions($request);
-		}
-		$protocol->saveDetails($request);
-		if ($request->lift_embargo) {
-			$detail = Detail::firstOrNew(['protocol_id' => $protocol->id, 'key' => 'has_embargo']);
-			$detail->value = "no";
-			$protocol->details()->save($detail);
-		}
-		$workflow->markAddressed($protocol, $changed);
-		if ($amending && array_diff($changed, ['why_amendment'])) {
-			ActivityLog::record($protocol, 'amended', ['fields' => array_values(array_diff($changed, ['why_amendment']))], $request->user());
-		}
-		return response()->json(["protocol" => new ProtocolResource($protocol)]);
-	}
-
-	public function get(Request $request)
-	{
-		$protocol = Protocol::where(['id' => $request->protocol_id])->with('details', 'revisions')->firstOrFail();
-
-		if (($protocol->has_embargo || $protocol->status === 'draft') && (!$request->user() || (!$request->user()->is_admin && $request->user()->id !== $protocol->user_id))) {
-			return abort(403, "You are not authorized.");
-		}
-
-		if (!$request->user() || (!$request->user()->is_admin && $request->user()->id !== $protocol->user_id)) {
-			$protocol->hideContactDetails();
-		}
-
-		return response()->json(["protocol" => new ProtocolResource($protocol)]);
-	}
-
-	public function getStatus(Request $request)
-	{
-		$protocol = Protocol::where(['id' => $request->protocol_id])->firstOrFail();
-		return response()->json(["status" => $protocol->status]);
-	}
-
-	public function mine(Request $request)
-	{
-		$protocols = Protocol::where(['user_id' => $request->user()->id])->with('details')->orderByDesc('updated_at')->get();
-		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
-	}
-
-	public function minePublished(Request $request)
-	{
-		$protocols = Protocol::where(['user_id' => $request->user()->id, 'status' => 'published'])->with('details')->orderByDesc('updated_at')->get();
-		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
-	}
-
+	/** GET /api/external/viewable-protocols: published protocols without embargo or contact details. */
 	public function getViewable()
 	{
 		$protocols = Protocol::where('status', 'published')->orderByDesc('created_at')->get();
@@ -94,110 +33,7 @@ class ProtocolController extends Controller
 		return response()->json(["protocols" => ProtocolResource::collection($withoutEmbargo)]);
 	}
 
-	public function submitForPublication(Request $request, ProtocolWorkflow $workflow)
-	{
-		$workflow->submit(Protocol::findOrFail($request->protocol_id), $request->user());
-	}
-
-	public function approve(Request $request, ProtocolWorkflow $workflow, $protocol_id)
-	{
-		$workflow->approve(Protocol::findOrFail($protocol_id), $request->user());
-
-		return response()->json(["success" => true]);
-	}
-
-
-
-	public function reject(Request $request, ProtocolWorkflow $workflow, $protocol_id)
-	{
-		$workflow->returnWithFeedback(Protocol::findOrFail($protocol_id), $request->user(), $request->message);
-
-		return response()->json(["success" => true]);
-	}
-
-
-	public function delete($protocol_id)
-	{
-		$p = Protocol::findOrFail($protocol_id);
-		if ($p->status === "draft") {
-			Protocol::destroy($protocol_id);
-			return response()->json(["success" => true]);
-		} else {
-			return response()->json(["success" => false, "message" => "protocol_not_draft"]);
-		}
-	}
-
-	public function duplicate($protocol_id)
-	{
-		$protocol = Protocol::findOrFail($protocol_id);
-		$copy = $protocol->replicate();
-		$copy->status = "draft";
-		$copy->push();
-
-		foreach ($protocol->details as $detail) {
-			$detailCopy = $detail->replicate();
-			$copy->details()->save($detailCopy);
-		}
-
-		return response()->json(["success" => true, "copy" => $copy]);
-	}
-
-	public function counts()
-	{
-		$protocols = Protocol::where('status', 'published')->get();
-		$withEmbargo = $protocols->filter(function ($p) {
-			return $p->has_embargo;
-		})->count();
-		return response()->json(["total" => $protocols->count(), "with_embargo" => $withEmbargo]);
-	}
-
-	public function countsRejected()
-	{
-		$protocols = Protocol::where('status', 'rejected')->get();
-		return response()->json(["total" => $protocols->count()]);
-	}
-
-	public function countsPerCountry(Request $request)
-	{
-		$protocols = Protocol::where('status', 'published')->get();
-		$countsPerCountry = $protocols->reduce(function ($base, $protocol) {
-			$studyCentre = $protocol->details->first(function ($d) {
-				return $d->key === "study_centre";
-			});
-			$countryCode = !empty($studyCentre) && !empty($studyCentre->value) ? $studyCentre->value[0]->country : null;
-			if ($countryCode) {
-				$currentValue = isset($base[$countryCode]) ? $base[$countryCode] : 0;
-				$base[$countryCode] = $currentValue ? $currentValue + 1 : 1;
-			}
-			return $base;
-		}, []);
-		asort($countsPerCountry);
-		$limit = $request->limit ? $request->limit : count($countsPerCountry);
-		$top5 = array_slice(array_reverse($countsPerCountry), 0, $limit);
-		return response()->json($top5);
-	}
-
-	public function countsPerMonth(Request $request)
-	{
-		$protocols = Protocol::where('status', 'published')->get();
-		$countsPerMonthYear = $protocols->reduce(function ($base, $protocol) {
-			$date = Carbon::createFromDate($protocol->updated_at);
-			$month = $date->month;
-			$year = $date->year;
-			$currentValue = isset($base[$year . "_" . $month]) ? $base[$year . "_" . $month] : 0;
-			$base[$year . "_" . $month] = $currentValue ? $currentValue + 1 : 1;
-			return $base;
-		}, []);
-		ksort($countsPerMonthYear);
-		return response()->json(array_reverse($countsPerMonthYear));
-	}
-
-	public function getViewableForAdmin()
-	{
-		$protocols = Protocol::where('status', '!=', 'draft')->with('adminActions')->orderByDesc('id')->get();
-		return response()->json(["protocols" => ProtocolResource::collection($protocols)]);
-	}
-
+	/** POST /api/iles/protocol: ILES submits a protocol on behalf of a PCT user. */
 	public function storeILES(Request $request)
 	{
 		$user = User::where('email', $request->target_email)->first();
@@ -229,30 +65,5 @@ class ProtocolController extends Controller
 
 
 		return response()->json(['success' => true, 'message' => 'protocol_stored', 'protocol' => $protocol->fresh(['details'])]);
-	}
-
-	public function getImportLogs()
-	{
-		return response()->json(ImportLog::all());
-	}
-
-	public function link(Request $request)
-	{
-		$ownedLinks = collect($request->linked)->filter(function ($idToLink) use ($request) {
-			$p = Protocol::findOrFail($idToLink);
-			return $p->user_id === $request->user()->id;
-		});
-		$protocol = Protocol::findOrFail($request->protocol_id);
-		$protocol->linkedTo()->sync($ownedLinks);
-		$protocol->linkedFrom()->sync($ownedLinks);
-
-		return response()->json(["success" => true]);
-	}
-
-	public function getLinked($protocol_id)
-	{
-		$protocol = Protocol::findOrFail($protocol_id);
-
-		return response()->json(["success" => true, "protocols" => $protocol->linked]);
 	}
 }

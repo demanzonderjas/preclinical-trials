@@ -73,7 +73,7 @@ class Protocol extends Model
 
     public function feedbackPoints()
     {
-        return $this->hasMany(FeedbackPoint::class);
+        return $this->hasMany(FeedbackPoint::class)->orderBy('id');
     }
 
     public function activity()

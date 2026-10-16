@@ -106,7 +106,7 @@ class ProtocolFormController extends Controller
         abort_unless(in_array($protocol->status, [...self::EDITABLE, 'published'], true), 409);
         $request->validate(ProtocolImages::RULES);
 
-        return response()->json(['filename' => ProtocolImages::store($request, $request->file('image'))]);
+        return response()->json(['filename' => ProtocolImages::store($request->file('image'))]);
     }
 
     public function import(Request $request, ProtocolImporter $importer): RedirectResponse

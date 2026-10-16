@@ -153,4 +153,13 @@ class ProtocolPageTest extends TestCase
                 ->has('versions.0.changes', 1)
                 ->where('versions.0.changes.0.key', 'sum_of_animals'));
     }
+
+    public function test_admin_only_revisions_are_hidden_from_readers(): void
+    {
+        $protocol = $this->makePublishedProtocol($this->makeUser());
+        $protocol->revisions()->save(new Revision(['admin_only' => true, 'changes' => [['key' => 'species', 'old_value' => 'rat', 'new_value' => 'mouse']]]));
+
+        $this->actingAs($this->makeUser())->get("/database/view-protocol/{$protocol->id}")->assertInertia(fn (Assert $page) => $page->has('versions', 0));
+        $this->actingAs($this->makeAdmin())->get("/database/view-protocol/{$protocol->id}")->assertInertia(fn (Assert $page) => $page->has('versions', 1));
+    }
 }

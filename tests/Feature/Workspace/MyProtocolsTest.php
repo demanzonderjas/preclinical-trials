@@ -64,6 +64,8 @@ class MyProtocolsTest extends TestCase
             ->assertSessionHas('success');
 
         $this->assertSame('submitted_for_publication', $complete->fresh()->status);
+        Mail::assertSent(\App\Mail\ProtocolSubmittedForPublication::class, fn ($mail) => $mail->hasTo('pct@example.test'));
+        Mail::assertSent(\App\Mail\ProtocolSubmittedUser::class, fn ($mail) => $mail->hasTo($owner->email));
         $this->assertSame('Ready for review', $complete->reviewRounds()->first()->researcher_note);
         $this->assertSame(['Ready for review'], Channel::teamFor($complete)->messages->pluck('text')->all(), 'the note shows in the comments');
     }
