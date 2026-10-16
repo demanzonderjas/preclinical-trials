@@ -8,6 +8,7 @@ use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
 use App\Models\ActivityLog;
+use App\Models\Channel;
 use App\Models\AdminAction;
 use App\Models\EmailLog;
 use App\Models\EmbargoEndDate;
@@ -42,6 +43,11 @@ class ProtocolWorkflow
 
             ActivityLog::record($protocol, $first ? 'submitted' : 'resubmitted', [], $actor);
         });
+
+        // The note shows in the protocol's comments; the submission mails already notify.
+        if ($note) {
+            Inbox::for($actor ?? $protocol->user)->post(Channel::teamFor($protocol), $note, notify: false);
+        }
 
         Mail::to(config('pct.admin_mail'))->send(new ProtocolSubmittedForPublication($protocol));
         Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
@@ -96,6 +102,10 @@ class ProtocolWorkflow
 
             ActivityLog::record($protocol, 'returned', ['points' => $points], $admin);
         });
+
+        if ($message && $admin) {
+            Inbox::for($admin)->post(Channel::teamFor($protocol), $message, notify: false);
+        }
 
         Mail::to($protocol->user)->send(new ProtocolRejected($protocol, (string) $message));
 

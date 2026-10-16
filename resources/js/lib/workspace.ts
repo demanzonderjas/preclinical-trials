@@ -1,20 +1,9 @@
-import { fieldByKey, formSteps, isVisible, protocolFields } from "@/data/protocol-schema";
+import { fieldByKey } from "@/data/protocol-schema";
+
+/** ProtocolSchema::progress() on the server, draftProgress() in the form. */
+export type Progress = { percent: number; missing: number; required: number; next_step: number | null };
 
 export type FeedbackStatus = "open" | "addressed" | "resolved";
-
-const filled = (value: unknown) => (Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && String(value).trim() !== "");
-
-/**
- * How far a draft is: the share of required questions answered (only those that show for
- * the current answers), and the first step with an open required question.
- */
-export function draftProgress(values: Record<string, unknown>) {
-	const required = protocolFields.filter(field => field.required && isVisible(field, values));
-	const missing = required.filter(field => !filled(values[field.key]));
-	const percent = required.length ? Math.round(((required.length - missing.length) / required.length) * 100) : 0;
-	const next = missing.length ? formSteps.find(step => step.step === Math.min(...missing.map(field => field.step))) ?? null : null;
-	return { percent, next, missing: missing.length, required: required.length };
-}
 
 export const fieldLabel = (key: string) => fieldByKey[key]?.label ?? key.replaceAll("_", " ");
 

@@ -8,11 +8,12 @@ import { WorkspaceLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
 import { capitalise, formatDate, formatMoment, formatShort } from "@/lib/dates";
 import { routes } from "@/lib/routes";
-import { type ActivityItem, activityLabel, draftProgress, type FeedbackStatus, fieldLabel } from "@/lib/workspace";
+import { formSteps } from "@/data/protocol-schema";
+import { type ActivityItem, activityLabel, type FeedbackStatus, fieldLabel, type Progress } from "@/lib/workspace";
 
 type FeedbackAction = { type: "feedback"; id: number; title: string; date: string; points: { field_key: string; status: FeedbackStatus }[]; message: string | null };
 type EmbargoAction = { type: "embargo"; id: number; pct_id: string; title: string; approved: string | null; ends: string; days_left: number; elapsed: number | null; extension_pending: boolean };
-type DraftAction = { type: "draft"; id: number; title: string | null; saved_at: string; values: Record<string, unknown> };
+type DraftAction = { type: "draft"; id: number; title: string | null; saved_at: string; progress: Progress };
 type Action = FeedbackAction | EmbargoAction | DraftAction;
 
 export type Conversation = {
@@ -147,7 +148,7 @@ function summary(actions: Action[], unread: number): ReactNode {
 
 	if (!parts.length) {
 		const draft = actions.find((action): action is DraftAction => action.type === "draft");
-		if (draft) return <>Nothing urgent today. Your draft “{shortTitle(draft.title)}” is {draftProgress(draft.values).percent}% complete.</>;
+		if (draft) return <>Nothing urgent today. Your draft “{shortTitle(draft.title)}” is {draft.progress.percent}% complete.</>;
 		return <>Nothing needs you today. Register a protocol before your study starts, or browse what others have registered.</>;
 	}
 
@@ -349,7 +350,8 @@ function EmbargoItem({ action }: { action: EmbargoAction }) {
 }
 
 function DraftItem({ action }: { action: DraftAction }) {
-	const progress = draftProgress(action.values);
+	const { progress } = action;
+	const next = formSteps.find(step => step.step === progress.next_step);
 	return (
 		<ActionRow
 			eyebrow={`Draft · Last saved ${formatMoment(action.saved_at)}`}
@@ -368,7 +370,7 @@ function DraftItem({ action }: { action: DraftAction }) {
 				</div>
 			}
 		>
-			{progress.next ? `Next up: step ${progress.next.step} of 7, ${progress.next.title}.` : "Every required question is answered. Ready to submit."}
+			{next ? `Next up: step ${next.step} of ${formSteps.length}, ${next.title}.` : "Every required question is answered. Ready to submit."}
 		</ActionRow>
 	);
 }

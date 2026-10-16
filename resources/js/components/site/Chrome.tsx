@@ -280,7 +280,25 @@ export function SlimFooter() {
 /* Workspace and admin headers                                                 */
 /* -------------------------------------------------------------------------- */
 
-export type AreaTab = { label: string; href: string; count?: number; countTone?: "teal" | "peach"; countLabel?: string };
+export type AreaTab = {
+	label: string;
+	href: string;
+	count?: number;
+	countTone?: "teal" | "peach";
+	countLabel?: string;
+	/** Other paths that belong to this tab, e.g. a protocol's feedback page under My protocols. */
+	also?: string[];
+};
+
+/** The tab for this URL: the most specific match, so /dashboard does not light up on its sub-pages. */
+function currentTab(url: string, tabs: AreaTab[]) {
+	const matches = tabs.filter(tab => isCurrent(url, tab.href) || tab.also?.some(prefix => url.startsWith(prefix)));
+	return matches.sort((a, b) => matchLength(b, url) - matchLength(a, url))[0];
+}
+
+function matchLength(item: AreaTab, url: string) {
+	return Math.max(isCurrent(url, item.href) ? item.href.length : 0, ...(item.also ?? []).map(prefix => (url.startsWith(prefix) ? prefix.length : 0)));
+}
 
 function SearchPill() {
 	return (
@@ -315,11 +333,12 @@ function LogoutButton({ className }: { className?: string }) {
 
 function AreaTabs({ tabs, label, trailing }: { tabs: AreaTab[]; label: string; trailing?: ReactNode }) {
 	const { url } = usePage();
+	const active = currentTab(url, tabs);
 	return (
 		<nav aria-label={label} className="border-t border-teal-50 border-b border-b-line bg-white">
 			<div className="container-page flex h-14 items-stretch gap-7 overflow-x-auto [scrollbar-width:none]">
 				{tabs.map(tab => {
-					const current = isCurrent(url, tab.href);
+					const current = tab === active;
 					return (
 						<a
 							key={tab.href}

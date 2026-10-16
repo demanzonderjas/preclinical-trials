@@ -4,10 +4,13 @@ namespace Tests\Feature\Workspace;
 
 use App\Services\ProtocolSchema;
 use Illuminate\Support\Facades\Process;
+use Tests\Feature\Characterization\BuildsPctData;
 use Tests\TestCase;
 
 class ProtocolSchemaTest extends TestCase
 {
+    use BuildsPctData;
+
     public function test_the_exported_json_matches_the_typescript_schema(): void
     {
         $this->requireNode();
@@ -34,6 +37,7 @@ class ProtocolSchemaTest extends TestCase
             }
             $valueSets[] = [$condition['key'] => $options->values()->all()];
         }
+        $valueSets[] = $this->protocolDetails();
         $valueSets[] = ['randomisation' => 'yes', 'randomisation_method' => 'other', 'blinding' => 'yes_partially', 'study_status' => 'completed_and_published', 'intervention_type' => ['drug', 'other']];
 
         $formats = [];
@@ -55,6 +59,9 @@ class ProtocolSchemaTest extends TestCase
         foreach ($valueSets as $index => $values) {
             $visible = $fields->filter(fn ($field) => ProtocolSchema::isVisible($field, $values))->pluck('key')->values()->all();
             $this->assertSame($expected['visible'][$index], $visible, 'visibility for '.json_encode($values));
+        }
+        foreach ($valueSets as $index => $values) {
+            $this->assertSame($expected['progress'][$index], ProtocolSchema::progress($values), 'progress for '.json_encode($values));
         }
         foreach ($formats as $index => [$key, $value]) {
             $this->assertSame($expected['formatted'][$index], ProtocolSchema::format(ProtocolSchema::field($key), $value), "format of $key = ".json_encode($value));

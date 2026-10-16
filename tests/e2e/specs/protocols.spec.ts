@@ -8,7 +8,7 @@ test.describe("Researcher: protocols", () => {
 	test("sees all own protocols with their status", async ({ workspace }) => {
 		await workspace.openMyProtocols();
 		await expect(workspace.myProtocolRow(protocols.draft)).toContainText("Draft");
-		await expect(workspace.myProtocolRow(protocols.submitted)).toContainText("Submitted for publication");
+		await expect(workspace.myProtocolRow(protocols.submitted)).toContainText("Submitted · in review");
 		await expect(workspace.myProtocolRow(protocols.rejected)).toContainText("Rejected");
 		await expect(workspace.myProtocolRow(protocols.published)).toContainText("Published");
 		await expect(workspace.myProtocolRow(protocols.colleagues)).toHaveCount(0);
@@ -54,7 +54,7 @@ test.describe("Researcher: protocols", () => {
 
 	test("cannot delete a published protocol", async ({ workspace }) => {
 		await workspace.openMyProtocols();
-		await expect(workspace.myProtocolRow(protocols.published).getByRole("button", { name: /^delete$/i })).toHaveCount(0);
+		await expect(workspace.myProtocolRow(protocols.published).getByRole("button", { name: /delete/i })).toHaveCount(0);
 	});
 
 	test("duplicates a protocol into a new draft", async ({ workspace }) => {
@@ -64,8 +64,8 @@ test.describe("Researcher: protocols", () => {
 	test("views an own draft, which nobody else can see", async ({ workspace, page }) => {
 		await workspace.viewOwnProtocol(protocols.draft);
 		await expect(page.getByRole("heading", { name: "Contact details" })).toBeVisible();
-		// The view never shows contact email or role, not even to the owner.
-		await expect(page.getByText(personas.researcher.email)).toHaveCount(0);
+		// Owners see their own contact email; other researchers never do (tests/Feature/Frontend/ProtocolPageTest.php).
+		await expect(page.getByText(personas.researcher.email).first()).toBeVisible();
 	});
 
 	test("amends a published protocol, which records a revision", async ({ workspace, app }) => {

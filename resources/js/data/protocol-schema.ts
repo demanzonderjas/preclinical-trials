@@ -1142,3 +1142,17 @@ function formatScalar(field: ProtocolField, value: string): string {
 			return value;
 	}
 }
+
+const filled = (value: unknown) => (Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && String(value).trim() !== "");
+
+/**
+ * How far a draft is: the share of required questions answered (only those that show for
+ * the current answers), and the first step with an open required question.
+ */
+export function draftProgress(values: Record<string, unknown>) {
+	const required = protocolFields.filter((field) => field.required && isVisible(field, values));
+	const missing = required.filter((field) => !filled(values[field.key]));
+	const percent = required.length ? Math.round(((required.length - missing.length) / required.length) * 100) : 0;
+	const next = missing.length ? formSteps.find(step => step.step === Math.min(...missing.map((field) => field.step))) ?? null : null;
+	return { percent, next, missing: missing.length, required: required.length };
+}

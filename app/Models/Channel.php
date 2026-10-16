@@ -82,6 +82,18 @@ class Channel extends Model
             ->orWhere(fn ($q) => $q->where('channels.kind', self::QUESTION)->where('channels.questioner_id', $user->id)));
     }
 
+    /** The conversation between a protocol's owner and the PCT team ("comments" in My protocols). */
+    public static function teamFor(Protocol $protocol): self
+    {
+        return self::firstOrCreate(['kind' => self::TEAM, 'protocol_id' => $protocol->id, 'protocol_owner_id' => $protocol->user_id]);
+    }
+
+    /** The thread about one feedback point. */
+    public static function feedbackFor(FeedbackPoint $point): self
+    {
+        return self::firstOrCreate(['kind' => self::FEEDBACK, 'feedback_point_id' => $point->id], ['protocol_id' => $point->protocol_id, 'protocol_owner_id' => $point->protocol->user_id]);
+    }
+
     public function isWithTeam(): bool
     {
         return $this->kind !== self::QUESTION;

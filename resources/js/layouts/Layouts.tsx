@@ -84,7 +84,7 @@ export function WorkspaceLayout({ title, children, counts: override, tint = true
 	const counts: WorkspaceCounts = override ?? { protocols: workspace?.protocols, unreadMessages: workspace?.unread_messages || undefined };
 	const tabs: AreaTab[] = [
 		{ label: "Dashboard", href: routes.dashboard },
-		{ label: "My protocols", href: routes.myProtocols, count: counts.protocols },
+		{ label: "My protocols", href: routes.myProtocols, count: counts.protocols, also: ["/dashboard/protocols/", "/dashboard/edit-protocol/", "/dashboard/add-protocol", "/dashboard/extend-embargo/"] },
 		{ label: "Messages", href: routes.messages, count: counts.unreadMessages, countTone: "peach", countLabel: `${counts.unreadMessages} unread` },
 		{ label: "Profile", href: routes.profile }
 	];

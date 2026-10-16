@@ -77,7 +77,8 @@ class DashboardTest extends TestCase
                 ->where('actions.1.days_left', 40)
                 ->where('actions.2.type', 'draft')
                 ->where('actions.2.id', $draft->id)
-                ->where('actions.2.values.title', 'My draft')
+                ->where('actions.2.title', 'My draft')
+                ->where('actions.2.progress.missing', fn ($n) => $n > 0)
                 ->where('activity.0.type', 'returned')
                 ->where('certificate.pct_id', fn ($id) => str_starts_with($id, 'PCTE')));
     }

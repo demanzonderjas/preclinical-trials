@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { type ReactNode, useEffect, useRef } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
 /* -------------------------------------------------------------------------- */
@@ -83,6 +83,91 @@ export function Dialog({ open, onClose, title, description, children, footer, si
 				{footer && <div className="mt-8 flex flex-wrap justify-end gap-3">{footer}</div>}
 			</div>
 		</dialog>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Menu                                                                        */
+/* -------------------------------------------------------------------------- */
+
+export type MenuItem = { label: ReactNode; onSelect?: () => void; href?: string; disabled?: boolean };
+
+/**
+ * A "More" button with a list of actions that opens above or below it. Escape and a click
+ * outside close it; focus returns to the button.
+ */
+export function Menu({ label = "More", items, footer, align = "right", className }: { label?: ReactNode; items: MenuItem[]; footer?: ReactNode; align?: "left" | "right"; className?: string }) {
+	const [open, setOpen] = useState(false);
+	const id = useId();
+	const root = useRef<HTMLDivElement>(null);
+	const button = useRef<HTMLButtonElement>(null);
+
+	useEffect(() => {
+		if (!open) return;
+		const onPointer = (event: PointerEvent) => root.current && !root.current.contains(event.target as Node) && setOpen(false);
+		const onKey = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				setOpen(false);
+				button.current?.focus();
+			}
+		};
+		document.addEventListener("pointerdown", onPointer);
+		document.addEventListener("keydown", onKey);
+		root.current?.querySelector<HTMLElement>("[data-menu-item]")?.focus();
+		return () => {
+			document.removeEventListener("pointerdown", onPointer);
+			document.removeEventListener("keydown", onKey);
+		};
+	}, [open]);
+
+	const itemClass = "flex min-h-11 w-full items-center rounded-md px-3 text-left text-[15.5px] font-bold text-ink hover:bg-teal-50 hover:text-ink disabled:cursor-not-allowed disabled:opacity-50";
+
+	return (
+		<div ref={root} className={cn("relative", className)}>
+			<button
+				ref={button}
+				type="button"
+				aria-expanded={open}
+				aria-controls={id}
+				onClick={() => setOpen(!open)}
+				className={cn(
+					"inline-flex h-11 items-center gap-2 rounded-full px-4.5 font-display text-[15px] font-extrabold",
+					open ? "bg-teal-50 shadow-[inset_0_0_0_1.5px_var(--color-teal-500)]" : "shadow-[inset_0_0_0_1.5px_var(--color-line)] hover:bg-teal-50"
+				)}
+			>
+				{label}
+				<ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" className={cn("transition-transform", open && "rotate-180")} />
+			</button>
+			{open && (
+				<div id={id} className={cn("absolute bottom-full z-30 mb-2 w-[272px] rounded-card bg-white p-2 shadow-[inset_0_0_0_1px_var(--color-line),var(--shadow-raised)]", align === "right" ? "right-0" : "left-0")}>
+					<ul>
+						{items.map((item, index) => (
+							<li key={index}>
+								{item.href ? (
+									<a data-menu-item href={item.href} className={itemClass} onClick={() => setOpen(false)}>
+										{item.label}
+									</a>
+								) : (
+									<button
+										data-menu-item
+										type="button"
+										disabled={item.disabled}
+										className={itemClass}
+										onClick={() => {
+											setOpen(false);
+											item.onSelect?.();
+										}}
+									>
+										{item.label}
+									</button>
+								)}
+							</li>
+						))}
+					</ul>
+					{footer && <p className="mt-1 border-t border-line px-3 pt-3 pb-2 text-[13.5px] leading-snug text-ink-muted">{footer}</p>}
+				</div>
+			)}
+		</div>
 	);
 }
 

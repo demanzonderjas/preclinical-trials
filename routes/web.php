@@ -10,6 +10,7 @@ use App\Http\Controllers\Pages\NewsController;
 use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Http\Controllers\Pages\ProtocolPdfController;
 use App\Http\Controllers\Pages\Workspace\DashboardController;
+use App\Http\Controllers\Pages\Workspace\MyProtocolsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -73,6 +74,15 @@ Route::fallback(function () {
 // The researcher workspace in the A2 design. Pages not rebuilt yet fall through to the legacy SPA.
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     Route::get('/', DashboardController::class)->name('workspace.dashboard');
+    Route::get('/manage-protocols', [MyProtocolsController::class, 'index'])->name('workspace.protocols');
+    Route::whereNumber('id')->prefix('protocols/{id}')->group(function () {
+        Route::post('/duplicate', [MyProtocolsController::class, 'duplicate'])->name('workspace.protocols.duplicate');
+        Route::delete('/', [MyProtocolsController::class, 'destroy'])->name('workspace.protocols.destroy');
+        Route::post('/submit', [MyProtocolsController::class, 'submit'])->name('workspace.protocols.submit');
+        Route::post('/comments', [MyProtocolsController::class, 'comment'])->middleware('throttle:30,1')->name('workspace.protocols.comment');
+        Route::post('/comments/read', [MyProtocolsController::class, 'readComments'])->name('workspace.protocols.comments.read');
+        Route::put('/links', [MyProtocolsController::class, 'link'])->name('workspace.protocols.link');
+    });
     Route::get('/protocols/{id}/certificate.pdf', [ProtocolPdfController::class, 'certificate'])->whereNumber('id')->middleware('throttle:30,1')->name('workspace.certificate');
 });
 

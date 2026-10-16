@@ -69,6 +69,9 @@ class E2ESeeder extends Seeder
 		] as [$key, $body, $status]) {
 			$points[$key] = $round->points()->create(['protocol_id' => $rejected->id, 'field_key' => $key, 'body' => $body, 'status' => $status, 'created_by' => $admin->id, 'addressed_at' => $status === FeedbackPoint::ADDRESSED ? Carbon::now()->subDays(10) : null]);
 		}
+		$comments = Channel::create(['kind' => Channel::TEAM, 'protocol_id' => $rejected->id, 'protocol_owner_id' => $researcher->id]);
+		$this->message($comments, $admin, 'Please add the sample size calculation.', 14 * 24);
+		$comments->readers()->attach($researcher->id, ['last_read_at' => Carbon::now()->subDays(13)]);
 		$this->activity($rejected, 'submitted', [], $researcher, 20);
 		$this->activity($rejected, 'returned', ['points' => 4], $admin, 14);
 		$this->activity($rejected, 'addressed', ['fields' => ['title', 'sample_size_calculation', 'study_arms']], $researcher, 10);

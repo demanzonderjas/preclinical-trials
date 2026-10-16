@@ -22,11 +22,12 @@ export class WorkspaceUI {
 
 	async openMyProtocols() {
 		await this.page.goto("/dashboard/manage-protocols");
-		await expect(this.page.locator("table tbody tr").first()).toBeVisible();
+		await expect(this.page.getByRole("heading", { level: 1, name: "My protocols" })).toBeVisible();
 	}
 
+	/** A protocol card in A2 My protocols. */
 	myProtocolRow(title: string) {
-		return this.page.locator("table tbody tr").filter({ hasText: title });
+		return this.page.locator("article").filter({ has: this.page.getByRole("heading", { name: title, exact: true }) });
 	}
 
 	async expectStatusInMyProtocols(title: string, status: string | RegExp) {
@@ -78,7 +79,7 @@ export class WorkspaceUI {
 
 	async createAmendment(title: string, change: { field: string; value: string }, reason: string) {
 		await this.openMyProtocols();
-		await this.myProtocolRow(title).getByRole("button", { name: /create amendment/i }).click();
+		await this.myProtocolRow(title).getByRole("link", { name: /create amendment/i }).click();
 		await expect(legacyField(this.page, "Title")).toBeVisible();
 		await this.changeField(change.field, change.value);
 		await this.changeField(/why.*amend/i, reason);
@@ -88,22 +89,24 @@ export class WorkspaceUI {
 
 	async deleteDraft(title: string) {
 		await this.openMyProtocols();
-		await this.myProtocolRow(title).getByRole("button", { name: /^delete$/i }).click();
-		await confirmModal(this.page);
+		await this.myProtocolRow(title).getByRole("button", { name: "Delete draft" }).click();
+		await this.page.getByRole("dialog").getByRole("button", { name: "Delete draft" }).click();
 		await expect(this.myProtocolRow(title)).toHaveCount(0);
 	}
 
 	async duplicate(title: string) {
 		await this.openMyProtocols();
 		const rowsBefore = await this.myProtocolRow(title).count();
-		await this.myProtocolRow(title).first().getByRole("button", { name: /^duplicate$/i }).click();
-		await confirmModal(this.page);
+		await this.myProtocolRow(title).first().getByRole("button", { name: "More" }).click();
+		await this.page.getByRole("button", { name: "Duplicate as new draft" }).click();
+		await expect(this.page).toHaveURL(/\/dashboard\/edit-protocol\/\d+/);
+		await this.openMyProtocols();
 		await expect(this.myProtocolRow(title)).toHaveCount(rowsBefore + 1);
 	}
 
 	async viewOwnProtocol(title: string) {
 		await this.openMyProtocols();
-		await this.myProtocolRow(title).getByRole("button", { name: /^view$/i }).click();
+		await this.myProtocolRow(title).getByRole("link", { name: "View", exact: true }).click();
 		await expect(this.page.getByText(title, { exact: true }).first()).toBeVisible();
 	}
 

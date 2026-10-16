@@ -8,6 +8,7 @@ use App\Models\ActivityLog;
 use App\Models\FeedbackPoint;
 use App\Models\Protocol;
 use App\Services\Inbox;
+use App\Services\ProtocolSchema;
 use App\Services\PublicRegister;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -142,7 +143,7 @@ class DashboardController extends Controller
                 'id' => $protocol->id,
                 'title' => $protocol->details->firstWhere('key', 'title')?->value,
                 'saved_at' => $protocol->updated_at->toIso8601String(),
-                'values' => $protocol->details->mapWithKeys(fn ($detail) => [$detail->key => $detail->value]),
+                'progress' => ProtocolSchema::progress($protocol->details->mapWithKeys(fn ($detail) => [$detail->key => $detail->value])->all()),
             ]);
 
         return $feedback->concat($embargoes)->concat($drafts)->values()->all();

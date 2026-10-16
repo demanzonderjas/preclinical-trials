@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Mail\ReceivedMessage;
+use App\Mail\TeamMessageReceived;
 use App\Models\Channel;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 /**
@@ -53,6 +56,31 @@ class Inbox
         $channels->each(fn (Channel $channel) => $channel->setAttribute('unread', (int) $unread->get($channel->id, 0)));
 
         return $limit ? $channels->take($limit)->values() : $channels;
+    }
+
+    /**
+     * Sends a message as this user and lets the other side know by mail: the other
+     * researcher, the researcher (when the PCT team writes) or the PCT mailbox.
+     */
+    public function post(Channel $channel, string $text, bool $notify = true): Message
+    {
+        $message = $channel->messages()->save(new Message(['user_id' => $this->user->id, 'text' => $text]));
+        $this->markRead($channel);
+
+        if ($notify) {
+            $recipient = match (true) {
+                ! $channel->isWithTeam() => $this->user->id === (int) $channel->protocol_owner_id ? $channel->questioner : $channel->protocolOwner,
+                $this->user->id === (int) $channel->protocol_owner_id => null,
+                default => $channel->protocolOwner,
+            };
+            if ($recipient && ! $recipient->disable_notifications) {
+                Mail::to($recipient)->send(new ReceivedMessage($recipient, $message));
+            } elseif (! $recipient && $channel->isWithTeam()) {
+                Mail::to(config('pct.admin_mail'))->send(new TeamMessageReceived($message));
+            }
+        }
+
+        return $message;
     }
 
     public function markRead(Channel $channel): void

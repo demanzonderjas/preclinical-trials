@@ -76,6 +76,39 @@ class ProtocolSchema
         return self::formatScalar($field, is_bool($value) ? ($value ? 'true' : 'false') : (string) $value);
     }
 
+    /**
+     * How far a protocol is filled in: the share of required questions answered (only those
+     * that show for the current answers) and the first step with one open. Mirrors
+     * draftProgress() in resources/js/lib/workspace.ts.
+     *
+     * @param  array<string, mixed>  $values
+     * @return array{percent: int, missing: int, required: int, next_step: ?int}
+     */
+    public static function progress(array $values): array
+    {
+        $required = self::fields()->filter(fn ($field) => $field['required'] && self::isVisible($field, $values));
+        $missing = $required->reject(fn ($field) => self::filled($values[$field['key']] ?? null));
+
+        return [
+            'percent' => $required->count() ? (int) round(($required->count() - $missing->count()) / $required->count() * 100) : 0,
+            'missing' => $missing->count(),
+            'required' => $required->count(),
+            'next_step' => $missing->min('step'),
+        ];
+    }
+
+    private static function filled(mixed $value): bool
+    {
+        if (is_array($value)) {
+            return count($value) > 0;
+        }
+        if (is_object($value)) {
+            return true; // as in the TypeScript, where String({}) is not empty
+        }
+
+        return $value !== null && trim(is_bool($value) ? ($value ? 'true' : 'false') : (string) $value) !== '';
+    }
+
     /** Rich text from the legacy editor as plain paragraphs. */
     public static function plainText(?string $value): string
     {
