@@ -12,6 +12,7 @@ use App\Http\Controllers\Pages\ProtocolPdfController;
 use App\Http\Controllers\Pages\Workspace\DashboardController;
 use App\Http\Controllers\Pages\Workspace\FeedbackController;
 use App\Http\Controllers\Pages\Workspace\MessagesController;
+use App\Http\Controllers\Pages\Workspace\ProfileController;
 use App\Http\Controllers\Pages\Workspace\MyProtocolsController;
 use App\Http\Controllers\Pages\Workspace\ProtocolFormController;
 use Illuminate\Http\Request;
@@ -94,6 +95,12 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('/comments/read', [MyProtocolsController::class, 'readComments'])->name('workspace.protocols.comments.read');
         Route::put('/links', [MyProtocolsController::class, 'link'])->name('workspace.protocols.link');
     });
+    Route::get('/profile', [ProfileController::class, 'show'])->name('workspace.profile');
+    Route::redirect('/edit-profile', '/dashboard/profile#details');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('workspace.profile.update');
+    Route::put('/profile/settings', [ProfileController::class, 'settings'])->name('workspace.profile.settings');
+    Route::put('/profile/password', [ProfileController::class, 'password'])->middleware('throttle:6,1')->name('workspace.profile.password');
+    Route::post('/profile/logout-everywhere', [ProfileController::class, 'logoutEverywhere'])->middleware('throttle:6,1')->name('workspace.profile.logout-everywhere');
     Route::get('/messages', [MessagesController::class, 'index'])->name('workspace.messages');
     Route::post('/messages/notifications', [MessagesController::class, 'notifications'])->name('workspace.messages.notifications');
     Route::whereNumber(['id', 'message'])->prefix('messages/{id}')->group(function () {

@@ -1,6 +1,6 @@
 import { expect, Page } from "@playwright/test";
 import { App } from "../app";
-import { fillLegacyField, fillRichText } from "./common";
+import { fillRichText } from "./common";
 
 /** The seven steps of the A2 protocol form. */
 export const FORM_STEPS = ["General", "Design & hypothesis", "Animals", "Groups & bias", "Ethics & extra info", "Contact details", "Embargo & submit"] as const;
@@ -199,33 +199,29 @@ export class WorkspaceUI {
 		await expect(this.page.getByRole("listitem").filter({ hasText: text }).first()).toBeVisible();
 	}
 
+	/** A2 My profile. */
 	async openProfile() {
 		await this.page.goto("/dashboard/profile");
+		await expect(this.page.getByRole("heading", { level: 1, name: "My profile" })).toBeVisible();
 	}
 
-	async editProfile(changes: { institution?: string; city?: string }, password: string) {
-		await this.page.goto("/dashboard/edit-profile");
-		const modal = this.page.locator(".Modal");
-		if (await modal.locator("input[type=password]").isVisible().catch(() => false)) {
-			await modal.locator("input[type=password]").fill(password);
-			await modal.getByRole("button").last().click();
-		}
-		if (changes.institution) await fillLegacyField(this.page, "Institution", changes.institution);
-		if (changes.city) await fillLegacyField(this.page, "City", changes.city);
-		await this.page.locator(".FormWrapper form").getByRole("button").last().click();
+	async editProfile(changes: { institution?: string; city?: string }) {
+		await this.openProfile();
+		const form = this.page.locator("#details");
+		if (changes.institution) await form.getByLabel(/^Institution/).fill(changes.institution);
+		if (changes.city) await form.getByLabel(/^City/).fill(changes.city);
+		await form.getByRole("button", { name: "Save changes" }).click();
+		await expect(this.page.getByText("Your details are saved.")).toBeVisible();
 	}
 
 	async changePassword(current: string, next: string) {
 		await this.openProfile();
-		await this.page.getByRole("button", { name: /change password/i }).click();
-		const modal = this.page.locator(".Modal");
-		const inputs = modal.locator("input[type=password]");
-		await inputs.nth(0).fill(current);
-		const count = await inputs.count();
-		for (let i = 1; i < count; i++) {
-			await inputs.nth(i).fill(next);
-		}
-		await modal.getByRole("button").last().click();
+		const form = this.page.locator("#password");
+		await form.getByLabel(/^Current password/).fill(current);
+		await form.getByLabel(/^New password/).fill(next);
+		await form.getByLabel(/^Repeat new password/).fill(next);
+		await form.getByRole("button", { name: "Update password" }).click();
+		await expect(this.page.getByText(/Your password is changed/)).toBeVisible();
 	}
 
 	async setMessageNotifications(enabled: boolean) {

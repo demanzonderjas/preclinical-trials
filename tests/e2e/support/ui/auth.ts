@@ -37,6 +37,8 @@ export class AuthUI {
 	async logout() {
 		// "Log out" in the A2 workspace header, "Logout" on legacy pages.
 		await this.page.getByText(/^Log ?out$/).first().click();
+		// Logging out lands on the home page (the workspace footer has a "Log in" link too).
+		await this.page.waitForURL(url => url.pathname === "/");
 		await expect(this.page.getByRole("link", { name: "Log in" }).first()).toBeVisible();
 	}
 
