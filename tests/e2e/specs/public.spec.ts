@@ -38,8 +38,8 @@ test.describe("Public site", () => {
 
 	test("the help page answers a question", async ({ site, page }) => {
 		await site.openHelp();
-		await site.readFaq("Is registration free?");
-		await expect(page.getByText("Yes", { exact: true }).first()).toBeVisible();
+		const answer = await site.readFaq("Is registration free?");
+		await expect(answer.locator("p", { hasText: /^Yes$/ })).toBeVisible();
 	});
 
 	test("a visitor sends the contact form to the PCT team", async ({ site, app }) => {

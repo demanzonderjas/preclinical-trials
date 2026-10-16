@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Pages\ContactController;
 use App\Http\Controllers\Pages\DatabaseController;
+use App\Http\Controllers\Pages\HelpController;
 use App\Http\Controllers\Pages\HomeController;
 use App\Http\Controllers\Pages\NewsController;
 use App\Http\Controllers\Pages\ProtocolPageController;
@@ -32,6 +33,9 @@ Route::get('/', HomeController::class)->name('index');
 
 Route::get('/database', [DatabaseController::class, 'index'])->name('database');
 Route::get('/database/export.csv', [DatabaseController::class, 'export'])->middleware(['auth', 'verified'])->name('database.export');
+
+Route::get('/help', [HelpController::class, 'index'])->name('help');
+Route::post('/help/{id}/feedback', [HelpController::class, 'feedback'])->whereNumber('id')->middleware('throttle:30,1')->name('help.feedback');
 
 Route::get('/news', [NewsController::class, 'index'])->name('news');
 Route::get('/news/view-item/{id}', [NewsController::class, 'show'])->whereNumber('id')->name('news.show');

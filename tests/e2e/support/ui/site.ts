@@ -79,8 +79,12 @@ export class SiteUI {
 		await this.page.goto("/help");
 	}
 
+	/** Opens a question on the A2 help page and returns the opened answer. */
 	async readFaq(question: string) {
-		await this.page.getByText(question, { exact: true }).first().click();
+		const item = this.page.locator("details", { has: this.page.getByText(question, { exact: true }) }).first();
+		await item.locator("summary").click();
+		await expect(item).toHaveAttribute("open", "");
+		return item;
 	}
 
 	/** A2 contact page. */
