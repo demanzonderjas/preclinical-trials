@@ -35,8 +35,8 @@ const europe = { west: -16, east: 39.8, north: 70, south: 34 };
 const inEurope = (a: Ambassador) => a.lng >= -8 && a.lng <= 33 && a.lat >= 43 && a.lat <= 63;
 const inDenseArea = ([lng, lat]: number[]) => lng >= europe.west && lng <= europe.east && lat >= europe.south && lat <= europe.north;
 
-const LENS_R = 124;
-const ZOOM = 2.4;
+const LENS_R = 92;
+const ZOOM = 2.2;
 const MOTION = "motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]";
 const px = (x: number, y: number) => `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
 
@@ -51,12 +51,17 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 	const focus = selected ? project(selected.lng, selected.lat) : project(10, 51);
 	const centre = [Math.min(W - LENS_R - 10, Math.max(LENS_R + 10, focus[0])), Math.min(VIEW_H - LENS_R - 30, Math.max(LENS_R + 10, focus[1]))] as const;
 
-	// Pins in the lens, magnified around the focus and nudged apart where they would touch.
+	// Pins in the lens, magnified around the focus: the selected city sits in the middle and
+	// only its neighbours are nudged aside where they would touch.
 	const inLens = placeLabels(
-		spread(ambassadors.map(a => {
-			const [x, y] = project(a.lng, a.lat);
-			return { a, xy: [(x - focus[0]) * ZOOM, (y - focus[1]) * ZOOM] as const };
-		})),
+		spread(
+			ambassadors.map(a => {
+				const [x, y] = project(a.lng, a.lat);
+				return { a, xy: [(x - focus[0]) * ZOOM, (y - focus[1]) * ZOOM] as const };
+			}),
+			30,
+			ambassadors.findIndex(a => a.id === selected?.id)
+		),
 		LENS_R - 12
 	).map(pin => ({ ...pin, visible: Math.hypot(pin.xy[0], pin.xy[1]) < LENS_R - 10 }));
 
@@ -86,7 +91,7 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 					</clipPath>
 					<circle r={LENS_R + 3} fill="#FFFFFF" />
 					<g clipPath={`url(#${clipId})`}>
-						<g className={MOTION} style={{ transform: `${px(focus[0] - centre[0], focus[1] - centre[1])} scale(${ZOOM}) ${px(-focus[0], -focus[1])}` }} aria-hidden="true" fill="#83B2BA" opacity="0.55">
+						<g className={MOTION} style={{ transform: `scale(${ZOOM}) ${px(-focus[0], -focus[1])}` }} aria-hidden="true" fill="#83B2BA" opacity="0.55">
 							{world.dots
 								.filter(dot => !inDenseArea(dot))
 								.map(([lng, lat], index) => {
@@ -98,7 +103,7 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 								return <circle key={`e${index}`} cx={x} cy={y} r={2.1 / ZOOM} />;
 							})}
 						</g>
-						<g className={MOTION} style={{ transform: px(focus[0] - centre[0], focus[1] - centre[1]) }}>
+						<g>
 							{inLens.map(({ a, xy, labelLeft, visible }) => (
 								<g key={a.id} className={MOTION} style={{ transform: px(xy[0], xy[1]) }} aria-hidden={!visible}>
 									<Pin a={a} x={0} y={0} active={selected?.id === a.id} onSelect={onSelect} small labelLeft={labelLeft} focusable={visible} />
@@ -107,7 +112,7 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 						</g>
 					</g>
 					<circle r={LENS_R} fill="none" stroke="#323742" strokeWidth="6" />
-					<path d={`M${LENS_R * 0.71 + 2} ${LENS_R * 0.71 + 2}l26 26`} stroke="#558F99" strokeWidth="10" strokeLinecap="round" />
+					<path d={`M${LENS_R * 0.71 + 2} ${LENS_R * 0.71 + 2}l22 22`} stroke="#558F99" strokeWidth="9" strokeLinecap="round" />
 				</g>
 			</svg>
 		</div>
@@ -143,8 +148,8 @@ function placeLabels<T extends { a: Ambassador; xy: readonly [number, number] }>
 	});
 }
 
-/** Nudges pins that would cover each other (Amsterdam and Utrecht) apart. */
-function spread<T extends { xy: readonly [number, number] }>(pins: T[], gap = 30): T[] {
+/** Nudges pins that would cover each other (Amsterdam and Utrecht) apart; the pin at `fixed` stays put. */
+function spread<T extends { xy: readonly [number, number] }>(pins: T[], gap = 30, fixed = -1): T[] {
 	const result = pins.map(pin => ({ ...pin, xy: [pin.xy[0], pin.xy[1]] as [number, number] }));
 	for (let i = 0; i < result.length; i++) {
 		for (let j = i + 1; j < result.length; j++) {
@@ -153,9 +158,10 @@ function spread<T extends { xy: readonly [number, number] }>(pins: T[], gap = 30
 			const distance = Math.hypot(bx - ax, by - ay);
 			if (distance < gap) {
 				const angle = distance ? Math.atan2(by - ay, bx - ax) : Math.PI / 4;
-				const push = (gap - distance) / 2;
-				result[i].xy = [ax - Math.cos(angle) * push, ay - Math.sin(angle) * push];
-				result[j].xy = [bx + Math.cos(angle) * push, by + Math.sin(angle) * push];
+				const push = gap - distance;
+				const share = i === fixed ? 0 : j === fixed ? 1 : 0.5;
+				result[i].xy = [ax - Math.cos(angle) * push * share, ay - Math.sin(angle) * push * share];
+				result[j].xy = [bx + Math.cos(angle) * push * (1 - share), by + Math.sin(angle) * push * (1 - share)];
 			}
 		}
 	}
