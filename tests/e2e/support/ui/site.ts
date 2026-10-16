@@ -25,8 +25,14 @@ export class SiteUI {
 		await expect(this.page).toHaveURL(new RegExp(`q=${encodeURIComponent(query).replace(/%20/g, "\\+")}`));
 	}
 
+	/** Ticks a facet option; the page reloads the results with it. */
 	async filterDatabase(facet: string, option: string) {
-		await this.page.getByRole("group", { name: facet }).or(this.page.locator("details", { hasText: facet })).first().getByLabel(option).check();
+		const group = this.page.getByRole("complementary", { name: "Filters" }).locator("details", { hasText: facet }).first();
+		if ((await group.getAttribute("open")) === null) await group.locator("summary").click();
+		const before = this.page.url();
+		await group.getByLabel(option).click();
+		await expect(this.page).not.toHaveURL(before);
+		await expect(group.getByLabel(option)).toBeChecked();
 	}
 
 	databaseResults() {
@@ -82,7 +88,8 @@ export class SiteUI {
 	/** Opens a question on the A2 help page and returns the opened answer. */
 	async readFaq(question: string) {
 		const item = this.page.locator("details", { has: this.page.getByText(question, { exact: true }) }).first();
-		await item.locator("summary").click();
+		// Search results open the best match already.
+		if ((await item.getAttribute("open")) === null) await item.locator("summary").click();
 		await expect(item).toHaveAttribute("open", "");
 		return item;
 	}

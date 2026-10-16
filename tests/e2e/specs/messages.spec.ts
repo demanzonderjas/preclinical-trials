@@ -1,3 +1,4 @@
+import path from "node:path";
 import { ADMIN_INBOX, expect, personas, protocols, test } from "../support/fixtures";
 
 test.describe("Messages", () => {
@@ -31,5 +32,34 @@ test.describe("Messages", () => {
 		await app.loginAs(personas.researcher);
 		await workspace.setMessageNotifications(false);
 		await workspace.setMessageNotifications(true);
+	});
+
+	test("sends an attachment that the other side can download", async ({ app, workspace, page }) => {
+		await app.loginAs(personas.researcher);
+		await workspace.openConversation("Emily Sena");
+		await page.getByLabel("Attach file").setInputFiles(path.join(__dirname, "../fixtures/sample-size.txt"));
+		await workspace.sendMessage("Here is the calculation.");
+
+		await app.loginAs(personas.colleague);
+		await workspace.openConversation("Sanne de Vries");
+		const download = page.waitForEvent("download");
+		await page.getByRole("link", { name: "sample-size.txt" }).click();
+		expect((await download).suggestedFilename()).toBe("sample-size.txt");
+	});
+
+	test("archives a conversation and marks one as unread", async ({ app, workspace, page }) => {
+		await app.loginAs(personas.researcher);
+		await workspace.openConversation("Welcome to preclinicaltrials.eu");
+		await page.getByRole("button", { name: "Archive" }).click();
+		await expect(page.getByText("Conversation archived.")).toBeVisible();
+		const list = page.getByRole("region", { name: "Conversations" });
+		await expect(list.getByRole("link").filter({ hasText: "Welcome to preclinicaltrials.eu" })).toHaveCount(0);
+		await list.getByRole("button", { name: /Archived/ }).click();
+		await expect(list.getByRole("link").filter({ hasText: "Welcome to preclinicaltrials.eu" })).toHaveCount(1);
+
+		await workspace.openConversation("Emily Sena");
+		await page.getByRole("button", { name: "Mark as unread" }).click();
+		await expect(page).toHaveURL(/\/dashboard\/messages$/);
+		await expect(list.getByRole("link").filter({ hasText: "Emily Sena" }).getByText(", unread")).toHaveCount(1);
 	});
 });

@@ -41,7 +41,15 @@ function stepStatus(step: number, values: Values) {
 	return { kind: "todo" as const, missing, text: `${required.length - missing.length} of ${required.length} · ${missing.length} to go` };
 }
 
-export default function ProtocolForm({ protocol, values: initial, feedback, countries, profile }: Props) {
+/**
+ * Inertia reuses this component when one protocol leads to another (an import, a duplicate),
+ * so key the form by protocol: its answers and steps then start fresh.
+ */
+export default function ProtocolFormPage(props: Props) {
+	return <ProtocolForm key={props.protocol?.id ?? "new"} {...props} />;
+}
+
+function ProtocolForm({ protocol, values: initial, feedback, countries, profile }: Props) {
 	const status = protocol?.status ?? "draft";
 	const amending = status === "published";
 	const autosaves = status === "draft" || status === "rejected";

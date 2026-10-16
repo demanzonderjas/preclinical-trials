@@ -138,6 +138,7 @@ Route::get('protocol', function (Request $request) {
 		'embargo_extensions' => $protocol->embargoExtensions,
 		'revisions' => $protocol->revisions,
 		'admin_actions' => $protocol->adminActions,
+		'linked' => $protocol->linked->pluck('id')->values(),
 		'details' => $protocol->details->mapWithKeys(function ($d) {
 			return [$d->key => $d->value];
 		}),

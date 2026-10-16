@@ -49,6 +49,8 @@ export function Tabs({ items, active, onChange, label, className }: { items: Tab
  */
 export function Dialog({ open, onClose, title, description, children, footer, size = "md" }: { open: boolean; onClose: () => void; title: ReactNode; description?: ReactNode; children?: ReactNode; footer?: ReactNode; size?: "sm" | "md" | "lg" }) {
 	const ref = useRef<HTMLDialogElement>(null);
+	const titleId = useId();
+	const descriptionId = useId();
 
 	useEffect(() => {
 		const dialog = ref.current;
@@ -60,6 +62,8 @@ export function Dialog({ open, onClose, title, description, children, footer, si
 	return (
 		<dialog
 			ref={ref}
+			aria-labelledby={titleId}
+			aria-describedby={description ? descriptionId : undefined}
 			onClose={onClose}
 			onClick={event => event.target === ref.current && onClose()}
 			className={cn(
@@ -72,8 +76,14 @@ export function Dialog({ open, onClose, title, description, children, footer, si
 			<div className="p-6 sm:p-8">
 				<div className="flex items-start justify-between gap-4">
 					<div>
-						<h2 className="text-2xl font-extrabold tracking-[-0.02em]">{title}</h2>
-						{description && <p className="mt-2 text-ink-muted">{description}</p>}
+						<h2 id={titleId} className="text-2xl font-extrabold tracking-[-0.02em]">
+							{title}
+						</h2>
+						{description && (
+							<p id={descriptionId} className="mt-2 text-ink-muted">
+								{description}
+							</p>
+						)}
 					</div>
 					<button type="button" onClick={onClose} className="-mt-1 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-full hover:bg-teal-50" aria-label="Close">
 						<X size={20} strokeWidth={2.2} aria-hidden="true" />

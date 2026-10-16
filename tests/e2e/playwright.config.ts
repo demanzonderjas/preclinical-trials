@@ -26,7 +26,9 @@ export default defineConfig({
 		viewport: { width: 1440, height: 900 }
 	},
 	projects: [
-		{ name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } }
+		{ name: "desktop", grepInvert: /@mobile/, use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
+		// Key journeys again on a phone (journeys tagged @mobile only).
+		{ name: "mobile", grep: /@mobile/, use: { ...devices["Pixel 7"] } }
 	],
 	webServer: {
 		command: "./serve.sh",

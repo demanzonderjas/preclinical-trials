@@ -34,7 +34,11 @@ const questionOf = (key: string): ProtocolField | undefined => {
 };
 const topLevel = (field: ProtocolField) => !field.parent || !!field.number;
 
-export default function Feedback({ protocol, points, values: initial, snapshot, countries }: Props) {
+export default function FeedbackPage(props: Props) {
+	return <Feedback key={props.protocol.id} {...props} />;
+}
+
+function Feedback({ protocol, points, values: initial, snapshot, countries }: Props) {
 	const { values, set, flush, save, uploadImage } = useAutosave({ id: protocol.id, values: initial, savedAt: protocol.saved_at, enabled: true });
 	const [view, setView] = useState<"feedback" | "all">("feedback");
 	const ctx: FieldContext = { values, set, countries, uploadImage, feedback: new Map() };

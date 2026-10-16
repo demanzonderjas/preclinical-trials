@@ -166,3 +166,6 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
 });
 
 require __DIR__ . '/auth.php';
+
+// Unknown URLs: through the web middleware, so the error page has the session and shared props.
+Route::fallback(fn () => abort(404));

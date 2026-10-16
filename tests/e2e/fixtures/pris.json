@@ -1,0 +1,18 @@
+{
+	"content": {
+		"title": "E2E Imported: hypothermia after neonatal hypoxia in piglets",
+		"shortTitle": "COOL-PIG",
+		"animalSex": "B",
+		"animalCount": 24,
+		"stage": 1,
+		"species": { "description": "Mice" },
+		"supportSources": { "selection": [2] },
+		"hypotheses": "Therapeutic hypothermia reduces brain injury after hypoxia.",
+		"date": { "start": "2027-04-01T00:00:00Z", "end": "2028-03-31T00:00:00Z" },
+		"randomisation": { "selection": 1 },
+		"groups": [
+			{ "name": "Normothermia", "count": 12, "type": { "selection": 1 } },
+			{ "name": "Hypothermia", "count": 12, "type": { "selection": 2 } }
+		]
+	}
+}

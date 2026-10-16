@@ -2,7 +2,7 @@
 
 Two layers. The backend layer guards behaviour across the Laravel 13 port and covers every
 A2 page (`tests/Feature/Frontend`, `Workspace`, `Admin`). The end-to-end layer drives the A2
-pages in a browser (38 journeys at the end of phase 5; phase 7 extends it).
+pages in a browser: 59 journeys (phase 7), of which 4 run again at phone size.
 
 ## 1. Backend tests (PHPUnit)
 
@@ -48,3 +48,18 @@ npx playwright test
 ```
 
 Playwright starts the app on port 8000 with `APP_ENV=e2e`, or reuses a running one. About 2–3 s per test.
+
+## Journeys (phase 7)
+
+| Spec | Who | What |
+|---|---|---|
+| `public.spec.ts` | guests | home figures, database search and facets, CSV export (logged in), protocol access, news, help (audiences, search, vote), contact form, ambassadors, the error page |
+| `auth.spec.ts` | guests | register and verify, log in and out, wrong password, password reset |
+| `workspace.spec.ts`, `protocols.spec.ts` | researchers | dashboard, new draft, autosave across a reload, submit lock, import from PRIS, submit, feedback and resubmit, amend, delete, duplicate, link, PDFs |
+| `messages.spec.ts` | researchers | ask an author, reply, comments to the PCT team, attachments, archive, mark unread, notifications |
+| `embargo.spec.ts` | both | request, approve, reject, set a new end date |
+| `profile.spec.ts` | researchers | details, password change |
+| `admin.spec.ts` | PCT team | review and decide (in `protocols.spec.ts`), users (verify, reset link, temporary password), news, FAQ order, pages, ambassadors, statistics export |
+| `mobile.spec.ts` (`@mobile`) | all | menu and filter sheet, log in and form steps, messages one pane at a time, the More menu |
+
+`npx playwright test --project=desktop` or `--project=mobile` runs one of the two.
