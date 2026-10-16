@@ -130,5 +130,9 @@ class AuthorPrivacyTest extends TestCase
             ProtocolSchema::cleanAnswers(['link_to_publication' => ' javascript:alert(1)', 'additional_information_images' => [$name, '../../.env', 'https://evil.example/x.png']])
         );
         $this->assertSame(['link_to_publication' => 'PubMed 42493553'], ProtocolSchema::cleanAnswers(['link_to_publication' => 'PubMed 42493553']));
+        // A single image as the legacy form stored it (a list) or as the A2 form does (a name).
+        $this->assertSame(['experimental_design_image' => [$name]], ProtocolSchema::cleanAnswers(['experimental_design_image' => [$name, 'x.php']]));
+        $this->assertSame(['experimental_design_image' => $name], ProtocolSchema::cleanAnswers(['experimental_design_image' => $name]));
+        $this->assertSame(['experimental_design_image' => null], ProtocolSchema::cleanAnswers(['experimental_design_image' => '../x.png']));
     }
 }

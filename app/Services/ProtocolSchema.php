@@ -47,10 +47,11 @@ class ProtocolSchema
                 $values[$key] = Html::answer($value);
             } elseif (is_string($value) && $type === 'url' && preg_match('/^[\x00-\x20]*(javascript|vbscript|data|file):/i', $value)) {
                 $values[$key] = '';
-            } elseif ($type === 'image') {
-                $values[$key] = is_string($value) && preg_match(self::IMAGE_NAME, $value) ? $value : null;
-            } elseif ($type === 'images') {
-                $values[$key] = array_values(array_filter((array) $value, fn ($file) => is_string($file) && preg_match(self::IMAGE_NAME, $file)));
+            } elseif (in_array($type, ['image', 'images'], true)) {
+                // The legacy form stored every image answer as a list; the A2 form stores one
+                // image as a name. Both shapes stay as they are.
+                $valid = fn ($file) => is_string($file) && preg_match(self::IMAGE_NAME, $file);
+                $values[$key] = is_array($value) ? array_values(array_filter($value, $valid)) : ($valid($value) ? $value : null);
             }
         }
 
