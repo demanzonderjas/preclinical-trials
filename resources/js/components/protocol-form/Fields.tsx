@@ -1,6 +1,5 @@
 import { Check, ImageIcon, Plus, Trash2, Upload, X } from "lucide-react";
 import { type ReactNode, useId, useRef, useState } from "react";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { RadioCards, Select, TextInput } from "@/components/ui/Form";
 import { type ProtocolField, isVisible, protocolFields } from "@/data/protocol-schema";
@@ -78,11 +77,6 @@ export function Question({ field, ctx, first, badge, after }: { field: ProtocolF
 						</span>
 					)}
 				</label>
-				{field.auditTracked && (
-					<Badge tone="blue" size="sm" className="h-6 text-[11.5px]">
-						Audit-tracked
-					</Badge>
-				)}
 				{missing && <span className="ml-auto text-[13.5px] font-bold">Required · not answered yet</span>}
 				{badge && <span className="ml-auto">{badge}</span>}
 			</div>

@@ -4,7 +4,7 @@ import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { Control, type Country, type FieldContext, isFilled, isTrue, Question, QuestionCard, type Values } from "@/components/protocol-form/Fields";
 import { SavePill } from "@/components/protocol-form/SavePill";
 import { type SaveState, useAutosave } from "@/components/protocol-form/useAutosave";
-import { Badge, type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
+import { type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
 import { Button, ButtonAnchor } from "@/components/ui/Button";
 import { Avatar, Note } from "@/components/ui/Content";
 import { Field, RadioCards, Switch, Textarea, TextInput } from "@/components/ui/Form";
@@ -122,6 +122,7 @@ function ProtocolForm({ protocol, values: initial, amendment, feedback, countrie
 							</button>
 						</div>
 					)}
+					{!amending && <p className="px-2 text-[14.5px] leading-normal text-ink-muted">After publication, changes go through an amendment and are shown in the protocol’s public version history.</p>}
 					<p className="px-2 text-[14.5px] leading-normal text-ink-muted">
 						Stuck on a question?{" "}
 						<a href={routes.bookAppointment} className="font-bold text-link underline underline-offset-3">
@@ -566,13 +567,7 @@ function SubmitStep({
 						</Field>
 					</>
 				) : (
-					<p className="mt-2 text-[15.5px] text-ink-muted">
-						Fields marked{" "}
-						<Badge tone="blue" size="sm" className="h-6 text-[11.5px]">
-							Audit-tracked
-						</Badge>{" "}
-						can still change after publication. When they do, this box asks why. The reason becomes part of the protocol’s version history.
-					</p>
+					<p className="mt-2 text-[15.5px] text-ink-muted">After publication you can still change your answers through an amendment. This box then asks why, and the reason becomes part of the protocol’s public version history.</p>
 				)}
 			</section>
 
