@@ -47,7 +47,7 @@ export function childrenOf(field: ProtocolField) {
 /* A numbered question with its follow-up questions                            */
 /* -------------------------------------------------------------------------- */
 
-export function Question({ field, ctx, first }: { field: ProtocolField; ctx: FieldContext; first?: boolean }) {
+export function Question({ field, ctx, first, badge, after }: { field: ProtocolField; ctx: FieldContext; first?: boolean; badge?: ReactNode; after?: ReactNode }) {
 	const id = `field-${field.key}`;
 	const value = ctx.values[field.key];
 	const missing = field.required && !isFilled(value);
@@ -77,6 +77,7 @@ export function Question({ field, ctx, first }: { field: ProtocolField; ctx: Fie
 					</Badge>
 				)}
 				{missing && <span className="ml-auto text-[13.5px] font-bold">Required · not answered yet</span>}
+				{badge && <span className="ml-auto">{badge}</span>}
 			</div>
 			{field.help && <p className={cn("mt-1.5 text-[14.5px] leading-normal whitespace-pre-line text-ink-muted", field.number && "sm:pl-11")}>{field.help}</p>}
 			{point && point.status === "open" && (
@@ -87,6 +88,7 @@ export function Question({ field, ctx, first }: { field: ProtocolField; ctx: Fie
 			<div className="mt-3.5">
 				<Control field={field} ctx={ctx} id={id} />
 			</div>
+			{after}
 			{followUps.length > 0 && (
 				<div className="relative mt-4 grid gap-5 rounded-card bg-teal-50 px-5 py-5 sm:px-6">
 					{followUps.map(child => (

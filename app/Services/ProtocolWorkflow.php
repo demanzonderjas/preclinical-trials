@@ -97,6 +97,7 @@ class ProtocolWorkflow
                 'decided_by' => $admin?->id,
                 'message' => $message,
                 'internal_note' => $internalNote,
+                'snapshot' => $protocol->load('details')->values(),
             ]);
             $points = $round ? $round->points()->count() : 0;
 

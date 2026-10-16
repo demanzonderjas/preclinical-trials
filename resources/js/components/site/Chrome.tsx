@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/react";
 import { LogOut, Menu, Plus, Search, ShieldCheck, X } from "lucide-react";
 import { type ReactNode, useEffect, useId, useState } from "react";
-import { ButtonAnchor, ButtonLink } from "@/components/ui/Button";
+import { ButtonAnchor } from "@/components/ui/Button";
 import { CountBubble } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Content";
 import { TextInput } from "@/components/ui/Form";

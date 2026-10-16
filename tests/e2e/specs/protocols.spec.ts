@@ -38,14 +38,19 @@ test.describe("Researcher: protocols", () => {
 		await app.expectMail({ to: personas.researcher.email });
 	});
 
-	// Parked until the A2 Feedback page exists (PLAN F1).
-	test.fixme("sees why a protocol was rejected and resubmits it", async ({ workspace, app, page }) => {
-		await workspace.openMyProtocols();
-		await workspace.submitForPublication(protocols.rejected);
+	test("answers the reviewer's feedback and resubmits", async ({ workspace, app, page }) => {
+		await workspace.openFeedback(protocols.rejected);
+		await expect(workspace.feedbackPoint(4)).toContainText("blinded to group allocation");
+		await expect(page.getByRole("button", { name: /resubmit for publication/i })).toBeDisabled();
 
-		expect((await app.protocol(protocols.rejected)).status).toBe("resubmitted_for_publication");
-		// The rejection message itself is only stored on the admin side today (see PLAN F1).
-		expect((await app.protocol(protocols.rejected)).admin_actions[0].message).toBe(rejectionMessage);
+		await workspace.askAboutPoint(4, "Does a coded file count as blinded?");
+		await app.expectMail({ to: ADMIN_INBOX });
+		await workspace.markPointAddressed(4);
+		await workspace.resubmitFromFeedback("All points addressed.");
+
+		const resubmitted = await app.protocol(protocols.rejected);
+		expect(resubmitted.status).toBe("resubmitted_for_publication");
+		expect(resubmitted.admin_actions[0].message).toBe(rejectionMessage);
 	});
 
 	test("deletes a draft", async ({ workspace }) => {

@@ -59,6 +59,11 @@ class E2ESeeder extends Seeder
 			'decided_at' => Carbon::now()->subDays(14),
 			'decided_by' => $admin->id,
 			'message' => 'Please add the sample size calculation.',
+			// What the reviewer saw; the researcher has changed the title and the sample size since.
+			'snapshot' => array_merge($rejected->fresh('details')->values(), [
+				'title' => 'E2E Rejected: dapagliflozin after ischemia-reperfusion',
+				'sample_size_calculation' => 'no',
+			]),
 		]);
 		$points = [];
 		foreach ([

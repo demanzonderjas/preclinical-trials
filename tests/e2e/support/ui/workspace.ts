@@ -105,6 +105,37 @@ export class WorkspaceUI {
 		await expect(this.page).toHaveURL(/\/database\/view-protocol\/\d+/);
 	}
 
+	/** A2 feedback page of a returned protocol (F1). */
+	async openFeedback(title: string) {
+		const { id } = await this.app.protocol(title);
+		await this.page.goto(`/dashboard/protocols/${id}/feedback`);
+		await expect(this.page.getByRole("heading", { level: 2, name: "Feedback, right where it applies" })).toBeVisible();
+	}
+
+	feedbackPoint(number: number) {
+		return this.page.getByRole("article", { name: new RegExp(`^Point ${number} of \\d+$`) });
+	}
+
+	async markPointAddressed(number: number) {
+		const toggle = this.feedbackPoint(number).getByRole("button", { name: /addressed/i });
+		await toggle.click();
+		await expect(toggle).toHaveAttribute("aria-pressed", "true");
+	}
+
+	async askAboutPoint(number: number, question: string) {
+		const point = this.feedbackPoint(number);
+		if (!(await point.getByRole("textbox").isVisible())) await point.getByRole("button", { name: "Ask a question" }).click();
+		await point.getByRole("textbox").fill(question);
+		await point.getByRole("button", { name: "Send" }).click();
+		await expect(point.getByText(question)).toBeVisible();
+	}
+
+	async resubmitFromFeedback(note: string) {
+		await this.page.getByLabel(/note for the reviewer/i).fill(note);
+		await this.page.getByRole("button", { name: /resubmit for publication/i }).click();
+		await expect(this.page).toHaveURL(/\/dashboard\/manage-protocols$/);
+	}
+
 	async deleteDraft(title: string) {
 		await this.openMyProtocols();
 		await this.myProtocolRow(title).getByRole("button", { name: "Delete draft" }).click();

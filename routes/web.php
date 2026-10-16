@@ -10,6 +10,7 @@ use App\Http\Controllers\Pages\NewsController;
 use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Http\Controllers\Pages\ProtocolPdfController;
 use App\Http\Controllers\Pages\Workspace\DashboardController;
+use App\Http\Controllers\Pages\Workspace\FeedbackController;
 use App\Http\Controllers\Pages\Workspace\MyProtocolsController;
 use App\Http\Controllers\Pages\Workspace\ProtocolFormController;
 use Illuminate\Http\Request;
@@ -82,6 +83,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     Route::post('/protocols/import', [ProtocolFormController::class, 'import'])->middleware('throttle:10,1')->name('workspace.protocols.import');
     Route::whereNumber('id')->prefix('protocols/{id}')->group(function () {
         Route::post('/duplicate', [MyProtocolsController::class, 'duplicate'])->name('workspace.protocols.duplicate');
+        Route::get('/feedback', [FeedbackController::class, 'show'])->name('workspace.feedback');
         Route::put('/answers', [ProtocolFormController::class, 'update'])->middleware('throttle:120,1')->name('workspace.protocols.update');
         Route::post('/amend', [ProtocolFormController::class, 'amend'])->name('workspace.protocols.amend');
         Route::post('/images', [ProtocolFormController::class, 'uploadImage'])->middleware('throttle:30,1')->name('workspace.protocols.images');
@@ -91,6 +93,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('/comments/read', [MyProtocolsController::class, 'readComments'])->name('workspace.protocols.comments.read');
         Route::put('/links', [MyProtocolsController::class, 'link'])->name('workspace.protocols.link');
     });
+    Route::post('/feedback-points/{point}/status', [FeedbackController::class, 'status'])->whereNumber('point')->name('workspace.feedback.status');
+    Route::post('/feedback-points/{point}/messages', [FeedbackController::class, 'message'])->whereNumber('point')->middleware('throttle:30,1')->name('workspace.feedback.message');
     Route::get('/protocols/{id}/certificate.pdf', [ProtocolPdfController::class, 'certificate'])->whereNumber('id')->middleware('throttle:30,1')->name('workspace.certificate');
 });
 

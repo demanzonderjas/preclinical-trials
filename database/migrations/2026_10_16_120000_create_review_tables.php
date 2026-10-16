@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('message')->nullable(); // to the researcher
             $table->text('internal_note')->nullable(); // PCT team only
             $table->text('researcher_note')->nullable(); // sent with a resubmission
+            $table->json('snapshot')->nullable(); // the answers when the round was decided, for "your change"
             $table->timestamps();
             $table->unique(['protocol_id', 'number']);
         });

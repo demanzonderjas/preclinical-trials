@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class ReviewRound extends Model
 {
-    protected $fillable = ['number', 'submitted_at', 'decision', 'decided_at', 'decided_by', 'message', 'internal_note', 'researcher_note'];
+    protected $fillable = ['number', 'submitted_at', 'decision', 'decided_at', 'decided_by', 'message', 'internal_note', 'researcher_note', 'snapshot'];
 
-    protected $casts = ['submitted_at' => 'datetime', 'decided_at' => 'datetime'];
+    protected $casts = ['submitted_at' => 'datetime', 'decided_at' => 'datetime', 'snapshot' => 'array'];
 
     public function protocol(): BelongsTo
     {

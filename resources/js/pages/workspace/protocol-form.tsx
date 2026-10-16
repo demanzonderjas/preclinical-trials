@@ -1,7 +1,9 @@
 import { router, useForm, usePage } from "@inertiajs/react";
-import { ArrowLeft, ArrowRight, Check, ChevronRight, CloudOff, CloudUpload, LoaderCircle, Lock, MoreHorizontal } from "lucide-react";
-import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Country, type FieldContext, isFilled, isTrue, Question, QuestionCard, type Values, Control } from "@/components/protocol-form/Fields";
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Lock, MoreHorizontal } from "lucide-react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { Control, type Country, type FieldContext, isFilled, isTrue, Question, QuestionCard, type Values } from "@/components/protocol-form/Fields";
+import { SavePill } from "@/components/protocol-form/SavePill";
+import { type SaveState, useAutosave } from "@/components/protocol-form/useAutosave";
 import { Badge, type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
 import { Button, ButtonAnchor } from "@/components/ui/Button";
 import { Avatar, Note } from "@/components/ui/Content";
@@ -10,8 +12,7 @@ import { Dialog, Menu } from "@/components/ui/Interactive";
 import { designGroupTitles, draftProgress, formSteps, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
 import { WorkspaceLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
-import { formatDate, formatTime } from "@/lib/dates";
-import { HttpError, request } from "@/lib/http";
+import { formatDate } from "@/lib/dates";
 import { routes } from "@/lib/routes";
 import { fieldLabel } from "@/lib/workspace";
 
@@ -23,8 +24,6 @@ type Props = {
 	profile: { name: string; role: string | null; email: string; institution: string | null };
 };
 
-type SaveState = { state: "idle" | "saving" | "saved" | "error"; at?: string };
-type Saved = { id: number; saved_at: string };
 
 const STEPS = formSteps.length;
 const topLevel = (field: ProtocolField) => !field.parent || !!field.number;
@@ -47,17 +46,9 @@ export default function ProtocolForm({ protocol, values: initial, feedback, coun
 	const amending = status === "published";
 	const autosaves = status === "draft" || status === "rejected";
 
-	const [values, setValues] = useState<Values>(initial);
+	const { values, set, flush, save, id, uploadImage } = useAutosave({ id: protocol?.id ?? null, values: initial, savedAt: protocol?.saved_at, enabled: autosaves });
 	const [step, setStep] = useState(1);
-	const [id, setId] = useState<number | null>(protocol?.id ?? null);
-	const [save, setSave] = useState<SaveState>(protocol ? { state: "saved", at: protocol.saved_at } : { state: "idle" });
 	const [importOpen, setImportOpen] = useState(false);
-
-	const valuesRef = useRef(values);
-	const dirty = useRef(new Set<string>());
-	const idRef = useRef(id);
-	const inFlight = useRef<Promise<void> | null>(null);
-	const timer = useRef<number | undefined>(undefined);
 
 	// The step and the import dialog come from the URL (?step=4, #import).
 	useEffect(() => {
@@ -65,82 +56,6 @@ export default function ProtocolForm({ protocol, values: initial, feedback, coun
 		if (fromUrl >= 1 && fromUrl <= STEPS) setStep(fromUrl);
 		if (window.location.hash === "#import" && !protocol) setImportOpen(true);
 	}, [protocol]);
-
-	/** Sends the answers changed since the last save; creates the draft on the first one. */
-	const flush = useCallback(async (): Promise<void> => {
-		window.clearTimeout(timer.current);
-		if (!autosaves) return;
-		if (inFlight.current) {
-			await inFlight.current;
-			if (!dirty.current.size) return;
-		}
-		if (!dirty.current.size) return;
-
-		const keys = [...dirty.current];
-		dirty.current.clear();
-		const changed = Object.fromEntries(keys.map(key => [key, valuesRef.current[key] ?? null]));
-		setSave({ state: "saving" });
-
-		inFlight.current = (async () => {
-			try {
-				const saved = idRef.current
-					? await request<Saved>("PUT", `/dashboard/protocols/${idRef.current}/answers`, { values: changed })
-					: await request<Saved>("POST", "/dashboard/protocols", { values: changed });
-				if (!idRef.current) {
-					idRef.current = saved.id;
-					setId(saved.id);
-					window.history.replaceState(window.history.state, "", `${routes.editProtocol(saved.id)}${window.location.search}`);
-				}
-				setSave({ state: "saved", at: saved.saved_at });
-			} catch (error) {
-				keys.forEach(key => dirty.current.add(key));
-				setSave({ state: "error" });
-				if (error instanceof HttpError && error.status === 419) window.location.reload();
-			} finally {
-				inFlight.current = null;
-			}
-		})();
-		await inFlight.current;
-	}, [autosaves]);
-
-	const set = useCallback(
-		(key: string, value: unknown) => {
-			setValues(current => {
-				const next = { ...current, [key]: value };
-				valuesRef.current = next;
-				return next;
-			});
-			dirty.current.add(key);
-			if (autosaves) {
-				window.clearTimeout(timer.current);
-				timer.current = window.setTimeout(() => void flush(), 1200);
-			}
-		},
-		[autosaves, flush]
-	);
-
-	// Warn before leaving with answers that are not saved yet.
-	useEffect(() => {
-		const warn = (event: BeforeUnloadEvent) => {
-			if (dirty.current.size || inFlight.current) event.preventDefault();
-		};
-		window.addEventListener("beforeunload", warn);
-		return () => window.removeEventListener("beforeunload", warn);
-	}, []);
-
-	const uploadImage = useCallback(
-		async (file: File) => {
-			if (!idRef.current) {
-				// Images belong to a protocol, so save the draft first.
-				dirty.current.add("title");
-				await flush();
-			}
-			const body = new FormData();
-			body.append("image", file);
-			return (await request<{ filename: string }>("POST", idRef.current ? `/dashboard/protocols/${idRef.current}/images` : "/api/protocol/upload-image", body)).filename;
-		},
-		[flush]
-	);
 
 	const feedbackByField = useMemo(() => new Map(feedback.map(point => [point.field_key, point])), [feedback]);
 	const ctx: FieldContext = { values, set, countries, uploadImage, feedback: feedbackByField };
@@ -348,35 +263,6 @@ function Header({ protocol, title, save, autosaves, amending, id }: { protocol: 
 				/>
 			)}
 		</section>
-	);
-}
-
-function SavePill({ save, autosaves }: { save: SaveState; autosaves: boolean }) {
-	const content: Record<SaveState["state"], ReactNode> = {
-		idle: autosaves ? "Saved automatically once you start typing" : "Changes are saved when you submit the amendment",
-		saving: (
-			<>
-				<LoaderCircle size={16} strokeWidth={2.2} className="animate-spin text-teal-500" aria-hidden="true" />
-				Saving…
-			</>
-		),
-		saved: (
-			<>
-				<CloudUpload size={16} strokeWidth={2.2} className="text-teal-500" aria-hidden="true" />
-				All changes saved automatically{save.at ? ` · ${formatTime(save.at)}` : ""}
-			</>
-		),
-		error: (
-			<>
-				<CloudOff size={16} strokeWidth={2.2} className="text-rust" aria-hidden="true" />
-				Not saved yet. We keep trying when you change something
-			</>
-		)
-	};
-	return (
-		<p role="status" className={cn("inline-flex h-8 items-center gap-2 rounded-full bg-white px-3.5 text-[14px] font-semibold text-ink", save.state === "error" && "bg-peach-100")}>
-			{autosaves || save.state === "idle" ? content[save.state] : content.idle}
-		</p>
 	);
 }
 
