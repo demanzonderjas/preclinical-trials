@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pages\AboutController;
+use App\Http\Controllers\Pages\Admin\AmendmentsController as AdminAmendmentsController;
 use App\Http\Controllers\Pages\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Pages\Admin\EmbargoesController as AdminEmbargoesController;
 use App\Http\Controllers\Pages\Admin\ProtocolsController as AdminProtocolsController;
@@ -18,8 +19,8 @@ use App\Http\Controllers\Pages\Workspace\DashboardController;
 use App\Http\Controllers\Pages\Workspace\EmbargoController;
 use App\Http\Controllers\Pages\Workspace\FeedbackController;
 use App\Http\Controllers\Pages\Workspace\MessagesController;
-use App\Http\Controllers\Pages\Workspace\ProfileController;
 use App\Http\Controllers\Pages\Workspace\MyProtocolsController;
+use App\Http\Controllers\Pages\Workspace\ProfileController;
 use App\Http\Controllers\Pages\Workspace\ProtocolFormController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,8 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
         Route::post('/decision', [AdminProtocolsController::class, 'decide'])->name('admin.decision');
         Route::post('/messages', [AdminProtocolsController::class, 'message'])->name('admin.protocol.message');
     });
+    Route::get('/amendments/{id}', [AdminAmendmentsController::class, 'show'])->whereNumber('id')->name('admin.amendments.show');
+    Route::post('/amendments/{id}/decision', [AdminAmendmentsController::class, 'decide'])->whereNumber('id')->name('admin.amendments.decision');
     Route::get('/embargoes', [AdminEmbargoesController::class, 'index'])->name('admin.embargoes');
     Route::post('/embargo-extensions/{extension}/approve', [AdminEmbargoesController::class, 'approve'])->whereNumber('extension')->name('admin.embargoes.approve');
     Route::post('/embargo-extensions/{extension}/reject', [AdminEmbargoesController::class, 'reject'])->whereNumber('extension')->name('admin.embargoes.reject');
@@ -134,6 +137,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::get('/feedback', [FeedbackController::class, 'show'])->name('workspace.feedback');
         Route::put('/answers', [ProtocolFormController::class, 'update'])->middleware('throttle:120,1')->name('workspace.protocols.update');
         Route::post('/amend', [ProtocolFormController::class, 'amend'])->name('workspace.protocols.amend');
+        Route::delete('/amendment', [ProtocolFormController::class, 'withdrawAmendment'])->name('workspace.protocols.amendment.withdraw');
         Route::post('/images', [ProtocolFormController::class, 'uploadImage'])->middleware('throttle:30,1')->name('workspace.protocols.images');
         Route::delete('/', [MyProtocolsController::class, 'destroy'])->name('workspace.protocols.destroy');
         Route::post('/submit', [MyProtocolsController::class, 'submit'])->name('workspace.protocols.submit');
@@ -165,7 +169,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     Route::get('/protocols/{id}/certificate.pdf', [ProtocolPdfController::class, 'certificate'])->whereNumber('id')->middleware('throttle:30,1')->name('workspace.certificate');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 
 // Unknown URLs: through the web middleware, so the error page has the session and shared props.
 Route::fallback(fn () => abort(404));

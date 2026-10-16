@@ -55,7 +55,7 @@ Playwright starts the app on port 8000 with `APP_ENV=e2e`, or reuses a running o
 |---|---|---|
 | `public.spec.ts` | guests | home figures, database search and facets, CSV export (logged in), protocol access, news, help (audiences, search, vote), contact form, ambassadors, the error page |
 | `auth.spec.ts` | guests | register and verify, log in and out, wrong password, password reset |
-| `workspace.spec.ts`, `protocols.spec.ts` | researchers | dashboard, new draft, autosave across a reload, submit lock, import from PRIS, submit, feedback and resubmit, amend, delete, duplicate, link, PDFs |
+| `workspace.spec.ts`, `protocols.spec.ts` | researchers | dashboard, new draft, autosave across a reload, submit lock, import from PRIS, submit, feedback and resubmit, amend (stays public until approved; admin approves or returns it), delete, duplicate, link, PDFs |
 | `messages.spec.ts` | researchers | ask an author, reply, comments to the PCT team, attachments, archive, mark unread, notifications |
 | `embargo.spec.ts` | both | request, approve, reject, set a new end date |
 | `profile.spec.ts` | researchers | details, password change |

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pages\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Models\Amendment;
 use App\Models\Channel;
 use App\Models\FeedbackPoint;
 use App\Models\Message;
@@ -15,7 +16,6 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -42,23 +42,23 @@ class ProtocolsController extends Controller
         $embargo = in_array($request->query('embargo'), ['yes', 'no'], true) ? $request->query('embargo') : 'any';
         $query = mb_strtolower(trim((string) $request->query('q')));
 
-        $all = Protocol::with('details', 'user', 'adminActions', 'embargoEndDates', 'reviewRounds')->get();
+        $all = Protocol::with('details', 'user', 'adminActions', 'embargoEndDates', 'reviewRounds', 'openAmendment')->get();
         $comments = Channel::where('kind', Channel::TEAM)->whereNotNull('protocol_id')
             ->withCount('messages')->withMax('messages', 'created_at')->get()->keyBy('protocol_id');
 
         $rows = $all
-            ->filter(fn (Protocol $p) => ! self::FILTERS[$filter] || in_array($p->status, self::FILTERS[$filter], true))
+            ->filter(fn (Protocol $p) => $this->matches($p, $filter))
             ->filter(fn (Protocol $p) => $embargo === 'any' || ($embargo === 'yes') === $p->has_embargo)
             ->filter(fn (Protocol $p) => $query === '' || str_contains(mb_strtolower(implode(' ', [$p->title, $p->pct_id, $p->user?->name, $p->user?->institution, $p->user?->email])), $query))
             ->sortBy([
-                fn ($a, $b) => (int) ! in_array($a->status, self::IN_REVIEW, true) <=> (int) ! in_array($b->status, self::IN_REVIEW, true),
-                fn ($a, $b) => in_array($a->status, self::IN_REVIEW, true) ? $this->submittedAt($a) <=> $this->submittedAt($b) : $b->updated_at <=> $a->updated_at,
+                fn ($a, $b) => (int) ! $this->waiting($a) <=> (int) ! $this->waiting($b),
+                fn ($a, $b) => $this->waiting($a) ? $this->submittedAt($a) <=> $this->submittedAt($b) : $b->updated_at <=> $a->updated_at,
             ])
             ->values();
 
         $page = max(1, (int) $request->query('page', 1));
         $paginator = new LengthAwarePaginator($rows->forPage($page, 10)->values(), $rows->count(), 10, $page, ['path' => $request->url(), 'query' => $request->query()]);
-        $waiting = $all->whereIn('status', self::IN_REVIEW);
+        $waiting = $all->filter(fn (Protocol $p) => $this->waiting($p));
         $published = $all->where('status', 'published');
 
         return Inertia::render('admin/protocols', [
@@ -66,12 +66,13 @@ class ProtocolsController extends Controller
                 'awaiting' => $waiting->count(),
                 'oldest_days' => $waiting->isEmpty() ? null : (int) $waiting->map(fn ($p) => $this->submittedAt($p))->min()->startOfDay()->diffInDays(now()->startOfDay()),
                 'resubmitted' => $waiting->where('status', 'resubmitted_for_publication')->count(),
+                'amendments' => $waiting->where('status', 'published')->count(),
                 'public' => $published->reject(fn ($p) => $p->has_embargo)->count(),
                 'embargoed' => $published->filter(fn ($p) => $p->has_embargo)->count(),
                 'rejected' => $all->where('status', 'rejected')->count(),
             ],
             'filters' => ['status' => $filter, 'embargo' => $embargo, 'q' => $request->query('q', '')],
-            'totals' => collect(self::FILTERS)->map(fn ($statuses) => $statuses ? $all->whereIn('status', $statuses)->count() : $all->count()),
+            'totals' => collect(self::FILTERS)->map(fn ($statuses, $filter) => $all->filter(fn (Protocol $p) => $this->matches($p, $filter))->count()),
             'protocols' => $paginator->through(fn (Protocol $p) => $this->row($p, $comments->get($p->id))),
         ]);
     }
@@ -79,6 +80,9 @@ class ProtocolsController extends Controller
     public function review(Request $request, int $id, ProtocolWorkflow $workflow): Response|RedirectResponse
     {
         $protocol = Protocol::with('details', 'user', 'adminActions', 'embargoEndDates', 'reviewRounds.points', 'reviewRounds.decider')->findOrFail($id);
+        if ($amendment = $this->pendingAmendment($protocol->load('openAmendment'))) {
+            return redirect("/admin/amendments/{$amendment->id}");
+        }
         if (! in_array($protocol->status, self::IN_REVIEW, true)) {
             return redirect("/database/view-protocol/{$protocol->id}")->with('error', 'This protocol is not waiting for a review.');
         }
@@ -218,20 +222,45 @@ class ProtocolsController extends Controller
         return $point;
     }
 
+    /** Waiting for the PCT team: a submitted protocol, or an amendment to a published one. */
+    private function waiting(Protocol $protocol): bool
+    {
+        return in_array($protocol->status, self::IN_REVIEW, true) || $this->pendingAmendment($protocol) !== null;
+    }
+
+    private function pendingAmendment(Protocol $protocol): ?Amendment
+    {
+        return $protocol->status === 'published' && $protocol->openAmendment?->status === Amendment::PENDING ? $protocol->openAmendment : null;
+    }
+
+    private function matches(Protocol $protocol, string $filter): bool
+    {
+        return match ($filter) {
+            'all' => true,
+            'awaiting' => $this->waiting($protocol),
+            default => in_array($protocol->status, self::FILTERS[$filter], true),
+        };
+    }
+
     private function submittedAt(Protocol $protocol): Carbon
     {
+        if ($amendment = $this->pendingAmendment($protocol)) {
+            return $amendment->submitted_at;
+        }
+
         return $protocol->reviewRounds->sortBy('number')->last()?->submitted_at ?? $protocol->updated_at;
     }
 
     private function row(Protocol $p, ?Channel $comments): array
     {
-        $inReview = in_array($p->status, self::IN_REVIEW, true);
+        $inReview = $this->waiting($p);
 
         return [
             'id' => $p->id,
             'pct_id' => $p->pct_id,
             'status' => $p->status,
             'title' => $p->title,
+            'amendment' => $this->pendingAmendment($p)?->id,
             'who' => $p->user ? trim($p->user->name.' · '.implode(', ', array_filter([$p->user->institution, $p->user->city])).($p->user->country ? " ({$p->user->country})" : ''), ' ·') : null,
             'updated_at' => $p->updated_at->toIso8601String(),
             'waiting_days' => $inReview ? (int) $this->submittedAt($p)->copy()->startOfDay()->diffInDays(now()->startOfDay()) : null,

@@ -29,6 +29,7 @@ export const routes = {
 	admin: {
 		protocols: "/admin/protocols",
 		review: (id: number) => `/admin/protocols/${id}/review`,
+		amendment: (id: number) => `/admin/amendments/${id}`,
 		embargoes: "/admin/embargoes",
 		content: "/admin/content",
 		users: "/admin/users",

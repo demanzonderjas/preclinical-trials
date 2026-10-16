@@ -1,15 +1,15 @@
 import { router, useForm } from "@inertiajs/react";
 import { AlertCircle, ChevronRight } from "lucide-react";
-import { type FormEvent, type ReactNode, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { Badge, type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
 import { Button, ButtonAnchor } from "@/components/ui/Button";
-import { Avatar } from "@/components/ui/Content";
 import { RadioCards, Textarea } from "@/components/ui/Form";
-import { formatValue, formSteps, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
+import { display } from "@/components/admin/FieldValue";
+import { ResearcherMessages } from "@/components/admin/ResearcherMessages";
+import { formSteps, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
 import { AdminLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
 import { formatDate, formatMoment } from "@/lib/dates";
-import { plainText } from "@/lib/protocol-versions";
 import { routes } from "@/lib/routes";
 import { fieldLabel } from "@/lib/workspace";
 
@@ -137,7 +137,7 @@ export default function Review({ protocol, values, previous, points, earlier, hi
 
 				<aside className="grid content-start gap-5">
 					<Decision protocol={protocol} points={points} approval={approval} />
-					<Messages protocolId={protocol.id} messages={messages} />
+					<ResearcherMessages protocolId={protocol.id} messages={messages} />
 					<History history={history} />
 				</aside>
 			</div>
@@ -146,51 +146,6 @@ export default function Review({ protocol, values, previous, points, earlier, hi
 }
 
 /* -------------------------------------------------------------------------- */
-
-function display(field: ProtocolField, value: unknown): ReactNode {
-	if (field.type === "study_arms") {
-		const arms = (Array.isArray(value) ? value : []) as { type?: string; number?: string | number; intervention?: string }[];
-		if (!arms.length) return null;
-		const total = arms.reduce((sum, arm) => sum + (Number(arm.number) || 0), 0);
-		return (
-			<>
-				<table className="w-full text-left text-[15px]">
-					<thead>
-						<tr>
-							{["Type", "Number", "Intervention"].map(header => (
-								<th key={header} scope="col" className="eyebrow pb-2 text-[11.5px]">
-									{header}
-								</th>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{arms.map((arm, index) => (
-							<tr key={index} className="border-t border-teal-50 align-top">
-								<td className="py-2 pr-3">{arm.type ? arm.type.charAt(0).toUpperCase() + arm.type.slice(1) : ""}</td>
-								<td className="py-2 pr-3 font-bold">{arm.number}</td>
-								<td className="py-2">{arm.intervention}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-				<p className="mt-2 text-[14px] text-ink-muted">
-					Arms add up to <strong className="text-ink">{total}</strong>
-				</p>
-			</>
-		);
-	}
-	if (field.type === "study_centres") {
-		const centres = (Array.isArray(value) ? value : []) as { name?: string; city?: string; country?: string }[];
-		return centres.length ? centres.map((centre, index) => <span key={index} className="block">{[centre.name, centre.city, centre.country].filter(Boolean).join(", ")}</span>) : null;
-	}
-	if (field.type === "image" || field.type === "images") {
-		const files = Array.isArray(value) ? value : value ? [value] : [];
-		return files.length ? `${files.length} image${files.length === 1 ? "" : "s"}` : null;
-	}
-	const text = field.type === "longtext" && typeof value === "string" ? plainText(value) : formatValue(field, value);
-	return text || null;
-}
 
 function FieldRow({ protocolId, field, values, previous, points, numberOf, earlier }: { protocolId: number; field: ProtocolField; values: Values; previous: Values | null; points: Point[]; numberOf: (point: Point) => number; earlier: EarlierPoint[] }) {
 	const [adding, setAdding] = useState(false);
@@ -413,51 +368,6 @@ function Decision({ protocol, points, approval }: Pick<Props, "protocol" | "poin
 				{returning ? "The researcher gets an e-mail with a link to the feedback." : `The researcher gets an e-mail that the protocol is approved and published.${approval.embargo_until ? " The embargo hides the details until the end date." : ""}`}
 			</p>
 		</form>
-	);
-}
-
-function Messages({ protocolId, messages }: { protocolId: number; messages: Props["messages"] }) {
-	const form = useForm({ text: "" });
-	return (
-		<section aria-labelledby="messages-title" className="rounded-card border border-line bg-white px-5 py-6 sm:px-6">
-			<h2 id="messages-title" className="text-xl font-extrabold">
-				Messages with the researcher
-			</h2>
-			{messages.length === 0 ? (
-				<p className="mt-2 text-[14.5px] text-ink-muted">No messages about this protocol yet.</p>
-			) : (
-				<ol className="mt-4 grid gap-4">
-					{messages.map(message => (
-						<li key={message.id} className="flex gap-3">
-							<Avatar initials={message.initials} size={34} tone={message.team ? "teal" : "teal"} />
-							<div className="min-w-0">
-								<p className="text-[13.5px] text-ink-muted">
-									<strong className="text-ink">{message.author}</strong> · {formatDate(message.at)}
-								</p>
-								<p className={cn("mt-1 rounded-card px-4 py-3 text-[15px] leading-snug whitespace-pre-line", message.team ? "bg-teal-50" : "bg-mist")}>{message.text}</p>
-							</div>
-						</li>
-					))}
-				</ol>
-			)}
-			<form
-				className="mt-4"
-				onSubmit={event => {
-					event.preventDefault();
-					form.post(`/admin/protocols/${protocolId}/messages`, { preserveScroll: true, onSuccess: () => form.reset() });
-				}}
-			>
-				<label htmlFor="admin-reply" className="sr-only">
-					Write a reply
-				</label>
-				<Textarea id="admin-reply" rows={2} placeholder="Write a reply" value={form.data.text} onChange={event => form.setData("text", event.target.value)} />
-				<div className="mt-2.5 flex justify-end">
-					<Button type="submit" variant="secondary" size="sm" disabled={form.processing || !form.data.text.trim()}>
-						Send
-					</Button>
-				</div>
-			</form>
-		</section>
 	);
 }
 

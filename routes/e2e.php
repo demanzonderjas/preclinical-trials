@@ -121,7 +121,7 @@ Route::post('artisan', function (Request $request) {
  * Read-only lookups so tests can find seeded records and assert state the UI does not show.
  */
 Route::get('protocol', function (Request $request) {
-	$protocol = Protocol::with('details', 'embargoEndDates', 'embargoExtensions', 'revisions', 'adminActions')
+	$protocol = Protocol::with('details', 'embargoEndDates', 'embargoExtensions', 'revisions', 'adminActions', 'amendments')
 		->get()
 		->first(function (Protocol $p) use ($request) {
 			return $p->title === $request->input('title');
@@ -138,6 +138,7 @@ Route::get('protocol', function (Request $request) {
 		'embargo_extensions' => $protocol->embargoExtensions,
 		'revisions' => $protocol->revisions,
 		'admin_actions' => $protocol->adminActions,
+		'amendments' => $protocol->amendments->map(fn ($a) => ['id' => $a->id, 'status' => $a->status, 'reason' => $a->reason, 'fields' => $a->fields()])->values(),
 		'linked' => $protocol->linked->pluck('id')->values(),
 		'details' => $protocol->details->mapWithKeys(function ($d) {
 			return [$d->key => $d->value];

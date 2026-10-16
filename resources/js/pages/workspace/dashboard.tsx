@@ -15,7 +15,8 @@ import { type ActivityItem, activityLabel, type FeedbackStatus, fieldLabel, type
 type FeedbackAction = { type: "feedback"; id: number; title: string; date: string; points: { field_key: string; status: FeedbackStatus }[]; message: string | null };
 type EmbargoAction = { type: "embargo"; id: number; pct_id: string; title: string; approved: string | null; ends: string; days_left: number; elapsed: number | null; extension_pending: boolean };
 type DraftAction = { type: "draft"; id: number; title: string | null; saved_at: string; progress: Progress };
-type Action = FeedbackAction | EmbargoAction | DraftAction;
+type AmendmentAction = { type: "amendment"; id: number; pct_id: string; title: string; date: string | null; message: string | null };
+type Action = FeedbackAction | AmendmentAction | EmbargoAction | DraftAction;
 
 
 type Props = {
@@ -125,6 +126,8 @@ function summary(actions: Action[], unread: number): ReactNode {
 
 	if (feedback.length === 1) parts.push(<>reviewer feedback on “{shortTitle(feedback[0].title)}”</>);
 	if (feedback.length > 1) parts.push(<>reviewer feedback on {feedback.length} protocols</>);
+	const amendments = actions.filter(action => action.type === "amendment");
+	if (amendments.length) parts.push(<>{amendments.length === 1 ? "an amendment" : `${amendments.length} amendments`} returned by the PCT team</>);
 	if (embargoes.length) parts.push(<>an embargo that ends {embargoes[0].days_left <= 0 ? "today" : `in ${embargoes[0].days_left} days`} ({embargoes[0].pct_id})</>);
 	if (unread) parts.push(<>{unread === 1 ? "a new message" : `${unread} new messages`} in your inbox</>);
 
@@ -134,7 +137,7 @@ function summary(actions: Action[], unread: number): ReactNode {
 		return <>Nothing needs you today. Register a protocol before your study starts, or browse what others have registered.</>;
 	}
 
-	const count = ["", "One thing needs", "Two things need", "Three things need"][parts.length];
+	const count = ["", "One thing needs", "Two things need", "Three things need", "Four things need"][parts.length];
 	return (
 		<>
 			{count} you today:{" "}
@@ -228,6 +231,7 @@ function NeedsAction({ actions }: { actions: Action[] }) {
 					{actions.map(action => (
 						<li key={`${action.type}-${action.id}`} className="py-6">
 							{action.type === "feedback" && <FeedbackItem action={action} />}
+							{action.type === "amendment" && <AmendmentItem action={action} />}
 							{action.type === "embargo" && <EmbargoItem action={action} />}
 							{action.type === "draft" && <DraftItem action={action} />}
 						</li>
@@ -251,6 +255,22 @@ function ActionRow({ eyebrow, title, children, button, progress }: { eyebrow: Re
 			</div>
 			{progress && <div className="mt-4">{progress}</div>}
 		</div>
+	);
+}
+
+function AmendmentItem({ action }: { action: AmendmentAction }) {
+	return (
+		<ActionRow
+			eyebrow={`Amendment returned${action.date ? ` · ${formatDate(action.date)}` : ""}`}
+			title={action.title}
+			button={
+				<ButtonAnchor href={routes.editProtocol(action.id)} size="sm" arrow>
+					Change amendment
+				</ButtonAnchor>
+			}
+		>
+			{action.message ? `The PCT team: “${action.message}”` : "The PCT team asks you to change your amendment."} Readers still see the published version of {action.pct_id}.
+		</ActionRow>
 	);
 }
 

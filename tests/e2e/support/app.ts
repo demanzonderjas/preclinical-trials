@@ -19,6 +19,7 @@ export type ProtocolState = {
 	embargo_extensions: { id: number; status: string; reason: string }[];
 	revisions: { changes: { key: string; old_value: unknown; new_value: unknown }[]; admin_only: boolean | number }[];
 	admin_actions: { action: string; message: string | null }[];
+	amendments: { id: number; status: "pending" | "returned" | "approved" | "withdrawn"; reason: string | null; fields: string[] }[];
 	linked: number[];
 	details: Record<string, unknown>;
 };

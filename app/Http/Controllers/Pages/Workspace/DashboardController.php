@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages\Workspace;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Models\ActivityLog;
+use App\Models\Amendment;
 use App\Models\FeedbackPoint;
 use App\Models\Protocol;
 use App\Services\Inbox;
@@ -31,7 +32,7 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $protocols = $user->protocols()
-            ->with('details', 'adminActions', 'embargoEndDates', 'embargoExtensions', 'reviewRounds', 'feedbackPoints')
+            ->with('details', 'adminActions', 'embargoEndDates', 'embargoExtensions', 'reviewRounds', 'feedbackPoints', 'openAmendment')
             ->get();
         $inbox = Inbox::for($user);
         $register = app(PublicRegister::class)->summaries();
@@ -92,7 +93,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Sorted by urgency: returned protocols, then embargoes about to end, then drafts.
+     * Sorted by urgency: returned protocols and amendments, then embargoes about to end, then drafts.
      *
      * @param  Collection<int, Protocol>  $protocols
      */
@@ -111,6 +112,18 @@ class DashboardController extends Controller
                     'message' => $round?->message,
                 ];
             })
+            ->sortBy('date');
+
+        $amendments = $protocols->where('status', 'published')
+            ->filter(fn (Protocol $protocol) => $protocol->openAmendment?->status === Amendment::RETURNED)
+            ->map(fn (Protocol $protocol) => [
+                'type' => 'amendment',
+                'id' => $protocol->id,
+                'pct_id' => $protocol->pct_id,
+                'title' => $protocol->title,
+                'date' => $protocol->openAmendment->decided_at?->toIso8601String(),
+                'message' => $protocol->openAmendment->message,
+            ])
             ->sortBy('date');
 
         $embargoes = $protocols->where('status', 'published')
@@ -146,7 +159,7 @@ class DashboardController extends Controller
                 'progress' => ProtocolSchema::progress($protocol->details->mapWithKeys(fn ($detail) => [$detail->key => $detail->value])->all()),
             ]);
 
-        return $feedback->concat($embargoes)->concat($drafts)->values()->all();
+        return $feedback->concat($amendments)->concat($embargoes)->concat($drafts)->values()->all();
     }
 
     /** @param  Collection<int, Protocol>  $protocols */

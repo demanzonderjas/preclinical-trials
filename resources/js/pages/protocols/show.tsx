@@ -3,7 +3,7 @@ import { Check, ChevronRight, Copy, Download, Lock, MessageCircleQuestion, Penci
 import { Fragment, type ReactNode, useMemo, useState } from "react";
 import { Badge, EmbargoBadge, StatusBadge, type ProtocolStatus } from "@/components/ui/Badge";
 import { Button, ButtonAnchor } from "@/components/ui/Button";
-import { DetailList, Diff } from "@/components/ui/Content";
+import { DetailList, Diff, Note } from "@/components/ui/Content";
 import { Switch } from "@/components/ui/Form";
 import { LogoMark } from "@/components/ui/Logo";
 import { designGroupTitles, fieldByKey, formatValue, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
@@ -30,6 +30,7 @@ type Props = {
 		centre_place: string;
 		is_owner: boolean;
 		shows_contact: boolean;
+		amendment: { id: number; status: "pending" | "returned" } | null;
 	};
 	versions: Version[];
 	original: { date: string | null; time: string | null };
@@ -173,9 +174,9 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 						<ButtonAnchor href={routes.protocolPdf(protocol.id)} size="lg" icon={<Download size={18} strokeWidth={2.2} aria-hidden="true" />}>
 							Download as PDF
 						</ButtonAnchor>
-						{protocol.is_owner ? (
+						{protocol.is_owner && protocol.amendment?.status === "pending" ? null : protocol.is_owner ? (
 							<ButtonAnchor href={routes.editProtocol(protocol.id)} variant="secondary" size="lg" icon={<Pencil size={18} strokeWidth={2.2} aria-hidden="true" />}>
-								{protocol.status === "published" ? "Create amendment" : "Edit protocol"}
+								{protocol.status !== "published" ? "Edit protocol" : protocol.amendment ? "Change amendment" : "Create amendment"}
 							</ButtonAnchor>
 						) : (
 							protocol.status === "published" && (
@@ -185,6 +186,21 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 							)
 						)}
 					</div>
+					{protocol.amendment && (
+						<Note tone={protocol.amendment.status === "returned" ? "peach" : "mist"} className="mt-6 max-w-[620px]">
+							{protocol.amendment.status === "pending"
+								? "An amendment to this protocol waits for review by the PCT team. Readers see this published version until it is approved."
+								: "The PCT team returned the amendment to this protocol. Readers see this published version until a new amendment is approved."}
+							{protocol.is_owner ? null : (
+								<>
+									{" "}
+									<a href={routes.admin.amendment(protocol.amendment.id)} className="font-bold underline underline-offset-3">
+										Open the amendment
+									</a>
+								</>
+							)}
+						</Note>
+					)}
 				</div>
 
 				<aside aria-labelledby="record-title" className="self-start rounded-[28px] bg-white p-6 shadow-[inset_0_0_0_1px_var(--color-line),var(--shadow-raised)] sm:p-7.5">

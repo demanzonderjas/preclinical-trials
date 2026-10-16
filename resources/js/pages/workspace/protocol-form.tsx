@@ -19,6 +19,8 @@ import { fieldLabel } from "@/lib/workspace";
 type Props = {
 	protocol: { id: number; status: ProtocolStatus; pct_id: string | null; started_at: string; saved_at: string } | null;
 	values: Values;
+	/** An amendment the PCT team returned; its changes are already in the values. */
+	amendment: { status: "returned"; message: string | null; fields: string[]; decided_at: string | null } | null;
 	feedback: { field_key: string; status: string; body: string }[];
 	countries: Country[];
 	profile: { name: string; role: string | null; email: string; institution: string | null };
@@ -49,7 +51,7 @@ export default function ProtocolFormPage(props: Props) {
 	return <ProtocolForm key={props.protocol?.id ?? "new"} {...props} />;
 }
 
-function ProtocolForm({ protocol, values: initial, feedback, countries, profile }: Props) {
+function ProtocolForm({ protocol, values: initial, amendment, feedback, countries, profile }: Props) {
 	const status = protocol?.status ?? "draft";
 	const amending = status === "published";
 	const autosaves = status === "draft" || status === "rejected";
@@ -57,6 +59,7 @@ function ProtocolForm({ protocol, values: initial, feedback, countries, profile 
 	const { values, set, flush, save, id, uploadImage } = useAutosave({ id: protocol?.id ?? null, values: initial, savedAt: protocol?.saved_at, enabled: autosaves });
 	const [step, setStep] = useState(1);
 	const [importOpen, setImportOpen] = useState(false);
+	const [withdrawOpen, setWithdrawOpen] = useState(false);
 
 	// The step and the import dialog come from the URL (?step=4, #import).
 	useEffect(() => {
@@ -85,7 +88,10 @@ function ProtocolForm({ protocol, values: initial, feedback, countries, profile 
 	const missing = protocolFields.filter(field => field.required && isVisible(field, values) && !isFilled(values[field.key]));
 	const current = formSteps[step - 1];
 	const title = typeof values.title === "string" && values.title.trim() ? values.title : protocol ? "Untitled draft" : "New protocol";
-	const changedKeys = amending ? Object.keys(values).filter(key => key !== "why_amendment" && JSON.stringify(values[key]) !== JSON.stringify(initial[key])) : [];
+	// A returned amendment starts from its own changes; the server drops any that match the published version again.
+	const changedKeys = amending
+		? [...new Set([...(amendment?.fields ?? []), ...Object.keys(values).filter(key => key !== "why_amendment" && JSON.stringify(values[key]) !== JSON.stringify(initial[key]))])]
+		: [];
 
 	return (
 		<WorkspaceLayout title={amending ? "Amend protocol" : protocol ? "Edit protocol" : "New protocol"} tint={false} slimFooter>
@@ -98,7 +104,7 @@ function ProtocolForm({ protocol, values: initial, feedback, countries, profile 
 						<div className="rounded-card bg-teal-50 px-6 py-6">
 							<p className="eyebrow">Amendment</p>
 							<p className="mt-2.5 text-xl leading-snug font-extrabold tracking-[-0.015em]">{changedKeys.length ? `${changedKeys.length} change${changedKeys.length === 1 ? "" : "s"} so far` : "Nothing changed yet"}</p>
-							<p className="mt-2 text-[14.5px] text-ink-muted">Changes are saved together with your reason, on the last step. Until then the published version stays as it is.</p>
+							<p className="mt-2 text-[14.5px] text-ink-muted">You send your changes with a reason on the last step. Readers keep seeing the published version until the PCT team approves the amendment.</p>
 							<Button variant="secondary" size="sm" className="mt-4 w-full" arrow onClick={() => goTo(STEPS)}>
 								Review & submit
 							</Button>
@@ -130,6 +136,16 @@ function ProtocolForm({ protocol, values: initial, feedback, countries, profile 
 				</aside>
 
 				<div className="order-1 min-w-0 lg:order-2">
+					{amendment && (
+						<div role="status" className="mb-6 rounded-card bg-peach-100 px-6 py-5">
+							<p className="font-bold">The PCT team returned your amendment{amendment.decided_at ? ` on ${formatDate(amendment.decided_at)}` : ""}</p>
+							{amendment.message && <p className="mt-2 text-[15.5px] leading-normal whitespace-pre-line">{amendment.message}</p>}
+							<p className="mt-2 text-[14.5px] text-ink-muted">Your changes are kept below. Adjust them and send the amendment again; the published version stays as it is meanwhile.</p>
+							<button type="button" onClick={() => setWithdrawOpen(true)} className="mt-3 font-display text-[15px] font-extrabold text-link underline underline-offset-3">
+								Withdraw amendment
+							</button>
+						</div>
+					)}
 					{status === "rejected" && feedback.some(point => point.status === "open") && (
 						<Note tone="peach" className="mb-6">
 							The PCT team returned this protocol with {feedback.length} point{feedback.length === 1 ? "" : "s"}; they are shown next to the questions.{" "}
@@ -152,7 +168,7 @@ function ProtocolForm({ protocol, values: initial, feedback, countries, profile 
 						<div className="mt-8 grid gap-6">
 							{step <= 5 && <QuestionCards step={step} ctx={ctx} />}
 							{step === 6 && <ContactStep ctx={ctx} profile={profile} />}
-							{step === 7 && <SubmitStep ctx={ctx} missing={missing} onGo={goTo} protocolId={id} status={status} amending={amending} changedKeys={changedKeys} flush={flush} />}
+							{step === 7 && <SubmitStep ctx={ctx} missing={missing} onGo={goTo} protocolId={id} status={status} amending={amending} returned={!!amendment} changedKeys={changedKeys} flush={flush} />}
 						</div>
 					</section>
 
@@ -188,6 +204,7 @@ function ProtocolForm({ protocol, values: initial, feedback, countries, profile 
 			</div>
 
 			{importOpen && <ImportDialog onClose={() => setImportOpen(false)} />}
+			{withdrawOpen && id && <WithdrawDialog protocolId={id} onClose={() => setWithdrawOpen(false)} />}
 		</WorkspaceLayout>
 	);
 }
@@ -441,6 +458,7 @@ function SubmitStep({
 	protocolId,
 	status,
 	amending,
+	returned,
 	changedKeys,
 	flush
 }: {
@@ -450,6 +468,7 @@ function SubmitStep({
 	protocolId: number | null;
 	status: ProtocolStatus;
 	amending: boolean;
+	returned: boolean;
 	changedKeys: string[];
 	flush: () => Promise<void>;
 }) {
@@ -534,7 +553,7 @@ function SubmitStep({
 						<p className="mt-2 text-[15.5px] text-ink-muted">
 							{changedKeys.length ? (
 								<>
-									You changed <strong className="text-ink">{changedKeys.map(fieldLabel).join(", ")}</strong>. Describe the amendment before you submit. It becomes part of the protocol’s version history, and the PCT team checks it.
+									You changed <strong className="text-ink">{changedKeys.map(fieldLabel).join(", ")}</strong>. Describe the amendment before you submit. The PCT team checks it first; once approved it becomes a new version in the protocol’s history. Until then readers see the published version.
 								</>
 							) : (
 								"Change the answers that need updating in the earlier steps; they are listed here."
@@ -559,7 +578,7 @@ function SubmitStep({
 
 			<div className="flex flex-col gap-5 rounded-card bg-mist px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">
 				<ol className="flex flex-wrap gap-x-6 gap-y-2 text-[15px]">
-					{["PCT team checks it", "Feedback or approval", "Time-stamped PCT ID"].map((label, index) => (
+					{(amending ? ["PCT team checks it", "Feedback or approval", "New public version"] : ["PCT team checks it", "Feedback or approval", "Time-stamped PCT ID"]).map((label, index) => (
 						<li key={label} className="flex items-center gap-2.5">
 							<span aria-hidden="true" className={cn("flex size-7 items-center justify-center rounded-full font-display text-[13px] font-extrabold", index === 0 ? "bg-peach-300" : "bg-white shadow-[inset_0_0_0_2px_var(--color-teal-300)]")}>
 								{index + 1}
@@ -570,7 +589,7 @@ function SubmitStep({
 				</ol>
 				{amending ? (
 					<Button size="lg" arrow disabled={busy || !changedKeys.length} onClick={amend}>
-						Submit amendment
+						{returned ? "Send amendment again" : "Submit amendment"}
 					</Button>
 				) : status === "draft" || status === "rejected" ? (
 					<Button size="lg" variant="accent" arrow disabled={busy || !ready} onClick={submit} title={ready ? undefined : "Answer every required question first"}>
@@ -580,6 +599,36 @@ function SubmitStep({
 				) : null}
 			</div>
 		</>
+	);
+}
+
+function WithdrawDialog({ protocolId, onClose }: { protocolId: number; onClose: () => void }) {
+	const [busy, setBusy] = useState(false);
+	return (
+		<Dialog
+			open
+			size="sm"
+			onClose={onClose}
+			title="Withdraw this amendment?"
+			description="Your proposed changes are dropped. The published version stays as it is, and you can start a new amendment later."
+			footer={
+				<>
+					<Button variant="secondary" onClick={onClose}>
+						Keep it
+					</Button>
+					<Button
+						variant="danger"
+						disabled={busy}
+						onClick={() => {
+							setBusy(true);
+							router.delete(`/dashboard/protocols/${protocolId}/amendment`, { onFinish: onClose });
+						}}
+					>
+						Withdraw amendment
+					</Button>
+				</>
+			}
+		/>
 	);
 }
 

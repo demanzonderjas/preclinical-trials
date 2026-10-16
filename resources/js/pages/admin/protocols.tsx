@@ -1,7 +1,7 @@
 import { router } from "@inertiajs/react";
 import { ArrowRight, Search } from "lucide-react";
 import { type FormEvent, useState } from "react";
-import { type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
+import { Badge, type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
 import { ButtonAnchor } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Content";
 import { Select } from "@/components/ui/Form";
@@ -16,6 +16,7 @@ type Row = {
 	pct_id: string;
 	status: ProtocolStatus;
 	title: string;
+	amendment: number | null;
 	who: string | null;
 	updated_at: string;
 	waiting_days: number | null;
@@ -28,7 +29,7 @@ type Row = {
 type Filter = "all" | "awaiting" | "resubmitted" | "published" | "rejected" | "draft";
 
 type Props = {
-	stats: { awaiting: number; oldest_days: number | null; resubmitted: number; public: number; embargoed: number; rejected: number };
+	stats: { awaiting: number; oldest_days: number | null; resubmitted: number; amendments: number; public: number; embargoed: number; rejected: number };
 	filters: { status: Filter; embargo: "any" | "yes" | "no"; q: string };
 	totals: Record<Filter, number>;
 	protocols: { data: Row[]; total: number; from: number | null; to: number | null; current_page: number; last_page: number; links: PaginationLink[] };
@@ -69,7 +70,7 @@ export default function AdminProtocols({ stats, filters, totals, protocols }: Pr
 				<dl className="grid grid-cols-2 overflow-hidden rounded-card border border-line bg-white md:grid-cols-3 lg:grid-cols-5">
 					{(
 						[
-							["Awaiting review", stats.awaiting, stats.oldest_days === null ? "Nothing waiting" : `Oldest has waited ${days(stats.oldest_days)}`],
+							["Awaiting review", stats.awaiting, stats.oldest_days === null ? "Nothing waiting" : `Oldest has waited ${days(stats.oldest_days)}${stats.amendments ? ` · ${stats.amendments} amendment${stats.amendments === 1 ? "" : "s"}` : ""}`],
 							["Resubmitted", stats.resubmitted, `Of the ${stats.awaiting}, after an earlier round`],
 							["Published", stats.public, "Publicly visible"],
 							["Under embargo", stats.embargoed, "Published, details hidden"],
@@ -148,6 +149,7 @@ export default function AdminProtocols({ stats, filters, totals, protocols }: Pr
 										<p className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
 											<span className="pct-id text-[15px]">{row.pct_id}</span>
 											<StatusBadge status={row.status} />
+											{row.amendment !== null && <Badge tone="blue-outline">Amendment</Badge>}
 											{row.waiting_days !== null && (
 												<span className="inline-flex items-center gap-1.5 text-[13.5px] font-bold">
 													<span aria-hidden="true" className="size-2 rounded-full bg-peach-300" />
@@ -174,7 +176,7 @@ export default function AdminProtocols({ stats, filters, totals, protocols }: Pr
 									</p>
 									<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 										{row.waiting_days !== null && (
-											<ButtonAnchor href={routes.admin.review(row.id)} size="sm" arrow>
+											<ButtonAnchor href={row.amendment !== null ? routes.admin.amendment(row.amendment) : routes.admin.review(row.id)} size="sm" arrow>
 												Review
 											</ButtonAnchor>
 										)}
@@ -202,7 +204,7 @@ export default function AdminProtocols({ stats, filters, totals, protocols }: Pr
 					</h2>
 					<dl className="mt-4 grid gap-6 md:grid-cols-3">
 						{[
-							["Review", "Opens a submitted or resubmitted protocol with its fields grouped by step. You attach feedback to fields there, then approve and publish it or return it with feedback."],
+							["Review", "Opens a submitted or resubmitted protocol with its fields grouped by step, or an amendment with the published and amended answers side by side. Approve and publish, or return it with feedback."],
 							["View", "Shows the protocol with its revision history. As an admin you also see the contact details and protocols under embargo, which stay hidden from the public."],
 							["Extend embargo", "Available once a protocol has an embargo end date. Choose the new end date; the user receives a confirmation e-mail about the extension."]
 						].map(([term, text]) => (

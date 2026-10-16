@@ -79,6 +79,10 @@ class ProtocolPageController extends Controller
                 'centre_place' => trim(implode(', ', array_filter([$summary['centre_city'], $summary['country_name']]))),
                 'is_owner' => $user->id === $protocol->user_id,
                 'shows_contact' => $privileged,
+                // Only the owner and the PCT team learn that changes wait for review.
+                'amendment' => $privileged && $protocol->status === 'published' && ($open = $protocol->openAmendment)
+                    ? ['id' => $open->id, 'status' => $open->status]
+                    : null,
             ],
             'versions' => $versions,
             'original' => [

@@ -38,6 +38,30 @@ export class AdminUI {
 		await expect(this.page).toHaveURL(/\/admin\/protocols$/);
 	}
 
+	/** The amendment page, reached from the queue like the PCT team does. */
+	async openAmendment(title: string) {
+		await this.openProtocols("awaiting");
+		const row = this.protocolRow(title);
+		await expect(row).toContainText("Amendment");
+		await row.getByRole("link", { name: "Review" }).click();
+		await expect(this.page.getByRole("heading", { level: 2, name: "Proposed changes" })).toBeVisible();
+	}
+
+	async approveAmendment(title: string) {
+		await this.openAmendment(title);
+		await this.page.getByRole("radio", { name: /approve & publish/i }).check();
+		await this.page.getByRole("button", { name: /^approve & publish$/i }).click();
+		await expect(this.page).toHaveURL(/\/admin\/protocols$/);
+	}
+
+	async returnAmendment(title: string, message: string) {
+		await this.openAmendment(title);
+		await this.page.getByRole("radio", { name: /return with feedback/i }).check();
+		await this.page.getByLabel(/message to the researcher/i).fill(message);
+		await this.page.getByRole("button", { name: "Return amendment" }).click();
+		await expect(this.page).toHaveURL(/\/admin\/protocols$/);
+	}
+
 	/** Returns the protocol with its saved points and a message (the legacy "reject"). */
 	async reject(title: string, message: string, points: { question: string; text: string }[] = []) {
 		await this.openReview(title);

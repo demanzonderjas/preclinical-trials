@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Workspace;
 
+use App\Mail\AmendmentSubmitted;
 use App\Models\ActivityLog;
+use App\Models\Amendment;
 use App\Models\FeedbackPoint;
 use App\Models\ImportLog;
 use App\Models\Protocol;
+use App\Services\AmendmentWorkflow;
 use App\Services\ProtocolWorkflow;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -87,7 +90,7 @@ class ProtocolFormTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->where('protocol.status', 'published')->where('values.publish_name', true));
     }
 
-    public function test_an_amendment_needs_a_change_and_a_reason_and_is_recorded(): void
+    public function test_an_amendment_needs_a_change_and_a_reason_and_waits_for_review(): void
     {
         Mail::fake();
         $owner = $this->makeUser();
@@ -97,17 +100,59 @@ class ProtocolFormTest extends TestCase
             ->assertSessionHas('error');
         $this->actingAs($owner)->post("/dashboard/protocols/{$protocol->id}/amend", ['values' => ['species' => 'rat']])
             ->assertSessionHasErrors('why_amendment');
-        $this->assertSame(0, $protocol->revisions()->count());
+        $this->assertSame(0, $protocol->amendments()->count());
 
-        $this->actingAs($owner)->post("/dashboard/protocols/{$protocol->id}/amend", ['values' => ['species' => 'rat'], 'why_amendment' => 'Rats after all'])
+        $this->actingAs($owner)->post("/dashboard/protocols/{$protocol->id}/amend", ['values' => ['species' => 'rat', 'title' => $protocol->title], 'why_amendment' => 'Rats after all'])
             ->assertRedirect("/database/view-protocol/{$protocol->id}");
 
-        $revision = $protocol->revisions()->firstOrFail();
-        $this->assertFalse((bool) $revision->admin_only);
-        $this->assertEqualsCanonicalizing(['species', 'why_amendment'], collect($revision->changes)->pluck('key')->all());
-        $this->assertSame(['species'], ActivityLog::where('type', 'amended')->firstOrFail()->data['fields']);
-        $this->assertSame('resubmitted_for_publication', $protocol->fresh()->status, 'the PCT team checks amendments');
-        $this->assertSame('Rats after all', $protocol->reviewRounds()->reorder('number', 'desc')->first()->researcher_note);
+        $amendment = $protocol->amendments()->sole();
+        $this->assertSame(Amendment::PENDING, $amendment->status);
+        $this->assertSame(['species' => 'rat'], $amendment->values, 'only what differs from the published version');
+        $this->assertSame('Rats after all', $amendment->reason);
+        $this->assertSame(['species'], ActivityLog::where('type', 'amendment_submitted')->firstOrFail()->data['fields']);
+        Mail::assertSent(AmendmentSubmitted::class);
+
+        // Readers keep the published version: no new status, value or public version yet.
+        $this->assertSame('published', $protocol->fresh()->status);
+        $this->assertSame('mouse', $this->detailValue($protocol, 'species'));
+        $this->assertSame(0, $protocol->revisions()->count());
+        $this->assertFalse(ActivityLog::where('type', 'amended')->exists());
+
+        // While it is with the PCT team the researcher cannot change it.
+        $this->actingAs($owner)->get("/dashboard/edit-protocol/{$protocol->id}")->assertRedirect("/database/view-protocol/{$protocol->id}");
+        $this->actingAs($owner)->post("/dashboard/protocols/{$protocol->id}/amend", ['values' => ['species' => 'pig'], 'why_amendment' => 'Pigs'])->assertStatus(409);
+    }
+
+    public function test_a_returned_amendment_continues_from_its_changes_and_can_be_withdrawn(): void
+    {
+        Mail::fake();
+        $owner = $this->makeUser();
+        $protocol = $this->makePublishedProtocol($owner);
+        $amendment = app(AmendmentWorkflow::class)->submit($protocol, $owner, ['species' => 'rat'], 'Rats after all');
+        app(AmendmentWorkflow::class)->return($amendment, $this->makeAdmin(), 'Say how many rats.');
+
+        $this->actingAs($owner)->get("/dashboard/edit-protocol/{$protocol->id}")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('values.species', 'rat')
+                ->where('values.why_amendment', 'Rats after all')
+                ->where('amendment.status', Amendment::RETURNED)
+                ->where('amendment.message', 'Say how many rats.')
+                ->where('amendment.fields', ['species']));
+
+        // Sending it again keeps the earlier changes and adds the new ones.
+        $this->actingAs($owner)->post("/dashboard/protocols/{$protocol->id}/amend", ['values' => ['sum_of_animals' => '24'], 'why_amendment' => 'Rats, 24 of them'])
+            ->assertRedirect();
+        $this->assertSame(['species' => 'rat', 'sum_of_animals' => '24'], $amendment->fresh()->values);
+        $this->assertSame(Amendment::PENDING, $amendment->fresh()->status);
+        $this->assertSame(1, $protocol->amendments()->count(), 'the same amendment, sent again');
+
+        $this->actingAs($owner)->delete("/dashboard/protocols/{$protocol->id}/amendment")->assertRedirect('/dashboard/manage-protocols');
+        $this->assertSame(Amendment::WITHDRAWN, $amendment->fresh()->status);
+        $this->assertSame('mouse', $this->detailValue($protocol, 'species'));
+        $this->actingAs($owner)->get("/dashboard/edit-protocol/{$protocol->id}")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->where('values.species', 'mouse')->where('amendment', null));
     }
 
     public function test_images_are_uploaded_for_own_protocols(): void

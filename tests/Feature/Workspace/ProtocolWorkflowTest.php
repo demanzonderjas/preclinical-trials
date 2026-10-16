@@ -4,6 +4,7 @@ namespace Tests\Feature\Workspace;
 
 use App\Models\ActivityLog;
 use App\Models\FeedbackPoint;
+use App\Services\AmendmentWorkflow;
 use App\Services\ProtocolWorkflow;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -73,6 +74,10 @@ class ProtocolWorkflowTest extends TestCase
             'values' => ['sum_of_animals' => '36'],
             'why_amendment' => 'Pilot results',
         ])->assertRedirect();
+        $this->assertSame(['sum_of_animals'], ActivityLog::where('type', 'amendment_submitted')->firstOrFail()->data['fields']);
+        $this->assertFalse(ActivityLog::where('type', 'amended')->exists(), 'recorded once the PCT team approves');
+
+        app(AmendmentWorkflow::class)->approve($protocol->openAmendment()->firstOrFail(), $this->makeAdmin());
 
         $log = ActivityLog::where('type', 'amended')->firstOrFail();
         $this->assertSame(['sum_of_animals'], $log->data['fields']);

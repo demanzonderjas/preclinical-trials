@@ -34,6 +34,7 @@ type Card = {
 	extension_pending: boolean;
 	version: number;
 	amended_at: string | null;
+	amendment: { status: "pending" | "returned"; submitted_at: string | null; decided_at: string | null } | null;
 	progress: Progress | null;
 	points: { field_key: string; status: FeedbackStatus }[];
 	linked: number[];
@@ -54,10 +55,12 @@ const filters: { key: Filter; label: string; dot: string; test: (card: Card) => 
 
 const untitled = (card: Pick<Card, "title">) => card.title || "Untitled draft";
 
+type DialogKind = "submit" | "delete" | "link" | "withdraw";
+
 export default function MyProtocols({ protocols }: { protocols: Card[] }) {
 	const [query, setQuery] = useState("");
 	const [filter, setFilter] = useState<Filter>("all");
-	const [dialog, setDialog] = useState<{ kind: "submit" | "delete" | "link"; card: Card } | null>(null);
+	const [dialog, setDialog] = useState<{ kind: DialogKind; card: Card } | null>(null);
 
 	const visible = useMemo(() => {
 		const words = query.toLowerCase().split(/\s+/).filter(Boolean);
@@ -159,6 +162,7 @@ export default function MyProtocols({ protocols }: { protocols: Card[] }) {
 			{dialog?.kind === "submit" && <SubmitDialog card={dialog.card} onClose={() => setDialog(null)} />}
 			{dialog?.kind === "delete" && <DeleteDialog card={dialog.card} onClose={() => setDialog(null)} />}
 			{dialog?.kind === "link" && <LinkDialog card={dialog.card} protocols={protocols} onClose={() => setDialog(null)} />}
+			{dialog?.kind === "withdraw" && <WithdrawDialog card={dialog.card} onClose={() => setDialog(null)} />}
 		</WorkspaceLayout>
 	);
 }
@@ -196,11 +200,13 @@ function StatusBadges({ card }: { card: Card }) {
 				</Badge>
 			)}
 			{card.status === "published" && card.embargo_ends && <EmbargoBadge until={formatDate(card.embargo_ends)} />}
+			{card.amendment?.status === "pending" && <Badge tone="blue-outline">Amendment · in review</Badge>}
+			{card.amendment?.status === "returned" && <Badge tone="peach">Amendment · needs changes</Badge>}
 		</div>
 	);
 }
 
-function ProtocolCardItem({ card, onDialog }: { card: Card; onDialog: (kind: "submit" | "delete" | "link") => void }) {
+function ProtocolCardItem({ card, onDialog }: { card: Card; onDialog: (kind: DialogKind) => void }) {
 	const [open, setOpen] = useState(false);
 	const unread = card.comments.filter(comment => comment.unread).length;
 	const toggleComments = () => {
@@ -359,7 +365,7 @@ function Locked({ children, reason }: { children: ReactNode; reason: string }) {
 	);
 }
 
-function Actions({ card, onDialog }: { card: Card; onDialog: (kind: "submit" | "delete" | "link") => void }) {
+function Actions({ card, onDialog }: { card: Card; onDialog: (kind: DialogKind) => void }) {
 	const [copied, setCopied] = useState(false);
 	const published = card.status === "published";
 	const openPoints = card.points.filter(point => point.status === "open").length;
@@ -420,9 +426,22 @@ function Actions({ card, onDialog }: { card: Card; onDialog: (kind: "submit" | "
 					<a href={routes.protocol(card.id)} className={linkClass}>
 						View
 					</a>
-					<a href={routes.editProtocol(card.id)} className={linkClass}>
-						Create amendment
-					</a>
+					{card.amendment?.status === "pending" ? (
+						<Locked reason="The PCT team is reviewing your amendment">Amend · locked during review</Locked>
+					) : card.amendment?.status === "returned" ? (
+						<>
+							<a href={routes.editProtocol(card.id)} className={linkClass}>
+								Change amendment
+							</a>
+							<button type="button" className={linkClass} onClick={() => onDialog("withdraw")}>
+								Withdraw amendment
+							</button>
+						</>
+					) : (
+						<a href={routes.editProtocol(card.id)} className={linkClass}>
+							Create amendment
+						</a>
+					)}
 				</>
 			)}
 
@@ -506,6 +525,38 @@ function SubmitDialog({ card, onClose }: { card: Card; onClose: () => void }) {
 					{({ id, describedBy, invalid }) => <Textarea id={id} rows={3} value={form.data.note} onChange={event => form.setData("note", event.target.value)} aria-describedby={describedBy} aria-invalid={invalid} />}
 				</Field>
 			</form>
+		</Dialog>
+	);
+}
+
+function WithdrawDialog({ card, onClose }: { card: Card; onClose: () => void }) {
+	const [busy, setBusy] = useState(false);
+	return (
+		<Dialog
+			open
+			size="sm"
+			onClose={onClose}
+			title="Withdraw this amendment?"
+			description="Your proposed changes are dropped. The published version stays as it is, and you can start a new amendment later."
+			footer={
+				<>
+					<Button variant="secondary" onClick={onClose}>
+						Keep it
+					</Button>
+					<Button
+						variant="danger"
+						disabled={busy}
+						onClick={() => {
+							setBusy(true);
+							router.delete(`/dashboard/protocols/${card.id}/amendment`, { preserveScroll: true, onFinish: onClose });
+						}}
+					>
+						Withdraw amendment
+					</Button>
+				</>
+			}
+		>
+			<p className="font-bold">{untitled(card)}</p>
 		</Dialog>
 	);
 }

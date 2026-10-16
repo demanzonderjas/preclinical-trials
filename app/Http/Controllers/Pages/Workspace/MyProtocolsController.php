@@ -34,7 +34,7 @@ class MyProtocolsController extends Controller
     {
         $user = $request->user();
         $protocols = $user->protocols()
-            ->with('details', 'adminActions', 'embargoEndDates', 'embargoExtensions', 'revisions', 'reviewRounds', 'feedbackPoints', 'linkedTo', 'linkedFrom')
+            ->with('details', 'adminActions', 'embargoEndDates', 'embargoExtensions', 'revisions', 'reviewRounds', 'feedbackPoints', 'linkedTo', 'linkedFrom', 'openAmendment')
             ->get();
 
         $channels = Channel::where('kind', Channel::TEAM)->whereIn('protocol_id', $protocols->modelKeys())
@@ -183,6 +183,11 @@ class MyProtocolsController extends Controller
             'extension_pending' => $protocol->embargoExtensions->contains('status', 'awaiting_approval'),
             'version' => $amendments->count() + 1,
             'amended_at' => $amendments->last()?->created_at?->toIso8601String(),
+            'amendment' => $protocol->status === 'published' && $protocol->openAmendment ? [
+                'status' => $protocol->openAmendment->status,
+                'submitted_at' => $protocol->openAmendment->submitted_at?->toIso8601String(),
+                'decided_at' => $protocol->openAmendment->decided_at?->toIso8601String(),
+            ] : null,
             'progress' => in_array($protocol->status, ['draft', 'rejected'], true) ? ProtocolSchema::progress($this->values($protocol)) : null,
             'points' => $protocol->status === 'rejected' ? $this->currentPoints($protocol)->map(fn (FeedbackPoint $point) => ['field_key' => $point->field_key, 'status' => $point->status])->values() : [],
             'linked' => $protocol->linkedTo->merge($protocol->linkedFrom)->pluck('id')->unique()->values(),

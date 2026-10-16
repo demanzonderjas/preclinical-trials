@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Services\PublicRegister;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -12,14 +12,14 @@ class Protocol extends Model
     use HasFactory;
 
     protected $fillable = [
-        "id",
-        "user_id",
-        "status",
-        "created_at",
-        "updated_at"
+        'id',
+        'user_id',
+        'status',
+        'created_at',
+        'updated_at',
     ];
 
-    protected $appends = ["title", "pct_id", "embargo_end_date", "registration_date"];
+    protected $appends = ['title', 'pct_id', 'embargo_end_date', 'registration_date'];
 
     /**
      * Anything that changes what the public register shows clears its cache.
@@ -65,7 +65,6 @@ class Protocol extends Model
         return $this->hasMany(EmbargoEndDate::class);
     }
 
-
     public function reviewRounds()
     {
         return $this->hasMany(ReviewRound::class)->orderBy('number');
@@ -79,6 +78,17 @@ class Protocol extends Model
     public function activity()
     {
         return $this->hasMany(ActivityLog::class);
+    }
+
+    public function amendments()
+    {
+        return $this->hasMany(Amendment::class)->orderBy('id');
+    }
+
+    /** The amendment waiting for the PCT team or back with the researcher, if any. */
+    public function openAmendment()
+    {
+        return $this->hasOne(Amendment::class)->whereIn('status', Amendment::OPEN)->latestOfMany();
     }
 
     public function embargoExtensions()
@@ -98,7 +108,7 @@ class Protocol extends Model
         $validKeys = self::getValidKeys($request->all());
         $this->addDetailsToDatabase($validKeys);
 
-        if (isset($request->import_type) && !empty($request->import_type)) {
+        if (isset($request->import_type) && ! empty($request->import_type)) {
             $log = ImportLog::firstOrNew(['protocol_id' => $this->id]);
             $log->type = $request->import_type;
             $log->save();
@@ -168,17 +178,17 @@ class Protocol extends Model
             $detail = Detail::firstOrNew(['protocol_id' => $this->id, 'key' => $key]);
             $valueIsString = is_string($detail->value) && is_string($value);
 
-            if ($valueIsString && str_replace(array("\r", "\n"), '', trim($detail->value)) != str_replace(array("\r", "\n"), '', trim($value))) {
+            if ($valueIsString && str_replace(["\r", "\n"], '', trim($detail->value)) != str_replace(["\r", "\n"], '', trim($value))) {
                 $changes[] = [
-                    "key" => $key,
-                    "old_value" => $detail->value,
-                    "new_value" => $value
+                    'key' => $key,
+                    'old_value' => $detail->value,
+                    'new_value' => $value,
                 ];
-            } else if (str_replace(array("\r", "\n"), '', trim(json_encode($detail->value), " \t\n\r\0\x0B\"")) != str_replace(array("\r", "\n"), '', trim(json_encode($value), " \t\n\r\0\x0B\""))) {
+            } elseif (str_replace(["\r", "\n"], '', trim(json_encode($detail->value), " \t\n\r\0\x0B\"")) != str_replace(["\r", "\n"], '', trim(json_encode($value), " \t\n\r\0\x0B\""))) {
                 $changes[] = [
-                    "key" => $key,
-                    "old_value" => $detail->value,
-                    "new_value" => $value
+                    'key' => $key,
+                    'old_value' => $detail->value,
+                    'new_value' => $value,
                 ];
             }
             $detail->value = $value;
@@ -187,9 +197,9 @@ class Protocol extends Model
         if (count($changes) > 0) {
             $this->revisions()->saveMany([
                 new Revision([
-                    "changes" => $changes,
-                    "admin_only" => $this->status != "published"
-                ])
+                    'changes' => $changes,
+                    'admin_only' => $this->status != 'published',
+                ]),
             ]);
         }
     }
@@ -197,41 +207,44 @@ class Protocol extends Model
     public function getHasEmbargoAttribute()
     {
         $detail = $this->details->first(function ($d) {
-            return $d->key === "has_embargo";
+            return $d->key === 'has_embargo';
         });
-        return !empty($detail) ? $detail->value !== "no" : false;
+
+        return ! empty($detail) ? $detail->value !== 'no' : false;
     }
 
     public function getTitleAttribute()
     {
         $detail = $this->details->first(function ($d) {
-            return $d->key === "title";
+            return $d->key === 'title';
         });
-        return !empty($detail) ? $detail->value : "No title was given yet.";
+
+        return ! empty($detail) ? $detail->value : 'No title was given yet.';
     }
 
     public function hideContactDetails()
     {
         $this->details = $this->details->filter(function (Detail $d) {
-            return strpos($d->key, "contact_") === false;
+            return strpos($d->key, 'contact_') === false;
         });
     }
 
     public function getPctIdAttribute()
     {
-        return "PCTE0000" . $this->id;
+        return 'PCTE0000'.$this->id;
     }
 
     public function getEmbargoEndDateAttribute()
     {
-        if (!$this->has_embargo) {
+        if (! $this->has_embargo) {
             return null;
         }
 
         $endDate = $this->embargoEndDates->first(function ($d) {
             return $d->is_active;
         });
-        return !empty($endDate) ? $endDate->date : null;
+
+        return ! empty($endDate) ? $endDate->date : null;
     }
 
     public function getLinkedAttribute()
@@ -241,13 +254,14 @@ class Protocol extends Model
 
     public function getRegistrationDateAttribute()
     {
-        if (!count($this->adminActions)) {
+        if (! count($this->adminActions)) {
             return null;
         }
 
         $approveAction = $this->adminActions->first(function (AdminAction $a) {
             return $a->action === 'approve';
         });
-        return !empty($approveAction) ? $approveAction->created_at : null;
+
+        return ! empty($approveAction) ? $approveAction->created_at : null;
     }
 }

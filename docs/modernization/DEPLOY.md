@@ -102,3 +102,11 @@ npm ci && npm run build                                   # A2 pages → public/
 - `POST /change-password` (which did not ask for the current password) is gone; users change
   their password on the profile page, admins help through Admin → Users.
 - Laravel Sanctum is removed. The `personal_access_tokens` table can stay or be dropped.
+
+## Amendments wait for review
+
+- New table `amendments` (migration `2026_10_16_150000`). Changes to a published protocol are
+  stored there until the PCT team approves them; the protocol stays published and public.
+- Legacy protocols with status `resubmitted_for_publication` that already had an approval are
+  amendments made the old way: they left the register when they were sent. They still show in
+  the review queue as "Resubmitted" and are published again on approval.

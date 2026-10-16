@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Pages\Workspace;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use App\Models\Amendment;
 use App\Models\FeedbackPoint;
 use App\Models\Protocol;
 use App\Models\User;
+use App\Services\AmendmentWorkflow;
 use App\Services\Import\ProtocolImporter;
 use App\Services\ProtocolImages;
 use App\Services\ProtocolSchema;
@@ -40,7 +42,18 @@ class ProtocolFormController extends Controller
         }
 
         // Protocols from before A2 have no choice stored and always showed the name.
-        return $this->render($request, $protocol, $protocol->values() + ['publish_name' => $protocol->publishes_name]);
+        $values = $protocol->values() + ['publish_name' => $protocol->publishes_name];
+
+        $amendment = $protocol->status === 'published' ? $protocol->openAmendment : null;
+        if ($amendment?->status === Amendment::PENDING) {
+            return redirect("/database/view-protocol/{$protocol->id}")->with('error', 'Your amendment is with the PCT team. You can change it again if they return it.');
+        }
+        if ($amendment) {
+            // A returned amendment: continue from the proposed answers.
+            $values = [...$values, ...$amendment->values, 'why_amendment' => $amendment->reason];
+        }
+
+        return $this->render($request, $protocol, $values, $amendment);
     }
 
     /** The first autosave of a new protocol creates the draft. */
@@ -75,29 +88,44 @@ class ProtocolFormController extends Controller
     }
 
     /**
-     * Changes to a published protocol: recorded as a version with the reason (audit trail)
-     * and sent to the PCT team, as in the legacy form.
+     * Changes to a published protocol. They wait for the PCT team as an amendment; readers
+     * keep seeing the published version until it is approved.
      */
-    public function amend(Request $request, ProtocolWorkflow $workflow, int $id): RedirectResponse
+    public function amend(Request $request, AmendmentWorkflow $workflow, int $id): RedirectResponse
     {
         $protocol = $this->owned($request, $id);
         abort_unless($protocol->status === 'published', 409, 'Only published protocols are amended.');
-        $values = $this->validated($request);
-        $reason = $request->validate(['why_amendment' => ['nullable', 'string', 'max:5000']])['why_amendment'] ?? null;
+        $open = $protocol->openAmendment;
+        abort_if($open?->status === Amendment::PENDING, 409, 'An amendment is already with the PCT team.');
+        $reason = trim((string) ($request->validate(['why_amendment' => ['nullable', 'string', 'max:5000']])['why_amendment'] ?? ''));
 
-        $changed = array_values(array_diff($protocol->changedKeys($values), ['why_amendment']));
-        if (! $changed) {
-            return back()->with('error', 'Nothing changed, so there is no amendment to record.');
+        // A returned amendment is the starting point; what was sent now goes on top.
+        $proposed = Protocol::getValidKeys([...($open?->values ?? []), ...$this->validated($request)]);
+        unset($proposed['why_amendment']);
+        $changes = array_intersect_key($proposed, array_flip($protocol->changedKeys($proposed)));
+
+        if (! $changes) {
+            return back()->with('error', 'Nothing differs from the published version, so there is no amendment to send.');
         }
-        if (! trim((string) $reason)) {
+        if ($reason === '') {
             return back()->withErrors(['why_amendment' => 'Describe why you amend the published protocol.']);
         }
 
-        $protocol->saveRevisions([...$values, 'why_amendment' => $reason]);
-        ActivityLog::record($protocol, 'amended', ['fields' => $changed], $request->user());
-        $workflow->submit($protocol, $request->user(), $reason);
+        $workflow->submit($protocol, $request->user(), $changes, $reason);
 
-        return redirect("/database/view-protocol/{$protocol->id}")->with('success', 'Your amendment is recorded in the protocol’s history and sent to the PCT team.');
+        return redirect("/database/view-protocol/{$protocol->id}")->with('success', 'Your amendment is sent to the PCT team. Readers keep seeing the published version until it is approved.');
+    }
+
+    /** Withdraws an amendment that was not approved yet. */
+    public function withdrawAmendment(Request $request, AmendmentWorkflow $workflow, int $id): RedirectResponse
+    {
+        $protocol = $this->owned($request, $id);
+        $open = $protocol->openAmendment;
+        abort_unless($open, 404);
+
+        $workflow->withdraw($open, $request->user());
+
+        return redirect()->route('workspace.protocols')->with('success', 'The amendment is withdrawn. The published version stays as it is.');
     }
 
     public function uploadImage(Request $request, int $id): JsonResponse
@@ -127,7 +155,7 @@ class ProtocolFormController extends Controller
         return redirect("/dashboard/edit-protocol/{$result['protocol']->id}")->with('success', $message);
     }
 
-    private function render(Request $request, ?Protocol $protocol, array $values): Response
+    private function render(Request $request, ?Protocol $protocol, array $values, ?Amendment $amendment = null): Response
     {
         $user = $request->user();
         $points = $protocol?->status === 'rejected'
@@ -143,6 +171,12 @@ class ProtocolFormController extends Controller
                 'saved_at' => $protocol->updated_at->toIso8601String(),
             ] : null,
             'values' => (object) $values,
+            'amendment' => $amendment ? [
+                'status' => $amendment->status,
+                'message' => $amendment->message,
+                'fields' => $amendment->fields(),
+                'decided_at' => $amendment->decided_at?->toIso8601String(),
+            ] : null,
             'feedback' => $points->map(fn (FeedbackPoint $point) => ['field_key' => $point->field_key, 'status' => $point->status, 'body' => $point->body])->values(),
             'countries' => collect(config('pct.countries'))->map(fn ($name, $code) => ['value' => $code, 'label' => $name])->values(),
             'profile' => ['name' => $user->name, 'role' => $user->role, 'email' => $user->email, 'institution' => $user->institution],

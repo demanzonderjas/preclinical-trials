@@ -1,5 +1,10 @@
 import { ADMIN_INBOX, expect, personas, protocols, rejectionMessage, test } from "../support/fixtures";
 
+const amendment = {
+	change: { field: "Secondary readout parameter", value: "Infarct size and troponin" },
+	reason: "Troponin added as a secondary readout"
+};
+
 test.describe("Researcher: protocols", () => {
 	test.beforeEach(async ({ app }) => {
 		await app.loginAs(personas.researcher);
@@ -73,17 +78,20 @@ test.describe("Researcher: protocols", () => {
 		await expect(page.getByText(personas.researcher.email).first()).toBeVisible();
 	});
 
-	test("amends a published protocol, which records a revision", async ({ workspace, app }) => {
-		await workspace.createAmendment(
-			protocols.published,
-			{ field: "Secondary readout parameter", value: "Infarct size and troponin" },
-			"Troponin added as a secondary readout"
-		);
+	test("amends a published protocol; readers keep the published version until it is approved", async ({ workspace, app, page }) => {
+		const before = await app.protocol(protocols.published);
+		await workspace.createAmendment(protocols.published, amendment.change, amendment.reason);
+		await expect(page.getByText(/waits for review by the PCT team/)).toBeVisible();
 
-		const amended = await app.protocol(protocols.published);
-		expect(amended.status).toBe("resubmitted_for_publication");
-		const latest = amended.revisions[amended.revisions.length - 1];
-		expect(latest.changes.map(c => c.key)).toContain("secondary_readout_parameter");
+		const after = await app.protocol(protocols.published);
+		expect(after.status).toBe("published");
+		expect(after.details.secondary_readout_parameter).toEqual(before.details.secondary_readout_parameter);
+		expect(after.revisions).toHaveLength(before.revisions.length);
+		expect(after.amendments.at(-1)).toMatchObject({ status: "pending", reason: amendment.reason, fields: ["secondary_readout_parameter"] });
+		await app.expectMail({ to: ADMIN_INBOX, subject: /Amendment to review/ });
+
+		await workspace.openMyProtocols();
+		await expect(workspace.myProtocolRow(protocols.published)).toContainText("Amendment · in review");
 	});
 });
 
@@ -106,6 +114,46 @@ test.describe("Admin: review", () => {
 
 		await site.searchDatabase("microbiome");
 		await site.expectInDatabase(protocols.submitted);
+	});
+
+	test("approves an amendment, which publishes it as a new version", async ({ admin, app, workspace }) => {
+		await app.loginAs(personas.researcher);
+		await workspace.createAmendment(protocols.published, amendment.change, amendment.reason);
+		const before = await app.protocol(protocols.published);
+
+		await app.loginAs(personas.admin);
+		await admin.approveAmendment(protocols.published);
+
+		const after = await app.protocol(protocols.published);
+		expect(after.status).toBe("published");
+		expect(after.details.secondary_readout_parameter).toBe(amendment.change.value);
+		expect(after.revisions).toHaveLength(before.revisions.length + 1);
+		expect(after.revisions.at(-1)!.changes.map(c => c.key)).toContain("secondary_readout_parameter");
+		expect(after.amendments.at(-1)!.status).toBe("approved");
+		await app.expectMail({ to: personas.researcher.email, subject: /amendment is published/i });
+	});
+
+	test("returns an amendment; the published version stays and the researcher can change it", async ({ admin, app, workspace, page }) => {
+		await app.loginAs(personas.researcher);
+		await workspace.createAmendment(protocols.published, amendment.change, amendment.reason);
+
+		await app.loginAs(personas.admin);
+		await admin.returnAmendment(protocols.published, "Please name the troponin assay.");
+
+		const after = await app.protocol(protocols.published);
+		expect(after.status).toBe("published");
+		expect(after.details.secondary_readout_parameter).not.toBe(amendment.change.value);
+		expect(after.amendments.at(-1)!.status).toBe("returned");
+		await app.expectMail({ to: personas.researcher.email, subject: /amendment needs changes/i });
+
+		await app.loginAs(personas.researcher);
+		await workspace.openMyProtocols();
+		await workspace.myProtocolRow(protocols.published).getByRole("link", { name: "Change amendment" }).click();
+		await expect(page.getByText("Please name the troponin assay.")).toBeVisible();
+		await workspace.goToFormStep("Embargo & submit");
+		await page.getByRole("button", { name: "Send amendment again" }).click();
+		await expect(page).toHaveURL(/\/database\/view-protocol\/\d+/);
+		expect((await app.protocol(protocols.published)).amendments.at(-1)!.status).toBe("pending");
 	});
 
 	test("returns a protocol with feedback points and a message", async ({ admin, app }) => {

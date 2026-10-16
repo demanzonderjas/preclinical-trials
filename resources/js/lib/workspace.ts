@@ -36,8 +36,14 @@ export function activityLabel(item: ActivityItem): string {
 			return points ? `Returned with ${points} feedback point${points === 1 ? "" : "s"}` : "Returned with feedback";
 		case "published":
 			return item.data.pct_id ? `Published as ${item.data.pct_id}` : "Published";
+		case "amendment_submitted":
+			return fields.length ? `Amendment sent for review · ${fieldList(fields)}` : "Amendment sent for review";
+		case "amendment_returned":
+			return "Amendment returned with feedback";
+		case "amendment_withdrawn":
+			return "Amendment withdrawn";
 		case "amended":
-			return fields.length ? `Amendment recorded · ${fieldList(fields)}` : "Amendment recorded";
+			return fields.length ? `Amendment published · ${fieldList(fields)}` : "Amendment published";
 		case "addressed":
 			return `You addressed feedback · ${fieldList(fields)}`;
 		case "imported":
