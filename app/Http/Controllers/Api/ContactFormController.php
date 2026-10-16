@@ -18,7 +18,7 @@ class ContactFormController extends Controller
 		$form->message = $request->message;
 		$form->save();
 
-		Mail::to(env('ADMIN_MAIL'))->send(new ContactFormSubmitted($form));
+		Mail::to(config('pct.admin_mail'))->send(new ContactFormSubmitted($form));
 
 		return response()->json(["success" => true]);
 	}

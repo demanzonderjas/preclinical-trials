@@ -16,7 +16,8 @@ class VerifyExternalApiKey
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->bearerToken() || !env('EXTERNAL_API_KEY') || $request->bearerToken() !== env('EXTERNAL_API_KEY')) {
+        $expected = config('pct.external_api_key');
+        if (!$request->bearerToken() || !$expected || !hash_equals($expected, $request->bearerToken())) {
             return response()->json(['success' => false, 'message' => 'invalid_api_key']);
         }
 

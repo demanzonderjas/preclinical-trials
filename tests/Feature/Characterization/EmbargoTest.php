@@ -120,22 +120,17 @@ class EmbargoTest extends TestCase
 		});
 	}
 
-	/**
-	 * Oddity: `EmbargoExtensionRejected` requires a string note, so rejecting without a
-	 * message throws (500) after the extension was already marked rejected.
-	 *
-	 * @group known-bug
-	 */
-	public function test_rejecting_without_a_message_currently_errors_after_marking_rejected()
+	public function test_rejecting_without_a_message_still_notifies_the_researcher()
 	{
 		$protocol = $this->makePublishedProtocol($this->makeUser(), true);
 		$extension = $this->requestExtension($protocol);
 
 		$this->actingAs($this->makeAdmin())
 			->postJson("/api/embargo-extension/{$extension->id}/reject")
-			->assertStatus(500);
+			->assertOk();
 
 		$this->assertSame('rejected', $extension->fresh()->status);
+		Mail::assertSent(EmbargoExtensionRejected::class);
 	}
 
 	public function test_admin_extend_requires_a_date_after_today()

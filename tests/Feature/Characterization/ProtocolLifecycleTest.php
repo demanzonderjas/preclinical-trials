@@ -260,13 +260,6 @@ class ProtocolLifecycleTest extends TestCase
 		$this->assertSame([$b->id], collect($linked)->pluck('id')->all());
 	}
 
-	/**
-	 * Known hole: the owner check reads `protocol_id` from the request input before the
-	 * route parameter, so a query string can point the check at the caller's own protocol.
-	 * Fixed in the Laravel 13 port; excluded from the baseline run.
-	 *
-	 * @group pending-fix
-	 */
 	public function test_owner_check_cannot_be_bypassed_with_a_query_parameter()
 	{
 		$attacker = $this->makeUser();

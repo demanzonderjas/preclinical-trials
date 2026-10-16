@@ -23,7 +23,7 @@ class NewPasswordController extends Controller
     public function resetAsAdmin(Request $request)
     {
         $user = User::where('email', $request->email)->firstOrFail();
-        self::changePassword($user, $request);
+        return self::changePassword($user, $request);
     }
 
     public static function changePassword(User $user, Request $request)

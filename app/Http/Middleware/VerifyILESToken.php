@@ -16,7 +16,8 @@ class VerifyILESToken
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->token || !env('ILES_TOKEN') || $request->token !== env('ILES_TOKEN')) {
+        $expected = config('pct.iles_token');
+        if (!$request->token || !$expected || !hash_equals($expected, (string) $request->token)) {
             return response()->json(['success' => false, 'message' => 'invalid_iles_token']);
         }
 

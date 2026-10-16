@@ -29,7 +29,7 @@
     </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/dashboard/edit-protocol/' . $protocol->id)
+@section('cta-link', config('app.url') . '/dashboard/edit-protocol/' . $protocol->id)
 @section('cta-text', 'Go to your protocol')
 
 @section('closing')

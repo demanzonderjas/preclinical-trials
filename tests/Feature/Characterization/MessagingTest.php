@@ -78,26 +78,6 @@ class MessagingTest extends TestCase
 		$this->assertSame(1, Channel::count());
 	}
 
-	/**
-	 * Characterizes a hole: the questioner is taken from the request body, and the route has
-	 * no auth middleware, so anyone can open a channel in someone else's name.
-	 *
-	 * @group known-bug
-	 */
-	public function test_channel_id_currently_takes_the_questioner_from_the_body()
-	{
-		$owner = $this->makeUser();
-		$caller = $this->makeUser();
-		$impersonated = $this->makeUser();
-		$protocol = $this->makePublishedProtocol($owner);
-
-		$channelId = $this->actingAs($caller)->postJson('/api/channel/id', [
-			'protocol_id' => $protocol->id,
-			'questioner_id' => $impersonated->id,
-		])->assertOk()->json('channel_id');
-
-		$this->assertEquals($impersonated->id, Channel::findOrFail($channelId)->questioner_id);
-	}
 
 	public function test_participants_can_read_the_messages()
 	{
@@ -289,12 +269,6 @@ class MessagingTest extends TestCase
 		$this->assertSame('Question for you', $byId[$asOwner->id]['latest_message']);
 	}
 
-	/**
-	 * The questioner must be the authenticated user, never a body parameter.
-	 * Currently fails: `ChannelController::getChannelId()` uses `$request->questioner_id`.
-	 *
-	 * @group pending-fix
-	 */
 	public function test_channel_id_uses_the_authenticated_user_as_questioner()
 	{
 		$owner = $this->makeUser();
@@ -310,12 +284,6 @@ class MessagingTest extends TestCase
 		$this->assertEquals($caller->id, Channel::findOrFail($channelId)->questioner_id);
 	}
 
-	/**
-	 * Guests must not be able to open channels. Currently the route has no auth middleware
-	 * and creates the channel (200).
-	 *
-	 * @group pending-fix
-	 */
 	public function test_guests_cannot_open_a_channel()
 	{
 		$protocol = $this->makePublishedProtocol($this->makeUser());
@@ -325,68 +293,49 @@ class MessagingTest extends TestCase
 		$this->assertSame(0, Channel::count());
 	}
 
-	/**
-	 * Guests must get 401. Currently the route has no auth middleware and crashes (500) on
-	 * `$request->user()->id`.
-	 *
-	 * @group pending-fix
-	 */
 	public function test_guests_cannot_list_my_channels()
 	{
 		$this->getJson('/api/channels/mine')->assertUnauthorized();
 	}
 
-	/**
-	 * Guests must get 401. Currently `protocols/mine` has no auth middleware and crashes (500).
-	 *
-	 * @group pending-fix
-	 */
 	public function test_guests_cannot_list_my_protocols()
 	{
 		$this->getJson('/api/protocols/mine')->assertUnauthorized();
 	}
 
-	/**
-	 * Guests must get 401 from the translate endpoint. Currently it has no auth middleware
-	 * and calls OpenAI. To guarantee no network traffic, curl is pointed at a dead local
-	 * proxy (the OpenAI client uses raw curl, which Http::fake() cannot intercept) and the
-	 * API key is replaced by a dummy, so this currently fails with a 500, not a real call.
-	 *
-	 * @group pending-fix
-	 */
 	public function test_guests_cannot_use_translate()
 	{
 		Http::fake();
-		$restore = $this->blockOutgoingCurl();
 
-		try {
-			$this->postJson('/api/translate', ['text_to_translate' => 'Bonjour'])->assertUnauthorized();
-		} finally {
-			$restore();
-		}
+		$this->postJson('/api/translate', ['text_to_translate' => 'Bonjour'])->assertUnauthorized();
+
+		Http::assertNothingSent();
 	}
 
-	protected function blockOutgoingCurl(): callable
+	public function test_translate_returns_the_english_text_from_openai()
 	{
-		$saved = [];
-		foreach (['https_proxy', 'HTTPS_PROXY', 'http_proxy', 'HTTP_PROXY', 'all_proxy', 'ALL_PROXY', 'no_proxy', 'NO_PROXY'] as $var) {
-			$saved[$var] = getenv($var);
-			putenv(stripos($var, 'no_proxy') === false ? "$var=http://127.0.0.1:9" : $var);
-		}
-		$savedKey = [$_SERVER['OPENAI_API_KEY'] ?? null, $_ENV['OPENAI_API_KEY'] ?? null];
-		$_SERVER['OPENAI_API_KEY'] = $_ENV['OPENAI_API_KEY'] = 'sk-dummy-not-a-key';
+		Http::fake([
+			'api.openai.com/*' => Http::response(['choices' => [['message' => ['content' => 'Hello']]]]),
+		]);
 
-		return function () use ($saved, $savedKey) {
-			foreach ($saved as $var => $value) {
-				putenv($value === false ? $var : "$var=$value");
-			}
-			foreach ([0 => '_SERVER', 1 => '_ENV'] as $i => $global) {
-				if ($savedKey[$i] === null) {
-					unset($GLOBALS[$global]['OPENAI_API_KEY']);
-				} else {
-					$GLOBALS[$global]['OPENAI_API_KEY'] = $savedKey[$i];
-				}
-			}
-		};
+		$this->actingAs($this->makeUser())
+			->postJson('/api/translate', ['text_to_translate' => 'Bonjour'])
+			->assertOk()
+			->assertExactJson(['translation' => 'Hello']);
+
+		Http::assertSent(function ($request) {
+			return $request->hasHeader('Authorization', 'Bearer sk-test-not-a-real-key')
+				&& $request['messages'][1]['content'] === 'Bonjour';
+		});
+	}
+
+	public function test_translate_reports_a_failed_openai_call()
+	{
+		Http::fake(['api.openai.com/*' => Http::response(['error' => 'quota'], 429)]);
+
+		$this->actingAs($this->makeUser())
+			->postJson('/api/translate', ['text_to_translate' => 'Bonjour'])
+			->assertStatus(502)
+			->assertJson(['translation' => null]);
 	}
 }

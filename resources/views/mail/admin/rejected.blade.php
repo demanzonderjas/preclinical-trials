@@ -13,7 +13,7 @@
     </div>
 @stop
 
-@section('cta-link', env('APP_URL') . '/dashboard/edit-protocol/' . $protocol->id)
+@section('cta-link', config('app.url') . '/dashboard/edit-protocol/' . $protocol->id)
 @section('cta-text', 'Edit protocol')
 
 @section('closing')

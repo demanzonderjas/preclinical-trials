@@ -95,23 +95,18 @@ class ContentTest extends TestCase
 		$this->assertEquals([$newer->id, $older->id], $ids);
 	}
 
-	/**
-	 * Oddity: the single news item endpoint has no status check, so drafts are readable by id.
-	 */
-	public function test_single_news_item_is_readable_by_id_even_as_draft()
+	public function test_a_draft_news_item_is_only_readable_by_admins()
 	{
 		$draft = $this->makeNewsItem('draft');
 
-		$this->getJson("/api/news-item/{$draft->id}")
+		$this->getJson("/api/news-item/{$draft->id}")->assertNotFound();
+		$this->actingAs($this->makeAdmin())->getJson("/api/news-item/{$draft->id}")
 			->assertOk()
 			->assertJsonPath('news_item.title', 'News (draft)')
 			->assertJsonPath('news_item.status', 'draft');
 	}
 
-	/**
-	 * Oddity: drafts are included; the public FAQ does not filter on status.
-	 */
-	public function test_faq_lists_categories_with_their_items()
+	public function test_faq_lists_categories_with_their_published_items()
 	{
 		$general = $this->makeCategory('General');
 		$technical = $this->makeCategory('Technical');
@@ -123,7 +118,7 @@ class ContentTest extends TestCase
 			->assertJsonStructure(['categories' => [['id', 'name', 'order', 'faq_items' => [['id', 'title', 'content', 'status', 'faq_category_id', 'category']]]]]);
 
 		$categories = collect($response->json('categories'))->keyBy('name');
-		$this->assertSame(['What is PCT?', 'Draft question'], collect($categories['General']['faq_items'])->pluck('title')->all());
+		$this->assertSame(['What is PCT?'], collect($categories['General']['faq_items'])->pluck('title')->all());
 		$this->assertSame(['How do I register?'], collect($categories['Technical']['faq_items'])->pluck('title')->all());
 		$this->assertSame('Technical', $categories['Technical']['faq_items'][0]['category']);
 	}
@@ -157,17 +152,11 @@ class ContentTest extends TestCase
 		$this->getJson("/api/page/{$page->id}")->assertOk()->assertJsonPath('page.slug', 'about');
 	}
 
-	/**
-	 * Oddity: an unknown slug calls toArray() on null and errors instead of returning 404.
-	 */
-	public function test_unknown_page_slug_errors()
+	public function test_unknown_page_slug_is_not_found()
 	{
-		$this->postJson('/api/page/slug', ['slug' => 'nope'])->assertStatus(500);
+		$this->postJson('/api/page/slug', ['slug' => 'nope'])->assertNotFound();
 	}
 
-	/**
-	 * Oddity: `image` is not fillable on NewsItem, so it is dropped on create but set on update.
-	 */
 	public function test_admin_news_item_round_trip()
 	{
 		$admin = $this->makeAdmin();
@@ -176,7 +165,7 @@ class ContentTest extends TestCase
 			'title' => 'Launch', 'summary' => 'Short', 'content' => '<p>Long</p>', 'image' => 'launch.png',
 			'publish_date' => '2026-11-01', 'status' => 'draft',
 		])->assertOk()->assertJsonPath('success', true)->json('news_item');
-		$this->assertNull(NewsItem::findOrFail($created['id'])->image);
+		$this->assertSame('launch.png', NewsItem::findOrFail($created['id'])->image);
 		$this->assertSame([], $this->getJson('/api/news-items')->json('news_items'));
 		$this->assertCount(1, $this->actingAs($admin)->getJson('/api/news-items/admin')->json('news_items'));
 
@@ -188,6 +177,21 @@ class ContentTest extends TestCase
 
 		$this->actingAs($admin)->deleteJson("/api/news-item/{$created['id']}")->assertExactJson(['success' => true]);
 		$this->assertNull(NewsItem::find($created['id']));
+	}
+
+	public function test_deleting_a_news_image_cannot_reach_outside_the_news_folder()
+	{
+		$outside = public_path('e2e-guard-' . uniqid() . '.txt');
+		file_put_contents($outside, 'keep me');
+
+		try {
+			$this->actingAs($this->makeAdmin())
+				->postJson('/api/news-item/delete-image', ['filename' => '../../' . basename($outside)])
+				->assertExactJson(['success' => false]);
+			$this->assertFileExists($outside);
+		} finally {
+			@unlink($outside);
+		}
 	}
 
 	public function test_admin_faq_item_round_trip()
@@ -265,31 +269,7 @@ class ContentTest extends TestCase
 		});
 	}
 
-	/**
-	 * Characterizes a bug: the `api` group already applies `ThrottleRequests` (60/min) and the
-	 * route adds `throttle:10,1`. Both use the same rate-limit key (domain + IP), so every
-	 * request is counted twice and the effective limit is 5 per minute.
-	 *
-	 * @group known-bug
-	 */
-	public function test_contact_form_is_currently_throttled_after_5_requests()
-	{
-		$payload = ['name' => 'Visitor', 'email' => 'visitor@example.test', 'message' => 'Hi'];
 
-		for ($i = 1; $i <= 5; $i++) {
-			$this->postJson('/api/contact-form', $payload)->assertOk();
-		}
-		$this->postJson('/api/contact-form', $payload)->assertStatus(429);
-
-		$this->assertSame(5, ContactForm::count());
-	}
-
-	/**
-	 * The contact form must accept 10 requests per minute and refuse the 11th. Currently the
-	 * 6th request already gets 429 because the two throttle middlewares share one counter.
-	 *
-	 * @group pending-fix
-	 */
 	public function test_contact_form_is_throttled_to_10_per_minute()
 	{
 		$payload = ['name' => 'Visitor', 'email' => 'visitor@example.test', 'message' => 'Hi'];

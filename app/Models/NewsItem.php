@@ -14,6 +14,7 @@ class NewsItem extends Model
         "status",
         "summary",
         "content",
-        "publish_date"
+        "publish_date",
+        "image"
     ];
 }

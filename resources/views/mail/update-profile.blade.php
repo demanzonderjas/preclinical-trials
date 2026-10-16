@@ -22,7 +22,7 @@
     </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/dashboard/edit-profile')
+@section('cta-link', config('app.url') . '/dashboard/edit-profile')
 @section('cta-text', 'Update your profile')
 
 @section('closing')

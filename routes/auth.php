@@ -10,25 +10,24 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [RegisteredUserController::class, 'store'])
-    ->middleware('guest');
+// No 'guest' middleware: on Laravel 8 RedirectIfAuthenticated was disabled, so logged-in
+// users could post these forms too. Keeping that behaviour for the SPA.
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('guest');
+Route::post('/register', [RegisteredUserController::class, 'store']);
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
 Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store'])
     ->middleware('auth');
 
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-    ->middleware('guest')
     ->name('password.email');
 
 Route::get('/reset-password/{token}', function () {
     return view('index');
-})->middleware('guest')->name('password.reset');
+})->name('password.reset');
 
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
-    ->middleware('guest')
     ->name('password.update');
 
 Route::post('/change-password', [NewPasswordController::class, 'resetManually'])

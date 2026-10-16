@@ -37,7 +37,7 @@ class EmbargoController extends Controller
 		]);
 		$targetProtocol->embargoExtensions()->save($extension);
 
-		Mail::to(env('ADMIN_MAIL'))->send(new EmbargoExtensionRequested($extension));
+		Mail::to(config('pct.admin_mail'))->send(new EmbargoExtensionRequested($extension));
 
 		return response()->json(["embargo_extension" => $extension]);
 	}
@@ -74,9 +74,10 @@ class EmbargoController extends Controller
 
 		$protocol = $embargo_extension->protocol;
 
-		$this->addAdminAction($protocol, "reject_embargo_extension", $request->message);
+		$message = (string) $request->input('message', '');
+		$this->addAdminAction($protocol, "reject_embargo_extension", $message);
 
-		Mail::to($protocol->user)->send(new EmbargoExtensionRejected($protocol, $request->message));
+		Mail::to($protocol->user)->send(new EmbargoExtensionRejected($protocol, $message));
 
 		return response()->json(["success" => true]);
 	}

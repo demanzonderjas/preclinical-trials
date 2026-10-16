@@ -34,7 +34,7 @@ class PageController extends Controller
 
     public function getBySlug(Request $request)
     {
-        $page = Page::where('slug', $request->slug)->first();
+        $page = Page::where('slug', $request->slug)->firstOrFail();
         return response()->json(["page" => $page->toArray()]);
     }
 }

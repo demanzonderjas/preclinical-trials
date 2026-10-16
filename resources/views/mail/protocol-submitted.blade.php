@@ -14,7 +14,7 @@
     </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/database/view-protocol/' . $protocol->id)
+@section('cta-link', config('app.url') . '/database/view-protocol/' . $protocol->id)
 @section('cta-text', 'View your protocol')
 
 @section('closing')

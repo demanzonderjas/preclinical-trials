@@ -51,9 +51,11 @@ class NewsItemController extends Controller
         return response()->json(["news_items" => NewsItemResource::collection($newsItems)]);
     }
 
-    public function get($news_item_id)
+    public function get(Request $request, $news_item_id)
     {
-        $newsItem = NewsItem::find($news_item_id);
+        $newsItem = NewsItem::findOrFail($news_item_id);
+        // Drafts are only readable in the admin area.
+        abort_if($newsItem->status === 'draft' && !$request->user()?->is_admin, 404);
         return response()->json(["news_item" => new NewsItemResource($newsItem)]);
     }
 
@@ -78,7 +80,7 @@ class NewsItemController extends Controller
 
     public function deleteImage(Request $request)
     {
-        $image_path = public_path('images/news/') . $request->filename;
+        $image_path = public_path('images/news/') . basename((string) $request->filename);
         $fileExists = File::exists($image_path);
         if ($fileExists) {
             File::delete($image_path);

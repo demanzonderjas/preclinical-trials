@@ -98,7 +98,7 @@ class ProtocolController extends Controller
 		$protocol->status = $protocol->status !== "draft" ? "resubmitted_for_publication" : "submitted_for_publication";
 		$protocol->save();
 
-		Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
+		Mail::to(config('pct.admin_mail'))->send(new ProtocolSubmittedForPublication($protocol));
 		Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
 	}
 
@@ -263,10 +263,11 @@ class ProtocolController extends Controller
 			$log->type = "iles";
 			$log->save();
 
-			Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
+			Mail::to(config('pct.admin_mail'))->send(new ProtocolSubmittedForPublication($protocol));
 			Mail::to($user)->send(new ProtocolSubmittedUser($protocol));
 		} catch (Exception $e) {
-			return response()->json(['success' => false, 'message' => 'error_during_saving_in_database', 'exception' => $e]);
+			report($e);
+			return response()->json(['success' => false, 'message' => 'error_during_saving_in_database']);
 		}
 
 

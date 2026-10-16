@@ -10,7 +10,7 @@
     </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/admin/embargo-extensions')
+@section('cta-link', config('app.url') . '/admin/embargo-extensions')
 @section('cta-text', 'View the extension request')
 
 @section('closing')

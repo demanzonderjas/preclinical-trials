@@ -47,7 +47,8 @@ class FaqController extends Controller
 
     public function getByCategory()
     {
-        $categories = FaqCategory::with('faqItems')->get();
+        // Draft questions are only shown in the admin area.
+        $categories = FaqCategory::with(['faqItems' => fn ($query) => $query->where('status', '!=', 'draft')])->get();
         return response()->json(["success" => true, "categories" => $categories->toArray()]);
     }
 

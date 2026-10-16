@@ -15,7 +15,7 @@
     </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/dashboard/extend-embargo/' . $protocol->id)
+@section('cta-link', config('app.url') . '/dashboard/extend-embargo/' . $protocol->id)
 @section('cta-text', 'Extend embargo')
 
 @section('closing')

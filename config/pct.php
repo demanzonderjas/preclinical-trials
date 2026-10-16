@@ -1,6 +1,13 @@
 <?php
 
 return [
+	// Receives submissions, embargo requests and contact form messages.
+	"admin_mail" => env("ADMIN_MAIL"),
+
+	// Shared secrets of the two external integrations (see routes/api.php).
+	"iles_token" => env("ILES_TOKEN"),
+	"external_api_key" => env("EXTERNAL_API_KEY"),
+
 	"valid_protocol_keys" => [
 		"title",
 		"short_title",

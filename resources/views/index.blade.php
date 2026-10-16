@@ -13,7 +13,7 @@
     @endunless
     <link rel="stylesheet" href="/css/app.css?t={{ time() }}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <title>{{ env('APP_NAME') }}</title>
+    <title>{{ config('app.name') }}</title>
 </head>
 
 <body>

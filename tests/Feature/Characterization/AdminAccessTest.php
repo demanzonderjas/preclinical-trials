@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AdminAccessTest extends TestCase
@@ -68,7 +69,7 @@ class AdminAccessTest extends TestCase
 	/**
 	 * Every route inside the `admin` middleware group in routes/api.php.
 	 */
-	public function adminRoutes(): array
+	public static function adminRoutes(): array
 	{
 		return [
 			'change password' => ['POST', '/api/admin/change-password', []],
@@ -117,17 +118,13 @@ class AdminAccessTest extends TestCase
 		return $this->json($method, $uri, $payload);
 	}
 
-	/**
-	 * @dataProvider adminRoutes
-	 */
+	#[DataProvider('adminRoutes')]
 	public function test_guests_are_forbidden_on_admin_routes(string $method, string $uri, array $payload)
 	{
 		$this->callRoute($method, $uri, $payload)->assertForbidden();
 	}
 
-	/**
-	 * @dataProvider adminRoutes
-	 */
+	#[DataProvider('adminRoutes')]
 	public function test_researchers_are_forbidden_on_admin_routes(string $method, string $uri, array $payload)
 	{
 		$this->actingAs($this->makeUser());
@@ -135,9 +132,7 @@ class AdminAccessTest extends TestCase
 		$this->callRoute($method, $uri, $payload)->assertForbidden();
 	}
 
-	/**
-	 * @dataProvider adminRoutes
-	 */
+	#[DataProvider('adminRoutes')]
 	public function test_admins_pass_the_admin_middleware(string $method, string $uri, array $payload)
 	{
 		$this->actingAs($this->makeAdmin());
@@ -177,10 +172,6 @@ class AdminAccessTest extends TestCase
 		$this->assertArrayNotHasKey('remember_token', $response->json('users.0'));
 	}
 
-	/**
-	 * Oddity: `resetAsAdmin()` does not return the JSON from `changePassword()`, so the
-	 * response is an empty 200.
-	 */
 	public function test_admin_changes_another_users_password()
 	{
 		$user = User::where('email', $this->ids['{owner_email}'])->firstOrFail();
@@ -191,7 +182,7 @@ class AdminAccessTest extends TestCase
 			'password_confirmation' => 'a-new-password-123',
 		])->assertOk();
 
-		$this->assertSame('', $response->getContent());
+		$response->assertExactJson(['success' => true]);
 		$this->assertTrue(Hash::check('a-new-password-123', $user->fresh()->password));
 	}
 

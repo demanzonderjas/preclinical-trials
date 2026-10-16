@@ -4,33 +4,37 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Orhanerday\OpenAi\OpenAi;
-
+use Illuminate\Support\Facades\Http;
 
 class AIController extends Controller
 {
+    /**
+     * Translates French text from an APAFiS import into English.
+     */
     public function translate(Request $request)
     {
+        $request->validate(['text_to_translate' => ['required', 'string', 'max:20000']]);
 
-        $open_ai_key = env('OPENAI_API_KEY');
-        $open_ai = new OpenAi($open_ai_key);
-
-        $chat = $open_ai->chat([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    "role" => "user",
-                    "content" => "Please translate the following quoted text from French into English: '" . $request->text_to_translate . "'. Show the translation only."
+        $response = Http::withToken(config('services.openai.key'))
+            ->timeout(60)
+            ->post('https://api.openai.com/v1/chat/completions', [
+                'model' => config('services.openai.model'),
+                'temperature' => 0,
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => 'Translate the French text the user sends into English. Reply with the translation only.',
+                    ],
+                    ['role' => 'user', 'content' => $request->text_to_translate],
                 ],
-            ],
-            'temperature' => 1.0,
-            'frequency_penalty' => 0,
-            'presence_penalty' => 0,
-        ]);
+            ]);
 
+        if ($response->failed()) {
+            report($response->toException());
 
-        $d = json_decode($chat);
+            return response()->json(['translation' => null, 'message' => 'translation_failed'], 502);
+        }
 
-        return response()->json(["translation" => $d->choices[0]->message->content]);
+        return response()->json(['translation' => $response->json('choices.0.message.content')]);
     }
 }

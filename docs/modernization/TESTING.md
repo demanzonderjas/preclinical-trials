@@ -1,7 +1,8 @@
 # Testing
 
-Two layers. The backend layer is the safety net for the Laravel 13 port, phase 1. The
-end-to-end layer is parked until the A2 pages exist (phases 3–5).
+Two layers. The backend layer guards behaviour across the Laravel 13 port. The end-to-end
+layer drives the real SPA in a browser. It passed on the Laravel 13 backend (23 passed, 2
+parked) and gets its page helpers rewritten as the A2 pages land (phases 3–5).
 
 ## 1. Backend tests (PHPUnit)
 
@@ -12,20 +13,12 @@ same tests must pass after the port.
 - **Database:** MySQL database `pct_testing`. Create it once with
   `CREATE DATABASE pct_testing`. Credentials come from your `.env`; `phpunit.xml` only
   overrides the database name.
-- **Run (Laravel 8 needs PHP 7.4, from Herd):**
-
-  ```bash
-  "$HOME/Library/Application Support/Herd/bin/php74" -d pcre.jit=0 vendor/bin/phpunit --exclude-group pending-fix
-  ```
-
-  After the port it is simply `php artisan test`.
-- **Groups:**
-  - `pending-fix`: the *secure or correct* behaviour for bugs we fix in phase 1. These
-    fail on the current app on purpose; after phase 1 they must pass, and the group
-    label is removed.
-  - `known-bug`: pins a current bug in the baseline run. When phase 1 fixes the bug,
-    the test is deleted or inverted.
-- **Run time:** about 3.5 seconds for 200+ tests.
+- **Run:** `php artisan test` (PHP 8.4).
+- **Bugs fixed in phase 1:** the bugs the phase 0 run documented (the `pending-fix` and
+  `known-bug` groups) were fixed in the Laravel 13 port. Their tests now describe the
+  fixed behaviour, and the groups are gone.
+- `MailRenderingTest` renders and sends every mail for real, because the other tests fake the mailer.
+- **Run time:** about 6 seconds for 217 tests.
 
 ## 2. End-to-end user-action tests (Playwright), parked
 
@@ -50,7 +43,7 @@ when that page is built, with `getByRole`/`getByLabel`, and to add specs for the
 
 ```bash
 cd tests/e2e && npm install && npx playwright install chromium
-PCT_PHP="$HOME/Library/Application Support/Herd/bin/php74" npx playwright test
+npx playwright test
 ```
 
 Playwright starts the app on port 8000 with `APP_ENV=e2e`, or reuses a running one. About 2–3 s per test.

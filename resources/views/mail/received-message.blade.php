@@ -10,7 +10,7 @@
     </p>
 @stop
 
-@section('cta-link', env('APP_URL') . '/dashboard/messages/' . $channel_id)
+@section('cta-link', config('app.url') . '/dashboard/messages/' . $channel_id)
 @section('cta-text', 'View message')
 
 @section('closing')

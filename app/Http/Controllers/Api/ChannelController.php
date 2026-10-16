@@ -16,7 +16,7 @@ class ChannelController extends Controller
 	public function getChannelId(Request $request)
 	{
 		$protocol = Protocol::findOrFail($request->protocol_id);
-		$channel = Channel::firstOrCreate(['protocol_id' => $request->protocol_id, 'questioner_id' => $request->questioner_id, 'protocol_owner_id' => $protocol->user_id]);
+		$channel = Channel::firstOrCreate(['protocol_id' => $request->protocol_id, 'questioner_id' => $request->user()->id, 'protocol_owner_id' => $protocol->user_id]);
 
 		return response()->json(["channel_id" => $channel->id]);
 	}
