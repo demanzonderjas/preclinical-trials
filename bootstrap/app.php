@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Pages built in the A2 design are Inertia responses.
         // AuthenticateSession ends other sessions after "log out on all devices" or a password change.
-        $middleware->web(append: [\Illuminate\Session\Middleware\AuthenticateSession::class, HandleInertiaRequests::class]);
+        $middleware->web(append: [\Illuminate\Session\Middleware\AuthenticateSession::class, \App\Http\Middleware\TrackLastActivity::class, HandleInertiaRequests::class]);
 
         // The legacy SPA authenticates API calls with the session cookie (Sanctum).
         $middleware->statefulApi();

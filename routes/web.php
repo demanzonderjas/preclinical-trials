@@ -3,6 +3,7 @@
 use App\Http\Controllers\Pages\AboutController;
 use App\Http\Controllers\Pages\Admin\EmbargoesController as AdminEmbargoesController;
 use App\Http\Controllers\Pages\Admin\ProtocolsController as AdminProtocolsController;
+use App\Http\Controllers\Pages\Admin\UsersController as AdminUsersController;
 use App\Http\Controllers\Pages\ContactController;
 use App\Http\Controllers\Pages\ContentPageController;
 use App\Http\Controllers\Pages\DatabaseController;
@@ -84,6 +85,12 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/embargo-extensions/{extension}/reject', [AdminEmbargoesController::class, 'reject'])->whereNumber('extension')->name('admin.embargoes.reject');
     Route::post('/protocols/{id}/embargo', [AdminEmbargoesController::class, 'extend'])->whereNumber('id')->name('admin.embargoes.extend');
     Route::redirect('/embargo-extensions', '/admin/embargoes');
+    Route::get('/users', [AdminUsersController::class, 'index'])->name('admin.users');
+    Route::whereNumber('id')->prefix('users/{id}')->group(function () {
+        Route::post('/verify', [AdminUsersController::class, 'verify'])->name('admin.users.verify');
+        Route::post('/reset-link', [AdminUsersController::class, 'sendResetLink'])->middleware('throttle:10,1')->name('admin.users.reset-link');
+        Route::post('/temporary-password', [AdminUsersController::class, 'temporaryPassword'])->middleware('throttle:10,1')->name('admin.users.temporary-password');
+    });
     Route::put('/feedback-points/{point}', [AdminProtocolsController::class, 'updatePoint'])->whereNumber('point')->name('admin.points.update');
     Route::delete('/feedback-points/{point}', [AdminProtocolsController::class, 'destroyPoint'])->whereNumber('point')->name('admin.points.destroy');
 });

@@ -83,8 +83,22 @@ export class AdminUI {
 		await expect(this.page.getByText(/Rejected\. The researcher gets your message/)).toBeVisible();
 	}
 
-	async openUsers() {
-		await this.page.goto("/admin/users");
+	/** A2 admin users. */
+	async openUsers(search = "") {
+		await this.page.goto(`/admin/users${search ? `?q=${encodeURIComponent(search)}` : ""}`);
+		await expect(this.page.getByRole("heading", { level: 1, name: "Users" })).toBeVisible();
+	}
+
+	async selectUser(name: string) {
+		await this.page.getByRole("button", { name, exact: true }).click();
+		await expect(this.page.getByRole("heading", { level: 2, name })).toBeVisible();
+	}
+
+	async verifyEmailOf(name: string) {
+		await this.openUsers(name);
+		await this.selectUser(name);
+		await this.page.getByRole("button", { name: "Mark email as verified" }).click();
+		await expect(this.page.getByText(/is marked as verified/)).toBeVisible();
 	}
 
 	async openStats() {
