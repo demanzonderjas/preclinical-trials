@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Pages\AboutController;
 use App\Http\Controllers\Pages\ContactController;
+use App\Http\Controllers\Pages\ContentPageController;
 use App\Http\Controllers\Pages\DatabaseController;
 use App\Http\Controllers\Pages\HelpController;
 use App\Http\Controllers\Pages\HomeController;
@@ -33,6 +35,15 @@ Route::get('/', HomeController::class)->name('index');
 
 Route::get('/database', [DatabaseController::class, 'index'])->name('database');
 Route::get('/database/export.csv', [DatabaseController::class, 'export'])->middleware(['auth', 'verified'])->name('database.export');
+
+Route::get('/about-pct', AboutController::class)->name('about');
+// The legacy about sub-pages are sections of the A2 About page now.
+Route::permanentRedirect('/about-pct/team', '/about-pct#team');
+Route::permanentRedirect('/about-pct/advisory-board', '/about-pct#advisory-board');
+Route::permanentRedirect('/about-pct/ambassadors', '/about-pct#ambassadors');
+Route::permanentRedirect('/about-pct/background-information', '/about-pct#background');
+
+Route::get('/disclaimer', ContentPageController::class)->name('disclaimer');
 
 Route::get('/help', [HelpController::class, 'index'])->name('help');
 Route::post('/help/{id}/feedback', [HelpController::class, 'feedback'])->whereNumber('id')->middleware('throttle:30,1')->name('help.feedback');

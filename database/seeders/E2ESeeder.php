@@ -106,13 +106,29 @@ class E2ESeeder extends Seeder
 			$news->save();
 		}
 
-		$ambassador = new Ambassador();
-		$ambassador->name = 'Prof. Georg Schmölzer';
-		$ambassador->description = 'Associate Professor, University of Alberta';
-		$ambassador->geo_search = 'Edmonton, Canada';
-		$ambassador->latitude = '53.546';
-		$ambassador->longitude = '-113.494';
-		$ambassador->save();
+		// The ambassadors as listed on the public site.
+		foreach ([
+			['Prof. Georg Schmölzer', 'Associate Professor, University of Alberta', 'Edmonton, Canada', 53.546, -113.494],
+			['Prof. Netzahualpilli Delgado Figueroa', 'Physician, professor of evidence-based medicine', 'Guadalajara, Mexico', 20.660, -103.350],
+			['Prof. Roberto Bolli', 'Professor of Medicine, Physiology and Biophysics', 'Louisville, United States', 38.253, -85.759],
+			['Dr. Marc Avey & Prof. Manoj Lalu', 'Standards director · Assistant professor of anesthesiology', 'Ottawa, Canada', 45.421, -75.697],
+			['Dr. Emily Sena', 'Senior lecturer in stroke research, University of Edinburgh', 'Edinburgh, United Kingdom', 55.953, -3.188],
+			['Dr. Lilas Courtot & Emeline Gougeon', 'Scientific advisor and administrator, Comité Scientifique Pro Anima', 'Paris, France', 48.857, 2.352],
+			['Dr. Viola Galligioni', 'Researcher, Netherlands Institute for Neuroscience (KNAW)', 'Amsterdam, Netherlands', 52.368, 4.904],
+			['Aina Cevera i Barea', 'PhD student, experimental cardiology & regenerative medicine', 'Utrecht, Netherlands', 52.091, 5.122],
+			['Prof. Matteo Bruschettini', 'Associate professor of paediatrics, director of Cochrane Sweden', 'Lund, Sweden', 55.705, 13.191],
+			['Dr. Ilya Sukhanov', 'PI, Institute of Pharmacology, Pavlov First St Petersburg State Medical University', 'Saint Petersburg, Russia', 59.931, 30.360],
+			['Mina Ibrahim Shalapy', 'R&D manager, El Romany Ophthalmics · Ain Shams University', 'Cairo, Egypt', 30.044, 31.236],
+			['Fahrul Nurkolis', 'Vice President, Medical Research Center of Indonesia', 'Surabaya, Indonesia', -7.257, 112.752],
+		] as [$name, $description, $place, $lat, $lng]) {
+			$ambassador = new Ambassador();
+			$ambassador->name = $name;
+			$ambassador->description = $description;
+			$ambassador->geo_search = $place;
+			$ambassador->latitude = (string) $lat;
+			$ambassador->longitude = (string) $lng;
+			$ambassador->save();
+		}
 	}
 
 	private function user(string $email, string $first, string $last, string $institution, string $role, string $country = 'NL', string $city = 'Utrecht', bool $verified = true): User
