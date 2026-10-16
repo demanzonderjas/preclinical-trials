@@ -94,6 +94,7 @@ These do not block the build. Placeholders are used until the client answers.
 | **4 · Researcher workspace** | Dashboard, My protocols, Protocol form (stepper), Messages, Profile, Import. F1 (researcher side), F2, F4, F5, F6, F10 and F11. | Checklist, plus a full lifecycle walk-through by hand |
 | **5 · Admin** | Protocols, Review, Embargoes, Content, Users, Statistics. F1 (admin side), F8 and F9. | Checklist |
 | **6 · Cutover** | Remove the old SPA, Mix and unused packages. Staging deploy, client acceptance, production deploy with DB backup, smoke tests, rollback plan. | Client sign-off, production live |
+| **7 · End-to-end suite** | Playwright journeys on the new design for everything guests and users can do. Guests: search and filter the register, CSV export, news, help (search, audiences, feedback), contact form, about page. Account: register, verify, log in and out, password reset. Researcher: create a draft with autosave, import PRIS/APAFiS, submit, act on feedback, resubmit, amend a published protocol, request an embargo extension, messages (questions, team, attachments, archive), profile, PDFs. Admin: review with points, approve and return, embargo decisions, content, users, statistics exports. Desktop plus a phone-width pass on the key journeys. | Suite green in CI; covers every row of sections 3a–3c |
 
 F1 is split across phases 4 and 5, but its data model and backend are built once, at the start of phase 4.
 
