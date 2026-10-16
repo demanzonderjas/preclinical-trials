@@ -19,25 +19,26 @@ export type Ambassador = {
 };
 
 /*
- * A dotted world map (equirectangular) with a pin per ambassador. Ambassadors in
- * the crowded European box are drawn in a magnifying-lens inset instead, as in A2.
+ * A dotted world map (equirectangular) with a pin per ambassador. A magnifying lens rests
+ * on the selected ambassador and glides to the next one, so the crowded European cities
+ * can be told apart wherever you look.
  */
 
 const W = 1160;
 const H = 470;
+const VIEW_H = H + 40;
 const bounds = { west: -168, east: 180, north: 76, south: -56 };
 const project = (lng: number, lat: number) => [((lng - bounds.west) / (bounds.east - bounds.west)) * W, ((bounds.north - lat) / (bounds.north - bounds.south)) * H] as const;
 
-const europe = { west: -8, east: 33, north: 63, south: 43 };
-const inEurope = (a: Ambassador) => a.lng >= europe.west && a.lng <= europe.east && a.lat >= europe.south && a.lat <= europe.north;
+/** Where the dense dots of world.europe apply; elsewhere the coarse world dots do. */
+const europe = { west: -16, east: 39.8, north: 70, south: 34 };
+const inEurope = (a: Ambassador) => a.lng >= -8 && a.lng <= 33 && a.lat >= 43 && a.lat <= 63;
+const inDenseArea = ([lng, lat]: number[]) => lng >= europe.west && lng <= europe.east && lat >= europe.south && lat <= europe.north;
 
-const lens = { cx: 580, cy: 395, r: 158 };
-const projectLens = (lng: number, lat: number) => {
-	const x = (lng - europe.west) / (europe.east - europe.west);
-	const y = (europe.north - lat) / (europe.north - europe.south);
-	return [lens.cx - lens.r * 0.95 + x * lens.r * 1.9, lens.cy - lens.r * 0.6 + y * lens.r * 1.2] as const;
-};
-const europeCentre = project((europe.west + europe.east) / 2, (europe.north + europe.south) / 2);
+const LENS_R = 124;
+const ZOOM = 2.4;
+const MOTION = "motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]";
+const px = (x: number, y: number) => `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
 
 export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors: Ambassador[]; selected: Ambassador | null; onSelect: (a: Ambassador) => void }) {
 	const clipId = useId();
@@ -45,9 +46,23 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 	const elsewhere = ambassadors.filter(a => !inEurope(a));
 	const dotSize = (world.step / (bounds.east - bounds.west)) * W * 0.42;
 
+	// The lens looks at the selected ambassador (or Europe), and sits on it unless that
+	// would push it off the map.
+	const focus = selected ? project(selected.lng, selected.lat) : project(10, 51);
+	const centre = [Math.min(W - LENS_R - 10, Math.max(LENS_R + 10, focus[0])), Math.min(VIEW_H - LENS_R - 30, Math.max(LENS_R + 10, focus[1]))] as const;
+
+	// Pins in the lens, magnified around the focus and nudged apart where they would touch.
+	const inLens = placeLabels(
+		spread(ambassadors.map(a => {
+			const [x, y] = project(a.lng, a.lat);
+			return { a, xy: [(x - focus[0]) * ZOOM, (y - focus[1]) * ZOOM] as const };
+		})),
+		LENS_R - 12
+	).map(pin => ({ ...pin, visible: Math.hypot(pin.xy[0], pin.xy[1]) < LENS_R - 10 }));
+
 	return (
 		<div className="relative">
-			<svg viewBox={`0 0 ${W} ${H + 90}`} className="h-auto w-full" role="group" aria-label="Map of ambassadors">
+			<svg viewBox={`0 0 ${W} ${VIEW_H}`} className="h-auto w-full" role="group" aria-label="Map of ambassadors">
 				<g aria-hidden="true" fill="#83B2BA" opacity="0.55">
 					{world.dots.map(([lng, lat], index) => {
 						const [x, y] = project(lng, lat);
@@ -55,49 +70,63 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 					})}
 				</g>
 
-				{european.length > 0 && (
-					<g aria-hidden="true">
-						<circle cx={europeCentre[0]} cy={europeCentre[1]} r="62" fill="none" stroke="#558F99" strokeWidth="1.5" strokeDasharray="5 6" />
-						<line x1={europeCentre[0]} y1={europeCentre[1] + 62} x2={lens.cx} y2={lens.cy - lens.r} stroke="#558F99" strokeWidth="1.5" strokeDasharray="5 6" />
-						{european.map(a => {
-							const [x, y] = project(a.lng, a.lat);
-							return <circle key={a.id} cx={x} cy={y} r="4" fill="#FFA888" />;
-						})}
-					</g>
-				)}
-
 				{elsewhere.map(a => {
 					const [x, y] = project(a.lng, a.lat);
 					return <Pin key={a.id} a={a} x={x} y={y} active={selected?.id === a.id} onSelect={onSelect} />;
 				})}
+				{/* European cities are too close for full pins: small dots, magnified in the lens. */}
+				{european.map(a => {
+					const [x, y] = project(a.lng, a.lat);
+					return <Dot key={a.id} a={a} x={x} y={y} active={selected?.id === a.id} onSelect={onSelect} />;
+				})}
 
-				{european.length > 0 && (
-					<g>
-						<clipPath id={clipId}>
-							<circle cx={lens.cx} cy={lens.cy} r={lens.r} />
-						</clipPath>
-						<circle cx={lens.cx} cy={lens.cy} r={lens.r} fill="#FFFFFF" />
-						<g clipPath={`url(#${clipId})`} aria-hidden="true" fill="#83B2BA" opacity="0.55">
+				<g className={MOTION} style={{ transform: px(centre[0], centre[1]) }}>
+					<clipPath id={clipId}>
+						<circle r={LENS_R} />
+					</clipPath>
+					<circle r={LENS_R + 3} fill="#FFFFFF" />
+					<g clipPath={`url(#${clipId})`}>
+						<g className={MOTION} style={{ transform: `${px(focus[0] - centre[0], focus[1] - centre[1])} scale(${ZOOM}) ${px(-focus[0], -focus[1])}` }} aria-hidden="true" fill="#83B2BA" opacity="0.55">
+							{world.dots
+								.filter(dot => !inDenseArea(dot))
+								.map(([lng, lat], index) => {
+									const [x, y] = project(lng, lat);
+									return <circle key={index} cx={x} cy={y} r={3 / ZOOM} />;
+								})}
 							{world.europe.map(([lng, lat], index) => {
-								const [x, y] = projectLens(lng, lat);
-								return <circle key={index} cx={x} cy={y} r="2.1" />;
+								const [x, y] = project(lng, lat);
+								return <circle key={`e${index}`} cx={x} cy={y} r={2.1 / ZOOM} />;
 							})}
 						</g>
-						<circle cx={lens.cx} cy={lens.cy} r={lens.r} fill="none" stroke="#323742" strokeWidth="9" />
-						<path d={`M${lens.cx + lens.r * 0.72} ${lens.cy + lens.r * 0.72}l38 38`} stroke="#558F99" strokeWidth="14" strokeLinecap="round" />
-						{placeLabels(spread(european.map(a => ({ a, xy: projectLens(a.lng, a.lat) }))), lens.cx + lens.r - 12).map(({ a, xy, labelLeft }) => (
-							<Pin key={a.id} a={a} x={xy[0]} y={xy[1]} active={selected?.id === a.id} onSelect={onSelect} small labelLeft={labelLeft} />
-						))}
+						<g className={MOTION} style={{ transform: px(focus[0] - centre[0], focus[1] - centre[1]) }}>
+							{inLens.map(({ a, xy, labelLeft, visible }) => (
+								<g key={a.id} className={MOTION} style={{ transform: px(xy[0], xy[1]) }} aria-hidden={!visible}>
+									<Pin a={a} x={0} y={0} active={selected?.id === a.id} onSelect={onSelect} small labelLeft={labelLeft} focusable={visible} />
+								</g>
+							))}
+						</g>
 					</g>
-				)}
+					<circle r={LENS_R} fill="none" stroke="#323742" strokeWidth="6" />
+					<path d={`M${LENS_R * 0.71 + 2} ${LENS_R * 0.71 + 2}l26 26`} stroke="#558F99" strokeWidth="10" strokeLinecap="round" />
+				</g>
 			</svg>
-			{european.length > 0 && (
-				<p className="absolute top-2 left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[13.5px] font-bold shadow-[inset_0_0_0_1px_var(--color-line)] md:inline-flex">
-					<span className="flex size-5 items-center justify-center rounded-full bg-peach-300 text-[11px]">{european.length}</span>
-					Europe, magnified below
-				</p>
-			)}
 		</div>
+	);
+}
+
+/** A European ambassador on the world map: too close to their neighbours for a full pin. */
+function Dot({ a, x, y, active, onSelect }: { a: Ambassador; x: number; y: number; active: boolean; onSelect: (a: Ambassador) => void }) {
+	return (
+		<g
+			role="button"
+			tabIndex={-1}
+			aria-label={`${a.city ?? a.name}: ${a.name}`}
+			onClick={() => onSelect(a)}
+			className="cursor-pointer outline-none"
+		>
+			<circle cx={x} cy={y} r="9" fill="transparent" />
+			<circle cx={x} cy={y} r={active ? 5 : 4} fill="#FFA888" stroke="#FFFFFF" strokeWidth="1.5" />
+		</g>
 	);
 }
 
@@ -133,12 +162,12 @@ function spread<T extends { xy: readonly [number, number] }>(pins: T[], gap = 30
 	return result;
 }
 
-function Pin({ a, x, y, active, onSelect, small = false, labelLeft = false }: { a: Ambassador; x: number; y: number; active: boolean; onSelect: (a: Ambassador) => void; small?: boolean; labelLeft?: boolean }) {
+function Pin({ a, x, y, active, onSelect, small = false, labelLeft = false, focusable = true }: { a: Ambassador; x: number; y: number; active: boolean; onSelect: (a: Ambassador) => void; small?: boolean; labelLeft?: boolean; focusable?: boolean }) {
 	const r = small ? 13 : 15;
 	return (
 		<g
 			role="button"
-			tabIndex={0}
+			tabIndex={focusable ? 0 : -1}
 			aria-label={`${a.city ?? a.name}: ${a.name}`}
 			aria-pressed={active}
 			onClick={() => onSelect(a)}
