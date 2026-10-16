@@ -1,6 +1,5 @@
 import { expect, Page } from "@playwright/test";
 import { App } from "../app";
-import { fillRichText } from "./common";
 
 /** The seven steps of the A2 protocol form. */
 export const FORM_STEPS = ["General", "Design & hypothesis", "Animals", "Groups & bias", "Ethics & extra info", "Contact details", "Embargo & submit"] as const;
@@ -159,15 +158,16 @@ export class WorkspaceUI {
 		await expect(this.page.getByText(title, { exact: true }).first()).toBeVisible();
 	}
 
+	/** A2 "Extend the embargo" page. */
 	async requestEmbargoExtension(title: string, reason: string) {
 		const { id } = await this.app.protocol(title);
 		await this.page.goto(`/dashboard/extend-embargo/${id}`);
-		await fillRichText(this.page.locator(".EmbargoForm"), reason);
-		await this.page.locator(".EmbargoForm input[type=checkbox]").check();
-		await this.page.locator(".EmbargoForm form").getByRole("button").last().click();
+		await this.page.getByRole("checkbox", { name: /extend the embargo/i }).check();
+		await this.page.getByLabel(/why do you need more time/i).fill(reason);
+		await this.page.getByRole("button", { name: "Send the request" }).click();
+		await expect(this.page).toHaveURL(/\/dashboard\/manage-protocols$/);
 	}
 
-	/** Opens someone else's protocol and sends its author a question. */
 	/** From the A2 protocol page into Messages, then sends the question. */
 	async askAuthor(title: string, question: string) {
 		const { id } = await this.app.protocol(title);

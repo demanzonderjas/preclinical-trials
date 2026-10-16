@@ -10,6 +10,7 @@ use App\Http\Controllers\Pages\NewsController;
 use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Http\Controllers\Pages\ProtocolPdfController;
 use App\Http\Controllers\Pages\Workspace\DashboardController;
+use App\Http\Controllers\Pages\Workspace\EmbargoController;
 use App\Http\Controllers\Pages\Workspace\FeedbackController;
 use App\Http\Controllers\Pages\Workspace\MessagesController;
 use App\Http\Controllers\Pages\Workspace\ProfileController;
@@ -95,6 +96,9 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('/comments/read', [MyProtocolsController::class, 'readComments'])->name('workspace.protocols.comments.read');
         Route::put('/links', [MyProtocolsController::class, 'link'])->name('workspace.protocols.link');
     });
+    Route::get('/extend-embargo/{id}', [EmbargoController::class, 'show'])->whereNumber('id')->name('workspace.embargo');
+    Route::post('/extend-embargo/{id}', [EmbargoController::class, 'store'])->whereNumber('id')->middleware('throttle:10,1')->name('workspace.embargo.store');
+    Route::redirect('/database', '/database');
     Route::get('/profile', [ProfileController::class, 'show'])->name('workspace.profile');
     Route::redirect('/edit-profile', '/dashboard/profile#details');
     Route::put('/profile', [ProfileController::class, 'update'])->name('workspace.profile.update');
