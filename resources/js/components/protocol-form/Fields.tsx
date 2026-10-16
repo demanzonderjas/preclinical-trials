@@ -80,23 +80,26 @@ export function Question({ field, ctx, first, badge, after }: { field: ProtocolF
 				{missing && <span className="ml-auto text-[13.5px] font-bold">Required · not answered yet</span>}
 				{badge && <span className="ml-auto">{badge}</span>}
 			</div>
-			{field.help && <p className={cn("mt-1.5 text-[14.5px] leading-normal whitespace-pre-line text-ink-muted", field.number && "sm:pl-11")}>{field.help}</p>}
-			{point && point.status === "open" && (
-				<p className="mt-3 rounded-input bg-peach-100 px-4 py-3 text-[15px]">
-					<strong>PCT review team:</strong> {point.body}
-				</p>
-			)}
-			<div className="mt-3.5">
-				<Control field={field} ctx={ctx} id={id} />
-			</div>
-			{after}
-			{followUps.length > 0 && (
-				<div className="relative mt-4 grid gap-5 rounded-card bg-teal-50 px-5 py-5 sm:px-6">
-					{followUps.map(child => (
-						<FollowUp key={child.key} field={child} ctx={ctx} />
-					))}
+			{/* Everything under the title lines up with the title, not with the number. */}
+			<div className={cn(field.number && "sm:pl-11")}>
+				{field.help && <p className="mt-1.5 text-[14.5px] leading-normal whitespace-pre-line text-ink-muted">{field.help}</p>}
+				{point && point.status === "open" && (
+					<p className="mt-3 rounded-input bg-peach-100 px-4 py-3 text-[15px]">
+						<strong>PCT review team:</strong> {point.body}
+					</p>
+				)}
+				<div className="mt-3.5">
+					<Control field={field} ctx={ctx} id={id} />
 				</div>
-			)}
+				{after}
+				{followUps.length > 0 && (
+					<div className="relative mt-4 grid gap-5 rounded-card bg-teal-50 px-5 py-5 sm:px-6">
+						{followUps.map(child => (
+							<FollowUp key={child.key} field={child} ctx={ctx} />
+						))}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }
