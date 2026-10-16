@@ -134,9 +134,32 @@ class Protocol extends Model
             ->all();
     }
 
-    public function saveRevisions(Request $request)
+    /**
+     * The stored answers by key.
+     *
+     * @return array<string, mixed>
+     */
+    public function values(): array
     {
-        $validKeys = array_filter($request->all(), function ($key) {
+        return $this->details->mapWithKeys(fn (Detail $detail) => [$detail->key => $detail->value])->all();
+    }
+
+    /** Whether readers see the contact name (F11). Protocols from before A2 always showed it. */
+    public function getPublishesNameAttribute(): bool
+    {
+        $detail = $this->details->firstWhere('key', 'publish_name');
+
+        return $detail === null || ! in_array($detail->value, [false, 'false', 'no', 0, '0'], true);
+    }
+
+    /**
+     * Saves the given answers and records the changed ones as a revision.
+     *
+     * @param  Request|array<string, mixed>  $input
+     */
+    public function saveRevisions(Request|array $input)
+    {
+        $validKeys = array_filter($input instanceof Request ? $input->all() : $input, function ($key) {
             return in_array($key, config('pct.valid_protocol_keys'));
         }, ARRAY_FILTER_USE_KEY);
         $currentDetails = collect($validKeys);

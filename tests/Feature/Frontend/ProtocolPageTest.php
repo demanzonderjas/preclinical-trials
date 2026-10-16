@@ -127,4 +127,30 @@ class ProtocolPageTest extends TestCase
         PublicRegister::forget();
         parent::tearDown();
     }
+
+    public function test_the_contact_name_is_hidden_when_the_author_does_not_publish_it(): void
+    {
+        $owner = $this->makeUser();
+        $protocol = $this->makePublishedProtocol($owner);
+        $protocol->addDetailsToDatabase(['publish_name' => false]);
+
+        $this->actingAs($this->makeUser())->get("/database/view-protocol/{$protocol->id}")
+            ->assertInertia(fn (Assert $page) => $page->missing('protocol.details.contact_name')->missing('protocol.details.publish_name'));
+        $this->actingAs($owner)->get("/database/view-protocol/{$protocol->id}")
+            ->assertInertia(fn (Assert $page) => $page->where('protocol.details.contact_name', 'Sanne de Vries'));
+    }
+
+    public function test_the_history_does_not_reveal_private_contact_details(): void
+    {
+        $protocol = $this->makePublishedProtocol($this->makeUser());
+        $protocol->revisions()->save(new Revision(['admin_only' => false, 'changes' => [
+            ['key' => 'contact_email', 'old_value' => 'old@example.test', 'new_value' => 'new@example.test'],
+            ['key' => 'sum_of_animals', 'old_value' => '30', 'new_value' => '36'],
+        ]]));
+
+        $this->actingAs($this->makeUser())->get("/database/view-protocol/{$protocol->id}")
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('versions.0.changes', 1)
+                ->where('versions.0.changes.0.key', 'sum_of_animals'));
+    }
 }

@@ -38,7 +38,7 @@ test.describe("Researcher: protocols", () => {
 		await app.expectMail({ to: personas.researcher.email });
 	});
 
-	// Parked: helper for the legacy form; rewrite against the A2 Feedback page (PLAN F1).
+	// Parked until the A2 Feedback page exists (PLAN F1).
 	test.fixme("sees why a protocol was rejected and resubmits it", async ({ workspace, app, page }) => {
 		await workspace.openMyProtocols();
 		await workspace.submitForPublication(protocols.rejected);

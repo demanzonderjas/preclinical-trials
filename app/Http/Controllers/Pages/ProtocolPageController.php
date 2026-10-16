@@ -29,8 +29,10 @@ class ProtocolPageController extends Controller
 
         abort_if(($protocol->has_embargo || $protocol->status !== 'published') && ! $privileged, 403, 'This protocol is not public.');
 
+        // Private to the owner and admins: email and role, the name unless published (F11).
+        $private = $privileged ? [] : ['contact_email', 'contact_role', 'publish_name', ...($protocol->publishes_name ? [] : ['contact_name'])];
         $details = $protocol->details
-            ->reject(fn (Detail $detail) => ! $privileged && in_array($detail->key, ['contact_email', 'contact_role'], true))
+            ->reject(fn (Detail $detail) => in_array($detail->key, $private, true))
             ->mapWithKeys(fn (Detail $detail) => [$detail->key => $detail->value]);
 
         $summary = PublicRegister::summarize($protocol);
@@ -40,8 +42,9 @@ class ProtocolPageController extends Controller
             ->filter(fn (Revision $revision) => $user->is_admin || ! $revision->admin_only)
             ->sortBy('created_at')
             ->values()
-            ->map(function (Revision $revision) {
-                $changes = collect($revision->changes ?? []);
+            ->map(function (Revision $revision) use ($private) {
+                // The history must not reveal private values either.
+                $changes = collect($revision->changes ?? [])->reject(fn ($change) => in_array($change['key'] ?? null, $private, true));
                 $reason = optional($changes->firstWhere('key', 'why_amendment'))['new_value'] ?? null;
 
                 return [

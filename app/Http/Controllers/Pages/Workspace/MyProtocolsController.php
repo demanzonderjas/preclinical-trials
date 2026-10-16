@@ -20,7 +20,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 /**
  * A2 "My protocols": every protocol of the researcher as a card with the actions its status
@@ -50,7 +49,7 @@ class MyProtocolsController extends Controller
         ]);
     }
 
-    public function duplicate(Request $request, int $id): SymfonyResponse
+    public function duplicate(Request $request, int $id): RedirectResponse
     {
         $protocol = $this->owned($request, $id);
 
@@ -64,8 +63,7 @@ class MyProtocolsController extends Controller
             return $copy;
         });
 
-        // The protocol form is still a legacy page, so leave Inertia with a full visit.
-        return Inertia::location("/dashboard/edit-protocol/{$copy->id}");
+        return redirect("/dashboard/edit-protocol/{$copy->id}")->with('success', 'A copy was saved as a new draft.');
     }
 
     public function destroy(Request $request, int $id): RedirectResponse

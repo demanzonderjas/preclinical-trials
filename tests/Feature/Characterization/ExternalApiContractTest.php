@@ -189,6 +189,23 @@ class ExternalApiContractTest extends TestCase
 		$this->assertSame(['key', 'value'], array_keys($titleDetail), 'details expose only key and value');
 	}
 
+	public function test_external_api_revisions_do_not_reveal_contact_details()
+	{
+		// Changed in phase 4: before, an amended contact email showed in the revision history.
+		$public = $this->makePublishedProtocol($this->makeUser());
+		$public->revisions()->save(new \App\Models\Revision(['admin_only' => false, 'changes' => [
+			['key' => 'contact_email', 'old_value' => 'old@example.test', 'new_value' => 'new@example.test'],
+			['key' => 'sum_of_animals', 'old_value' => '30', 'new_value' => '36'],
+		]]));
+
+		$revisions = $this->withHeaders(['Authorization' => 'Bearer test-external-key'])
+			->getJson('/api/external/viewable-protocols')
+			->json('protocols.0.revisions');
+
+		$changes = collect($revisions)->flatMap(fn ($revision) => $revision['changes'])->pluck('key')->all();
+		$this->assertSame(['sum_of_animals'], $changes);
+	}
+
 	public function test_external_api_returns_the_same_protocols_as_the_public_list()
 	{
 		$owner = $this->makeUser();

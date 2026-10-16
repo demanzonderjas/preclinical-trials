@@ -1077,6 +1077,17 @@
 			"auditTracked": true
 		},
 		{
+			"key": "publish_name",
+			"label": "Publish my name on the protocol",
+			"section": "contact",
+			"step": 6,
+			"type": "boolean",
+			"required": false,
+			"help": "Your email and role always stay private. Readers can still reach you through “Ask question to author”.",
+			"public": false,
+			"auditTracked": false
+		},
+		{
 			"key": "study_centre",
 			"label": "Study centre details",
 			"section": "contact",

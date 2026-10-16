@@ -3,33 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\ProtocolImages;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 class ProtocolImageController extends Controller
 {
-    const FOLDER = 'images/protocols';
+    const FOLDER = ProtocolImages::FOLDER;
 
     public function upload(Request $request)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $request->validate(ProtocolImages::RULES);
 
-        $filename = time() . '-' . Str::random(16) . '.' . $request->image->extension();
-        $request->image->move(public_path(self::FOLDER), $filename);
-
-        return response()->json(["success" => true, "filename" => $filename]);
+        return response()->json(["success" => true, "filename" => ProtocolImages::store($request, $request->file('image'))]);
     }
 
+    /**
+     * Only removes images uploaded in this session: published protocols and their history
+     * keep referring to older files, and anyone could name someone else's file before.
+     */
     public function delete(Request $request)
     {
-        $path = public_path(self::FOLDER) . '/' . basename($request->filename);
-        $fileExists = File::exists($path);
-        if ($fileExists) {
-            File::delete($path);
-        }
-        return response()->json(["success" => $fileExists]);
+        return response()->json(["success" => ProtocolImages::forget($request, (string) $request->filename)]);
     }
 }

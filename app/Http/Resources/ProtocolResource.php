@@ -22,6 +22,18 @@ class ProtocolResource extends JsonResource
             return !$r->admin_only;
         })->toArray();
 
+        // Others never see contact details (hideContactDetails), so neither in the history.
+        $isOwner = !empty($request->user()) && $request->user()->id === $this->user_id;
+        if (!$isAdmin && !$isOwner) {
+            $revisions = collect($revisions)->map(function ($revision) {
+                $revision['changes'] = array_values(array_filter($revision['changes'] ?? [], function ($change) {
+                    $key = $change['key'] ?? '';
+                    return strpos($key, 'contact_') !== 0 && $key !== 'publish_name';
+                }));
+                return $revision;
+            })->all();
+        }
+
         $comments = $isAdmin && !empty($this->adminActions) ? $this->adminActions->filter(function ($c) {
             return !empty($c->message);
         })->toArray() : [];

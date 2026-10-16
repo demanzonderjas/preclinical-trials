@@ -14,7 +14,7 @@
  *   7-step A2 form.
  *
  * `required` holds only while a field is visible (see `isVisible`), as in the legacy FormStore.
- * Left out on purpose: `import_type` (hidden plumbing), the linked-protocols pseudo field and
+ * `publish_name` (F11) is new in A2. Left out on purpose: `import_type` (hidden plumbing), the linked-protocols pseudo field and
  * `application_number` (only filled by the PRIS import; the legacy form has no field for it).
  */
 
@@ -884,6 +884,18 @@ export const protocolFields: ProtocolField[] = [
 		help: "Provide the email address of the main contact",
 		public: false,
 		auditTracked: true,
+	},
+	{
+		// F11, new in A2. Missing on protocols from before A2, which always showed the name.
+		key: "publish_name",
+		label: "Publish my name on the protocol",
+		section: "contact",
+		step: 6,
+		type: "boolean",
+		required: false,
+		help: "Your email and role always stay private. Readers can still reach you through “Ask question to author”.",
+		public: false,
+		auditTracked: false,
 	},
 	{
 		key: "study_centre",

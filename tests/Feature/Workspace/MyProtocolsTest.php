@@ -103,10 +103,10 @@ class MyProtocolsTest extends TestCase
         $owner = $this->makeUser();
         $published = $this->makePublishedProtocol($owner);
 
-        $response = $this->actingAs($owner)->post("/dashboard/protocols/{$published->id}/duplicate", [], ['X-Inertia' => 'true'])->assertStatus(409);
+        $response = $this->actingAs($owner)->post("/dashboard/protocols/{$published->id}/duplicate");
 
         $copy = $owner->protocols()->latest('id')->first();
-        $this->assertStringEndsWith("/dashboard/edit-protocol/{$copy->id}", $response->headers->get('X-Inertia-Location'));
+        $response->assertRedirect("/dashboard/edit-protocol/{$copy->id}");
         $this->assertNotSame($published->id, $copy->id);
         $this->assertSame('draft', $copy->status);
         $this->assertSame($published->title, $copy->title);

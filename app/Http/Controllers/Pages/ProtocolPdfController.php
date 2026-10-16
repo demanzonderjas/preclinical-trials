@@ -24,8 +24,9 @@ class ProtocolPdfController extends Controller
         $privileged = $this->privileged($request, $protocol);
         abort_if(($protocol->has_embargo || $protocol->status !== 'published') && ! $privileged, 403, 'This protocol is not public.');
 
+        $private = $privileged ? [] : ['contact_email', 'contact_role', 'publish_name', ...($protocol->publishes_name ? [] : ['contact_name'])];
         $values = $protocol->details
-            ->reject(fn (Detail $detail) => ! $privileged && in_array($detail->key, ['contact_email', 'contact_role'], true))
+            ->reject(fn (Detail $detail) => in_array($detail->key, $private, true))
             ->mapWithKeys(fn (Detail $detail) => [$detail->key => $detail->value])
             ->all();
 

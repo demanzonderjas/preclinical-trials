@@ -11,6 +11,7 @@ use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Http\Controllers\Pages\ProtocolPdfController;
 use App\Http\Controllers\Pages\Workspace\DashboardController;
 use App\Http\Controllers\Pages\Workspace\MyProtocolsController;
+use App\Http\Controllers\Pages\Workspace\ProtocolFormController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -75,8 +76,15 @@ Route::fallback(function () {
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     Route::get('/', DashboardController::class)->name('workspace.dashboard');
     Route::get('/manage-protocols', [MyProtocolsController::class, 'index'])->name('workspace.protocols');
+    Route::get('/add-protocol', [ProtocolFormController::class, 'create'])->name('workspace.protocols.create');
+    Route::get('/edit-protocol/{id}', [ProtocolFormController::class, 'edit'])->whereNumber('id')->name('workspace.protocols.edit');
+    Route::post('/protocols', [ProtocolFormController::class, 'store'])->middleware('throttle:30,1')->name('workspace.protocols.store');
+    Route::post('/protocols/import', [ProtocolFormController::class, 'import'])->middleware('throttle:10,1')->name('workspace.protocols.import');
     Route::whereNumber('id')->prefix('protocols/{id}')->group(function () {
         Route::post('/duplicate', [MyProtocolsController::class, 'duplicate'])->name('workspace.protocols.duplicate');
+        Route::put('/answers', [ProtocolFormController::class, 'update'])->middleware('throttle:120,1')->name('workspace.protocols.update');
+        Route::post('/amend', [ProtocolFormController::class, 'amend'])->name('workspace.protocols.amend');
+        Route::post('/images', [ProtocolFormController::class, 'uploadImage'])->middleware('throttle:30,1')->name('workspace.protocols.images');
         Route::delete('/', [MyProtocolsController::class, 'destroy'])->name('workspace.protocols.destroy');
         Route::post('/submit', [MyProtocolsController::class, 'submit'])->name('workspace.protocols.submit');
         Route::post('/comments', [MyProtocolsController::class, 'comment'])->middleware('throttle:30,1')->name('workspace.protocols.comment');

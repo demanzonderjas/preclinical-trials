@@ -65,6 +65,7 @@ return [
 		"contact_name",
 		"contact_role",
 		"contact_email",
+		"publish_name",
 		"study_centre",
 		"additional_information",
 		"additional_information_images",

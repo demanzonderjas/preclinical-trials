@@ -96,7 +96,24 @@ export type MenuItem = { label: ReactNode; onSelect?: () => void; href?: string;
  * A "More" button with a list of actions that opens above or below it. Escape and a click
  * outside close it; focus returns to the button.
  */
-export function Menu({ label = "More", items, footer, align = "right", className }: { label?: ReactNode; items: MenuItem[]; footer?: ReactNode; align?: "left" | "right"; className?: string }) {
+export function Menu({
+	label = "More",
+	items,
+	footer,
+	align = "right",
+	direction = "up",
+	chevron = true,
+	className
+}: {
+	label?: ReactNode;
+	items: MenuItem[];
+	footer?: ReactNode;
+	align?: "left" | "right";
+	/** Up for menus at the bottom of a card, down for menus in a page header. */
+	direction?: "up" | "down";
+	chevron?: boolean;
+	className?: string;
+}) {
 	const [open, setOpen] = useState(false);
 	const id = useId();
 	const root = useRef<HTMLDivElement>(null);
@@ -136,10 +153,10 @@ export function Menu({ label = "More", items, footer, align = "right", className
 				)}
 			>
 				{label}
-				<ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" className={cn("transition-transform", open && "rotate-180")} />
+				{chevron && <ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" className={cn("transition-transform", open && "rotate-180")} />}
 			</button>
 			{open && (
-				<div id={id} className={cn("absolute bottom-full z-30 mb-2 w-[272px] rounded-card bg-white p-2 shadow-[inset_0_0_0_1px_var(--color-line),var(--shadow-raised)]", align === "right" ? "right-0" : "left-0")}>
+				<div id={id} className={cn("absolute z-30 w-[272px] rounded-card bg-white p-2 shadow-[inset_0_0_0_1px_var(--color-line),var(--shadow-raised)]", direction === "up" ? "bottom-full mb-2" : "top-full mt-2", align === "right" ? "right-0" : "left-0")}>
 					<ul>
 						{items.map((item, index) => (
 							<li key={index}>

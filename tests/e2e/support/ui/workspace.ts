@@ -1,12 +1,15 @@
 import { expect, Page } from "@playwright/test";
 import { App } from "../app";
-import { chooseLegacyRadio, confirmModal, fillLegacyField, fillRichText, legacyField } from "./common";
+import { fillLegacyField, fillRichText } from "./common";
 
-export const FORM_SECTIONS = ["General", "Study design", "Contact details", "Submit"] as const;
-export type FormSection = (typeof FORM_SECTIONS)[number];
+/** The seven steps of the A2 protocol form. */
+export const FORM_STEPS = ["General", "Design & hypothesis", "Animals", "Groups & bias", "Ethics & extra info", "Contact details", "Embargo & submit"] as const;
+export type FormStep = (typeof FORM_STEPS)[number];
 
 /** The logged-in researcher's workspace: protocols, embargo, messages, profile. */
 export class WorkspaceUI {
+	private pendingSave?: Promise<import("@playwright/test").Response>;
+
 	constructor(private readonly page: Page, private readonly app: App) {}
 
 	/** A2 dashboard. */
@@ -35,55 +38,70 @@ export class WorkspaceUI {
 		await expect(this.myProtocolRow(title)).toContainText(status);
 	}
 
-	/** Starts a new protocol, fills the title and saves it as a draft. */
+	/** Starts a new protocol in the A2 form; the first autosave creates the draft. */
 	async startNewProtocol(title: string) {
 		await this.page.goto("/dashboard/add-protocol");
-		await fillLegacyField(this.page, "Title", title);
-		await this.page.getByRole("button", { name: /go to next section and save as draft/i }).click();
+		await this.changeField("Title", title);
+		await this.saveChanges();
 		await expect(this.page).toHaveURL(/\/dashboard\/edit-protocol\/\d+/);
 	}
 
 	async openEditForm(title: string) {
 		const { id } = await this.app.protocol(title);
 		await this.page.goto(`/dashboard/edit-protocol/${id}`);
-		await expect(legacyField(this.page, "Title")).toBeVisible();
+		await expect(this.page.getByRole("heading", { level: 1, name: title })).toBeVisible();
 	}
 
-	async goToFormSection(name: FormSection) {
-		await this.page.locator(".Sections li", { hasText: name }).click();
+	async goToFormStep(name: FormStep) {
+		await this.page.getByRole("navigation", { name: "Form steps" }).first().getByRole("button", { name: new RegExp(`^${name.replace("&", "\\&")}`) }).click();
+		await expect(this.page.getByRole("heading", { level: 2, name })).toBeVisible();
 	}
 
-	/** Changes a field, switching to whichever form section holds it. */
+	/** Changes a field, switching to whichever step holds it. Autosave starts right away. */
 	async changeField(label: string | RegExp, value: string) {
-		for (const section of FORM_SECTIONS) {
-			if (await legacyField(this.page, label).isVisible()) {
-				break;
+		const field = this.fieldByLabel(label);
+		if (!(await field.first().isVisible())) {
+			for (const step of FORM_STEPS) {
+				await this.goToFormStep(step);
+				if (await field.first().isVisible()) break;
 			}
-			await this.goToFormSection(section);
 		}
-		await fillLegacyField(this.page, label, value);
+		this.pendingSave = this.page.waitForResponse(r => /\/dashboard\/protocols(\/\d+\/answers)?$/.test(r.url()) && ["POST", "PUT"].includes(r.request().method()));
+		await field.first().fill(value);
 	}
 
+	/** A form control by its question; required questions end in an asterisk. */
+	private fieldByLabel(label: string | RegExp) {
+		return this.page.getByLabel(typeof label === "string" ? new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}\\s*\\*?$`) : label);
+	}
+
+	/** Waits for the autosave of the last change (the form saves drafts by itself). */
 	async saveChanges() {
-		const saved = this.page.waitForResponse(r => r.url().includes("/api/protocol") && r.request().method() === "PUT");
-		await this.page.getByRole("button", { name: /^save changes$/i }).click();
-		await saved;
+		const response = await this.pendingSave;
+		expect(response?.ok()).toBe(true);
+		this.pendingSave = undefined;
 	}
 
 	async submitForPublication(title: string) {
 		await this.openEditForm(title);
-		await this.goToFormSection("Submit");
-		await this.page.getByRole("button", { name: /^submit for publication$/i }).click();
-		await expect(this.page).toHaveURL(/\/database\/view-protocol\/\d+/);
+		await this.goToFormStep("Embargo & submit");
+		await this.page.getByRole("button", { name: /^(re)?submit for publication$/i }).click();
+		await expect(this.page).toHaveURL(/\/dashboard\/manage-protocols$/);
 	}
 
 	async createAmendment(title: string, change: { field: string; value: string }, reason: string) {
 		await this.openMyProtocols();
 		await this.myProtocolRow(title).getByRole("link", { name: /create amendment/i }).click();
-		await expect(legacyField(this.page, "Title")).toBeVisible();
-		await this.changeField(change.field, change.value);
-		await this.changeField(/why.*amend/i, reason);
-		await this.page.getByRole("button", { name: /submit/i }).last().click();
+		await expect(this.page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+		const field = this.fieldByLabel(change.field);
+		for (const step of FORM_STEPS) {
+			await this.goToFormStep(step);
+			if (await field.first().isVisible()) break;
+		}
+		await field.first().fill(change.value);
+		await this.goToFormStep("Embargo & submit");
+		await this.page.getByLabel(/why do you amend/i).fill(reason);
+		await this.page.getByRole("button", { name: "Submit amendment" }).click();
 		await expect(this.page).toHaveURL(/\/database\/view-protocol\/\d+/);
 	}
 
@@ -183,7 +201,8 @@ export class WorkspaceUI {
 	}
 
 	async chooseEmbargo(choice: "yes" | "no") {
-		await this.goToFormSection("Submit");
-		await chooseLegacyRadio(this.page, /embargo/i, choice === "yes" ? /^yes/i : /^no/i);
+		await this.goToFormStep("Embargo & submit");
+		this.pendingSave = this.page.waitForResponse(r => /\/dashboard\/protocols(\/\d+\/answers)?$/.test(r.url()) && r.request().method() !== "GET");
+		await this.page.getByRole("radio", { name: choice === "yes" ? /^Embargo the details/ : /^I do not want/ }).check();
 	}
 }
