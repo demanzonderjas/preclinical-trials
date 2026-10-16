@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pages\AboutController;
+use App\Http\Controllers\Pages\Admin\ProtocolsController as AdminProtocolsController;
 use App\Http\Controllers\Pages\ContactController;
 use App\Http\Controllers\Pages\ContentPageController;
 use App\Http\Controllers\Pages\DatabaseController;
@@ -66,6 +67,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/database/view-protocol/{id}', [ProtocolPageController::class, 'show'])->whereNumber('id')->name('protocols.show');
     Route::post('/database/view-protocol/{id}/ask', [ProtocolPageController::class, 'ask'])->whereNumber('id')->name('protocols.ask');
     Route::get('/database/view-protocol/{id}/pdf', [ProtocolPdfController::class, 'protocol'])->whereNumber('id')->middleware('throttle:30,1')->name('protocols.pdf');
+});
+
+// The PCT team's admin area in the A2 design. Pages not rebuilt yet fall through to the legacy SPA.
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/protocols', [AdminProtocolsController::class, 'index'])->name('admin.protocols');
+    Route::whereNumber('id')->prefix('protocols/{id}')->group(function () {
+        Route::get('/review', [AdminProtocolsController::class, 'review'])->name('admin.review');
+        Route::post('/points', [AdminProtocolsController::class, 'storePoint'])->name('admin.points.store');
+        Route::post('/decision', [AdminProtocolsController::class, 'decide'])->name('admin.decision');
+        Route::post('/messages', [AdminProtocolsController::class, 'message'])->name('admin.protocol.message');
+    });
+    Route::put('/feedback-points/{point}', [AdminProtocolsController::class, 'updatePoint'])->whereNumber('point')->name('admin.points.update');
+    Route::delete('/feedback-points/{point}', [AdminProtocolsController::class, 'destroyPoint'])->whereNumber('point')->name('admin.points.destroy');
 });
 
 Route::get('/admin{any}', function () {

@@ -28,10 +28,11 @@ export const routes = {
 	conversation: (id: number) => `/dashboard/messages/${id}`,
 	admin: {
 		protocols: "/admin/protocols",
-		embargoes: "/admin/embargo-extensions",
-		content: "/admin/news",
+		review: (id: number) => `/admin/protocols/${id}/review`,
+		embargoes: "/admin/embargoes",
+		content: "/admin/content",
 		users: "/admin/users",
-		statistics: "/admin/stats"
+		statistics: "/admin/statistics"
 	},
 	terms: "/disclaimer",
 	privacy: "/disclaimer",

@@ -60,7 +60,8 @@ class ProtocolWorkflowTest extends TestCase
 
         $this->assertSame(FeedbackPoint::RESOLVED, $title->fresh()->status);
         $this->assertSame('published', $protocol->fresh()->status);
-        $this->assertSame('approved', $protocol->reviewRounds()->orderByDesc('number')->first()->decision);
+        $this->assertSame('approved', $protocol->reviewRounds()->reorder('number', 'desc')->first()->decision);
+        $this->assertSame(['returned', 'approved'], $protocol->reviewRounds()->pluck('decision')->all(), 'the decision lands on the latest round');
     }
 
     public function test_amending_a_published_protocol_is_logged_with_its_fields(): void

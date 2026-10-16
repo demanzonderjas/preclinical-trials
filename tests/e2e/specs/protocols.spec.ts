@@ -108,9 +108,8 @@ test.describe("Admin: review", () => {
 		await site.expectInDatabase(protocols.submitted);
 	});
 
-	// Parked: helper for the legacy reject modal; rewrite against the A2 Review page (PLAN F1).
-	test.fixme("rejects a protocol with a message for the researcher", async ({ admin, app }) => {
-		await admin.reject(protocols.submitted, "Please describe the blinding of outcome assessment.");
+	test("returns a protocol with feedback points and a message", async ({ admin, app }) => {
+		await admin.reject(protocols.submitted, "Please describe the blinding of outcome assessment.", [{ question: "Blinding (assessment)", text: "Who analyses the images?" }]);
 
 		const rejected = await app.protocol(protocols.submitted);
 		expect(rejected.status).toBe("rejected");

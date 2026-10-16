@@ -105,16 +105,18 @@ export function WorkspaceLayout({ title, children, counts: override, tint = true
 export type AdminCounts = { awaitingReview?: number; embargoRequests?: number };
 
 /** The PCT team's admin area. */
-export function AdminLayout({ title, children, counts = {} }: LayoutProps & { counts?: AdminCounts }) {
+export function AdminLayout({ title, children, counts: override, tint = false }: LayoutProps & { counts?: AdminCounts; tint?: boolean }) {
+	const { admin } = usePage().props;
+	const counts: AdminCounts = override ?? { awaitingReview: admin?.awaiting_review || undefined, embargoRequests: admin?.embargo_requests || undefined };
 	const tabs: AreaTab[] = [
-		{ label: "Protocols", href: routes.admin.protocols, count: counts.awaitingReview },
+		{ label: "Protocols", href: routes.admin.protocols, count: counts.awaitingReview, also: ["/admin/protocols/"] },
 		{ label: "Embargoes", href: routes.admin.embargoes, count: counts.embargoRequests },
 		{ label: "Content", href: routes.admin.content },
 		{ label: "Users", href: routes.admin.users },
 		{ label: "Statistics", href: routes.admin.statistics }
 	];
 	return (
-		<div className="flex min-h-dvh flex-col bg-mist">
+		<div className={cn("flex min-h-dvh flex-col", tint ? "bg-mist" : "bg-white")}>
 			<Meta title={title} />
 			<SkipLink />
 			<AdminHeader tabs={tabs} />

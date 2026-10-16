@@ -144,7 +144,7 @@ class ProtocolWorkflow
      */
     public function currentRound(Protocol $protocol): ?ReviewRound
     {
-        $round = $protocol->reviewRounds()->orderByDesc('number')->first();
+        $round = $protocol->reviewRounds()->reorder('number', 'desc')->first();
         if ($round || $protocol->status === 'draft') {
             return $round;
         }

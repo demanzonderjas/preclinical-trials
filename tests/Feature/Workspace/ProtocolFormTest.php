@@ -107,7 +107,7 @@ class ProtocolFormTest extends TestCase
         $this->assertEqualsCanonicalizing(['species', 'why_amendment'], collect($revision->changes)->pluck('key')->all());
         $this->assertSame(['species'], ActivityLog::where('type', 'amended')->firstOrFail()->data['fields']);
         $this->assertSame('resubmitted_for_publication', $protocol->fresh()->status, 'the PCT team checks amendments');
-        $this->assertSame('Rats after all', $protocol->reviewRounds()->latest('number')->first()->researcher_note);
+        $this->assertSame('Rats after all', $protocol->reviewRounds()->reorder('number', 'desc')->first()->researcher_note);
     }
 
     public function test_images_are_uploaded_for_own_protocols(): void

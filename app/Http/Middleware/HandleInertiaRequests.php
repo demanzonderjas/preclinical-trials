@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\EmbargoExtension;
+use App\Models\Protocol;
 use App\Services\Inbox;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -42,6 +44,11 @@ class HandleInertiaRequests extends Middleware
             'workspace' => fn () => $user ? [
                 'protocols' => $user->protocols()->count(),
                 'unread_messages' => Inbox::for($user)->unreadCount(),
+            ] : null,
+            // The counts on the admin tabs.
+            'admin' => fn () => $user?->is_admin ? [
+                'awaiting_review' => Protocol::whereIn('status', ['submitted_for_publication', 'resubmitted_for_publication'])->count(),
+                'embargo_requests' => EmbargoExtension::where('status', 'awaiting_approval')->count(),
             ] : null,
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

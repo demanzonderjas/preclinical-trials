@@ -131,7 +131,7 @@ class ProtocolFormController extends Controller
     {
         $user = $request->user();
         $points = $protocol?->status === 'rejected'
-            ? $protocol->feedbackPoints()->whereIn('review_round_id', $protocol->reviewRounds()->latest('number')->limit(1)->pluck('id'))->get()
+            ? $protocol->feedbackPoints()->whereIn('review_round_id', $protocol->reviewRounds()->reorder('number', 'desc')->limit(1)->pluck('id'))->get()
             : collect();
 
         return Inertia::render('workspace/protocol-form', [
