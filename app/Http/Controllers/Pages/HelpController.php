@@ -17,7 +17,10 @@ class HelpController extends Controller
 
     public function index(Request $request): Response
     {
-        $items = FaqItem::with('faqCategory')->where('status', '!=', 'draft')->orderBy('id')->get();
+        // In the order the PCT team set: categories first, then the questions within them.
+        $items = FaqItem::with('faqCategory')->where('status', '!=', 'draft')->get()
+            ->sortBy([fn ($a, $b) => ($a->faqCategory?->order ?? 0) <=> ($b->faqCategory?->order ?? 0), fn ($a, $b) => $a->faq_category_id <=> $b->faq_category_id, fn ($a, $b) => $a->order <=> $b->order, fn ($a, $b) => $a->id <=> $b->id])
+            ->values();
         $audience = array_key_exists((string) $request->query('for'), FaqItem::AUDIENCES) ? $request->query('for') : 'researcher';
         $query = trim(Str::limit((string) $request->query('q', ''), 100, ''));
 
@@ -51,7 +54,6 @@ class HelpController extends Controller
             'audience' => $audience,
             'items' => $items->filter(fn (FaqItem $item) => in_array($audience, $item->audience_list, true))
                 ->map($present)
-                ->sortBy([['category_order', 'asc'], ['id', 'asc']])
                 ->values(),
             'total' => $items->count(),
             'query' => $query,

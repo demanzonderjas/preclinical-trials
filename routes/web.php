@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pages\AboutController;
+use App\Http\Controllers\Pages\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Pages\Admin\EmbargoesController as AdminEmbargoesController;
 use App\Http\Controllers\Pages\Admin\ProtocolsController as AdminProtocolsController;
 use App\Http\Controllers\Pages\Admin\StatisticsController as AdminStatisticsController;
@@ -86,6 +87,25 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::post('/embargo-extensions/{extension}/reject', [AdminEmbargoesController::class, 'reject'])->whereNumber('extension')->name('admin.embargoes.reject');
     Route::post('/protocols/{id}/embargo', [AdminEmbargoesController::class, 'extend'])->whereNumber('id')->name('admin.embargoes.extend');
     Route::redirect('/embargo-extensions', '/admin/embargoes');
+    Route::get('/content', [AdminContentController::class, 'index'])->name('admin.content');
+    Route::prefix('content')->whereNumber(['id', 'category'])->group(function () {
+        Route::post('/news', [AdminContentController::class, 'saveNews'])->name('admin.content.news.store');
+        Route::put('/news/{id}', [AdminContentController::class, 'saveNews'])->name('admin.content.news.update');
+        Route::delete('/news/{id}', [AdminContentController::class, 'destroyNews'])->name('admin.content.news.destroy');
+        Route::post('/faq', [AdminContentController::class, 'saveFaq'])->name('admin.content.faq.store');
+        Route::put('/faq/{id}', [AdminContentController::class, 'saveFaq'])->name('admin.content.faq.update');
+        Route::delete('/faq/{id}', [AdminContentController::class, 'destroyFaq'])->name('admin.content.faq.destroy');
+        Route::put('/faq-categories/{category}/order', [AdminContentController::class, 'orderFaq'])->name('admin.content.faq.order');
+        Route::put('/pages/{id}', [AdminContentController::class, 'savePage'])->name('admin.content.pages.update');
+        Route::post('/ambassadors', [AdminContentController::class, 'saveAmbassador'])->name('admin.content.ambassadors.store');
+        Route::put('/ambassadors/{id}', [AdminContentController::class, 'saveAmbassador'])->name('admin.content.ambassadors.update');
+        Route::delete('/ambassadors/{id}', [AdminContentController::class, 'destroyAmbassador'])->name('admin.content.ambassadors.destroy');
+        Route::post('/images', [AdminContentController::class, 'image'])->middleware('throttle:60,1')->name('admin.content.images');
+    });
+    Route::redirect('/news', '/admin/content?tab=news');
+    Route::redirect('/faq', '/admin/content?tab=faq');
+    Route::redirect('/pages', '/admin/content?tab=pages');
+    Route::redirect('/ambassadors', '/admin/content?tab=ambassadors');
     Route::get('/statistics', [AdminStatisticsController::class, 'index'])->name('admin.statistics');
     Route::get('/statistics/protocols.csv', [AdminStatisticsController::class, 'protocolsCsv'])->name('admin.statistics.protocols');
     Route::get('/statistics/users.csv', [AdminStatisticsController::class, 'usersCsv'])->name('admin.statistics.users');

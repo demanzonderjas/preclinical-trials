@@ -17,3 +17,22 @@ test.describe("Admin: users", () => {
 		await app.expectMail({ to: personas.researcher.email, subject: /password/i });
 	});
 });
+
+test.describe("Admin: content and statistics", () => {
+	test.beforeEach(async ({ app }) => {
+		await app.loginAs(personas.admin);
+	});
+
+	test("publishes a news item that visitors then see", async ({ admin, page }) => {
+		await admin.addNewsItem({ title: "E2E News: new website", summary: "We have a new website.", content: "The register now has a new design.", publish: true });
+		await page.goto("/news");
+		await expect(page.getByText("E2E News: new website").first()).toBeVisible();
+	});
+
+	test("downloads the statistics exports", async ({ admin, page }) => {
+		await admin.openStats();
+		const download = page.waitForEvent("download");
+		await page.getByRole("link", { name: "Users (CSV)" }).click();
+		expect((await download).suggestedFilename()).toMatch(/^pct-users-.*\.csv$/);
+	});
+});

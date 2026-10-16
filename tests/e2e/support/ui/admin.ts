@@ -1,6 +1,5 @@
 import { expect, Page } from "@playwright/test";
 import { App } from "../app";
-import { confirmModal, fillLegacyField, fillModalMessage } from "./common";
 
 /** The PCT team's admin area. */
 export class AdminUI {
@@ -101,32 +100,49 @@ export class AdminUI {
 		await expect(this.page.getByText(/is marked as verified/)).toBeVisible();
 	}
 
+	/** A2 statistics. */
 	async openStats() {
-		await this.page.goto("/admin/stats");
+		await this.page.goto("/admin/statistics");
+		await expect(this.page.getByRole("heading", { level: 1, name: "Statistics" })).toBeVisible();
+	}
+
+	/** A2 content, on one of its tabs. */
+	async openContent(tab: "news" | "faq" | "pages" | "ambassadors" = "news") {
+		await this.page.goto(`/admin/content?tab=${tab}`);
+		await expect(this.page.getByRole("heading", { level: 1, name: "Content" })).toBeVisible();
 	}
 
 	async openNews() {
-		await this.page.goto("/admin/news");
+		await this.openContent("news");
 	}
 
-	async addNewsItem(item: { title: string; summary: string; content: string }) {
-		await this.page.goto("/admin/news/add");
-		await fillLegacyField(this.page, "Title", item.title);
-		const editors = this.page.locator(".jodit-wysiwyg");
-		await editors.nth(0).fill(item.summary);
-		await editors.nth(1).fill(item.content);
-		await this.page.locator(".FormWrapper form").getByRole("button").last().click();
+	/** Fills a rich-text editor by its label. */
+	private async fillRichText(label: string, text: string) {
+		const editor = this.page.getByRole("textbox", { name: label });
+		await editor.click();
+		await editor.fill(text);
+	}
+
+	async addNewsItem(item: { title: string; summary: string; content: string; publish?: boolean }) {
+		await this.openNews();
+		await this.page.getByRole("button", { name: "Add news item" }).click();
+		await this.page.getByLabel(/^Title/).fill(item.title);
+		await this.fillRichText("Summary", item.summary);
+		await this.fillRichText("Content", item.content);
+		if (item.publish) await this.page.getByLabel(/^Status/).selectOption("published");
+		await this.page.getByRole("button", { name: "Save", exact: true }).click();
+		await expect(this.page.getByText("News item saved.")).toBeVisible();
 	}
 
 	async openFaq() {
-		await this.page.goto("/admin/faq");
+		await this.openContent("faq");
 	}
 
 	async openPages() {
-		await this.page.goto("/admin/pages");
+		await this.openContent("pages");
 	}
 
 	async openAmbassadors() {
-		await this.page.goto("/admin/ambassadors");
+		await this.openContent("ambassadors");
 	}
 }
