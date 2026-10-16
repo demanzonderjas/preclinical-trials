@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Pages\DatabaseController;
 use App\Http\Controllers\Pages\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,9 @@ Route::get('/design-system', function (Request $request) {
 })->name('design-system');
 
 Route::get('/', HomeController::class)->name('index');
+
+Route::get('/database', [DatabaseController::class, 'index'])->name('database');
+Route::get('/database/export.csv', [DatabaseController::class, 'export'])->middleware(['auth', 'verified'])->name('database.export');
 
 Route::get('/admin{any}', function () {
     return view('index');

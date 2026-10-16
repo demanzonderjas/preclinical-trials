@@ -18,14 +18,20 @@ export class SiteUI {
 		await expect(figures.locator("div", { has: this.page.getByText("under embargo", { exact: true }) }).locator("dd").first()).toHaveText(String(underEmbargo));
 	}
 
+	/** A2 database page: search in all fields. */
 	async searchDatabase(query: string) {
 		await this.page.goto("/database");
-		await this.page.getByPlaceholder("Enter your search here..").fill(query);
-		await this.page.getByText(/^add filter$/i).click();
+		await this.page.getByRole("searchbox", { name: "Search protocols" }).fill(query);
+		await this.page.getByRole("search").getByRole("button", { name: "Search" }).click();
+		await expect(this.page).toHaveURL(new RegExp(`q=${encodeURIComponent(query).replace(/%20/g, "\\+")}`));
+	}
+
+	async filterDatabase(facet: string, option: string) {
+		await this.page.getByRole("group", { name: facet }).or(this.page.locator("details", { hasText: facet })).first().getByLabel(option).check();
 	}
 
 	databaseResults() {
-		return this.page.locator("table tbody tr, .ProtocolCard");
+		return this.page.locator("section[aria-labelledby=results-title] ul > li");
 	}
 
 	async expectInDatabase(title: string) {

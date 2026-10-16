@@ -22,7 +22,7 @@ class HomeController extends Controller
 
         return Inertia::render('home', [
             'figures' => $register->figures(),
-            'recent' => $register->summaries()->take(4)->values(),
+            'recent' => $register->summaries()->take(4)->map(fn (array $summary) => PublicRegister::forClient($summary))->values(),
             'updatedOn' => now()->format('j F Y'),
             'videoId' => 'xYjLvDBTsV4',
         ]);

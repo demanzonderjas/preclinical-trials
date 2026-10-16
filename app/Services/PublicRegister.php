@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class PublicRegister
 {
-    public const CACHE_KEY = 'public-register:v1';
+    public const CACHE_KEY = 'public-register:v2';
 
     /**
      * @return Collection<int, array<string, mixed>>
@@ -34,6 +34,19 @@ class PublicRegister
                 ->values()
                 ->all();
         }));
+    }
+
+    /**
+     * A summary without the server-side search texts.
+     *
+     * @param  array<string, mixed>  $summary
+     * @return array<string, mixed>
+     */
+    public static function forClient(array $summary): array
+    {
+        unset($summary['search']);
+
+        return $summary;
     }
 
     public static function forget(): void
@@ -82,6 +95,25 @@ class PublicRegister
             'registered_on' => $registeredAt?->format('j M Y'),
             'registered_year' => $registeredAt?->year,
             'registered_before_start' => self::registeredBeforeStart($registeredAt, $start),
+            'sex' => $detail('sex'),
+            'financial_support' => array_values(array_filter((array) ($detail('financial_support') ?: []), 'is_string')),
+            'intervention_type' => $detail('intervention_type'),
+            // Server-side only: the texts the database search looks in, per field.
+            'search' => [
+                'title' => (string) $protocol->title,
+                'hypothesis' => (string) self::plainText($detail('hypothesis')),
+                'research_field' => (string) $detail('research_field'),
+                'centre' => implode(' ', array_filter([data_get($centre, 'name'), data_get($centre, 'city'), $countryCode ? config("pct.countries.$countryCode") : null])),
+                'pct_id' => (string) $protocol->pct_id,
+                'other' => implode(' ', array_filter([
+                    $species ? __("pct.species.$species") : null,
+                    (string) $detail('other_species'),
+                    (string) $detail('strain'),
+                    self::plainText($detail('primary_readout_parameter')),
+                    self::plainText($detail('secondary_readout_parameter')),
+                    self::plainText($detail('experimental_design')),
+                ])),
+            ],
         ];
     }
 
