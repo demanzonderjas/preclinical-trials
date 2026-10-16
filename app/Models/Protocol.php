@@ -154,12 +154,16 @@ class Protocol extends Model
         return $this->details->mapWithKeys(fn (Detail $detail) => [$detail->key => $detail->value])->all();
     }
 
-    /** Whether readers see the contact name (F11). Protocols from before A2 always showed it. */
+    /**
+     * Whether readers see the contact name (F11). Only when the author chose so: protocols
+     * from before A2 and ILES imports have no choice stored, and the legacy site hid every
+     * contact detail from other users, so they stay private.
+     */
     public function getPublishesNameAttribute(): bool
     {
         $detail = $this->details->firstWhere('key', 'publish_name');
 
-        return $detail === null || ! in_array($detail->value, [false, 'false', 'no', 0, '0'], true);
+        return $detail !== null && in_array($detail->value, [true, 'true', 'yes', 1, '1'], true);
     }
 
     /**
@@ -224,9 +228,10 @@ class Protocol extends Model
 
     public function hideContactDetails()
     {
-        $this->details = $this->details->filter(function (Detail $d) {
+        // As the relation, so toArray() (linked protocols in the external API) drops them too.
+        $this->setRelation('details', $this->details->filter(function (Detail $d) {
             return strpos($d->key, 'contact_') === false;
-        });
+        }));
     }
 
     public function getPctIdAttribute()

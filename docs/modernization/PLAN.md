@@ -180,6 +180,13 @@ Found and fixed in phase 4:
 - **Contact details leaked through the revision history.** An amended contact email or role was shown to every reader in the version history, and in the external `viewable-protocols` API. Revisions now drop contact changes for anyone but the owner and admins (the API format is unchanged).
 - **Anyone logged in could delete any protocol image** by naming its file (`POST /api/protocol/delete-image`). Only images uploaded in the same session can be removed now; older files stay, because published versions refer to them.
 
+Found by the security review of the modernization branch (October) and fixed:
+
+- **"Ask the author" revealed who wrote a protocol.** Opening a question showed the author's account name, institution and role before any message was sent. The person asking now sees "Protocol author", or the contact name only when the author chose to publish it (F11); never institution or role. The author still sees who asks, as on the legacy site.
+- **Protocols without a stored "publish my name" choice showed the contact name.** These are all protocols from before A2 and every ILES import; the legacy site hid all contact details from other users. A missing choice now means private, on the page, in the PDF and in the version history.
+- **Linked protocols in the external API** (already on the legacy site): `linked` held embargoed and unpublished protocols in full, contact details included. It now lists only public protocols without contact details; the item format is unchanged.
+- **Hardening:** link answers lose script schemes and only become links for web addresses, PubMed IDs and DOIs; image answers only name uploaded files (`ProtocolSchema::cleanAnswers`, and again when the protocol page renders them).
+
 ## 8. Open items
 
 - Section 3d placeholders: booking link, video URL, newsletter, logo sign-off.

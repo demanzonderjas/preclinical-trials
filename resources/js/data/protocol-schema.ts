@@ -886,7 +886,7 @@ export const protocolFields: ProtocolField[] = [
 		auditTracked: true,
 	},
 	{
-		// F11, new in A2. Missing on protocols from before A2, which always showed the name.
+		// F11, new in A2. Missing on protocols from before A2, whose name stays private.
 		key: "publish_name",
 		label: "Publish my name on the protocol",
 		section: "contact",

@@ -41,7 +41,7 @@ class ProtocolFormController extends Controller
             return redirect("/database/view-protocol/{$protocol->id}")->with('error', 'This protocol is locked while the PCT team reviews it.');
         }
 
-        // Protocols from before A2 have no choice stored and always showed the name.
+        // Protocols from before A2 have no choice stored; their name stayed private.
         $values = $protocol->values() + ['publish_name' => $protocol->publishes_name];
 
         $amendment = $protocol->status === 'published' ? $protocol->openAmendment : null;

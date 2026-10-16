@@ -40,8 +40,10 @@ test.describe("Messages", () => {
 		await page.getByLabel("Attach file").setInputFiles(path.join(__dirname, "../fixtures/sample-size.txt"));
 		await workspace.sendMessage("Here is the calculation.");
 
+		// The colleague asked about this protocol; who wrote it stays private (name not published).
 		await app.loginAs(personas.colleague);
-		await workspace.openConversation("Sanne de Vries");
+		await workspace.openConversation("Protocol author");
+		await expect(page.getByText("Sanne de Vries")).toHaveCount(0);
 		const download = page.waitForEvent("download");
 		await page.getByRole("link", { name: "sample-size.txt" }).click();
 		expect((await download).suggestedFilename()).toBe("sample-size.txt");

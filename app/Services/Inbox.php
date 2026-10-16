@@ -114,7 +114,8 @@ class Inbox
         $other = match (true) {
             $channel->kind === Channel::FEEDBACK => ['name' => 'PCT review team', 'initials' => 'PCT', 'affiliation' => null],
             $channel->isWithTeam() => ['name' => 'PCT team', 'initials' => 'PCT', 'affiliation' => null],
-            default => $this->person($this->user->id === (int) $channel->protocol_owner_id ? $channel->questioner : $channel->protocolOwner),
+            $this->user->id === (int) $channel->protocol_owner_id => $this->person($channel->questioner),
+            default => self::author($channel),
         };
 
         return [
@@ -143,6 +144,25 @@ class Inbox
         $text = is_string($text) ? $text : (string) json_encode($text);
 
         return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags(str_replace(['<br>', '<br/>', '<br />', '</p>'], ' ', $text)))));
+    }
+
+    /**
+     * The protocol's owner as the person who asked about it sees them. Asking must not reveal
+     * who wrote a protocol: only the contact name the author chose to publish (F11), and
+     * never their account name, institution or role.
+     *
+     * @return array{name: string, initials: string, affiliation: null}
+     */
+    public static function author(Channel $channel): array
+    {
+        $protocol = $channel->protocol;
+        $name = $protocol?->publishes_name ? trim((string) $protocol->details->firstWhere('key', 'contact_name')?->value) : '';
+        if ($name === '') {
+            return ['name' => 'Protocol author', 'initials' => 'PA', 'affiliation' => null];
+        }
+        $parts = preg_split('/\s+/', $name);
+
+        return ['name' => $name, 'initials' => HandleInertiaRequests::initials($parts[0], count($parts) > 1 ? end($parts) : null), 'affiliation' => null];
     }
 
     /** @return array{name: string, initials: string, affiliation: ?string} */

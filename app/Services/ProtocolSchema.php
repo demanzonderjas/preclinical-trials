@@ -26,9 +26,15 @@ class ProtocolSchema
         return self::fields()->firstWhere('key', $key);
     }
 
+    /** What ProtocolImages::store() names an upload (the legacy upload used the same). */
+    public const IMAGE_NAME = '/^\d+-[A-Za-z0-9]{16}\.[a-z0-9]{2,5}$/';
+
     /**
-     * Long answers that hold markup are reduced to what the answer editor makes (see
-     * App\Support\Html::answer). Plain-text answers stay as typed, "<" included.
+     * Answers as they may be stored:
+     * - long answers that hold markup are reduced to what the answer editor makes (see
+     *   App\Support\Html::answer); plain-text answers stay as typed, "<" included;
+     * - links lose script schemes (a link answer may also be "PubMed 12345", so no stricter);
+     * - image answers only name uploaded files.
      *
      * @param  array<string, mixed>  $values
      * @return array<string, mixed>
@@ -36,8 +42,15 @@ class ProtocolSchema
     public static function cleanAnswers(array $values): array
     {
         foreach ($values as $key => $value) {
-            if (is_string($value) && $key !== 'sum_of_animals' && (self::field($key)['type'] ?? null) === 'longtext' && preg_match('/<\/?[a-z][^>]*>/i', $value)) {
+            $type = self::field($key)['type'] ?? null;
+            if (is_string($value) && $key !== 'sum_of_animals' && $type === 'longtext' && preg_match('/<\/?[a-z][^>]*>/i', $value)) {
                 $values[$key] = Html::answer($value);
+            } elseif (is_string($value) && $type === 'url' && preg_match('/^[\x00-\x20]*(javascript|vbscript|data|file):/i', $value)) {
+                $values[$key] = '';
+            } elseif ($type === 'image') {
+                $values[$key] = is_string($value) && preg_match(self::IMAGE_NAME, $value) ? $value : null;
+            } elseif ($type === 'images') {
+                $values[$key] = array_values(array_filter((array) $value, fn ($file) => is_string($file) && preg_match(self::IMAGE_NAME, $file)));
             }
         }
 

@@ -121,11 +121,13 @@ class MessagesController extends Controller
         $messages = $channel->messages()->with('user.roles')->oldest()->get();
         $theyRead = $this->otherSideReadAt($channel, $user);
         $summary = Inbox::for($user)->summary($channel->setRelation('latestMessage', $messages->last()));
-        $other = $channel->isWithTeam() ? null : ($user->id === (int) $channel->protocol_owner_id ? $channel->questioner : $channel->protocolOwner);
+        $owner = $user->id === (int) $channel->protocol_owner_id;
+        // Whoever asks about a protocol does not learn who wrote it (see Inbox::author).
+        $author = ! $channel->isWithTeam() && ! $owner ? Inbox::author($channel) : null;
 
         return [
             ...$summary,
-            'role' => $other?->role,
+            'role' => ! $channel->isWithTeam() && $owner ? $channel->questioner?->role : null,
             'blocked' => (bool) $channel->blocked,
             'can_block' => $channel->kind === Channel::QUESTION && $user->id === (int) $channel->protocol_owner_id,
             'protocol' => $channel->protocol ? [
@@ -136,8 +138,17 @@ class MessagesController extends Controller
             'messages' => $messages->map(fn (Message $message) => [
                 'id' => $message->id,
                 'mine' => $message->user_id === $user->id,
-                'author' => $message->user_id === $user->id ? 'You' : ($message->user?->is_admin && $channel->isWithTeam() ? "{$message->user->name} · PCT" : ($message->user?->name ?? 'Former user')),
-                'initials' => $message->user?->is_admin && $channel->isWithTeam() ? 'PCT' : HandleInertiaRequests::initials($message->user?->first_name, $message->user?->last_name),
+                'author' => match (true) {
+                    $message->user_id === $user->id => 'You',
+                    $author !== null => $author['name'],
+                    $message->user?->is_admin && $channel->isWithTeam() => "{$message->user->name} · PCT",
+                    default => $message->user?->name ?? 'Former user',
+                },
+                'initials' => match (true) {
+                    $author !== null && $message->user_id !== $user->id => $author['initials'],
+                    $message->user?->is_admin && $channel->isWithTeam() => 'PCT',
+                    default => HandleInertiaRequests::initials($message->user?->first_name, $message->user?->last_name),
+                },
                 'text' => Inbox::plain($message->text),
                 'at' => $message->created_at->toIso8601String(),
                 'attachment' => $message->attachment_path ? ['name' => $message->attachment_name, 'url' => "/dashboard/messages/{$channel->id}/attachments/{$message->id}"] : null,

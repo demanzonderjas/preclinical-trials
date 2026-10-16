@@ -26,6 +26,7 @@ class ProtocolPageTest extends TestCase
     public function test_researchers_see_a_published_protocol_without_contact_email_and_role(): void
     {
         $protocol = $this->makePublishedProtocol($this->makeUser());
+        $protocol->addDetailsToDatabase(['publish_name' => true]);
 
         $this->actingAs($this->makeUser())->get("/database/view-protocol/{$protocol->id}")
             ->assertOk()
@@ -34,7 +35,7 @@ class ProtocolPageTest extends TestCase
                 ->where('protocol.pct_id', $protocol->pct_id)
                 ->where('protocol.shows_contact', false)
                 ->where('protocol.is_owner', false)
-                ->has('protocol.details.contact_name')
+                ->has('protocol.details.contact_name') // the author chose to publish it
                 ->missing('protocol.details.contact_email')
                 ->missing('protocol.details.contact_role'));
     }

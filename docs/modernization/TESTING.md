@@ -50,6 +50,20 @@ cd tests/e2e && npm install && npx playwright install chromium
 npx playwright test
 ```
 
+**When to run it.** The full suite takes a few minutes, so it is not part of every change:
+
+- **Every change:** `php artisan test` and `npm run build` (plus `npm run test:js` when
+  `lib/rich-text.ts` changes).
+- **A change to one area:** only the specs for that area, e.g.
+  `npx playwright test specs/messages.spec.ts specs/protocols.spec.ts`.
+- **The full suite:** after big changes (a new flow, a change across several areas, shared
+  layout or form components, routing or middleware) and before merging or deploying.
+
+The e2e app always uses the production build (`npm run build` first), also while
+`npm run dev` runs: on-demand dev modules are slow enough to time tests out. If port 8000
+is taken (for example by `php artisan serve`), run on another one:
+`PCT_E2E_PORT=8031 npx playwright test`.
+
 Playwright starts the app on port 8000 with `APP_ENV=e2e`, or reuses a running one. About 2–3 s per test.
 
 ## Journeys (phase 7)

@@ -12,6 +12,7 @@ use App\Services\AmendmentWorkflow;
 use App\Services\ProtocolWorkflow;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -87,7 +88,7 @@ class ProtocolFormTest extends TestCase
         $this->actingAs($owner)->putJson("/dashboard/protocols/{$published->id}/answers", ['values' => ['title' => 'x']])->assertStatus(409);
         $this->actingAs($owner)->get("/dashboard/edit-protocol/{$published->id}")
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page->where('protocol.status', 'published')->where('values.publish_name', true));
+            ->assertInertia(fn (Assert $page) => $page->where('protocol.status', 'published')->where('values.publish_name', false), 'no choice stored: the name stays private');
     }
 
     public function test_an_amendment_needs_a_change_and_a_reason_and_waits_for_review(): void
@@ -245,7 +246,7 @@ XML;
         $user = $this->makeUser();
         $id = $this->actingAs($user)->postJson('/dashboard/protocols', ['values' => ['title' => 'A secret plan']])->json('id');
 
-        $raw = \Illuminate\Support\Facades\DB::table('details')->where(['protocol_id' => $id, 'key' => 'title'])->value('value');
+        $raw = DB::table('details')->where(['protocol_id' => $id, 'key' => 'title'])->value('value');
         $this->assertStringNotContainsString('A secret plan', $raw);
         $this->assertSame('A secret plan', Protocol::find($id)->title);
     }

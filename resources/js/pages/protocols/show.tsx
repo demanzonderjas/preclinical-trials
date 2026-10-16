@@ -217,10 +217,12 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 						</RecordItem>
 						<RecordItem term="Embargo">{protocol.has_embargo ? `Until ${protocol.embargo_end_date ?? "…"}` : "None · public"}</RecordItem>
 						<RecordItem term="Publication">
-							{publication ? (
-								<a href={publication} target="_blank" rel="noopener noreferrer" className="break-all">
+							{publication && linkFor(publication) ? (
+								<a href={linkFor(publication)!} target="_blank" rel="noopener noreferrer" className="break-all">
 									{publicationLabel(publication)}
 								</a>
+							) : publication ? (
+								<span className="break-all">{publication}</span>
 							) : (
 								<span className="font-normal text-ink-muted italic">Not yet linked</span>
 							)}
@@ -232,6 +234,17 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 			</div>
 		</section>
 	);
+}
+
+/** A link answer as a safe address: web links, and PubMed IDs or DOIs written as text. */
+function linkFor(value: string): string | null {
+	const text = value.trim();
+	if (/^https?:\/\/\S+$/i.test(text)) return text;
+	const pubmed = text.match(/^(?:pubmed|pmid)\s*:?\s*(\d{5,9})$/i);
+	if (pubmed) return `https://pubmed.ncbi.nlm.nih.gov/${pubmed[1]}/`;
+	const doi = text.match(/^(?:doi\s*:?\s*)?(10\.\d{4,9}\/\S+)$/i);
+	if (doi) return `https://doi.org/${doi[1]}`;
+	return null;
 }
 
 function publicationLabel(url: string) {
@@ -546,9 +559,10 @@ function FieldValue({ field, values, change }: { field: ProtocolField; values: D
 	const formatted = plainText(formatValue(field, value));
 	if (!formatted) return <p className="text-ink-muted italic">Not provided</p>;
 	if (field.type === "longtext" && typeof value === "string" && field.key !== "sum_of_animals" && !/^https?:\/\/\S+$/.test(formatted)) return <RichAnswer value={value} />;
-	if (field.type === "url" || /^https?:\/\//.test(formatted)) {
+	const href = field.type === "url" || /^https?:\/\//i.test(formatted) ? linkFor(formatted) : null;
+	if (href) {
 		return (
-			<a href={formatted} target="_blank" rel="noopener noreferrer" className="font-bold break-all">
+			<a href={href} target="_blank" rel="noopener noreferrer" className="font-bold break-all">
 				{formatted}
 			</a>
 		);
@@ -652,7 +666,8 @@ function StudyCentres({ value }: { value: unknown }) {
 }
 
 function Images({ value, label }: { value: unknown; label: string }) {
-	const files = (Array.isArray(value) ? value : value ? [value] : []).map(text).filter(Boolean);
+	// Only names the upload gives a file (ProtocolSchema::IMAGE_NAME), whatever an answer holds.
+	const files = (Array.isArray(value) ? value : value ? [value] : []).map(text).filter(file => /^\d+-[A-Za-z0-9]{16}\.[a-z0-9]{2,5}$/.test(file));
 	if (!files.length) return null;
 	return (
 		<ul className="mt-3 flex flex-wrap gap-3">

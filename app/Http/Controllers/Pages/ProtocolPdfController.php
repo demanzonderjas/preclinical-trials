@@ -36,7 +36,7 @@ class ProtocolPdfController extends Controller
             ['title' => 'Study design', 'groups' => collect(ProtocolSchema::designGroups())
                 ->map(fn ($title, $group) => ['title' => $title, 'fields' => $this->rows('design', $values, $group)])
                 ->filter(fn ($group) => $group['fields'])->values()->all()],
-            ['title' => 'Contact', 'fields' => $this->rows('contact', $values, null, $privileged)],
+            ['title' => 'Contact', 'fields' => $this->rows('contact', $values, null, $privileged, $private)],
         ]);
 
         $pdf = Pdf::loadView('pdf.protocol', [
@@ -93,11 +93,11 @@ class ProtocolPdfController extends Controller
      * @param  array<string, mixed>  $values
      * @return array<int, array<string, mixed>>
      */
-    private function rows(string $section, array $values, ?string $group = null, bool $privileged = true): array
+    private function rows(string $section, array $values, ?string $group = null, bool $privileged = true, array $private = []): array
     {
         $fields = ProtocolSchema::fields()->where('section', $section)
             ->when($group, fn ($fields) => $fields->where('group', $group))
-            ->filter(fn ($field) => $privileged || $field['public']);
+            ->filter(fn ($field) => ($privileged || $field['public']) && ! in_array($field['key'], $private, true));
 
         return $fields
             ->filter(fn ($field) => (empty($field['parent']) || ! empty($field['number'])) && ProtocolSchema::isVisible($field, $values))
