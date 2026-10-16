@@ -34,8 +34,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'external-api' => VerifyExternalApiKey::class,
         ]);
 
-        // Guests are sent to the home page, which opens the login form and returns them afterwards.
-        $middleware->redirectGuestsTo(fn (Request $request) => route('index', ['login_to' => $request->path()]));
+        // Guests are sent to the log in page, which returns them to the page they wanted.
+        $middleware->redirectGuestsTo(fn () => route('login'));
 
         // Test helper routes, only registered when APP_ENV=e2e (App\Providers\E2EServiceProvider).
         $middleware->validateCsrfTokens(except: ['__e2e/*']);

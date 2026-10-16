@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Pages\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,9 +24,7 @@ Route::get('/design-system', function (Request $request) {
     ]);
 })->name('design-system');
 
-Route::get('/', function () {
-    return view('index');
-})->name('index');
+Route::get('/', HomeController::class)->name('index');
 
 Route::get('/admin{any}', function () {
     return view('index');

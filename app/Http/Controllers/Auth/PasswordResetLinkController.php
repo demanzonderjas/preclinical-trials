@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Inertia\Inertia;
 
 class PasswordResetLinkController extends Controller
 {
@@ -16,22 +17,36 @@ class PasswordResetLinkController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+    /**
+     * The A2 "reset your password" page.
+     */
+    public function create(Request $request)
+    {
+        return Inertia::render('auth/forgot-password', [
+            'sentTo' => $request->session()->get('reset_link_sent_to'),
+            'sentAt' => $request->session()->get('reset_link_sent_at'),
+        ]);
+    }
+
+    /**
+     * Sends a reset link. The answer is the same whether or not the address has an account,
+     * so the form cannot be used to find out who is registered.
+     */
     public function store(Request $request)
     {
         $request->validate([
             'email' => ['required', 'email'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        Password::sendResetLink($request->only('email'));
 
-        return $status == Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withInput($request->only('email'))
-            ->withErrors(['email' => __($status)]);
+        if ($request->expectsJson() && ! $request->header('X-Inertia')) {
+            return response()->json(['success' => true]);
+        }
+
+        return back()->with([
+            'reset_link_sent_to' => $request->input('email'),
+            'reset_link_sent_at' => now()->format('H:i'),
+        ]);
     }
 }

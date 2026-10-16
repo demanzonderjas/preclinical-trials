@@ -11,8 +11,11 @@ export class SiteUI {
 		await expect(this.page.locator("h1").first()).toBeVisible();
 	}
 
+	/** "The register at a glance" on the A2 home page. */
 	async expectRegisterCounts(total: number, underEmbargo: number) {
-		await expect(this.page.getByText(`${total} protocols registered already! (${underEmbargo} under embargo)`)).toBeVisible();
+		const figures = this.page.getByRole("region", { name: "The register at a glance" });
+		await expect(figures.locator("div", { has: this.page.getByText("protocols registered", { exact: true }) }).locator("dd").first()).toHaveText(String(total));
+		await expect(figures.locator("div", { has: this.page.getByText("under embargo", { exact: true }) }).locator("dd").first()).toHaveText(String(underEmbargo));
 	}
 
 	async searchDatabase(query: string) {

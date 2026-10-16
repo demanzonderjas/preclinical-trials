@@ -16,6 +16,24 @@ class AuthenticatedSessionController extends Controller
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
+    /**
+     * The A2 log in page.
+     */
+    public function create(Request $request)
+    {
+        if ($request->user()) {
+            return redirect('/dashboard');
+        }
+
+        return Inertia::render('auth/login', [
+            'status' => $request->session()->get('status'),
+        ]);
+    }
+
+    /**
+     * Logs in from the A2 page (Inertia: redirect or validation errors) or from the legacy
+     * SPA (JSON).
+     */
     public function store(LoginRequest $request)
     {
         $response = $request->authenticate();
@@ -23,7 +41,17 @@ class AuthenticatedSessionController extends Controller
         if ($response["success"]) {
             $request->session()->regenerate();
         }
-        return response()->json($response);
+
+        if (! $request->header('X-Inertia')) {
+            return response()->json($response);
+        }
+
+        if (! $response["success"]) {
+            return back()->withErrors($response["errors"])->onlyInput('email');
+        }
+
+        // The dashboard is still a legacy page, so leave Inertia with a full page load.
+        return Inertia::location(redirect()->intended('/dashboard')->getTargetUrl());
     }
 
     /**

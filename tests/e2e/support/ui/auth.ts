@@ -17,11 +17,12 @@ export type Registration = {
 export class AuthUI {
 	constructor(private readonly page: Page) {}
 
+	/** A2 log in page. */
 	async login(persona: Persona, password = PASSWORD) {
-		await this.page.goto("/?login_to=dashboard");
-		await this.loginForm().locator("input[type=email]").fill(persona.email);
-		await this.loginForm().locator("input[type=password]").fill(password);
-		await this.loginForm().getByRole("button", { name: /^go!?$/i }).click();
+		await this.page.goto("/login");
+		await this.page.getByLabel("Email address").fill(persona.email);
+		await this.page.getByLabel("Password", { exact: true }).fill(password);
+		await this.page.getByRole("button", { name: "Log in", exact: true }).click();
 	}
 
 	async expectLoggedIn() {
@@ -29,13 +30,13 @@ export class AuthUI {
 	}
 
 	async expectLoginRejected() {
-		await expect(this.loginForm().locator(".error").first()).toBeVisible();
-		await expect(this.page.getByText("Logout", { exact: true })).toHaveCount(0);
+		await expect(this.page.getByRole("alert")).toContainText(/do not match|credentials/i);
+		await expect(this.page).toHaveURL(/\/login$/);
 	}
 
 	async logout() {
 		await this.page.getByText("Logout", { exact: true }).click();
-		await expect(this.page.getByText("Login", { exact: true })).toBeVisible();
+		await expect(this.page.getByRole("link", { name: "Log in" }).first()).toBeVisible();
 	}
 
 	async register(details: Registration) {
@@ -57,12 +58,12 @@ export class AuthUI {
 		await this.page.goto(link);
 	}
 
+	/** A2 "reset your password" page. */
 	async requestPasswordReset(email: string) {
-		await this.page.goto("/?login_to=dashboard");
-		await this.loginForm().getByText("Forgot?").click();
-		const modal = this.page.locator(".Modal");
-		await modal.locator("input[type=email]").fill(email);
-		await modal.getByRole("button").last().click();
+		await this.page.goto("/forgot-password");
+		await this.page.getByLabel("Email address").fill(email);
+		await this.page.getByRole("button", { name: "Send reset link" }).click();
+		await expect(this.page.getByRole("heading", { name: "Link on its way" })).toBeVisible();
 	}
 
 	async resetPassword(link: string, newPassword: string) {
@@ -74,7 +75,4 @@ export class AuthUI {
 		await this.page.locator("form").getByRole("button").last().click();
 	}
 
-	private loginForm() {
-		return this.page.locator(".LoginForm, form:has(input[type=password])").first();
-	}
 }

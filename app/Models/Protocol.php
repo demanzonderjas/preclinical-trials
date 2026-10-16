@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Services\PublicRegister;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,15 @@ class Protocol extends Model
     ];
 
     protected $appends = ["title", "pct_id", "embargo_end_date", "registration_date"];
+
+    /**
+     * Anything that changes what the public register shows clears its cache.
+     */
+    protected static function booted(): void
+    {
+        static::saved(fn () => PublicRegister::forget());
+        static::deleted(fn () => PublicRegister::forget());
+    }
 
     public function user()
     {
