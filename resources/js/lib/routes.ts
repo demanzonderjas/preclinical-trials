@@ -1,6 +1,6 @@
 /**
- * Every URL the new layouts link to, in one place. While pages move from the legacy SPA
- * to the A2 design some of these still point at legacy routes.
+ * Every URL the layouts and pages link to, in one place. Some keep the paths of the former
+ * SPA (e.g. /dashboard/manage-protocols) so old links and e-mails still work.
  */
 export const routes = {
 	home: "/",

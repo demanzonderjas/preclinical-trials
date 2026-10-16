@@ -62,14 +62,13 @@ Bug and security fixes; the rest of the behaviour is unchanged (see the tests in
   - the admin password reset returns `{"success": true}`;
   - deleting a news image can no longer touch files outside `public/images/news`.
 
-## From phase 2: two frontend builds and an SSR process
+## From phase 2: the frontend build and an SSR process
 
 ```bash
 npm ci && npm run build                                   # A2 pages → public/build, bootstrap/ssr
-(cd resources/legacy && npm ci && npm run production)     # legacy SPA → public/js, public/css
 ```
 
-- **Node:** 22 LTS or newer. The legacy build sets `--openssl-legacy-provider` itself.
+- **Node:** 22 LTS or newer.
 - **Server-side rendering** for the public pages: keep `php artisan inertia:start-ssr`
   running under a process manager (supervisor or systemd), and restart it after every deploy
   with `php artisan inertia:stop-ssr`. If it is not running, pages fall back to
@@ -83,3 +82,13 @@ npm ci && npm run build                                   # A2 pages → public/
 - The PDFs read the protocol fields from `resources/data/protocol-schema.json`, exported
   from `resources/js/data/protocol-schema.ts`. `npm run build` fails when the export is
   stale; run `npm run export-schema` and commit the result.
+
+## From phase 6: the legacy SPA is gone
+
+- Only `npm run build` remains; there is no Laravel Mix build any more.
+- On the server, `public/js`, `public/css` and `public/mix-manifest.json` are leftovers of the
+  old build and can be deleted after the deploy.
+- `public/images` keeps the uploads (`images/protocols`, `images/news`); the icons the old build
+  copied there are unused. Static images of the A2 pages are in `public/static` (in git).
+- Unknown URLs, and pages a user may not open, show the A2 error page; API and JSON requests
+  keep JSON errors.

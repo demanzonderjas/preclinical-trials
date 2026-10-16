@@ -51,11 +51,14 @@ class AuthPagesTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_the_legacy_spa_still_gets_json(): void
+    public function test_logging_in_goes_back_to_the_page_the_user_wanted(): void
     {
         $user = User::factory()->create();
+        $this->get('/database/export.csv')->assertRedirect('/login');
 
-        $this->postJson('/login', ['email' => $user->email, 'password' => 'password'])->assertExactJson(['success' => true]);
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'], $this->inertia())
+            ->assertStatus(409)
+            ->assertHeader('X-Inertia-Location', url('/database/export.csv'));
     }
 
     public function test_legacy_login_links_land_on_the_login_page(): void

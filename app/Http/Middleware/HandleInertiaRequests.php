@@ -11,8 +11,7 @@ use Inertia\Middleware;
 class HandleInertiaRequests extends Middleware
 {
     /**
-     * The root template for pages built in the A2 design. Pages that have not been
-     * rebuilt yet are still served by the legacy SPA in resources/views/index.blade.php.
+     * The root template of every page.
      *
      * @var string
      */

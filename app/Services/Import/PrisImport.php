@@ -5,7 +5,7 @@ namespace App\Services\Import;
 use Carbon\Carbon;
 
 /**
- * A PRIS export (.json) as protocol answers. Ported from resources/legacy/js/utils/pris.ts;
+ * A PRIS export (.json) as protocol answers. Ported from the former SPA (resources/legacy/js/utils/pris.ts, see git history);
  * PRIS stores choices as indexes into the legacy option lists below.
  */
 class PrisImport

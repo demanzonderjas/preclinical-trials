@@ -30,8 +30,8 @@ use Inertia\Inertia;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Every page is rendered by the React SPA in resources/views/index.blade.php;
-| these routes only decide who may load which part of it.
+| Every page is an Inertia page in resources/js/pages (A2 design). Unknown
+| URLs get the A2 error page (bootstrap/app.php).
 |
 */
 
@@ -73,7 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/database/view-protocol/{id}/pdf', [ProtocolPdfController::class, 'protocol'])->whereNumber('id')->middleware('throttle:30,1')->name('protocols.pdf');
 });
 
-// The PCT team's admin area in the A2 design. Pages not rebuilt yet fall through to the legacy SPA.
+// The PCT team's admin area.
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
     Route::get('/protocols', [AdminProtocolsController::class, 'index'])->name('admin.protocols');
     Route::whereNumber('id')->prefix('protocols/{id}')->group(function () {
@@ -121,15 +121,7 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
     Route::delete('/feedback-points/{point}', [AdminProtocolsController::class, 'destroyPoint'])->whereNumber('point')->name('admin.points.destroy');
 });
 
-Route::get('/admin{any}', function () {
-    return view('index');
-})->where('any', '.*')->middleware(['auth', 'verified', 'admin'])->name('admin');
-
-Route::fallback(function () {
-    return view('index');
-});
-
-// The researcher workspace in the A2 design. Pages not rebuilt yet fall through to the legacy SPA.
+// The researcher workspace.
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     Route::get('/', DashboardController::class)->name('workspace.dashboard');
     Route::get('/manage-protocols', [MyProtocolsController::class, 'index'])->name('workspace.protocols');
@@ -172,9 +164,5 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     Route::post('/feedback-points/{point}/messages', [FeedbackController::class, 'message'])->whereNumber('point')->middleware('throttle:30,1')->name('workspace.feedback.message');
     Route::get('/protocols/{id}/certificate.pdf', [ProtocolPdfController::class, 'certificate'])->whereNumber('id')->middleware('throttle:30,1')->name('workspace.certificate');
 });
-
-Route::get('/dashboard{any}', function () {
-    return view('index');
-})->where('any', '.*')->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__ . '/auth.php';

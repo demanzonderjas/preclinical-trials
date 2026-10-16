@@ -4,7 +4,7 @@
  *
  * Where the values come from:
  * - Keys, components, `required`, parent/child relations (`showValueIn`) and dependencies come
- *   from the legacy definitions in resources/legacy/js/data/forms/fields/protocol/*.ts, in the
+ *   from the former SPA's definitions in resources/legacy/js/data/forms/fields/protocol/*.ts (see git history), in the
  *   field order of `createProtocolForm` (resources/legacy/js/data/forms/protocol.ts).
  * - Labels, options and help texts are the English strings from
  *   resources/legacy/js/data/translations/en.json, with HTML stripped. Legacy info-icon texts

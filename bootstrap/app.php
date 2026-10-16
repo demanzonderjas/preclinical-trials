@@ -45,4 +45,20 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Pages get the A2 error page; server errors keep Laravel's debug page while developing.
+        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response, \Throwable $exception, Request $request) {
+            $status = $response->getStatusCode();
+            if ($request->is('api/*') || $request->expectsJson() || ! in_array($status, [403, 404, 419, 429, 500, 503], true)) {
+                return $response;
+            }
+            if ($status === 419) {
+                return back()->with('error', 'The page expired. Please try again.');
+            }
+            if ($status >= 500 && config('app.debug')) {
+                return $response;
+            }
+
+            return \Inertia\Inertia::render('error', ['status' => $status])->toResponse($request)->setStatusCode($status);
+        });
     })->create();

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -14,14 +13,12 @@ use Illuminate\Support\Facades\Route;
 // users could post these forms too. Keeping that behaviour for the SPA.
 
 Route::post('/register', [RegisteredUserController::class, 'store']);
+Route::get('/register', fn () => redirect('/create-account'));
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-
-Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store'])
-    ->middleware('auth');
 
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
     ->name('password.email');

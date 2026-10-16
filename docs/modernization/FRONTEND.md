@@ -1,19 +1,16 @@
 # Frontend
 
-Two frontends live side by side until every page is rebuilt in the A2 design.
+Every page is an Inertia page in the A2 design (the legacy React 16 SPA was removed in
+phase 6).
 
-| | New (A2) | Legacy |
-|---|---|---|
-| Code | `resources/js`, `resources/css` | `resources/legacy/js`, `resources/legacy/sass` |
-| Stack | Inertia 3, React 19, TypeScript, Tailwind 4, Vite | React 16, MobX, React Router 5, Laravel Mix |
-| Served by | `Inertia::render('page-name')` with root view `resources/views/app.blade.php` | `view('index')` routes and the fallback in `routes/web.php` |
-| Build | `npm run build` (repo root) | `cd resources/legacy && npm run production` |
-| Output | `public/build`, `bootstrap/ssr` | `public/js/index.js`, `public/css/app.css` |
-
-A request goes to whichever frontend owns its route. Moving a page means adding an
-Inertia route above the legacy fallback and pointing `resources/js/lib/routes.ts` at it.
-At cutover (phase 6), `resources/legacy`, `resources/views/index.blade.php` and the
-legacy JSON endpoints the new pages no longer use are deleted.
+| | |
+|---|---|
+| Code | `resources/js`, `resources/css` |
+| Stack | Inertia 3, React 19, TypeScript, Tailwind 4, Vite |
+| Served by | `Inertia::render('page-name')` with root view `resources/views/app.blade.php` |
+| Build | `npm run build` |
+| Output | `public/build`, `bootstrap/ssr` |
+| Static images | `public/static` (in the repository); uploads stay in `public/images` (on the server) |
 
 ## Structure
 
@@ -52,7 +49,6 @@ resources/js/data/protocol-schema.ts  The protocol fields; exported to resources
 
 ```bash
 composer install && npm install
-(cd resources/legacy && npm install && npm run development)   # legacy pages
 npm run dev                                                    # Vite + SSR in dev
 php artisan serve
 ```

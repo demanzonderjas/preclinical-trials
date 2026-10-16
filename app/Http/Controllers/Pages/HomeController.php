@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function __invoke(Request $request, PublicRegister $register): Response|RedirectResponse
     {
-        // The legacy SPA sends guests to "/?login_to=<path>"; that now lives on /login.
+        // Old links (from the former SPA and its e-mails) send guests to "/?login_to=<path>".
         if ($request->filled('login_to')) {
             $request->session()->put('url.intended', url('/'.ltrim($request->query('login_to'), '/')));
 

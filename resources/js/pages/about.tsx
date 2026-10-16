@@ -287,7 +287,7 @@ function People() {
 					<ul className="mt-6 grid gap-6 lg:grid-cols-2">
 						{directors.map(person => (
 							<li key={person.name} className="grid gap-5 rounded-card bg-white p-3.5 sm:grid-cols-[184px_minmax(0,1fr)]">
-								<img src={`/images/about-us/${person.image}`} alt={`Portrait of ${person.name}`} className="aspect-square w-full rounded-[14px] object-cover max-sm:max-w-[184px]" loading="lazy" />
+								<img src={`/static/about-us/${person.image}`} alt={`Portrait of ${person.name}`} className="aspect-square w-full rounded-[14px] object-cover max-sm:max-w-[184px]" loading="lazy" />
 								<div className="flex flex-col py-2 pr-4">
 									<p className="eyebrow">{person.role}</p>
 									<p className="mt-2 font-display text-2xl font-bold">{person.name}</p>
@@ -307,7 +307,7 @@ function People() {
 					<ul className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
 						{steering.map(person => (
 							<li key={person.name}>
-								<img src={`/images/about-us/${person.image}`} alt={`Portrait of ${person.name}`} className="aspect-[4/5] w-full rounded-[14px] object-cover" loading="lazy" />
+								<img src={`/static/about-us/${person.image}`} alt={`Portrait of ${person.name}`} className="aspect-[4/5] w-full rounded-[14px] object-cover" loading="lazy" />
 								<p className="mt-3 font-display text-[17px] leading-snug font-bold">{person.name}</p>
 								<p className="mt-1 text-[14.5px] text-ink-muted">{person.place}</p>
 							</li>

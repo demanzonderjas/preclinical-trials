@@ -202,7 +202,7 @@ export default function Contact({ topics, frequent, faqCount, prefill }: Props) 
 									{ name: "Bente Verbruggen", role: "Project Manager", image: "bente.jpg" }
 								].map(person => (
 									<li key={person.name} className="flex items-center gap-4">
-										<img src={`/images/about-us/${person.image}`} alt="" className="size-12 rounded-full object-cover" loading="lazy" />
+										<img src={`/static/about-us/${person.image}`} alt="" className="size-12 rounded-full object-cover" loading="lazy" />
 										<span>
 											<span className="block font-bold">{person.name}</span>
 											<span className="block text-[14.5px] text-ink-muted">{person.role}</span>

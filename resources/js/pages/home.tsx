@@ -400,7 +400,7 @@ function Funders() {
 						{funders.map(funder => (
 							<li key={funder.image}>
 								<a href={funder.url} target="_blank" rel="noopener noreferrer" className="flex h-full flex-col gap-3 rounded-card border border-line bg-white p-5.5 text-ink hover:border-teal-300 hover:text-ink">
-									<img src={`/images/partners/${funder.image}`} alt="" className="h-14 w-auto self-start object-contain" loading="lazy" />
+									<img src={`/static/partners/${funder.image}`} alt="" className="h-14 w-auto self-start object-contain" loading="lazy" />
 									<span className="text-sm text-ink-muted">{funder.name}</span>
 								</a>
 							</li>
@@ -423,7 +423,7 @@ function Funders() {
 				{partners.map(partner => (
 					<li key={partner.image}>
 						<a href={partner.url} target="_blank" rel="noopener noreferrer" className="flex h-[76px] items-center justify-center rounded-input border border-line bg-white px-4 hover:border-teal-300">
-							<img src={`/images/partners/${partner.image}`} alt={partner.name} className="max-h-11 w-auto max-w-full object-contain" loading="lazy" />
+							<img src={`/static/partners/${partner.image}`} alt={partner.name} className="max-h-11 w-auto max-w-full object-contain" loading="lazy" />
 						</a>
 					</li>
 				))}

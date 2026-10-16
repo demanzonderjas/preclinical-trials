@@ -11,9 +11,8 @@ class RegistrationTest extends TestCase
 
     public function test_registration_screen_can_be_rendered()
     {
-        $response = $this->get('/register');
-
-        $response->assertStatus(200);
+        $this->get('/register')->assertRedirect('/create-account');
+        $this->get('/create-account')->assertOk();
     }
 
     public function test_new_users_can_register()
@@ -32,6 +31,6 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect('/verify-email');
     }
 }

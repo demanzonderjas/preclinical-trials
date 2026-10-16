@@ -30,28 +30,21 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
-    /**
-     * Logs in from the A2 page (Inertia: redirect or validation errors) or from the legacy
-     * SPA (JSON).
-     */
+    /** Logs in: back to the form with errors, or on to the page the user wanted. */
     public function store(LoginRequest $request)
     {
         $response = $request->authenticate();
-
-        if ($response["success"]) {
-            $request->session()->regenerate();
-        }
-
-        if (! $request->header('X-Inertia')) {
-            return response()->json($response);
-        }
 
         if (! $response["success"]) {
             return back()->withErrors($response["errors"])->onlyInput('email');
         }
 
-        // The dashboard is still a legacy page, so leave Inertia with a full page load.
-        return Inertia::location(redirect()->intended('/dashboard')->getTargetUrl());
+        $request->session()->regenerate();
+
+        // A full page load: the intended URL can be a download (a PDF or the CSV export).
+        $target = redirect()->intended('/dashboard')->getTargetUrl();
+
+        return $request->header('X-Inertia') ? Inertia::location($target) : redirect($target);
     }
 
     /**
@@ -68,7 +61,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        // A full page load, so legacy pages and Inertia pages both start fresh.
+        // A full page load, so nothing of the session stays in the page.
         return $request->header('X-Inertia') ? Inertia::location('/') : redirect('/');
     }
 }

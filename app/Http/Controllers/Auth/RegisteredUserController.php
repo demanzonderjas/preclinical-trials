@@ -53,8 +53,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // The A2 form continues to "verify your email"; the legacy SPA follows the redirect.
-        return $request->header('X-Inertia') ? redirect('/verify-email') : redirect('/dashboard');
+        return redirect('/verify-email');
     }
 
     /**

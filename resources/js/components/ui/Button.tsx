@@ -72,7 +72,7 @@ export function ButtonLink({ variant, size, arrow, icon, className, children, ..
 	);
 }
 
-/** A button-styled plain anchor, for legacy pages, files and external links. */
+/** A button-styled plain anchor, for downloads, full page loads and external links. */
 export function ButtonAnchor({ variant, size, arrow, icon, className, children, ...rest }: CommonProps & Omit<ComponentProps<"a">, "children">) {
 	return (
 		<a className={buttonClasses({ variant, size, className })} {...rest}>

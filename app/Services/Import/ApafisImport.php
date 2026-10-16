@@ -6,7 +6,7 @@ use SimpleXMLElement;
 
 /**
  * An APAFiS project form (.xml, French) as protocol answers. Ported from
- * resources/legacy/js/utils/fc3r.ts; the XML is read the way xml2js did with
+ * resources/legacy/js/utils/fc3r.ts of the former SPA (see git history); the XML is read the way xml2js did with
  * explicitArray: false, so the same paths apply.
  */
 class ApafisImport

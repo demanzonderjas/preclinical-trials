@@ -295,7 +295,7 @@ function StillStuck() {
 					<p className="mt-6 flex items-center gap-3 text-[15px] text-ink-muted">
 						<span className="flex -space-x-2">
 							{["julia.jpg", "bente.jpg"].map(image => (
-								<img key={image} src={`/images/about-us/${image}`} alt="" className="size-10 rounded-full object-cover ring-2 ring-mist" loading="lazy" />
+								<img key={image} src={`/static/about-us/${image}`} alt="" className="size-10 rounded-full object-cover ring-2 ring-mist" loading="lazy" />
 							))}
 						</span>
 						<span>

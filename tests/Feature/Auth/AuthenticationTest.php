@@ -21,13 +21,12 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->postJson('/login', [
+        $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
-        // The SPA posts the login form and gets JSON back instead of a redirect.
-        $response->assertExactJson(['success' => true]);
+        $response->assertRedirect('/dashboard');
         $this->assertAuthenticated();
     }
 
@@ -35,10 +34,10 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->post('/login', [
+        $this->from('/login')->post('/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
-        ]);
+        ])->assertRedirect('/login')->assertSessionHasErrors('email');
 
         $this->assertGuest();
     }
