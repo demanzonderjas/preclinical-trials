@@ -6,7 +6,7 @@ production before the redesign.
 
 ## Server
 
-- **PHP 8.4** with the usual Laravel extensions: `pdo_mysql`, `mbstring`, `openssl`, `ctype`, `fileinfo`, `tokenizer`, `xml`, `curl`. Also `gd` and `zip` for maatwebsite/excel.
+- **PHP 8.4** with the usual Laravel extensions: `pdo_mysql`, `mbstring`, `openssl`, `ctype`, `fileinfo`, `tokenizer`, `xml`, `curl`. Also `gd` for images in the PDFs (dompdf).
 - **Composer 2.**
 - **Web server document root:** `public/`, as before. `server.php` no longer exists; nothing should point at it.
 - **Scheduler:** unchanged, `* * * * * php artisan schedule:run`. It still runs `embargo:check` and `enddate:reminder` daily at 00:00.
@@ -18,6 +18,7 @@ production before the redesign.
 | `MAIL_FROM_ADDRESS` | **Must be a real address.** `null` worked on SwiftMailer; Symfony Mailer refuses to send without it. |
 | `ADMIN_MAIL`, `ILES_TOKEN`, `EXTERNAL_API_KEY`, `OPENAI_API_KEY` | Unchanged. They are now read through `config/pct.php` and `config/services.php`, so `config:cache` is safe. |
 | `OPENAI_MODEL` | New, optional (default `gpt-4o-mini`). The old code was hard-wired to `gpt-3.5-turbo`, which OpenAI has retired. |
+| `DB_DATABASE_SECOND` | Can be removed. The one-off 2021–22 data-import commands that read it (and the `mysql2` connection) are gone. |
 | `CACHE_DRIVER`, `FILESYSTEM_DRIVER` | Still read as fallbacks. The new names are `CACHE_STORE` and `FILESYSTEM_DISK`. |
 | `MAIL_ENCRYPTION` | No longer used. TLS is negotiated automatically; for port 465, set `MAIL_SCHEME=smtps`. |
 | `BROADCAST_DRIVER`, `PUSHER_*`, `MIX_PUSHER_*` | Unused, can be removed. |

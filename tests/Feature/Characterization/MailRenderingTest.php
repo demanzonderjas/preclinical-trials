@@ -17,7 +17,6 @@ use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
 use App\Mail\ReceivedMessage;
-use App\Mail\UpdateProfileEmail;
 use App\Models\Channel;
 use App\Models\ContactForm;
 use App\Models\EmbargoExtension;
@@ -72,7 +71,6 @@ class MailRenderingTest extends TestCase
 			new ProtocolSubmittedForPublication($protocol),
 			new ProtocolSubmittedUser($protocol),
 			new ReceivedMessage($owner, $message->fresh()),
-			new UpdateProfileEmail($owner),
 		];
 
 		foreach ($mailables as $mailable) {

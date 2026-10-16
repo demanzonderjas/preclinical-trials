@@ -2,7 +2,7 @@
 	"name": "pct",
 	"private": true,
 	"type": "module",
-	"description": "PreclinicalTrials.eu frontend: Inertia + React 19, built with Vite. The legacy SPA lives in resources/legacy.",
+	"description": "PreclinicalTrials.eu frontend: Inertia + React 19, built with Vite.",
 	"scripts": {
 		"dev": "vite",
 		"build": "node scripts/export-protocol-schema.mjs --check && tsc --noEmit && vite build && vite build --ssr",

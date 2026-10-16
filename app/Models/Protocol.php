@@ -103,18 +103,6 @@ class Protocol extends Model
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    public function saveDetails(Request $request)
-    {
-        $validKeys = self::getValidKeys($request->all());
-        $this->addDetailsToDatabase($validKeys);
-
-        if (isset($request->import_type) && ! empty($request->import_type)) {
-            $log = ImportLog::firstOrNew(['protocol_id' => $this->id]);
-            $log->type = $request->import_type;
-            $log->save();
-        }
-    }
-
     public function addDetailsToDatabase(array $validKeys)
     {
         $details = collect($validKeys);
