@@ -335,7 +335,8 @@ function People() {
 }
 
 function Ambassadors({ ambassadors }: { ambassadors: Ambassador[] }) {
-	const [selected, setSelected] = useState<Ambassador | null>(ambassadors[ambassadors.length - 1] ?? null);
+	// Opens on Utrecht, where PCT is based, when an ambassador is there.
+	const [selected, setSelected] = useState<Ambassador | null>(ambassadors.find(a => a.city === "Utrecht") ?? ambassadors[0] ?? null);
 	const countries = new Set(ambassadors.map(a => a.country).filter(Boolean)).size;
 	const cities = new Set(ambassadors.map(a => a.city).filter(Boolean)).size;
 
