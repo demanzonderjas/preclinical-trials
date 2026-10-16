@@ -26,8 +26,8 @@ class RegistrationTest extends TestCase
             'city' => 'Utrecht',
             'role' => 'Postdoc',
             'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'A-strong-Passw0rd',
+            'password_confirmation' => 'A-strong-Passw0rd',
             'terms_conditions' => true,
         ]);
 

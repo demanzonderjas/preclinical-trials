@@ -1,6 +1,5 @@
 import { expect, Page } from "@playwright/test";
 import { PASSWORD, Persona } from "../fixtures-data";
-import { fillLegacyField } from "./common";
 
 export type Registration = {
 	firstName: string;
@@ -39,18 +38,21 @@ export class AuthUI {
 		await expect(this.page.getByRole("link", { name: "Log in" }).first()).toBeVisible();
 	}
 
+	/** A2 "create your account" page. */
 	async register(details: Registration) {
 		await this.page.goto("/create-account");
-		await fillLegacyField(this.page, "First name", details.firstName);
-		await fillLegacyField(this.page, "Last name", details.lastName);
-		await fillLegacyField(this.page, "Email", details.email);
-		await fillLegacyField(this.page, "Password", details.password);
-		await fillLegacyField(this.page, "Institution", details.institution);
-		await this.page.locator(".FormField select").first().selectOption({ label: details.country });
-		await fillLegacyField(this.page, "City", details.city);
-		await fillLegacyField(this.page, "Role", details.role);
-		await this.page.locator(".FormField input[type=checkbox]").check();
-		await this.page.getByRole("button", { name: /create my account/i }).click();
+		const form = this.page.locator("form", { has: this.page.getByRole("button", { name: "Create my account" }) });
+		await form.getByLabel(/^First name/).fill(details.firstName);
+		await form.getByLabel(/^Last name/).fill(details.lastName);
+		await form.getByLabel(/^Email address/).fill(details.email);
+		await form.getByLabel(/^Password/).fill(details.password);
+		await form.getByLabel(/^Institution/).fill(details.institution);
+		await form.getByLabel(/^Country/).selectOption({ label: details.country });
+		await form.getByLabel(/^City/).fill(details.city);
+		await form.getByLabel(/^Role/).selectOption({ label: details.role });
+		await form.getByRole("checkbox", { name: /terms and conditions/ }).check();
+		await form.getByRole("button", { name: "Create my account" }).click();
+		await expect(this.page.getByRole("heading", { name: "Verify your email" })).toBeVisible();
 	}
 
 	/** Opens the verification link from the mail in the current (logged-in) browser. */
@@ -66,13 +68,12 @@ export class AuthUI {
 		await expect(this.page.getByRole("heading", { name: "Link on its way" })).toBeVisible();
 	}
 
+	/** A2 "choose a new password" page, opened from the mail. */
 	async resetPassword(link: string, newPassword: string) {
 		await this.page.goto(link);
-		const passwordInputs = this.page.locator("input[type=password]");
-		for (const input of await passwordInputs.all()) {
-			await input.fill(newPassword);
-		}
-		await this.page.locator("form").getByRole("button").last().click();
+		await this.page.getByLabel(/^New password/).fill(newPassword);
+		await this.page.getByRole("button", { name: "Save new password" }).click();
+		await expect(this.page).toHaveURL(/\/login$/);
 	}
 
 }

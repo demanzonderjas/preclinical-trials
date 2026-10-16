@@ -178,12 +178,12 @@ class AdminAccessTest extends TestCase
 
 		$response = $this->actingAs($this->makeAdmin())->postJson('/api/admin/change-password', [
 			'email' => $user->email,
-			'password' => 'a-new-password-123',
-			'password_confirmation' => 'a-new-password-123',
+			'password' => 'A-new-Password-123',
+			'password_confirmation' => 'A-new-Password-123',
 		])->assertOk();
 
 		$response->assertExactJson(['success' => true]);
-		$this->assertTrue(Hash::check('a-new-password-123', $user->fresh()->password));
+		$this->assertTrue(Hash::check('A-new-Password-123', $user->fresh()->password));
 	}
 
 	public function test_admin_change_password_validates_confirmation_and_unknown_email()
@@ -194,14 +194,14 @@ class AdminAccessTest extends TestCase
 
 		$this->actingAs($admin)->postJson('/api/admin/change-password', [
 			'email' => $user->email,
-			'password' => 'a-new-password-123',
-			'password_confirmation' => 'different-123',
+			'password' => 'A-new-Password-123',
+			'password_confirmation' => 'Different-Password-123',
 		])->assertStatus(422)->assertJsonValidationErrors('password');
 
 		$this->actingAs($admin)->postJson('/api/admin/change-password', [
 			'email' => 'nobody@example.test',
-			'password' => 'a-new-password-123',
-			'password_confirmation' => 'a-new-password-123',
+			'password' => 'A-new-Password-123',
+			'password_confirmation' => 'A-new-Password-123',
 		])->assertNotFound();
 
 		$this->assertSame($before, $user->fresh()->password);

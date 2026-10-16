@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -46,6 +47,17 @@ class NewPasswordController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
+    /**
+     * The A2 "choose a new password" page, opened from the reset mail.
+     */
+    public function create(Request $request, string $token)
+    {
+        return Inertia::render('auth/reset-password', [
+            'token' => $token,
+            'email' => (string) $request->query('email', ''),
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -72,9 +84,12 @@ class NewPasswordController extends Controller
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
-        return $status == Password::PASSWORD_RESET
-            ? redirect()->route('index')->with('status', __($status))
-            : back()->withInput($request->only('email'))
-            ->withErrors(['email' => __($status)]);
+        if ($status != Password::PASSWORD_RESET) {
+            return back()->withInput($request->only('email'))->withErrors(['email' => __($status)]);
+        }
+
+        return $request->header('X-Inertia')
+            ? redirect()->route('login')->with('status', 'Your password has been changed. Log in with your new password.')
+            : redirect()->route('index')->with('status', __($status));
     }
 }

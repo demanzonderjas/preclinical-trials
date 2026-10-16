@@ -8,10 +8,14 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
 {
+    /** Suggested roles; the column stays free text, as on the legacy form. */
+    public const ROLES = ['PhD student', 'Postdoc', 'Principal investigator', 'Research technician', 'Veterinarian', 'Animal welfare body / ethics committee', 'Other'];
+
     /**
      * Handle an incoming registration request.
      *
@@ -49,6 +53,22 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        // The A2 form continues to "verify your email"; the legacy SPA follows the redirect.
+        return $request->header('X-Inertia') ? redirect('/verify-email') : redirect('/dashboard');
+    }
+
+    /**
+     * The A2 "create your account" page.
+     */
+    public function create(Request $request)
+    {
+        if ($request->user()) {
+            return redirect('/dashboard');
+        }
+
+        return Inertia::render('auth/register', [
+            'countries' => collect(config('pct.countries'))->map(fn ($name, $code) => ['value' => $code, 'label' => $name])->values(),
+            'roles' => self::ROLES,
+        ]);
     }
 }

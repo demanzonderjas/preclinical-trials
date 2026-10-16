@@ -26,9 +26,9 @@ Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store']
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
     ->name('password.email');
 
-Route::get('/reset-password/{token}', function () {
-    return view('index');
-})->name('password.reset');
+Route::get('/create-account', [RegisteredUserController::class, 'create'])->name('register');
+
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
 
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
     ->name('password.update');
