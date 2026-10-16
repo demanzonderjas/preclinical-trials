@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -65,6 +66,8 @@ class Inbox
     public function post(Channel $channel, string $text, bool $notify = true): Message
     {
         $message = $channel->messages()->save(new Message(['user_id' => $this->user->id, 'text' => $text]));
+        // A new message brings an archived conversation back to everyone's inbox.
+        DB::table('channel_user')->where('channel_id', $channel->id)->update(['archived_at' => null]);
         $this->markRead($channel);
 
         if ($notify) {

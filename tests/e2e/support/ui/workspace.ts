@@ -168,31 +168,35 @@ export class WorkspaceUI {
 	}
 
 	/** Opens someone else's protocol and sends its author a question. */
+	/** From the A2 protocol page into Messages, then sends the question. */
 	async askAuthor(title: string, question: string) {
 		const { id } = await this.app.protocol(title);
 		await this.page.goto(`/database/view-protocol/${id}`);
-		await this.page.getByRole("button", { name: /ask question to author/i }).click();
+		await this.page.getByRole("button", { name: /ask the author/i }).click();
+		await expect(this.page).toHaveURL(/\/dashboard\/messages\/\d+$/);
 		await this.sendMessage(question);
 	}
 
+	/** A2 Messages. */
 	async openMessages() {
 		await this.page.goto("/dashboard/messages");
+		await expect(this.page.getByRole("heading", { level: 1, name: "Messages" })).toBeVisible();
 	}
 
 	async openConversation(about: string) {
 		await this.openMessages();
-		await this.page.getByText(about).first().click();
+		await this.page.getByRole("region", { name: "Conversations" }).getByRole("link").filter({ hasText: about }).first().click();
+		await expect(this.page.getByLabel("Your reply")).toBeVisible();
 	}
 
 	async sendMessage(text: string) {
-		const sent = this.page.waitForResponse(r => r.url().includes("/api/channel/message") && r.request().method() === "POST");
-		await fillRichText(this.page.locator(".Modal, .Conversation, .ViewConversation, body").first(), text);
-		await this.page.getByRole("button", { name: /send message/i }).click();
-		await sent;
+		await this.page.getByLabel("Your reply").fill(text);
+		await this.page.getByRole("button", { name: "Send reply" }).click();
+		await this.expectMessageVisible(text);
 	}
 
 	async expectMessageVisible(text: string) {
-		await expect(this.page.getByText(text).first()).toBeVisible();
+		await expect(this.page.getByRole("listitem").filter({ hasText: text }).first()).toBeVisible();
 	}
 
 	async openProfile() {
@@ -226,9 +230,9 @@ export class WorkspaceUI {
 
 	async setMessageNotifications(enabled: boolean) {
 		await this.openMessages();
-		const toggle = this.page.locator(".NotifyToggle input[type=checkbox]");
-		// The toggle is phrased as "disable notifications".
-		await toggle.setChecked(!enabled);
+		const toggle = this.page.getByRole("switch", { name: /email me about new messages/i });
+		if ((await toggle.getAttribute("aria-checked")) !== String(enabled)) await toggle.click();
+		await expect(toggle).toHaveAttribute("aria-checked", String(enabled));
 	}
 
 	async chooseEmbargo(choice: "yes" | "no") {

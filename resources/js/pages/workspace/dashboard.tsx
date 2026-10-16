@@ -1,9 +1,10 @@
 import { usePage } from "@inertiajs/react";
 import { ArrowRight, ArrowUpToLine, Check, Plus, Search } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { Badge, type ProtocolStatus } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/Badge";
 import { ButtonAnchor, Button } from "@/components/ui/Button";
 import { Avatar, Card } from "@/components/ui/Content";
+import { type Conversation, conversationContext, ProtocolChip, shortTitle } from "@/components/workspace/Conversation";
 import { WorkspaceLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
 import { capitalise, formatDate, formatMoment, formatShort } from "@/lib/dates";
@@ -16,21 +17,6 @@ type EmbargoAction = { type: "embargo"; id: number; pct_id: string; title: strin
 type DraftAction = { type: "draft"; id: number; title: string | null; saved_at: string; progress: Progress };
 type Action = FeedbackAction | EmbargoAction | DraftAction;
 
-export type Conversation = {
-	id: number;
-	kind: "question" | "team" | "feedback";
-	name: string;
-	initials: string;
-	affiliation: string | null;
-	subject: string | null;
-	field_key: string | null;
-	protocol: { id: number; pct_id: string | null; title: string; status: ProtocolStatus } | null;
-	asked_by_me: boolean;
-	excerpt: string | null;
-	from_me: boolean;
-	at: string | null;
-	unread: number;
-};
 
 type Props = {
 	today: string;
@@ -47,10 +33,6 @@ type Props = {
 	register: { protocols: number; countries: number };
 };
 
-const shortTitle = (title: string | null, length = 40) => {
-	if (!title) return "Untitled draft";
-	return title.length > length ? `${title.slice(0, length).replace(/\s+\S*$/, "")}…` : title;
-};
 
 export default function Dashboard(props: Props) {
 	const { auth, workspace } = usePage().props;
@@ -376,30 +358,6 @@ function DraftItem({ action }: { action: DraftAction }) {
 }
 
 /* -------------------------------------------------------------------------- */
-
-const statusWord: Record<ProtocolStatus, string> = {
-	draft: "draft",
-	submitted_for_publication: "submitted",
-	resubmitted_for_publication: "resubmitted",
-	rejected: "needs changes",
-	published: "published"
-};
-
-/** The protocol chip in conversation lists: the PCT ID, or a short title and status. */
-export function ProtocolChip({ protocol }: { protocol: NonNullable<Conversation["protocol"]> }) {
-	return (
-		<span className="inline-flex h-6 max-w-full items-center truncate rounded-sm bg-mist px-2 text-[13px] font-bold shadow-[inset_0_0_0_1px_var(--color-line)]">
-			{protocol.pct_id ? <span className="pct-id">{protocol.pct_id}</span> : `${shortTitle(protocol.title, 18)} · ${statusWord[protocol.status]}`}
-		</span>
-	);
-}
-
-/** "Feedback", a team subject, or the other researcher's institution. */
-export function conversationContext(conversation: Conversation) {
-	if (conversation.kind === "feedback") return conversation.field_key ? `Feedback · ${fieldLabel(conversation.field_key)}` : "Feedback";
-	if (conversation.kind === "team") return conversation.subject;
-	return conversation.affiliation;
-}
 
 function RecentMessages({ messages }: { messages: Conversation[] }) {
 	return (

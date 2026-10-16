@@ -11,6 +11,7 @@ use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Http\Controllers\Pages\ProtocolPdfController;
 use App\Http\Controllers\Pages\Workspace\DashboardController;
 use App\Http\Controllers\Pages\Workspace\FeedbackController;
+use App\Http\Controllers\Pages\Workspace\MessagesController;
 use App\Http\Controllers\Pages\Workspace\MyProtocolsController;
 use App\Http\Controllers\Pages\Workspace\ProtocolFormController;
 use Illuminate\Http\Request;
@@ -92,6 +93,16 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         Route::post('/comments', [MyProtocolsController::class, 'comment'])->middleware('throttle:30,1')->name('workspace.protocols.comment');
         Route::post('/comments/read', [MyProtocolsController::class, 'readComments'])->name('workspace.protocols.comments.read');
         Route::put('/links', [MyProtocolsController::class, 'link'])->name('workspace.protocols.link');
+    });
+    Route::get('/messages', [MessagesController::class, 'index'])->name('workspace.messages');
+    Route::post('/messages/notifications', [MessagesController::class, 'notifications'])->name('workspace.messages.notifications');
+    Route::whereNumber(['id', 'message'])->prefix('messages/{id}')->group(function () {
+        Route::get('/', [MessagesController::class, 'index'])->name('workspace.messages.show');
+        Route::post('/', [MessagesController::class, 'reply'])->middleware('throttle:30,1')->name('workspace.messages.reply');
+        Route::get('/attachments/{message}', [MessagesController::class, 'attachment'])->name('workspace.messages.attachment');
+        Route::post('/unread', [MessagesController::class, 'unread'])->name('workspace.messages.unread');
+        Route::post('/archive', [MessagesController::class, 'archive'])->name('workspace.messages.archive');
+        Route::post('/block', [MessagesController::class, 'block'])->name('workspace.messages.block');
     });
     Route::post('/feedback-points/{point}/status', [FeedbackController::class, 'status'])->whereNumber('point')->name('workspace.feedback.status');
     Route::post('/feedback-points/{point}/messages', [FeedbackController::class, 'message'])->whereNumber('point')->middleware('throttle:30,1')->name('workspace.feedback.message');
