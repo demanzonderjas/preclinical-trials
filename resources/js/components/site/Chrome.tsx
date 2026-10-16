@@ -228,13 +228,14 @@ function FooterLinks({ title, links }: { title: string; links: { label: string; 
 }
 
 /**
- * Newsletter sign-up. Posts to the newsletter provider (Laposta) once the client has
- * confirmed the list; until then it submits to the contact page.
+ * Newsletter sign-up. Until the Laposta list is confirmed with the client it opens the
+ * contact form with the topic "Newsletter" and the address filled in.
  */
 function NewsletterForm() {
 	const id = useId();
 	return (
 		<form action={routes.contact} method="get">
+			<input type="hidden" name="topic" value="newsletter" />
 			<h2 className="text-[19px] font-extrabold tracking-[-0.01em]">Newsletter</h2>
 			<p className="mt-1.5 text-[15px] leading-normal text-ink-muted">Follow PCT's updates by registering for the newsletter.</p>
 			<label htmlFor={id} className="mt-3.5 block text-[14px] font-semibold">

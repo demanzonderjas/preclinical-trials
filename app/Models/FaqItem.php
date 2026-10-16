@@ -17,6 +17,6 @@ class FaqItem extends Model
 
     public function getCategoryAttribute()
     {
-        return $this->faqCategory->name;
+        return $this->faqCategory?->name;
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Pages\ContactController;
 use App\Http\Controllers\Pages\DatabaseController;
 use App\Http\Controllers\Pages\HomeController;
+use App\Http\Controllers\Pages\ProtocolPageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,6 +31,14 @@ Route::get('/', HomeController::class)->name('index');
 
 Route::get('/database', [DatabaseController::class, 'index'])->name('database');
 Route::get('/database/export.csv', [DatabaseController::class, 'export'])->middleware(['auth', 'verified'])->name('database.export');
+
+Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:10,1')->name('contact.store');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/database/view-protocol/{id}', [ProtocolPageController::class, 'show'])->whereNumber('id')->name('protocols.show');
+    Route::post('/database/view-protocol/{id}/ask', [ProtocolPageController::class, 'ask'])->whereNumber('id')->name('protocols.ask');
+});
 
 Route::get('/admin{any}', function () {
     return view('index');

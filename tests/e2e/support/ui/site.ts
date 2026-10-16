@@ -1,6 +1,5 @@
 import { expect, Page } from "@playwright/test";
 import { App } from "../app";
-import { fillLegacyField } from "./common";
 
 /** Public pages: home, database, protocol detail, news, help, contact. */
 export class SiteUI {
@@ -77,12 +76,17 @@ export class SiteUI {
 		await this.page.getByText(question, { exact: true }).first().click();
 	}
 
-	async sendContactForm(message: { name: string; email: string; message: string }) {
+	/** A2 contact page. */
+	async sendContactForm(message: { name: string; email: string; message: string; topic?: string; pctId?: string }) {
 		await this.page.goto("/contact");
-		await fillLegacyField(this.page, "Name", message.name);
-		await fillLegacyField(this.page, "Email", message.email);
-		await fillLegacyField(this.page, "Message", message.message);
-		await this.page.locator(".FormWrapper form").getByRole("button").last().click();
+		const form = this.page.locator("form", { has: this.page.getByRole("button", { name: "Send message" }) });
+		await form.getByLabel(/^Name/).fill(message.name);
+		await form.getByLabel(/^Email/).fill(message.email);
+		await form.getByLabel(/^Topic/).selectOption({ label: message.topic ?? "Something else" });
+		if (message.pctId) await form.getByLabel(/Related PCT ID/).fill(message.pctId);
+		await form.getByLabel(/^Message/).fill(message.message);
+		await form.getByRole("button", { name: "Send message" }).click();
+		await expect(this.page.getByRole("status")).toContainText("Your message is on its way");
 	}
 
 	async openAbout() {
