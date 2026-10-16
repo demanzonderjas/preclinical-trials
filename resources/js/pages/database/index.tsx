@@ -30,7 +30,7 @@ type Props = {
 	filters: Filters;
 	results: { data: PublicProtocol[]; total: number; from: number | null; to: number | null; links: PaginationLink[] };
 	facets: Record<FacetName, FacetOption[]>;
-	years: { year: number; count: number }[];
+	timeline: { unit: "month" | "year"; buckets: Bucket[] };
 	beforeStartCount: number;
 	publicTotal: number;
 	underEmbargo: number;
@@ -371,8 +371,7 @@ type PanelProps = Props & {
 	onClear: () => void;
 };
 
-function FilterPanel({ filters, facets, years, beforeStartCount, activeCount, onToggle, onVisit, onClear }: PanelProps) {
-	const maxYear = Math.max(1, ...years.map(year => year.count));
+function FilterPanel({ filters, facets, timeline, beforeStartCount, activeCount, onToggle, onVisit, onClear }: PanelProps) {
 	return (
 		<div>
 			<div className="flex items-center justify-between">
@@ -392,25 +391,22 @@ function FilterPanel({ filters, facets, years, beforeStartCount, activeCount, on
 				<Switch
 					checked={filters.before_start}
 					onChange={checked => onVisit({ before_start: checked })}
-					label={
-						<span className="font-bold">
-							Registered before start <span className="ml-1 font-normal tabular-nums">{beforeStartCount}</span>
-						</span>
+					label={<span className="font-bold">Only preregistered studies</span>}
+					description={
+						<>
+							Registered before the study started, as preregistration is meant to work.{" "}
+							<span className="font-semibold text-ink tabular-nums">
+								{beforeStartCount} {beforeStartCount === 1 ? "protocol" : "protocols"}
+							</span>
+						</>
 					}
-					description="Only protocols registered at inception — before the first animal was included."
 				/>
 			</div>
 
 			<FilterGroup title="Registration date">
-				{years.length > 0 && (
-					<div className="flex h-16 items-end gap-1" aria-hidden="true">
-						{years.map(year => (
-							<span key={year.year} className="flex-1 rounded-t-sm bg-blue-100" style={{ height: `${Math.max(6, (year.count / maxYear) * 100)}%` }} title={`${year.year}: ${year.count}`} />
-						))}
-					</div>
-				)}
+				<Timeline timeline={timeline} from={filters.from} to={filters.to} onPick={bucket => onVisit({ from: bucket.from, to: bucket.to })} />
 				<div className="mt-4 grid grid-cols-2 gap-2.5">
-					<MonthInput label="From" value={filters.from ?? (years.length ? `${years[0].year}-01` : null)} onChange={value => onVisit({ from: value })} />
+					<MonthInput label="From" value={filters.from ?? timeline.buckets[0]?.from ?? null} onChange={value => onVisit({ from: value })} />
 					<MonthInput label="To" value={filters.to ?? currentMonth()} onChange={value => onVisit({ to: value })} />
 				</div>
 			</FilterGroup>
@@ -482,6 +478,47 @@ function FacetList({ facet, options, chosen, onToggle }: { facet: FacetName; opt
 function currentMonth() {
 	const now = new Date();
 	return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+}
+
+type Bucket = { label: string; from: string; to: string; count: number };
+
+/**
+ * Registrations per month (or per year once the register spans more than two years). Bars in
+ * the chosen period are dark; a click on a bar filters on that period.
+ */
+function Timeline({ timeline, from, to, onPick }: { timeline: Props["timeline"]; from: string | null; to: string | null; onPick: (bucket: Bucket) => void }) {
+	const { buckets, unit } = timeline;
+	if (!buckets.length) return null;
+	const max = Math.max(1, ...buckets.map(bucket => bucket.count));
+	const inRange = (bucket: Bucket) => (!from || bucket.to >= from) && (!to || bucket.from <= to);
+	const short = (bucket: Bucket) => (unit === "month" ? bucket.label.replace(/ (\d{2})(\d{2})$/, " ’$2") : bucket.label);
+
+	return (
+		<div>
+			<div className="flex h-16 items-end gap-[3px]" role="group" aria-label={`Registrations per ${unit}`}>
+				{buckets.map(bucket => (
+					<button
+						key={bucket.from}
+						type="button"
+						onClick={() => onPick(bucket)}
+						title={`${bucket.label}: ${bucket.count} ${bucket.count === 1 ? "protocol" : "protocols"}`}
+						aria-label={`${bucket.label}: ${bucket.count} ${bucket.count === 1 ? "protocol" : "protocols"}. Show this ${unit}.`}
+						className="group flex h-full min-w-0 flex-1 items-end"
+					>
+						<span
+							className={cn("block w-full rounded-t-[3px] transition-colors", bucket.count ? (inRange(bucket) ? "bg-teal-500 group-hover:bg-ink" : "bg-teal-200 group-hover:bg-teal-300") : "bg-line")}
+							style={{ height: bucket.count ? `${Math.max(10, (bucket.count / max) * 100)}%` : "3px" }}
+						/>
+					</button>
+				))}
+			</div>
+			<div className="mt-1.5 flex justify-between text-[12.5px] text-ink-muted tabular-nums" aria-hidden="true">
+				<span>{short(buckets[0])}</span>
+				{buckets.length > 2 && <span>{short(buckets[Math.floor((buckets.length - 1) / 2)])}</span>}
+				<span>{short(buckets[buckets.length - 1])}</span>
+			</div>
+		</div>
+	);
 }
 
 function MonthInput({ label, value, onChange }: { label: string; value: string | null; onChange: (value: string | null) => void }) {

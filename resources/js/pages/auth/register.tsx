@@ -110,11 +110,10 @@ export default function Register({ countries, roles }: Props) {
 								<label className="flex cursor-pointer items-start gap-3 text-base">
 									<input type="checkbox" checked={form.data.terms_conditions} onChange={event => form.setData("terms_conditions", event.target.checked)} className="mt-0.5 size-5 shrink-0 accent-ink" aria-invalid={!!form.errors.terms_conditions} />
 									<span>
-										I have read the{" "}
+										I agree to the{" "}
 										<a href={routes.terms} target="_blank" className="font-bold underline underline-offset-3">
 											terms and conditions
 										</a>{" "}
-										and agree to be bound by them{" "}
 										<span aria-hidden="true" className="text-rust">
 											*
 										</span>

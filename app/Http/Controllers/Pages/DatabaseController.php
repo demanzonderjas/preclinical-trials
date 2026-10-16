@@ -25,7 +25,7 @@ class DatabaseController extends Controller
             'filters' => $search->filters,
             'results' => $search->paginate(max(1, (int) $request->query('page', 1))),
             'facets' => $search->facets(),
-            'years' => $search->years(),
+            'timeline' => $search->timeline(),
             'beforeStartCount' => $search->beforeStartCount(),
             'publicTotal' => $figures['public'],
             'underEmbargo' => $figures['under_embargo'],

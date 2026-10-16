@@ -129,18 +129,39 @@ class RegisterSearch
      *
      * @return array<int, array{year: int, count: int}>
      */
-    public function years(): array
+    /**
+     * Registrations over time for the date filter: per month while the register spans two
+     * years or less (one year would be a single bar), per year after that.
+     *
+     * @return array{unit: string, buckets: list<array{label: string, from: string, to: string, count: int}>}
+     */
+    public function timeline(): array
     {
-        $counts = $this->apply($this->register->summaries(), except: 'date')
-            ->whereNotNull('registered_year')
-            ->countBy('registered_year');
-        if ($counts->isEmpty()) {
-            return [];
+        $months = $this->apply($this->register->summaries(), except: 'date')
+            ->pluck('registered_at')->filter()
+            ->map(fn (string $at) => Carbon::parse($at)->format('Y-m'));
+        if ($months->isEmpty()) {
+            return ['unit' => 'month', 'buckets' => []];
         }
 
-        return collect(range($counts->keys()->min(), max($counts->keys()->max(), now()->year)))
-            ->map(fn (int $year) => ['year' => $year, 'count' => $counts->get($year, 0)])
-            ->all();
+        $first = Carbon::createFromFormat('Y-m-d', $months->min().'-01')->startOfMonth();
+        $last = now()->startOfMonth();
+        if ($first->diffInMonths($last) < 24) {
+            $counts = $months->countBy();
+            $buckets = [];
+            for ($month = $first->copy()->startOfYear(); $month <= $last; $month->addMonth()) {
+                $key = $month->format('Y-m');
+                $buckets[] = ['label' => $month->format('M Y'), 'from' => $key, 'to' => $key, 'count' => $counts->get($key, 0)];
+            }
+
+            return ['unit' => 'month', 'buckets' => $buckets];
+        }
+
+        $counts = $months->countBy(fn (string $month) => substr($month, 0, 4));
+
+        return ['unit' => 'year', 'buckets' => collect(range($first->year, $last->year))
+            ->map(fn (int $year) => ['label' => (string) $year, 'from' => "$year-01", 'to' => "$year-12", 'count' => $counts->get((string) $year, 0)])
+            ->all()];
     }
 
     public function beforeStartCount(): int
