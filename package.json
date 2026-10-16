@@ -7,6 +7,7 @@
 		"dev": "vite",
 		"build": "node scripts/export-protocol-schema.mjs --check && tsc --noEmit && vite build && vite build --ssr",
 		"typecheck": "tsc --noEmit",
+		"test:js": "node --test \"tests/js/*.test.ts\"",
 		"export-schema": "node scripts/export-protocol-schema.mjs"
 	},
 	"dependencies": {

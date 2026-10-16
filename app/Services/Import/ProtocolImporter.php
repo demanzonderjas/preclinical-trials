@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\ImportLog;
 use App\Models\Protocol;
 use App\Models\User;
+use App\Services\ProtocolSchema;
 use App\Services\Translator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +43,7 @@ class ProtocolImporter
             $source = 'PRIS';
         }
 
-        $values = array_filter(Protocol::getValidKeys($values), fn ($value) => $value !== null && $value !== '' && $value !== []);
+        $values = array_filter(ProtocolSchema::cleanAnswers(Protocol::getValidKeys($values)), fn ($value) => $value !== null && $value !== '' && $value !== []);
         $values += $defaults;
 
         $protocol = DB::transaction(function () use ($user, $values, $source, $isXml) {

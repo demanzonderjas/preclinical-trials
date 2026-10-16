@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { RichAnswer } from "@/components/ui/RichAnswer";
 import { formatValue, type ProtocolField } from "@/data/protocol-schema";
 import { plainText } from "@/lib/protocol-versions";
 
@@ -44,6 +45,7 @@ export function display(field: ProtocolField, value: unknown): ReactNode {
 		const files = Array.isArray(value) ? value : value ? [value] : [];
 		return files.length ? `${files.length} image${files.length === 1 ? "" : "s"}` : null;
 	}
+	if (field.type === "longtext" && typeof value === "string" && field.key !== "sum_of_animals") return plainText(value) ? <RichAnswer value={value} /> : null;
 	const text = field.type === "longtext" && typeof value === "string" ? plainText(value) : formatValue(field, value);
 	return text || null;
 }

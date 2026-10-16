@@ -42,6 +42,14 @@ resources/js/data/protocol-schema.ts  The protocol fields; exported to resources
 - **Server-side rendering.** Pages render on the server, so keep
   `window`/`document` access inside effects and event handlers, and format dates with
   `lib/dates.ts` (fixed time zone and month names) so both renders agree.
+- **Long answers** (schema type `longtext`) are edited with `protocol-form/AnswerEditor`
+  (Tiptap: paragraphs, bold, italic, underline, lists, links; Markdown-style shortcuts) and
+  stored as that small subset of HTML. Paste from Word, Google Docs, PDFs or web pages is
+  repaired in `lib/rich-text.ts` (Word's typed bullets become real lists, tables become one
+  line per row, PDF line wraps are joined, styling goes). Show an answer with
+  `ui/RichAnswer`, which builds React elements from an allowlist and never uses
+  `innerHTML`; older answers may be plain text or legacy-editor HTML and both work. The
+  server cleans answers again on save (`ProtocolSchema::cleanAnswers`, `Html::answer`).
 - **Icons** come from `lucide-react`, at a stroke width of 2–2.4 to match the artboards.
 - **Fonts** are self-hosted through `@fontsource-variable/*`, with no requests to Google.
 

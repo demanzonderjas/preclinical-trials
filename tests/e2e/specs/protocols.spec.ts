@@ -126,7 +126,7 @@ test.describe("Admin: review", () => {
 
 		const after = await app.protocol(protocols.published);
 		expect(after.status).toBe("published");
-		expect(after.details.secondary_readout_parameter).toBe(amendment.change.value);
+		expect(after.details.secondary_readout_parameter).toBe(`<p>${amendment.change.value}</p>`);
 		expect(after.revisions).toHaveLength(before.revisions.length + 1);
 		expect(after.revisions.at(-1)!.changes.map(c => c.key)).toContain("secondary_readout_parameter");
 		expect(after.amendments.at(-1)!.status).toBe("approved");

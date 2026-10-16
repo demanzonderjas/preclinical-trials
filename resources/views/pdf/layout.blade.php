@@ -32,6 +32,11 @@
     .field .sub { margin: 1.5mm 0 0 8mm; }
     .field .sub .label { font-weight: bold; font-size: 8.5pt; color: #585F6F; }
     .empty { color: #798399; font-style: italic; }
+    .rich p { margin: 0 0 1.5mm; }
+    .rich ul, .rich ol { margin: 0 0 1.5mm; padding-left: 5mm; }
+    .rich li { margin: 0 0 0.8mm; }
+    .rich li p { margin: 0; }
+    .rich a { color: #1F5FA8; }
     .note { background: #E6F0F1; padding: 3mm 4mm; margin-top: 6mm; font-size: 8.5pt; }
 </style>
 </head>

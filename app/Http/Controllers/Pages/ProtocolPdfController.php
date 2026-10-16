@@ -7,6 +7,7 @@ use App\Models\Detail;
 use App\Models\Protocol;
 use App\Services\ProtocolSchema;
 use App\Services\PublicRegister;
+use App\Support\Html;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -117,9 +118,13 @@ class ProtocolPdfController extends Controller
         $value = $values[$field['key']] ?? null;
         $text = $field['type'] === 'longtext' && is_string($value) ? (ProtocolSchema::plainText($value) ?: null) : ProtocolSchema::format($field, $value);
 
+        $rich = $text !== null && $field['type'] === 'longtext' && $field['key'] !== 'sum_of_animals' && preg_match('/<\/?[a-z][^>]*>/i', (string) $value);
+
         return [
             'label' => $field['label'],
             'text' => $text,
+            // Cleaned again here: answers from the legacy editor were never cleaned on the server.
+            'html' => $rich ? Html::answer($value) : null,
             'table' => match ($field['type']) {
                 'study_arms' => $this->table(['Type', 'Intervention', 'Animals'], $value, fn ($arm) => [ucfirst((string) data_get($arm, 'type')), data_get($arm, 'intervention'), data_get($arm, 'number')]),
                 'study_centres' => $this->table(['Name', 'City', 'Country'], $value, fn ($centre) => [data_get($centre, 'name'), data_get($centre, 'city'), config('pct.countries.'.data_get($centre, 'country')) ?? data_get($centre, 'country')]),

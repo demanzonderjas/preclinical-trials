@@ -2,9 +2,10 @@ import { Check, ImageIcon, Plus, Trash2, Upload, X } from "lucide-react";
 import { type ReactNode, useId, useRef, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { RadioCards, Select, Textarea, TextInput } from "@/components/ui/Form";
+import { RadioCards, Select, TextInput } from "@/components/ui/Form";
 import { type ProtocolField, isVisible, protocolFields } from "@/data/protocol-schema";
 import { cn } from "@/lib/cn";
+import { AnswerEditor } from "./AnswerEditor";
 import { plainText } from "@/lib/protocol-versions";
 
 export type Values = Record<string, unknown>;
@@ -32,6 +33,12 @@ export const toList = (value: unknown): string[] => (Array.isArray(value) ? valu
 export const isTrue = (value: unknown) => value === true || value === 1 || value === "1" || value === "true" || value === "yes";
 
 /** Rich text from the legacy editor is edited as plain text. */
+/** Labels point at their control; an answer editor is not a form control, so focus it by hand. */
+const focusEditor = (id: string) => {
+	const element = document.getElementById(id);
+	if (element?.isContentEditable) element.focus();
+};
+
 const asText = (value: unknown) => (typeof value === "string" ? (/<[a-z][\s\S]*>/i.test(value) ? plainText(value) : value) : "");
 
 /** Fields shown as a dropdown because their options are long sentences. */
@@ -62,7 +69,7 @@ export function Question({ field, ctx, first, badge, after }: { field: ProtocolF
 						{field.number}
 					</span>
 				)}
-				<label htmlFor={id} className="text-[16.5px] font-bold">
+				<label id={`${id}-label`} htmlFor={id} onClick={() => focusEditor(id)} className="text-[16.5px] font-bold">
 					{field.label}
 					{field.required && (
 						<span aria-hidden="true" className="text-rust">
@@ -105,7 +112,7 @@ function FollowUp({ field, ctx }: { field: ProtocolField; ctx: FieldContext }) {
 	const point = ctx.feedback.get(field.key);
 	return (
 		<div id={`question-${field.key}`} className="scroll-mt-28">
-			<label htmlFor={id} className="block font-bold">
+			<label id={`${id}-label`} htmlFor={id} onClick={() => focusEditor(id)} className="block font-bold">
 				{field.label}
 				{field.required ? (
 					<span aria-hidden="true" className="text-rust">
@@ -149,7 +156,7 @@ export function Control({ field, ctx, id }: { field: ProtocolField; ctx: FieldCo
 
 	switch (field.type) {
 		case "longtext":
-			return <Textarea id={id} rows={5} value={asText(value)} onChange={event => set(event.target.value)} aria-required={field.required} />;
+			return <AnswerEditor id={id} labelId={`${id}-label`} value={value} onChange={set} required={field.required} />;
 		case "date":
 			return <TextInput id={id} type="date" value={typeof value === "string" ? value.slice(0, 10) : ""} onChange={event => set(event.target.value)} className="h-13 max-w-xs" aria-required={field.required} />;
 		case "email":

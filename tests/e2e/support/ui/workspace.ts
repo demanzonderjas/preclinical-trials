@@ -70,6 +70,23 @@ export class WorkspaceUI {
 	}
 
 	/** A form control by its question; required questions end in an asterisk. */
+	/**
+	 * Pastes into a long answer as the browser would from Word, Google Docs or a PDF: a paste
+	 * event with the clipboard's HTML and plain-text flavours. Autosave starts right away.
+	 */
+	async pasteInto(label: string, clipboard: { html?: string; text: string }) {
+		const field = this.fieldByLabel(label).first();
+		await field.click();
+		await field.press("ControlOrMeta+a"); // replaces the answer, as a researcher pasting a new one would
+		this.pendingSave = this.page.waitForResponse(r => /\/dashboard\/protocols\/\d+\/answers$/.test(r.url()) && r.request().method() === "PUT");
+		await field.evaluate((element, data) => {
+			const transfer = new DataTransfer();
+			if (data.html) transfer.setData("text/html", data.html);
+			transfer.setData("text/plain", data.text);
+			element.dispatchEvent(new ClipboardEvent("paste", { clipboardData: transfer, bubbles: true, cancelable: true }));
+		}, clipboard);
+	}
+
 	private fieldByLabel(label: string | RegExp) {
 		return this.page.getByLabel(typeof label === "string" ? new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}\\s*\\*?$`) : label);
 	}

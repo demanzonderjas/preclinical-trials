@@ -200,7 +200,7 @@ class ProtocolFormController extends Controller
     {
         $data = $request->validate(['values' => ['required', 'array']]);
 
-        return Protocol::getValidKeys($data['values']);
+        return ProtocolSchema::cleanAnswers(Protocol::getValidKeys($data['values']));
     }
 
     private function saved(Protocol $protocol, int $status = 200): JsonResponse

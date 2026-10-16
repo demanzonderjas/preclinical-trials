@@ -7,6 +7,8 @@
     </table>
 @elseif ($cell['images'])
     <div class="{{ $class }} muted">{{ $cell['images'] }} {{ $cell['images'] === 1 ? 'image' : 'images' }}, see the online record</div>
+@elseif ($cell['html'] ?? null)
+    <div class="{{ $class }} rich">{!! $cell['html'] !!}</div>
 @elseif ($cell['text'] !== null)
     <div class="{{ $class }}">{{ $cell['text'] }}</div>
 @else

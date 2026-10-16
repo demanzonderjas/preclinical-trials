@@ -173,3 +173,37 @@
 	letter-spacing: var(--tracking-id);
 	font-variant-numeric: tabular-nums;
 }
+
+/* Long answers in the protocol form (AnswerEditor) and the empty box shown before it starts. */
+@layer components {
+	.answer-editor {
+		& p {
+			margin-block: 0.5em;
+		}
+		& > :first-child {
+			margin-top: 0;
+		}
+		& > :last-child {
+			margin-bottom: 0;
+		}
+		& ul,
+		& ol {
+			margin-block: 0.5em;
+			padding-left: 1.5rem;
+		}
+		& ul {
+			list-style: disc;
+		}
+		& ol {
+			list-style: decimal;
+		}
+		& li > p {
+			margin-block: 0.15em;
+		}
+		& a {
+			color: var(--color-link);
+			text-decoration: underline;
+			text-underline-offset: 2px;
+		}
+	}
+}

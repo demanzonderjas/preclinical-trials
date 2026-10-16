@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Support\Html;
 use Illuminate\Support\Collection;
 
 /**
@@ -23,6 +24,24 @@ class ProtocolSchema
     public static function field(string $key): ?array
     {
         return self::fields()->firstWhere('key', $key);
+    }
+
+    /**
+     * Long answers that hold markup are reduced to what the answer editor makes (see
+     * App\Support\Html::answer). Plain-text answers stay as typed, "<" included.
+     *
+     * @param  array<string, mixed>  $values
+     * @return array<string, mixed>
+     */
+    public static function cleanAnswers(array $values): array
+    {
+        foreach ($values as $key => $value) {
+            if (is_string($value) && $key !== 'sum_of_animals' && (self::field($key)['type'] ?? null) === 'longtext' && preg_match('/<\/?[a-z][^>]*>/i', $value)) {
+                $values[$key] = Html::answer($value);
+            }
+        }
+
+        return $values;
     }
 
     /** @return array<string, string> */

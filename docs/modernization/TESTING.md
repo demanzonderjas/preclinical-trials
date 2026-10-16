@@ -19,6 +19,9 @@ behaviour of the former JSON API is tested through the A2 pages in `tests/Featur
 - **Bugs fixed in phase 1:** the bugs the phase 0 run documented (the `pending-fix` and
   `known-bug` groups) were fixed in the Laravel 13 port. Their tests now describe the
   fixed behaviour, and the groups are gone.
+- **JavaScript unit tests:** `npm run test:js` (Node's built-in runner, no extra packages)
+  checks the answer helpers in `lib/rich-text.ts`: pasted text, legacy HTML, unsafe markup.
+  Paste cleanup that needs a browser DOM is covered by the e2e suite.
 - `MailRenderingTest` renders and sends every mail for real, because the other tests fake the mailer.
 - **Run time:** about 6 seconds for 217 tests.
 

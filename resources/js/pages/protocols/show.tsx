@@ -6,6 +6,7 @@ import { Button, ButtonAnchor } from "@/components/ui/Button";
 import { DetailList, Diff, Note } from "@/components/ui/Content";
 import { Switch } from "@/components/ui/Form";
 import { LogoMark } from "@/components/ui/Logo";
+import { RichAnswer } from "@/components/ui/RichAnswer";
 import { designGroupTitles, fieldByKey, formatValue, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
 import { PublicLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
@@ -544,6 +545,7 @@ function FieldValue({ field, values, change }: { field: ProtocolField; values: D
 
 	const formatted = plainText(formatValue(field, value));
 	if (!formatted) return <p className="text-ink-muted italic">Not provided</p>;
+	if (field.type === "longtext" && typeof value === "string" && field.key !== "sum_of_animals" && !/^https?:\/\/\S+$/.test(formatted)) return <RichAnswer value={value} />;
 	if (field.type === "url" || /^https?:\/\//.test(formatted)) {
 		return (
 			<a href={formatted} target="_blank" rel="noopener noreferrer" className="font-bold break-all">

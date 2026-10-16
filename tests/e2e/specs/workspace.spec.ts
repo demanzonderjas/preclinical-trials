@@ -37,8 +37,31 @@ test.describe("Researcher: workspace", () => {
 
 		await page.reload();
 		await workspace.goToFormStep("Animals");
-		await expect(page.getByLabel(/^Strain/)).toHaveValue("Dutch Landrace");
+		await expect(page.getByLabel(/^Strain/)).toHaveText("Dutch Landrace");
 		await expect(page.getByRole("status").filter({ hasText: "All changes saved automatically" })).toBeVisible();
+	});
+
+	test("text pasted from Word or a PDF keeps its lists and bold, and loses the styling", async ({ workspace, page, app }) => {
+		await workspace.openEditForm(protocols.draft);
+		await workspace.goToFormStep("Design & hypothesis");
+
+		await workspace.pasteInto("Hypothesis / Research question", { html: wordClipboard, text: "Hypothesis: dapagliflozin limits remodelling\n·  in mice\n·  in rats" });
+		await workspace.saveChanges();
+		const hypothesis = page.getByLabel(/^Hypothesis \/ Research question/);
+		await expect(hypothesis.getByRole("listitem")).toHaveText(["in mice", "in rats"]);
+		await expect(hypothesis.locator("strong")).toHaveText("Hypothesis");
+
+		await workspace.pasteInto("Primary readout parameter", { text: "Infarct size measured with\nTTC staining\n\n- troponin I\n- ejection fraction" });
+		await workspace.saveChanges();
+
+		const { details } = await app.protocol(protocols.draft);
+		expect(details.hypothesis).toBe("<p><strong>Hypothesis</strong>: dapagliflozin limits remodelling</p><ul><li><p>in mice</p></li><li><p>in rats</p></li></ul>");
+		expect(details.primary_readout_parameter).toBe("<p>Infarct size measured with<br>TTC staining</p><ul><li><p>troponin I</p></li><li><p>ejection fraction</p></li></ul>");
+
+		// Readers see the same structure.
+		const { id } = await app.protocol(protocols.draft);
+		await page.goto(`/database/view-protocol/${id}`);
+		await expect(page.getByRole("listitem").filter({ hasText: "ejection fraction" })).toBeVisible();
 	});
 
 	test("a new protocol cannot be submitted until every required question is answered", async ({ workspace, page }) => {
@@ -75,3 +98,10 @@ test.describe("Researcher: workspace", () => {
 		expect(embargoed.linked).toEqual([(await app.protocol(protocols.published)).id]);
 	});
 });
+
+/** What Word puts on the clipboard for a bold word and a two-item bulleted list. */
+const wordClipboard = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta name=Generator content="Microsoft Word 15"><style><!-- p.MsoNormal {margin:0cm; font-family:Calibri} --></style></head><body lang=EN-GB>
+<!--StartFragment--><p class=MsoNormal><b><span style='font-family:"Calibri",sans-serif'>Hypothesis</span></b><span style='font-family:"Calibri",sans-serif'>: dapagliflozin limits remodelling<o:p></o:p></span></p>
+<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><![endif]><span style='color:#C00000'>in mice</span><o:p></o:p></p>
+<p class=MsoListParagraphCxSpLast style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><![endif]>in rats<o:p></o:p></p>
+<!--EndFragment--></body></html>`;
