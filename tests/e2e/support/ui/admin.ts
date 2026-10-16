@@ -49,34 +49,38 @@ export class AdminUI {
 		await expect(this.page).toHaveURL(/\/admin\/protocols$/);
 	}
 
+	/** From the review queue's "Extend embargo" to the A2 embargo page. */
 	async extendEmbargo(title: string, newEndDate: string) {
-		await this.openReview(title);
-		await this.page.getByRole("button", { name: /extend embargo/i }).click();
-		const modal = this.page.locator(".Modal");
-		await modal.locator("input[type=date]").fill(newEndDate);
-		await modal.locator("form").getByRole("button").last().click();
+		const { id } = await this.app.protocol(title);
+		await this.page.goto(`/admin/embargoes?protocol=${id}#extend`);
+		const card = this.page.locator("#extend");
+		await card.getByLabel("New embargo end date").fill(newEndDate);
+		await card.getByRole("button", { name: "Extend embargo" }).click();
+		await expect(this.page.getByText(/now ends on/)).toBeVisible();
 	}
 
 	async openEmbargoExtensions() {
-		await this.page.goto("/admin/embargo-extensions");
+		await this.page.goto("/admin/embargoes");
+		await expect(this.page.getByRole("heading", { level: 1, name: "Embargo extensions" })).toBeVisible();
 	}
 
 	extensionRow(title: string) {
-		return this.page.locator("table tbody tr").filter({ hasText: title });
+		return this.page.getByRole("article").filter({ hasText: title });
 	}
 
 	async approveExtension(title: string) {
 		await this.openEmbargoExtensions();
-		await this.extensionRow(title).getByRole("button", { name: /^approve$/i }).click();
-		await confirmModal(this.page);
+		await this.extensionRow(title).getByRole("button", { name: "Approve" }).click();
+		await expect(this.page.getByText(/Approved\. The embargo now ends on/)).toBeVisible();
 	}
 
 	async rejectExtension(title: string, message: string) {
 		await this.openEmbargoExtensions();
-		await this.extensionRow(title).getByRole("button", { name: /^reject$/i }).click();
-		const modal = this.page.locator(".Modal");
-		await fillModalMessage(modal, message);
-		await modal.locator("form").getByRole("button").last().click();
+		const card = this.extensionRow(title);
+		await card.getByRole("button", { name: "Reject", exact: true }).click();
+		await card.getByPlaceholder("Message to the researcher").fill(message);
+		await card.getByRole("button", { name: "Send and reject" }).click();
+		await expect(this.page.getByText(/Rejected\. The researcher gets your message/)).toBeVisible();
 	}
 
 	async openUsers() {

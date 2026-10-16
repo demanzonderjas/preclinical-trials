@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Mail\EmbargoExtensionApproved;
-use App\Mail\EmbargoExtensionRejected;
 use App\Mail\EmbargoExtensionRequested;
 use App\Models\ActivityLog;
-use App\Models\AdminAction;
 use App\Models\EmbargoEndDate;
+use App\Services\EmbargoDecisions;
 use App\Models\EmbargoExtension;
 use App\Models\Protocol;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -50,79 +47,33 @@ class EmbargoController extends Controller
 		return response()->json(["embargo_extensions" => $extensions->toArray()]);
 	}
 
-	public function approve(EmbargoExtension $embargo_extension)
+	public function approve(EmbargoExtension $embargo_extension, EmbargoDecisions $decisions)
 	{
-		$embargo_extension->status = "approved";
-		$embargo_extension->save();
-
-		$protocol = $embargo_extension->protocol;
-
-		$this->addAdminAction($protocol, "approve_embargo_extension", "");
-
-		$currentDate = EmbargoEndDate::where('protocol_id', $protocol->id)->firstOrFail();
-		$newDate = Carbon::create($currentDate->date)->addYear()->toDateString();
-		$currentDate->date = $newDate;
-		$currentDate->mail_status = NULL;
-		$currentDate->save();
-
-		ActivityLog::record($protocol, 'embargo_extended', ['until' => $newDate]);
-
-		Mail::to($protocol->user)->send(new EmbargoExtensionApproved($protocol, $currentDate));
+		$decisions->approve($embargo_extension);
 		return response()->json(["success" => true]);
 	}
 
-	public function reject(EmbargoExtension $embargo_extension, Request $request)
+	public function reject(EmbargoExtension $embargo_extension, Request $request, EmbargoDecisions $decisions)
 	{
-		$embargo_extension->status = "rejected";
-		$embargo_extension->save();
-
-		$protocol = $embargo_extension->protocol;
-
-		$message = (string) $request->input('message', '');
-		$this->addAdminAction($protocol, "reject_embargo_extension", $message);
-		ActivityLog::record($protocol, 'extension_rejected', [], $request->user());
-
-		Mail::to($protocol->user)->send(new EmbargoExtensionRejected($protocol, $message));
+		$decisions->reject($embargo_extension, (string) $request->input('message', ''), $request->user());
 
 		return response()->json(["success" => true]);
 	}
 
-	public function extendAsAdmin(Request $request)
+	public function extendAsAdmin(Request $request, EmbargoDecisions $decisions)
 	{
 		$request->validate([
 			"embargo_end_date" => "required|date|after:today"
 		]);
 
 		$protocol = Protocol::findOrFail($request->protocol_id);
-		$embargoEndDate = EmbargoEndDate::where(['protocol_id' => $protocol->id, 'is_active' => true])->first();
+		$embargoEndDate = $decisions->extendTo($protocol, $request->embargo_end_date, $request->user());
 
 		if (!$embargoEndDate) {
 			return response()->json(["errors" => ["embargo_end_date" => "no_active_embargo"]], 422);
 		}
 
-		$newDate = Carbon::parse($request->embargo_end_date)->toDateString();
-		$embargoEndDate->date = $newDate;
-		$embargoEndDate->mail_status = NULL;
-		$embargoEndDate->save();
-
-		$protocol->embargoExtensions()
-			->where('status', 'awaiting_approval')
-			->update(['status' => 'approved']);
-
-		$this->addAdminAction($protocol, "extend_embargo", "Embargo extended until " . $newDate);
-		ActivityLog::record($protocol, 'embargo_extended', ['until' => $newDate], $request->user());
-
-		Mail::to($protocol->user)->send(new EmbargoExtensionApproved($protocol, $embargoEndDate));
-
 		return response()->json(["success" => true, "embargo_end_date" => $embargoEndDate]);
 	}
 
-	public function addAdminAction(Protocol $protocol, $action, $message)
-	{
-		$adminAction = new AdminAction();
-		$adminAction->protocol_id = $protocol->id;
-		$adminAction->action = $action;
-		$adminAction->message = $message;
-		$adminAction->save();
-	}
 }

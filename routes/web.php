@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pages\AboutController;
+use App\Http\Controllers\Pages\Admin\EmbargoesController as AdminEmbargoesController;
 use App\Http\Controllers\Pages\Admin\ProtocolsController as AdminProtocolsController;
 use App\Http\Controllers\Pages\ContactController;
 use App\Http\Controllers\Pages\ContentPageController;
@@ -78,6 +79,11 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(functio
         Route::post('/decision', [AdminProtocolsController::class, 'decide'])->name('admin.decision');
         Route::post('/messages', [AdminProtocolsController::class, 'message'])->name('admin.protocol.message');
     });
+    Route::get('/embargoes', [AdminEmbargoesController::class, 'index'])->name('admin.embargoes');
+    Route::post('/embargo-extensions/{extension}/approve', [AdminEmbargoesController::class, 'approve'])->whereNumber('extension')->name('admin.embargoes.approve');
+    Route::post('/embargo-extensions/{extension}/reject', [AdminEmbargoesController::class, 'reject'])->whereNumber('extension')->name('admin.embargoes.reject');
+    Route::post('/protocols/{id}/embargo', [AdminEmbargoesController::class, 'extend'])->whereNumber('id')->name('admin.embargoes.extend');
+    Route::redirect('/embargo-extensions', '/admin/embargoes');
     Route::put('/feedback-points/{point}', [AdminProtocolsController::class, 'updatePoint'])->whereNumber('point')->name('admin.points.update');
     Route::delete('/feedback-points/{point}', [AdminProtocolsController::class, 'destroyPoint'])->whereNumber('point')->name('admin.points.destroy');
 });

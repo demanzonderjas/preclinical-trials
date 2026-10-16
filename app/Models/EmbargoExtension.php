@@ -9,7 +9,7 @@ class EmbargoExtension extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["reason"];
+    protected $fillable = ["reason", "status"];
 
     public function protocol()
     {
