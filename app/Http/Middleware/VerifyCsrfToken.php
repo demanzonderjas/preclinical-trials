@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        // Test helper routes, only registered when APP_ENV=e2e.
+        '__e2e/*',
     ];
 }
