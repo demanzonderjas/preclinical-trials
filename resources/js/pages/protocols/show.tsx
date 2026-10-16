@@ -170,11 +170,11 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 						].filter(item => item !== null)}
 					/>
 					<div className="mt-8 flex flex-col gap-3 sm:flex-row">
-						<Button size="lg" icon={<Download size={18} strokeWidth={2.2} aria-hidden="true" />} onClick={() => window.print()}>
+						<ButtonAnchor href={routes.protocolPdf(protocol.id)} size="lg" icon={<Download size={18} strokeWidth={2.2} aria-hidden="true" />}>
 							Download as PDF
-						</Button>
+						</ButtonAnchor>
 						{protocol.is_owner ? (
-							<ButtonAnchor href={`/dashboard/edit-protocol/${protocol.id}`} variant="secondary" size="lg" icon={<Pencil size={18} strokeWidth={2.2} aria-hidden="true" />}>
+							<ButtonAnchor href={routes.editProtocol(protocol.id)} variant="secondary" size="lg" icon={<Pencil size={18} strokeWidth={2.2} aria-hidden="true" />}>
 								{protocol.status === "published" ? "Create amendment" : "Edit protocol"}
 							</ButtonAnchor>
 						) : (

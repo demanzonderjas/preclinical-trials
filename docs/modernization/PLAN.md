@@ -1,10 +1,11 @@
 # PCT modernization plan
 
-Status: phases 0–3 done · branch `modernization` · last updated 16 Oct 2026
+Status: phases 0–3 done, phase 4 in progress · branch `modernization` · last updated 16 Oct 2026
 
 - **Phase 0 (16 Oct):** characterization tests and end-to-end infrastructure. See [TESTING.md](TESTING.md).
 - **Phase 1 (16 Oct):** Laravel 13.37 on PHP 8.4, with the security and bug fixes from section 7. The old SPA runs unchanged on it and can be deployed now; see [DEPLOY.md](DEPLOY.md).
 - **Phase 3 (16 Oct):** the public site in A2 — home, database search, protocol page, about, help, news, contact, content pages, log in, create account and password reset — with 3b, F7, F12 (report an issue) and F13. Pages not yet rebuilt (workspace and admin) still come from the legacy SPA.
+- **Phase 4 (in progress):** `ProtocolWorkflow` with review rounds and per-field feedback points (F1 data model), the activity log (F6), conversations with read state and archive (F2/F10 data model), the A2 dashboard, and PDFs of protocols and registration certificates (F4). Feedback threads are conversations (`channels.kind = feedback`), so they show in Messages, as A2 draws them.
 - **Phase 2 (16 Oct):** Inertia 3, React 19, Tailwind 4 and Vite with SSR. The A2 tokens, component kit and four layouts are previewed at `/design-system`. The legacy SPA moved to `resources/legacy` and is still built and served; see [FRONTEND.md](FRONTEND.md).
 
 ## 1. What we are building

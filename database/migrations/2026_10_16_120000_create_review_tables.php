@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * F1: per-field reviewer feedback. A protocol gets a review round per submission; the PCT
- * team attaches feedback points to fields, each with its own thread.
+ * team attaches feedback points to fields. Each point's thread is a channel of kind
+ * "feedback", so it shows in Messages with the other conversations.
  */
 return new class extends Migration
 {
@@ -41,19 +42,10 @@ return new class extends Migration
             $table->index(['protocol_id', 'status']);
         });
 
-        Schema::create('feedback_messages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('feedback_point_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->text('body');
-            $table->timestamp('read_at')->nullable();
-            $table->timestamps();
-        });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('feedback_messages');
         Schema::dropIfExists('feedback_points');
         Schema::dropIfExists('review_rounds');
     }

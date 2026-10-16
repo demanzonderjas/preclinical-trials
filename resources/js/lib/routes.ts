@@ -18,6 +18,14 @@ export const routes = {
 	messages: "/dashboard/messages",
 	profile: "/dashboard/profile",
 	newProtocol: "/dashboard/add-protocol",
+	importProtocol: "/dashboard/add-protocol#import",
+	protocol: (id: number) => `/database/view-protocol/${id}`,
+	protocolPdf: (id: number) => `/database/view-protocol/${id}/pdf`,
+	editProtocol: (id: number) => `/dashboard/edit-protocol/${id}`,
+	feedback: (id: number) => `/dashboard/protocols/${id}/feedback`,
+	extendEmbargo: (id: number) => `/dashboard/extend-embargo/${id}`,
+	certificate: (id: number) => `/dashboard/protocols/${id}/certificate.pdf`,
+	conversation: (id: number) => `/dashboard/messages/${id}`,
 	admin: {
 		protocols: "/admin/protocols",
 		embargoes: "/admin/embargo-extensions",
@@ -28,5 +36,6 @@ export const routes = {
 	terms: "/disclaimer",
 	privacy: "/disclaimer",
 	howToGuide: "/help",
-	bookAppointment: "/contact"
+	researcherFaq: "/help?for=researcher",
+	bookAppointment: "/contact?topic=registering"
 } as const;

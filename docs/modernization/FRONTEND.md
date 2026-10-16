@@ -25,6 +25,8 @@ resources/js/layouts/           PublicLayout, AuthLayout, WorkspaceLayout, Admin
 resources/js/components/ui/     The component kit (see /design-system)
 resources/js/components/site/   Headers and footers
 resources/js/lib/routes.ts      Every URL the layouts link to
+resources/js/lib/dates.ts       Date formatting in the PCT time zone (identical on server and browser)
+resources/js/data/protocol-schema.ts  The protocol fields; exported to resources/data/*.json for PHP
 ```
 
 ## Conventions
@@ -40,8 +42,9 @@ resources/js/lib/routes.ts      Every URL the layouts link to
   errors from Laravel validation into `error`.
 - **Mobile first.** Follow the responsive rules in PLAN.md §6. Tables use `DataTable`,
   which becomes cards below 768 px.
-- **Server-side rendering.** Public pages render on the server, so keep
-  `window`/`document` access inside effects.
+- **Server-side rendering.** Pages render on the server, so keep
+  `window`/`document` access inside effects and event handlers, and format dates with
+  `lib/dates.ts` (fixed time zone and month names) so both renders agree.
 - **Icons** come from `lucide-react`, at a stroke width of 2–2.4 to match the artboards.
 - **Fonts** are self-hosted through `@fontsource-variable/*`, with no requests to Google.
 

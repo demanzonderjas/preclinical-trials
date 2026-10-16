@@ -75,3 +75,11 @@ npm ci && npm run build                                   # A2 pages → public/
   with `php artisan inertia:stop-ssr`. If it is not running, pages fall back to
   client-side rendering, so nothing breaks; search engines just see less.
 - **Optional `.env`:** `INERTIA_SSR_ENABLED=false` switches SSR off completely.
+
+## From phase 4: PDFs
+
+- Protocol PDFs and registration certificates are made by dompdf (pure PHP, no system
+  packages). It caches font metrics in `storage/fonts`, which must be writable.
+- The PDFs read the protocol fields from `resources/data/protocol-schema.json`, exported
+  from `resources/js/data/protocol-schema.ts`. `npm run build` fails when the export is
+  stale; run `npm run export-schema` and commit the result.

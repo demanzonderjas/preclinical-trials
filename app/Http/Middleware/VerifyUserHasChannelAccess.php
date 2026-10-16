@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Models\Channel;
-use App\Models\Protocol;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -24,7 +23,7 @@ class VerifyUserHasChannelAccess
             return $next($request);
         }
 
-        if ($targetChannel->questioner->id !== $request->user()->id && $targetChannel->protocolOwner->id !== $request->user()->id) {
+        if (! $targetChannel->isParticipant($request->user())) {
             return abort(403, 'Not your channel.');
         }
 

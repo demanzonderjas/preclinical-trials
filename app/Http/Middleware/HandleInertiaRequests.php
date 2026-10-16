@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Inbox;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -37,6 +38,11 @@ class HandleInertiaRequests extends Middleware
                     'is_verified' => $user->is_verified,
                 ] : null,
             ],
+            // The counts on the workspace tabs.
+            'workspace' => fn () => $user ? [
+                'protocols' => $user->protocols()->count(),
+                'unread_messages' => Inbox::for($user)->unreadCount(),
+            ] : null,
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),

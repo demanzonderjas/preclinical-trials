@@ -11,6 +11,8 @@ export type AuthUser = {
 export type SharedProps = {
 	auth: { user: AuthUser | null };
 	flash: { success: string | null; error: string | null };
+	/** Counts on the workspace tabs, for logged-in users. */
+	workspace: { protocols: number; unread_messages: number } | null;
 };
 
 declare module "@inertiajs/core" {

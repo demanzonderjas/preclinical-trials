@@ -24,8 +24,9 @@ export class AuthUI {
 		await this.page.getByRole("button", { name: "Log in", exact: true }).click();
 	}
 
+	/** Logging in lands on the A2 dashboard. */
 	async expectLoggedIn() {
-		await expect(this.page.getByText("Logout", { exact: true })).toBeVisible();
+		await expect(this.page.getByRole("heading", { level: 1, name: /^Hi, / })).toBeVisible();
 	}
 
 	async expectLoginRejected() {
@@ -34,7 +35,8 @@ export class AuthUI {
 	}
 
 	async logout() {
-		await this.page.getByText("Logout", { exact: true }).click();
+		// "Log out" in the A2 workspace header, "Logout" on legacy pages.
+		await this.page.getByText(/^Log ?out$/).first().click();
 		await expect(this.page.getByRole("link", { name: "Log in" }).first()).toBeVisible();
 	}
 

@@ -39,7 +39,10 @@ class ChannelController extends Controller
 	public function mine(Request $request)
 	{
 		$userId = $request->user()->id;
-		$channels = Channel::where('protocol_owner_id', $userId)->orWhere('questioner_id', $userId)->get();
+		// The legacy inbox only knows questions between researchers.
+		$channels = Channel::where('kind', Channel::QUESTION)
+			->where(fn ($query) => $query->where('protocol_owner_id', $userId)->orWhere('questioner_id', $userId))
+			->get();
 		$channelsWithMessages = $channels->filter(function ($channel) {
 			return $channel->messages->count() > 0;
 		});

@@ -8,6 +8,9 @@ return [
 	"iles_token" => env("ILES_TOKEN"),
 	"external_api_key" => env("EXTERNAL_API_KEY"),
 
+	// Times are stored in UTC and shown in the PCT team's time zone (also in resources/js/lib/dates.ts).
+	"display_timezone" => "Europe/Amsterdam",
+
 	"valid_protocol_keys" => [
 		"title",
 		"short_title",

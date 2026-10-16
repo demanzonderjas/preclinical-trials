@@ -5,8 +5,9 @@
 	"description": "PreclinicalTrials.eu frontend: Inertia + React 19, built with Vite. The legacy SPA lives in resources/legacy.",
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc --noEmit && vite build && vite build --ssr",
-		"typecheck": "tsc --noEmit"
+		"build": "node scripts/export-protocol-schema.mjs --check && tsc --noEmit && vite build && vite build --ssr",
+		"typecheck": "tsc --noEmit",
+		"export-schema": "node scripts/export-protocol-schema.mjs"
 	},
 	"dependencies": {
 		"@fontsource-variable/manrope": "^5.3.0",

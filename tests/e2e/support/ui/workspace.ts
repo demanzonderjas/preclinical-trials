@@ -9,8 +9,15 @@ export type FormSection = (typeof FORM_SECTIONS)[number];
 export class WorkspaceUI {
 	constructor(private readonly page: Page, private readonly app: App) {}
 
+	/** A2 dashboard. */
 	async openDashboard() {
 		await this.page.goto("/dashboard");
+		await expect(this.page.getByRole("heading", { level: 1, name: /^Hi, / })).toBeVisible();
+	}
+
+	/** An item under "Needs your action" on the dashboard. */
+	dashboardAction(title: string) {
+		return this.page.locator("section[aria-labelledby=actions-title] li").filter({ hasText: title });
 	}
 
 	async openMyProtocols() {

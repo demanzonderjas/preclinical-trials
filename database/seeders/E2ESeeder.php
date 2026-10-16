@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\ActivityLog;
 use App\Models\AdminAction;
 use App\Models\Ambassador;
 use App\Models\Channel;
 use App\Models\EmbargoEndDate;
 use App\Models\EmbargoExtension;
+use App\Models\FeedbackPoint;
 use App\Models\Message;
 use App\Models\NewsItem;
 use App\Models\Protocol;
@@ -49,6 +51,27 @@ class E2ESeeder extends Seeder
 
 		$rejected = $this->protocol($researcher, 'rejected', 'E2E Rejected: dapagliflozin after ischemia-reperfusion in mice');
 		$this->adminAction($rejected, 'reject', 'Please add the sample size calculation.');
+		// F1: returned with four points, three of them addressed since.
+		$round = $rejected->reviewRounds()->create([
+			'number' => 1,
+			'submitted_at' => Carbon::now()->subDays(20),
+			'decision' => 'returned',
+			'decided_at' => Carbon::now()->subDays(14),
+			'decided_by' => $admin->id,
+			'message' => 'Please add the sample size calculation.',
+		]);
+		$points = [];
+		foreach ([
+			['title', 'Please mention the species and model in the title.', FeedbackPoint::ADDRESSED],
+			['sample_size_calculation', 'Please add the sample size calculation, or explain why it was not performed.', FeedbackPoint::ADDRESSED],
+			['study_arms', 'Group sizes do not add up to the sum of animals.', FeedbackPoint::ADDRESSED],
+			['investigators_blinded_assessment', 'Please clarify how the outcome assessors are blinded to group allocation.', FeedbackPoint::OPEN],
+		] as [$key, $body, $status]) {
+			$points[$key] = $round->points()->create(['protocol_id' => $rejected->id, 'field_key' => $key, 'body' => $body, 'status' => $status, 'created_by' => $admin->id, 'addressed_at' => $status === FeedbackPoint::ADDRESSED ? Carbon::now()->subDays(10) : null]);
+		}
+		$this->activity($rejected, 'submitted', [], $researcher, 20);
+		$this->activity($rejected, 'returned', ['points' => 4], $admin, 14);
+		$this->activity($rejected, 'addressed', ['fields' => ['title', 'sample_size_calculation', 'study_arms']], $researcher, 10);
 
 		$published = $this->protocol($researcher, 'published', 'E2E Published: sodium bicarbonate in asphyxiated newborn piglets', [
 			'species' => 'pig',
@@ -87,8 +110,24 @@ class E2ESeeder extends Seeder
 			'protocol_owner_id' => $researcher->id,
 			'questioner_id' => $colleague->id,
 		]);
-		$channel->messages()->save(new Message(['user_id' => $colleague->id, 'text' => 'Which primary outcome did you register?']));
-		$channel->messages()->save(new Message(['user_id' => $researcher->id, 'text' => 'Time to return of spontaneous circulation.']));
+		$this->message($channel, $colleague, 'Which primary outcome did you register?', 50);
+		$this->message($channel, $researcher, 'Time to return of spontaneous circulation.', 49);
+		$channel->readers()->attach($researcher->id, ['last_read_at' => Carbon::now()->subHours(49)]);
+		$this->message($channel, $colleague, 'Thanks! Could we contact you again once the study is published?', 2); // unread
+
+		// F2: the PCT team, and a thread on a feedback point.
+		$team = Channel::create(['kind' => Channel::TEAM, 'subject' => 'Welcome to preclinicaltrials.eu', 'protocol_owner_id' => $researcher->id]);
+		$this->message($team, $admin, 'Happy to help you import your APAFiS file or answer questions about the form.', 24 * 60);
+		$team->readers()->attach($researcher->id, ['last_read_at' => Carbon::now()->subDays(59)]);
+
+		$thread = Channel::create(['kind' => Channel::FEEDBACK, 'protocol_id' => $rejected->id, 'feedback_point_id' => $points['investigators_blinded_assessment']->id, 'protocol_owner_id' => $researcher->id]);
+		$this->message($thread, $researcher, 'Our echo analysis is done by a technician in another lab. Does that count as blinded assessment?', 30);
+		$this->message($thread, $admin, 'Yes, if they do not know the group allocation. Please describe that set-up in the field.', 20); // unread
+		$thread->readers()->attach($researcher->id, ['last_read_at' => Carbon::now()->subHours(30)]);
+
+		$this->activity($published, 'published', ['pct_id' => $published->pct_id], $admin, 200);
+		$this->activity($published, 'amended', ['fields' => ['study_status']], $researcher, 120);
+		$this->activity($embargoed, 'published', ['pct_id' => $embargoed->pct_id], $admin, 200);
 
 		foreach ([
 			['E2E News: presentation at EUSAAT', 'published', '2024-09-20'],
@@ -156,6 +195,20 @@ class E2ESeeder extends Seeder
 		$protocol->addDetailsToDatabase(array_merge($this->completeDetails($owner, $title), $overrides));
 
 		return $protocol;
+	}
+
+	private function message(Channel $channel, User $author, string $text, int $hoursAgo): void
+	{
+		$message = new Message(['user_id' => $author->id, 'text' => $text]);
+		$message->created_at = $message->updated_at = Carbon::now()->subHours($hoursAgo);
+		$channel->messages()->save($message);
+	}
+
+	private function activity(Protocol $protocol, string $type, array $data, User $actor, int $daysAgo): void
+	{
+		$log = ActivityLog::record($protocol, $type, $data, $actor);
+		$log->created_at = Carbon::now()->subDays($daysAgo);
+		$log->save();
 	}
 
 	private function adminAction(Protocol $protocol, string $action, string $message = ''): void

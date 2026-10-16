@@ -8,6 +8,8 @@ use App\Http\Controllers\Pages\HelpController;
 use App\Http\Controllers\Pages\HomeController;
 use App\Http\Controllers\Pages\NewsController;
 use App\Http\Controllers\Pages\ProtocolPageController;
+use App\Http\Controllers\Pages\ProtocolPdfController;
+use App\Http\Controllers\Pages\Workspace\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -57,6 +59,7 @@ Route::post('/contact', [ContactController::class, 'store'])->middleware('thrott
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/database/view-protocol/{id}', [ProtocolPageController::class, 'show'])->whereNumber('id')->name('protocols.show');
     Route::post('/database/view-protocol/{id}/ask', [ProtocolPageController::class, 'ask'])->whereNumber('id')->name('protocols.ask');
+    Route::get('/database/view-protocol/{id}/pdf', [ProtocolPdfController::class, 'protocol'])->whereNumber('id')->middleware('throttle:30,1')->name('protocols.pdf');
 });
 
 Route::get('/admin{any}', function () {
@@ -65,6 +68,12 @@ Route::get('/admin{any}', function () {
 
 Route::fallback(function () {
     return view('index');
+});
+
+// The researcher workspace in the A2 design. Pages not rebuilt yet fall through to the legacy SPA.
+Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
+    Route::get('/', DashboardController::class)->name('workspace.dashboard');
+    Route::get('/protocols/{id}/certificate.pdf', [ProtocolPdfController::class, 'certificate'])->whereNumber('id')->middleware('throttle:30,1')->name('workspace.certificate');
 });
 
 Route::get('/dashboard{any}', function () {

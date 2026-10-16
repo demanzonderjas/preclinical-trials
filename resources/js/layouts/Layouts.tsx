@@ -79,7 +79,9 @@ export function AuthLayout({ title, description, children }: LayoutProps) {
 export type WorkspaceCounts = { protocols?: number; unreadMessages?: number };
 
 /** The researcher's workspace: top bar with search and account tabs. */
-export function WorkspaceLayout({ title, children, counts = {}, tint = true, slimFooter = false }: LayoutProps & { counts?: WorkspaceCounts; tint?: boolean; slimFooter?: boolean }) {
+export function WorkspaceLayout({ title, children, counts: override, tint = true, slimFooter = false }: LayoutProps & { counts?: WorkspaceCounts; tint?: boolean; slimFooter?: boolean }) {
+	const { workspace } = usePage().props;
+	const counts: WorkspaceCounts = override ?? { protocols: workspace?.protocols, unreadMessages: workspace?.unread_messages || undefined };
 	const tabs: AreaTab[] = [
 		{ label: "Dashboard", href: routes.dashboard },
 		{ label: "My protocols", href: routes.myProtocols, count: counts.protocols },

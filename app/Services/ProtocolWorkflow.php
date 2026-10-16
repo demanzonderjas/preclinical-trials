@@ -113,10 +113,18 @@ class ProtocolWorkflow
             return 0;
         }
 
-        return $protocol->feedbackPoints()
+        $points = $protocol->feedbackPoints()
             ->where('status', FeedbackPoint::OPEN)
             ->whereIn('field_key', $changedKeys)
-            ->update(['status' => FeedbackPoint::ADDRESSED, 'addressed_at' => now()]);
+            ->get();
+        if ($points->isEmpty()) {
+            return 0;
+        }
+
+        FeedbackPoint::whereKey($points->modelKeys())->update(['status' => FeedbackPoint::ADDRESSED, 'addressed_at' => now()]);
+        ActivityLog::record($protocol, 'addressed', ['fields' => $points->pluck('field_key')->unique()->values()->all()]);
+
+        return $points->count();
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * A reviewer's point about one field of a protocol (F1). Open until the researcher changes
@@ -32,8 +32,9 @@ class FeedbackPoint extends Model
         return $this->belongsTo(Protocol::class);
     }
 
-    public function messages(): HasMany
+    /** The thread about this point, once someone wrote in it. */
+    public function channel(): HasOne
     {
-        return $this->hasMany(FeedbackMessage::class)->orderBy('id');
+        return $this->hasOne(Channel::class);
     }
 }
