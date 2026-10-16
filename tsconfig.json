@@ -1,18 +1,16 @@
 {
 	"compilerOptions": {
-		"target": "ES5",
-		"moduleResolution": "node",
-		"allowJs": true,
-		"sourceMap": false,
-		"jsx": "react",
-		"strict": false,
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"jsx": "react-jsx",
+		"strict": true,
+		"noEmit": true,
 		"isolatedModules": true,
-		"esModuleInterop": true,
-		"noImplicitAny": false,
-		"experimentalDecorators": true,
+		"skipLibCheck": true,
 		"resolveJsonModule": true,
-		"downlevelIteration": true
+		"types": ["vite/client", "node"],
+		"paths": { "@/*": ["./resources/js/*"] }
 	},
-	"include": ["resources/js"],
-	"compileOnSave": false
+	"include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "vite.config.ts"]
 }

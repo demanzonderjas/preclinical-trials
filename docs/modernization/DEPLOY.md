@@ -38,6 +38,7 @@ tables are needed. The `password_resets` table keeps its name (configured in `co
 
    `migrate` reports nothing to migrate, since there are no schema changes in phase 1.
 3. Build the frontend as before (`npm run production`, Laravel Mix). Phase 1 does not touch it.
+   From phase 2 on there are two builds, described in the next section.
 4. Smoke test:
    - log in and log out;
    - open a protocol;
@@ -60,3 +61,17 @@ Bug and security fixes; the rest of the behaviour is unchanged (see the tests in
   - rejecting an embargo extension without a message no longer errors;
   - the admin password reset returns `{"success": true}`;
   - deleting a news image can no longer touch files outside `public/images/news`.
+
+## From phase 2: two frontend builds and an SSR process
+
+```bash
+npm ci && npm run build                                   # A2 pages → public/build, bootstrap/ssr
+(cd resources/legacy && npm ci && npm run production)     # legacy SPA → public/js, public/css
+```
+
+- **Node:** 22 LTS or newer. The legacy build sets `--openssl-legacy-provider` itself.
+- **Server-side rendering** for the public pages: keep `php artisan inertia:start-ssr`
+  running under a process manager (supervisor or systemd), and restart it after every deploy
+  with `php artisan inertia:stop-ssr`. If it is not running, pages fall back to
+  client-side rendering, so nothing breaks; search engines just see less.
+- **Optional `.env`:** `INERTIA_SSR_ENABLED=false` switches SSR off completely.

@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@source "../views";
+@source "../js";
+
+/*
+ * A2 · Clear Lens, muted. Tokens from the brand board (docs/modernization/PLAN.md §5).
+ * The default Tailwind palette is switched off so only brand colours can be used.
+ */
+@theme {
+	--color-*: initial;
+	--color-white: #ffffff;
+	--color-black: #000000;
+	--color-transparent: transparent;
+	--color-current: currentColor;
+
+	/* Text and actions */
+	--color-ink: #323742;
+	--color-ink-muted: #585f6f;
+	--color-ink-subtle: #798399;
+	--color-line: #d2d6dd;
+	--color-line-strong: #a5acbb;
+
+	/* Grounds */
+	--color-mist: #f3f7f8;
+	--color-teal-50: #e6f0f1;
+	--color-teal-200: #b5d1d6;
+	--color-teal-300: #83b2ba;
+	--color-teal-500: #558f99;
+	--color-teal-700: #395f66;
+
+	/* Links, focus and data */
+	--color-link: #2c6faa;
+	--color-link-hover: #163755;
+	--color-blue-100: #bdd7ee;
+	--color-blue-400: #68a4d8;
+
+	/* Warm accent */
+	--color-peach-100: #ffe2d7;
+	--color-peach-300: #ffa888;
+	--color-rust: #9c2a00;
+
+	--font-sans: "Source Sans 3 Variable", "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+	--font-display: "Manrope Variable", "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+	--text-2xs: 12.5px;
+	--text-xs: 13.5px;
+	--text-sm: 14.5px;
+	--text-base: 16px;
+	--text-md: 17px;
+	--text-lg: 19px;
+	--text-xl: 22px;
+	--text-2xl: 28px;
+	--text-3xl: 34px;
+	--text-4xl: 44px;
+	--text-5xl: 56px;
+	--text-6xl: 72px;
+
+	--radius-sm: 6px;
+	--radius-md: 10px;
+	--radius-input: 14px;
+	--radius-card: 20px;
+	--radius-panel: 28px;
+
+	--shadow-raised: 0 16px 36px -20px rgb(50 55 66 / 0.35);
+	--shadow-card-hover: 0 2px 4px rgb(50 55 66 / 0.05), 0 20px 40px -18px rgb(50 55 66 / 0.22);
+
+	--tracking-eyebrow: 0.14em;
+	--tracking-id: 0.04em;
+	--tracking-tight-display: -0.035em;
+
+	--animate-breath: pct-breath 2.4s ease-in-out infinite;
+	--animate-scan: pct-scan 2.4s ease-in-out infinite;
+
+	@keyframes pct-breath {
+		0%,
+		100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.06);
+		}
+	}
+
+	@keyframes pct-scan {
+		0%,
+		100% {
+			transform: scaleX(0.55);
+		}
+		50% {
+			transform: scaleX(1);
+		}
+	}
+}
+
+@layer base {
+	html {
+		-webkit-text-size-adjust: 100%;
+	}
+
+	body {
+		@apply bg-white font-sans text-md text-ink antialiased;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		@apply font-display text-ink;
+		text-wrap: pretty;
+	}
+
+	h1,
+	h2 {
+		text-wrap: balance;
+	}
+
+	a {
+		@apply text-link;
+	}
+
+	a:hover {
+		@apply text-link-hover;
+	}
+
+	:focus-visible {
+		outline: 3px solid var(--color-link);
+		outline-offset: 2px;
+	}
+
+	::selection {
+		background: var(--color-blue-100);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+}
+
+@utility container-page {
+	width: 100%;
+	max-width: 1344px;
+	margin-inline: auto;
+	padding-inline: 16px;
+
+	@media (width >= 48rem) {
+		padding-inline: 32px;
+	}
+
+	@media (width >= 64rem) {
+		padding-inline: 48px;
+	}
+}
+
+@utility eyebrow {
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 13px;
+	letter-spacing: var(--tracking-eyebrow);
+	text-transform: uppercase;
+	color: var(--color-ink-muted);
+}
+
+@utility pct-id {
+	font-family: var(--font-display);
+	font-weight: 700;
+	letter-spacing: var(--tracking-id);
+	font-variant-numeric: tabular-nums;
+}

@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 | these routes only decide who may load which part of it.
 |
 */
+
+// The A2 design system on one page. Outside production, or for admins.
+Route::get('/design-system', function (Request $request) {
+    abort_unless(! app()->isProduction() || $request->user()?->is_admin, 404);
+
+    return Inertia::render('design-system', [
+        'layout' => in_array($request->query('layout'), ['public', 'auth', 'workspace', 'admin'], true) ? $request->query('layout') : 'public',
+    ]);
+})->name('design-system');
 
 Route::get('/', function () {
     return view('index');

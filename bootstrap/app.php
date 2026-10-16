@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckIfUserIsAdmin;
 use App\Http\Middleware\EnsureUserIsOwner;
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\VerifyExternalApiKey;
 use App\Http\Middleware\VerifyILESToken;
 use App\Http\Middleware\VerifyUserHasChannelAccess;
@@ -18,7 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // The React SPA authenticates API calls with the session cookie (Sanctum).
+        // Pages built in the A2 design are Inertia responses.
+        $middleware->web(append: [HandleInertiaRequests::class]);
+
+        // The legacy SPA authenticates API calls with the session cookie (Sanctum).
         $middleware->statefulApi();
         $middleware->throttleApi();
 

@@ -1,9 +1,10 @@
 # PCT modernization plan
 
-Status: phase 0 and phase 1 done · branch `modernization` · last updated 16 Oct 2026
+Status: phases 0–2 done · branch `modernization` · last updated 16 Oct 2026
 
 - **Phase 0 (16 Oct):** characterization tests and end-to-end infrastructure. See [TESTING.md](TESTING.md).
 - **Phase 1 (16 Oct):** Laravel 13.37 on PHP 8.4, with the security and bug fixes from section 7. The old SPA runs unchanged on it and can be deployed now; see [DEPLOY.md](DEPLOY.md).
+- **Phase 2 (16 Oct):** Inertia 3, React 19, Tailwind 4 and Vite with SSR. The A2 tokens, component kit and four layouts are previewed at `/design-system`. The legacy SPA moved to `resources/legacy` and is still built and served; see [FRONTEND.md](FRONTEND.md).
 
 ## 1. What we are building
 
