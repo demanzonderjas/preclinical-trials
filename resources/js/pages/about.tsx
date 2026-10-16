@@ -364,11 +364,15 @@ function Ambassadors({ ambassadors }: { ambassadors: Ambassador[] }) {
 				</div>
 				<div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-end">
 					<div className="max-md:hidden">
-						<AmbassadorMap ambassadors={ambassadors} selected={selected} onSelect={setSelected} />
+						<AmbassadorMap ambassadors={ambassadors} selected={selected} onSelect={setSelected} onClear={() => setSelected(null)} />
 						<p className="mt-3 max-w-md text-[15.5px] text-ink-muted">Select a pin to meet the ambassador. The lens follows your choice, so cities that sit close together, as in Europe, are easy to tell apart.</p>
 					</div>
 					<div aria-live="polite" className="max-md:hidden">
-						{selected && <AmbassadorCard a={selected} />}
+						{selected ? (
+							<AmbassadorCard a={selected} />
+						) : (
+							<p className="rounded-card border-[1.5px] border-dashed border-line-strong px-5.5 py-6 text-[15.5px] text-ink-muted">Select a pin on the map, or an ambassador below, to meet them.</p>
+						)}
 					</div>
 					<p className="text-[15.5px] text-ink-muted md:hidden">Our ambassadors are listed below; open one to meet them.</p>
 				</div>

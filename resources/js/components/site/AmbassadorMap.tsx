@@ -1,5 +1,5 @@
 import { Mail, MapPin, Search } from "lucide-react";
-import { useId } from "react";
+import { useId, useRef } from "react";
 import world from "@/data/world-dots.json";
 import { ButtonAnchor } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
@@ -40,7 +40,7 @@ const ZOOM = 2.2;
 const MOTION = "motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]";
 const px = (x: number, y: number) => `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
 
-export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors: Ambassador[]; selected: Ambassador | null; onSelect: (a: Ambassador) => void }) {
+export function AmbassadorMap({ ambassadors, selected, onSelect, onClear }: { ambassadors: Ambassador[]; selected: Ambassador | null; onSelect: (a: Ambassador) => void; onClear: () => void }) {
 	const clipId = useId();
 	const european = ambassadors.filter(inEurope);
 	const elsewhere = ambassadors.filter(a => !inEurope(a));
@@ -48,7 +48,11 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 
 	// The lens looks at the selected ambassador (or Europe), and sits on it unless that
 	// would push it off the map.
-	const focus = selected ? project(selected.lng, selected.lat) : project(10, 51);
+	// Without a selection the lens fades out where it last was.
+	const last = useRef<Ambassador | null>(selected);
+	if (selected) last.current = selected;
+	const shown = selected ?? last.current;
+	const focus = shown ? project(shown.lng, shown.lat) : project(10, 51);
 	const centre = [Math.min(W - LENS_R - 10, Math.max(LENS_R + 10, focus[0])), Math.min(VIEW_H - LENS_R - 30, Math.max(LENS_R + 10, focus[1]))] as const;
 
 	// Pins in the lens, magnified around the focus: the selected city sits in the middle and
@@ -60,14 +64,22 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 				return { a, xy: [(x - focus[0]) * ZOOM, (y - focus[1]) * ZOOM] as const };
 			}),
 			30,
-			ambassadors.findIndex(a => a.id === selected?.id)
+			ambassadors.findIndex(a => a.id === shown?.id)
 		),
 		LENS_R - 12
 	).map(pin => ({ ...pin, visible: Math.hypot(pin.xy[0], pin.xy[1]) < LENS_R - 10 }));
 
 	return (
 		<div className="relative">
-			<svg viewBox={`0 0 ${W} ${VIEW_H}`} className="h-auto w-full" role="group" aria-label="Map of ambassadors">
+			{/* A click on the map itself, not on an ambassador, puts the lens away (as does Escape). */}
+			<svg
+				viewBox={`0 0 ${W} ${VIEW_H}`}
+				className="h-auto w-full"
+				role="group"
+				aria-label="Map of ambassadors"
+				onClick={event => !(event.target as Element).closest("[role=button]") && onClear()}
+				onKeyDown={event => event.key === "Escape" && onClear()}
+			>
 				<g aria-hidden="true" fill="#83B2BA" opacity="0.55">
 					{world.dots.map(([lng, lat], index) => {
 						const [x, y] = project(lng, lat);
@@ -86,6 +98,11 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 				})}
 
 				<g className={MOTION} style={{ transform: px(centre[0], centre[1]) }}>
+					<g
+						aria-hidden={!selected}
+						className={cn("motion-safe:transition-[opacity,transform] motion-safe:duration-300 motion-safe:ease-out", !selected && "pointer-events-none")}
+						style={{ opacity: selected ? 1 : 0, transform: selected ? "scale(1)" : "scale(0.6)" }}
+					>
 					<clipPath id={clipId}>
 						<circle r={LENS_R} />
 					</clipPath>
@@ -106,13 +123,14 @@ export function AmbassadorMap({ ambassadors, selected, onSelect }: { ambassadors
 						<g>
 							{inLens.map(({ a, xy, labelLeft, visible }) => (
 								<g key={a.id} className={MOTION} style={{ transform: px(xy[0], xy[1]) }} aria-hidden={!visible}>
-									<Pin a={a} x={0} y={0} active={selected?.id === a.id} onSelect={onSelect} small labelLeft={labelLeft} focusable={visible} />
+									<Pin a={a} x={0} y={0} active={selected?.id === a.id} onSelect={onSelect} small labelLeft={labelLeft} focusable={visible && !!selected} />
 								</g>
 							))}
 						</g>
 					</g>
 					<circle r={LENS_R} fill="none" stroke="#323742" strokeWidth="6" />
 					<path d={`M${LENS_R * 0.71 + 2} ${LENS_R * 0.71 + 2}l22 22`} stroke="#558F99" strokeWidth="9" strokeLinecap="round" />
+					</g>
 				</g>
 			</svg>
 		</div>
