@@ -137,9 +137,9 @@ export default function Contact({ topics, frequent, faqCount, prefill }: Props) 
 										</Select>
 									)}
 								</Field>
-								<Field label={<>Related PCT ID <span className="font-normal text-ink-muted">(optional)</span></>} help="Helps us find your protocol straight away." error={form.errors.pct_id}>
+								<Field label={<>Related PCT ID <span className="font-normal text-ink-muted">(optional)</span></>} help="Helps us find your protocol straight away." helpBelow error={form.errors.pct_id}>
 									{({ id, describedBy, invalid }) => (
-										<TextInput id={id} value={form.data.pct_id} onChange={event => form.setData("pct_id", event.target.value)} placeholder="PCTE0000…" aria-describedby={describedBy} aria-invalid={invalid} className="pct-id" />
+										<TextInput id={id} value={form.data.pct_id} onChange={event => form.setData("pct_id", event.target.value)} placeholder="e.g. PCTE0000123" aria-describedby={describedBy} aria-invalid={invalid} className="pct-id placeholder:font-sans placeholder:font-normal placeholder:tracking-normal" />
 									)}
 								</Field>
 							</div>

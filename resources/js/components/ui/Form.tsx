@@ -11,6 +11,8 @@ type FieldProps = {
 	label: ReactNode;
 	required?: boolean;
 	help?: ReactNode;
+	/** Help under the control instead of above it, e.g. to keep fields in a row aligned. */
+	helpBelow?: boolean;
 	error?: string | null;
 	className?: string;
 	/** Renders the control; receives the ids to wire label, help and error. */
@@ -21,7 +23,7 @@ type FieldProps = {
  * Label, optional help text, the control and an error message, wired together with
  * ids so screen readers announce all of it.
  */
-export function Field({ label, required, help, error, className, children }: FieldProps) {
+export function Field({ label, required, help, helpBelow, error, className, children }: FieldProps) {
 	const id = useId();
 	const helpId = help ? `${id}-help` : undefined;
 	const errorId = error ? `${id}-error` : undefined;
@@ -38,12 +40,17 @@ export function Field({ label, required, help, error, className, children }: Fie
 					</span>
 				)}
 			</label>
-			{help && (
+			{help && !helpBelow && (
 				<p id={helpId} className="mt-1 text-[15px] leading-[1.45] text-ink-muted">
 					{help}
 				</p>
 			)}
 			<div className="mt-2">{children({ id, describedBy, invalid: !!error })}</div>
+			{help && helpBelow && (
+				<p id={helpId} className="mt-1.5 text-[14px] leading-[1.45] text-ink-muted">
+					{help}
+				</p>
+			)}
 			{error && (
 				<FieldError id={errorId} className="mt-2">
 					{error}
