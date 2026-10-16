@@ -62,9 +62,16 @@ export class SiteUI {
 		await this.page.goto("/news");
 	}
 
+	/** Opens an item from the A2 news page: the featured one or one in the archive. */
 	async openNewsItem(title: string) {
 		await this.openNews();
-		await this.page.getByText(title).first().click();
+		const archived = this.page.getByRole("link", { name: new RegExp(title) });
+		if (await archived.count()) {
+			await archived.first().click();
+		} else {
+			await this.page.getByRole("link", { name: "Read the full story" }).click();
+		}
+		await expect(this.page.getByRole("heading", { level: 1, name: title })).toBeVisible();
 		await expect(this.page.getByText(`Content of ${title}.`)).toBeVisible();
 	}
 
