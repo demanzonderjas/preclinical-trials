@@ -69,7 +69,7 @@ function HeroArcs() {
 	return (
 		<svg aria-hidden="true" className="pointer-events-none absolute top-[300px] left-1/2 h-[1200px] w-[1200px] -translate-x-1/2" viewBox="0 0 1200 1200" fill="none">
 			<circle cx="600" cy="600" r="590" stroke="#FFFFFF" strokeWidth="2" />
-			<circle cx="600" cy="600" r="480" stroke="#83B2BA" strokeWidth="2" strokeDasharray="4 10" opacity="0.6" />
+			<circle cx="600" cy="600" r="480" stroke="#FFA888" strokeWidth="2" strokeDasharray="4 10" />
 		</svg>
 	);
 }

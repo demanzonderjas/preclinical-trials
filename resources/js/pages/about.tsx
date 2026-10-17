@@ -52,7 +52,7 @@ function Hero({ figures }: { figures: Props["figures"] }) {
 		<section aria-labelledby="about-title" className="relative overflow-hidden bg-teal-50">
 			<svg aria-hidden="true" className="pointer-events-none absolute -top-24 -right-56 hidden h-[620px] w-[620px] lg:block" viewBox="0 0 600 600" fill="none">
 				<circle cx="300" cy="300" r="290" stroke="#83B2BA" strokeWidth="2" />
-				<circle cx="300" cy="300" r="220" stroke="#83B2BA" strokeWidth="2" strokeDasharray="4 10" opacity="0.6" />
+				<circle cx="300" cy="300" r="220" stroke="#FFA888" strokeWidth="2" strokeDasharray="4 10" />
 			</svg>
 			<div className="container-page relative py-10 lg:py-14">
 				<Breadcrumb />

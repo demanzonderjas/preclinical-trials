@@ -42,7 +42,7 @@ export default function Contact({ topics, frequent, faqCount, prefill }: Props) 
 			<section aria-labelledby="contact-title" className="relative overflow-hidden bg-teal-50 pb-40">
 				<svg aria-hidden="true" className="pointer-events-none absolute -top-56 -right-40 hidden h-[600px] w-[600px] lg:block" viewBox="0 0 600 600" fill="none">
 					<circle cx="300" cy="300" r="290" stroke="#83B2BA" strokeWidth="2" />
-					<circle cx="300" cy="300" r="220" stroke="#83B2BA" strokeWidth="2" strokeDasharray="4 10" opacity="0.6" />
+					<circle cx="300" cy="300" r="220" stroke="#FFA888" strokeWidth="2" strokeDasharray="4 10" />
 				</svg>
 				<div className="container-page relative pt-10 lg:pt-14">
 					<nav aria-label="Breadcrumb">

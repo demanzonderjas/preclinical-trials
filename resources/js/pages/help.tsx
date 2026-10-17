@@ -165,7 +165,7 @@ function Hero({ query, popular, onSearch }: { query: string; popular: string[]; 
 		<section aria-labelledby="help-title" className="relative overflow-hidden bg-teal-50">
 			<svg aria-hidden="true" className="pointer-events-none absolute -top-56 -right-40 hidden h-[600px] w-[600px] lg:block" viewBox="0 0 600 600" fill="none">
 				<circle cx="300" cy="300" r="290" stroke="#83B2BA" strokeWidth="2" />
-				<circle cx="300" cy="300" r="220" stroke="#83B2BA" strokeWidth="2" strokeDasharray="4 10" opacity="0.6" />
+				<circle cx="300" cy="300" r="220" stroke="#FFA888" strokeWidth="2" strokeDasharray="4 10" />
 			</svg>
 			<div className="container-page relative py-10 lg:pt-14 lg:pb-16">
 				<nav aria-label="Breadcrumb">
@@ -285,17 +285,17 @@ function Question({ item, voted, defaultOpen = false }: { item: Faq; voted: Reco
 function StillStuck() {
 	return (
 		<section aria-labelledby="stuck-title" className="container-page pb-20 lg:pb-24">
-			<div className="grid gap-8 rounded-[32px] border border-line bg-mist p-6 sm:p-14 lg:grid-cols-[minmax(0,1fr)_600px] lg:items-center">
+			<div className="grid gap-8 rounded-[32px] bg-peach-100 p-6 sm:p-14 lg:grid-cols-[minmax(0,1fr)_600px] lg:items-center">
 				<div>
-					<p className="eyebrow">Still stuck?</p>
+					<p className="eyebrow text-ink">Still stuck?</p>
 					<h2 id="stuck-title" className="mt-3 text-3xl font-extrabold tracking-[-0.03em] sm:text-[44px]">
 						Talk to a person.
 					</h2>
-					<p className="mt-4 max-w-md text-[17px] leading-[1.6] text-ink-muted">The PCT team at UMC Utrecht answers questions about registering, embargo and amendments.</p>
-					<p className="mt-6 flex items-center gap-3 text-[15px] text-ink-muted">
+					<p className="mt-4 max-w-md text-[17px] leading-[1.6]">The PCT team at UMC Utrecht answers questions about registering, embargo and amendments.</p>
+					<p className="mt-6 flex items-center gap-3 text-[15px]">
 						<span className="flex -space-x-2">
 							{["julia.jpg", "bente.jpg"].map(image => (
-								<img key={image} src={`/static/about-us/${image}`} alt="" className="size-10 rounded-full object-cover ring-2 ring-mist" loading="lazy" />
+								<img key={image} src={`/static/about-us/${image}`} alt="" className="size-10 rounded-full object-cover ring-2 ring-peach-100" loading="lazy" />
 							))}
 						</span>
 						<span>

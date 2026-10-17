@@ -1,5 +1,5 @@
 import { Link, usePage } from "@inertiajs/react";
-import { LogOut, Menu, Plus, Search, ShieldCheck, X } from "lucide-react";
+import { LogOut, Mail, Menu, Plus, Search, ShieldCheck, X } from "lucide-react";
 import { type ReactNode, useEffect, useId, useState } from "react";
 import { ButtonAnchor } from "@/components/ui/Button";
 import { CountBubble } from "@/components/ui/Badge";
@@ -236,8 +236,13 @@ function NewsletterForm() {
 	return (
 		<form action={routes.contact} method="get">
 			<input type="hidden" name="topic" value="newsletter" />
-			<h2 className="text-[19px] font-extrabold tracking-[-0.01em]">Newsletter</h2>
-			<p className="mt-2 text-[15px] leading-normal text-ink-muted">Follow PCT's updates by registering for the newsletter.</p>
+			<h2 className="flex items-center gap-3 text-[19px] font-extrabold tracking-[-0.01em]">
+				<span aria-hidden="true" className="flex size-9 items-center justify-center rounded-[10px] bg-peach-300">
+					<Mail size={18} strokeWidth={2.2} />
+				</span>
+				Newsletter
+			</h2>
+			<p className="mt-3 text-[15px] leading-normal text-ink-muted">Follow PCT's updates by registering for the newsletter.</p>
 			<label htmlFor={id} className="mt-5 block text-[14px] font-semibold">
 				Email address
 			</label>
