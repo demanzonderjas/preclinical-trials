@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckIfUserIsAdmin;
+use App\Http\Middleware\EnsureAdminTwoFactor;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\VerifyExternalApiKey;
 use App\Http\Middleware\VerifyILESToken;
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => CheckIfUserIsAdmin::class,
+            'admin.2fa' => EnsureAdminTwoFactor::class,
             'iles' => VerifyILESToken::class,
             'external-api' => VerifyExternalApiKey::class,
         ]);

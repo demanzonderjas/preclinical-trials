@@ -6,6 +6,7 @@ use App\Http\Controllers\Pages\Admin\ContentController as AdminContentController
 use App\Http\Controllers\Pages\Admin\EmbargoesController as AdminEmbargoesController;
 use App\Http\Controllers\Pages\Admin\ProtocolsController as AdminProtocolsController;
 use App\Http\Controllers\Pages\Admin\StatisticsController as AdminStatisticsController;
+use App\Http\Controllers\Pages\Admin\TwoFactorController as AdminTwoFactorController;
 use App\Http\Controllers\Pages\Admin\UsersController as AdminUsersController;
 use App\Http\Controllers\Pages\ContactController;
 use App\Http\Controllers\Pages\ContentPageController;
@@ -74,8 +75,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/database/view-protocol/{id}/pdf', [ProtocolPdfController::class, 'protocol'])->whereNumber('id')->middleware('throttle:30,1')->name('protocols.pdf');
 });
 
+// The admin area's second factor: an authenticator app, asked once per session.
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin/two-factor')->group(function () {
+    Route::get('/', [AdminTwoFactorController::class, 'show'])->name('admin.two-factor');
+    Route::post('/confirm', [AdminTwoFactorController::class, 'confirm'])->middleware('throttle:6,1')->name('admin.two-factor.confirm');
+    Route::post('/', [AdminTwoFactorController::class, 'verify'])->middleware('throttle:6,1')->name('admin.two-factor.verify');
+});
+
 // The PCT team's admin area.
-Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified', 'admin', 'admin.2fa'])->prefix('admin')->group(function () {
+    Route::redirect('/', '/admin/protocols');
     Route::get('/protocols', [AdminProtocolsController::class, 'index'])->name('admin.protocols');
     Route::whereNumber('id')->prefix('protocols/{id}')->group(function () {
         Route::get('/review', [AdminProtocolsController::class, 'review'])->name('admin.review');

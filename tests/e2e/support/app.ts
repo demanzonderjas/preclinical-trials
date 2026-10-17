@@ -37,9 +37,9 @@ export class App {
 		expect(response.ok(), await response.text()).toBeTruthy();
 	}
 
-	/** Logs the browser in without going through the login form. */
-	async loginAs(persona: Persona) {
-		const response = await this.page.request.post("/__e2e/login", { data: { email: persona.email } });
+	/** Logs the browser in without going through the login form. Admins skip the admin area's two-factor step unless `twoFactor` is set. */
+	async loginAs(persona: Persona, options: { twoFactor?: boolean } = {}) {
+		const response = await this.page.request.post("/__e2e/login", { data: { email: persona.email, two_factor: options.twoFactor ?? false } });
 		expect(response.ok(), await response.text()).toBeTruthy();
 	}
 

@@ -1,4 +1,33 @@
 import { expect, personas, test } from "../support/fixtures";
+import { totp } from "../support/totp";
+
+test.describe("Admin: two-factor authentication", () => {
+	test("sets up an authenticator app, then asks for a code in a new session", async ({ app, page }) => {
+		await app.loginAs(personas.admin, { twoFactor: true });
+		await page.goto("/admin/users");
+		await expect(page.getByRole("heading", { name: "Set up two-factor authentication" })).toBeVisible();
+		await expect(page.getByRole("img", { name: "QR code for your authenticator app" })).toBeVisible();
+
+		await page.getByRole("button", { name: "Show the setup key" }).click();
+		const secret = (await page.locator("code").innerText()).replace(/\s+/g, "");
+		await page.getByLabel("Code from the app").fill(totp(secret));
+		await page.getByRole("button", { name: "Turn on two-factor authentication" }).click();
+
+		await expect(page).toHaveURL(/\/admin\/users$/);
+
+		await page.request.post("/__e2e/logout");
+		await app.loginAs(personas.admin, { twoFactor: true });
+		await page.goto("/admin/statistics");
+		await expect(page.getByRole("heading", { name: "Enter your code" })).toBeVisible();
+		await page.getByLabel("Code", { exact: true }).fill("000000");
+		await page.getByRole("button", { name: "Continue to the admin area" }).click();
+		await expect(page.getByText("That code is not right")).toBeVisible();
+		// The setup code is used up; the next one is accepted too.
+		await page.getByLabel("Code", { exact: true }).fill(totp(secret, 1));
+		await page.getByRole("button", { name: "Continue to the admin area" }).click();
+		await expect(page).toHaveURL(/\/admin\/statistics$/);
+	});
+});
 
 test.describe("Admin: users", () => {
 	test.beforeEach(async ({ app }) => {

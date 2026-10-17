@@ -14,6 +14,7 @@
 use App\Models\Protocol;
 use App\Models\User;
 use App\Providers\E2EServiceProvider;
+use App\Services\TwoFactor;
 use Carbon\Carbon;
 use Database\Seeders\E2ESeeder;
 use Illuminate\Http\Request;
@@ -72,6 +73,10 @@ Route::post('login', function (Request $request) {
 	$user = User::where('email', $request->input('email'))->firstOrFail();
 	Auth::login($user);
 	$request->session()->regenerate();
+	// Admins have passed the admin area's two-factor step, unless a test wants to go through it.
+	if ($user->is_admin && ! $request->boolean('two_factor')) {
+		$request->session()->put(TwoFactor::SESSION_KEY, $user->id);
+	}
 
 	return response()->json(['success' => true, 'user_id' => $user->id]);
 });

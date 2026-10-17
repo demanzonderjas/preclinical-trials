@@ -33,7 +33,8 @@ export const routes = {
 		embargoes: "/admin/embargoes",
 		content: "/admin/content",
 		users: "/admin/users",
-		statistics: "/admin/statistics"
+		statistics: "/admin/statistics",
+		twoFactor: "/admin/two-factor"
 	},
 	terms: "/disclaimer",
 	privacy: "/disclaimer",
