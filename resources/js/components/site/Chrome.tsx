@@ -182,7 +182,7 @@ export function SiteFooter({ newsletter = true }: { newsletter?: boolean }) {
 						<FooterLinks key={column.title} title={column.title} links={column.links} />
 					))}
 					{newsletter && (
-						<div className="self-start rounded-[22px] bg-white px-6 pt-5.5 pb-6 shadow-[inset_0_0_0_1px_var(--color-line)] sm:col-span-3 lg:col-span-1">
+						<div className="@container self-start rounded-[22px] bg-white px-7 pt-7 pb-7 shadow-[inset_0_0_0_1px_var(--color-line)] sm:col-span-3 lg:col-span-1">
 							<NewsletterForm />
 						</div>
 					)}
@@ -237,13 +237,14 @@ function NewsletterForm() {
 		<form action={routes.contact} method="get">
 			<input type="hidden" name="topic" value="newsletter" />
 			<h2 className="text-[19px] font-extrabold tracking-[-0.01em]">Newsletter</h2>
-			<p className="mt-1.5 text-[15px] leading-normal text-ink-muted">Follow PCT's updates by registering for the newsletter.</p>
-			<label htmlFor={id} className="mt-3.5 block text-[14px] font-semibold">
+			<p className="mt-2 text-[15px] leading-normal text-ink-muted">Follow PCT's updates by registering for the newsletter.</p>
+			<label htmlFor={id} className="mt-5 block text-[14px] font-semibold">
 				Email address
 			</label>
-			<div className="mt-2 flex gap-2">
-				<TextInput id={id} name="email" type="email" required autoComplete="email" placeholder="name@institution.org" className="h-12 min-w-0 flex-1 rounded-full text-base" />
-				<button type="submit" className="h-12 shrink-0 rounded-full bg-ink px-5 font-display text-[15px] font-extrabold text-white hover:shadow-[0_0_0_5px_var(--color-line)]">
+			{/* Side by side when the card is wide; stacked in the narrow footer column. */}
+			<div className="mt-2 flex flex-col gap-2.5 @[440px]:flex-row">
+				<TextInput id={id} name="email" type="email" required autoComplete="email" placeholder="name@institution.org" className="h-12 min-w-0 rounded-full text-base @[440px]:flex-1" />
+				<button type="submit" className="h-12 shrink-0 rounded-full bg-ink px-6 font-display text-[15px] font-extrabold text-white hover:shadow-[0_0_0_5px_var(--color-line)]">
 					Subscribe
 				</button>
 			</div>
