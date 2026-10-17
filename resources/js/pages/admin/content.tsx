@@ -1,5 +1,5 @@
 import { router, useForm, usePage } from "@inertiajs/react";
-import { ArrowDown, ArrowUp, Check, GripVertical, ImageIcon } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, Check, GripVertical, ImageIcon } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
 import { RichText } from "@/components/admin/RichText";
 import { Badge } from "@/components/ui/Badge";
@@ -49,6 +49,30 @@ function useEditing() {
 const go = (tab: Tab, edit?: number | "new" | null) => router.get(routes.admin.content, { tab, ...(edit ? { edit } : {}) }, { preserveState: true, preserveScroll: true, replace: true });
 
 export default function Content(props: Props) {
+	const editing = useEditing();
+
+	// News items and pages are edited on a page of their own.
+	if (editing !== null && props.tab === "news") {
+		const item = editing === "new" ? null : props.news.find(other => other.id === editing);
+		if (item !== undefined) {
+			return (
+				<EditorPage title={item ? item.title : "New news item"} back={() => go("news")} backLabel="All news">
+					<NewsForm key={editing} item={item} categories={props.categories} />
+				</EditorPage>
+			);
+		}
+	}
+	if (editing !== null && props.tab === "pages") {
+		const page = props.pages.find(other => other.id === editing);
+		if (page) {
+			return (
+				<EditorPage title={page.title} back={() => go("pages")} backLabel="All pages">
+					<PageForm key={page.id} page={page} />
+				</EditorPage>
+			);
+		}
+	}
+
 	return (
 		<AdminLayout title="Content">
 			<section aria-labelledby="content-title" className="bg-teal-50">
@@ -79,7 +103,7 @@ export default function Content(props: Props) {
 				</div>
 
 				<div className="mt-6">
-					{props.tab === "news" && <NewsTab news={props.news} categories={props.categories} />}
+					{props.tab === "news" && <NewsTab news={props.news} />}
 					{props.tab === "faq" && <FaqTab categories={props.faq} audiences={props.audiences} />}
 					{props.tab === "pages" && <PagesTab pages={props.pages} />}
 					{props.tab === "ambassadors" && <AmbassadorsTab ambassadors={props.ambassadors} />}
@@ -100,10 +124,24 @@ function Split({ list, editor }: { list: ReactNode; editor: ReactNode }) {
 	);
 }
 
-function EditorHead({ title, sub }: { title: string; sub?: string | null }) {
+function EditorPage({ title, back, backLabel, children }: { title: string; back: () => void; backLabel: string; children: ReactNode }) {
 	return (
-		<div className="mb-6">
-			<h2 className="text-2xl font-extrabold tracking-[-0.02em]">{title}</h2>
+		<AdminLayout title={title}>
+			<div className="container-page pt-8 pb-16">
+				<button type="button" onClick={back} className="inline-flex items-center gap-2 font-display text-[15.5px] font-extrabold text-link">
+					<ArrowLeft size={18} strokeWidth={2.4} aria-hidden="true" />
+					{backLabel}
+				</button>
+				<div className="mt-5">{children}</div>
+			</div>
+		</AdminLayout>
+	);
+}
+
+function EditorHead({ title, sub, page }: { title: string; sub?: string | null; page?: boolean }) {
+	return (
+		<div className={page ? "mb-8" : "mb-6"}>
+			{page ? <h1 className="text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-[44px]">{title}</h1> : <h2 className="text-2xl font-extrabold tracking-[-0.02em]">{title}</h2>}
 			{sub && <p className="mt-1 text-[14.5px] text-ink-muted">{sub}</p>}
 		</div>
 	);
@@ -176,57 +214,50 @@ function FormActions({ processing, onCancel }: { processing: boolean; onCancel: 
 
 /* News ---------------------------------------------------------------------- */
 
-function NewsTab({ news, categories }: { news: News[]; categories: Option[] }) {
-	const editing = useEditing();
+function NewsTab({ news }: { news: News[] }) {
 	const [deleting, setDeleting] = useState<News | null>(null);
-	const current = editing === "new" ? null : news.find(item => item.id === editing) ?? null;
 	const published = news.filter(item => item.status === "published").length;
 
 	return (
-		<Split
-			list={
-				<>
-					<div className="flex flex-wrap items-center justify-between gap-3">
-						<p className="text-[15px] text-ink-muted">
-							{news.length} news items · {published} published, {news.length - published} draft
-						</p>
-						<Button onClick={() => go("news", "new")}>Add news item</Button>
+		<>
+			<div className="flex flex-wrap items-center justify-between gap-3">
+				<p className="text-[15px] text-ink-muted">
+					{news.length} news items · {published} published, {news.length - published} draft
+				</p>
+				<Button onClick={() => go("news", "new")}>Add news item</Button>
+			</div>
+			{news.length === 0 ? (
+				<div className="mt-5">
+					<EmptyState title="No news yet" />
+				</div>
+			) : (
+				<div className="mt-5 overflow-hidden rounded-card border border-line">
+					<div className="hidden grid-cols-[minmax(0,1fr)_130px_120px_170px] gap-4 bg-mist px-5 py-3.5 md:grid">
+						{["Title", "Publish date", "Status", "Admin action"].map(header => (
+							<span key={header} className="eyebrow text-[11.5px]">
+								{header}
+							</span>
+						))}
 					</div>
-					{news.length === 0 ? (
-						<div className="mt-5">
-							<EmptyState title="No news yet" />
-						</div>
-					) : (
-						<div className="mt-5 overflow-hidden rounded-card border border-line">
-							<div className="hidden grid-cols-[minmax(0,1fr)_130px_120px_170px] gap-4 bg-mist px-5 py-3.5 md:grid">
-								{["Title", "Publish date", "Status", "Admin action"].map(header => (
-									<span key={header} className="eyebrow text-[11.5px]">
-										{header}
-									</span>
-								))}
-							</div>
-							<ul className="divide-y divide-line bg-white">
-								{news.map(item => (
-									<li key={item.id} className={cn("grid gap-2 px-5 py-4 md:grid-cols-[minmax(0,1fr)_130px_120px_170px] md:items-center md:gap-4", item.id === editing && "bg-teal-50 shadow-[inset_0_0_0_2px_var(--color-teal-500)]")}>
-										<p className="font-bold">{item.title}</p>
-										<p className="text-[14px]">
-											<span className="block font-semibold">{item.publish_date ? formatDate(item.publish_date) : "Not scheduled"}</span>
-											{item.updated_at && <span className="text-ink-muted">Updated {formatDate(item.updated_at)}</span>}
-										</p>
-										<span>
-											<StatusChip status={item.status} />
-										</span>
-										<RowActions label={item.title} view={item.status === "published" ? `/news/view-item/${item.id}` : undefined} onEdit={() => go("news", item.id)} onDelete={() => setDeleting(item)} />
-									</li>
-								))}
-							</ul>
-						</div>
-					)}
-					{deleting && <ConfirmDelete what={`“${deleting.title}”`} url={`/admin/content/news/${deleting.id}`} onClose={() => setDeleting(null)} />}
-				</>
-			}
-			editor={editing === null ? <EmptyEditor what="a news item" /> : <NewsForm key={editing} item={current} categories={categories} />}
-		/>
+					<ul className="divide-y divide-line bg-white">
+						{news.map(item => (
+							<li key={item.id} className="grid gap-2 px-5 py-4 md:grid-cols-[minmax(0,1fr)_130px_120px_170px] md:items-center md:gap-4">
+								<p className="font-bold">{item.title}</p>
+								<p className="text-[14px]">
+									<span className="block font-semibold">{item.publish_date ? formatDate(item.publish_date) : "Not scheduled"}</span>
+									{item.updated_at && <span className="text-ink-muted">Updated {formatDate(item.updated_at)}</span>}
+								</p>
+								<span>
+									<StatusChip status={item.status} />
+								</span>
+								<RowActions label={item.title} view={item.status === "published" ? `/news/view-item/${item.id}` : undefined} onEdit={() => go("news", item.id)} onDelete={() => setDeleting(item)} />
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+			{deleting && <ConfirmDelete what={`“${deleting.title}”`} url={`/admin/content/news/${deleting.id}`} onClose={() => setDeleting(null)} />}
+		</>
 	);
 }
 
@@ -270,37 +301,18 @@ function NewsForm({ item, categories }: { item: News | null; categories: Option[
 
 	return (
 		<form onSubmit={submit} noValidate>
-			<EditorHead title={item ? "Edit news item" : "New news item"} sub={item ? `${item.title}${item.updated_at ? ` · last updated ${formatDate(item.updated_at)}` : ""}` : null} />
-			<div className="grid gap-5">
-				<Field label="Title" required error={form.errors.title}>
-					{({ id, invalid }) => <TextInput id={id} value={form.data.title} onChange={event => form.setData("title", event.target.value)} aria-invalid={invalid} className="h-13" />}
-				</Field>
-				<RichText label="Summary" required value={form.data.summary} onChange={html => form.setData("summary", html)} invalid={!!form.errors.summary} minHeight={90} />
-				{form.errors.summary && <p className="-mt-3 text-[14.5px] font-semibold text-rust">{form.errors.summary}</p>}
-				<div>
-					<p className="font-bold">Image</p>
-					<div className="mt-2 flex items-center gap-4 rounded-card border-[1.5px] border-dashed border-line-strong bg-white px-4 py-3">
-						<span aria-hidden="true" className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-md bg-teal-50">
-							{form.data.image ? <img src={`/images/news/${form.data.image}`} alt="" className="size-full object-cover" /> : <ImageIcon size={22} strokeWidth={2} className="text-teal-500" />}
-						</span>
-						<span className="min-w-0 flex-1 truncate text-[14.5px] font-bold">{form.data.image || "No image"}</span>
-						<label className="cursor-pointer font-display font-extrabold text-link">
-							{uploading ? "Uploading…" : form.data.image ? "Replace" : "Upload"}
-							<input type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="sr-only" onChange={event => upload(event.target.files?.[0])} />
-						</label>
-						{form.data.image && (
-							<button type="button" onClick={() => form.setData("image", "")} className="font-display font-extrabold">
-								Remove
-							</button>
-						)}
-					</div>
-				</div>
-				<RichText label="Content" required value={form.data.content} onChange={html => form.setData("content", html)} invalid={!!form.errors.content} minHeight={180} />
-				{form.errors.content && <p className="-mt-3 text-[14.5px] font-semibold text-rust">{form.errors.content}</p>}
-				<div className="grid gap-4 sm:grid-cols-2">
-					<Field label="Publish date" error={form.errors.publish_date}>
-						{({ id }) => <TextInput id={id} type="date" value={form.data.publish_date} onChange={event => form.setData("publish_date", event.target.value)} className="h-13" />}
+			<EditorHead page title={item ? "Edit news item" : "New news item"} sub={item?.updated_at ? `Last updated ${formatDate(item.updated_at)}` : null} />
+			<div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+				<div className="grid min-w-0 gap-5">
+					<Field label="Title" required error={form.errors.title}>
+						{({ id, invalid }) => <TextInput id={id} value={form.data.title} onChange={event => form.setData("title", event.target.value)} aria-invalid={invalid} className="h-14 text-lg font-bold" />}
 					</Field>
+					<RichText label="Summary" required value={form.data.summary} onChange={html => form.setData("summary", html)} invalid={!!form.errors.summary} minHeight={120} />
+					{form.errors.summary && <p className="-mt-3 text-[14.5px] font-semibold text-rust">{form.errors.summary}</p>}
+					<RichText label="Content" required value={form.data.content} onChange={html => form.setData("content", html)} invalid={!!form.errors.content} minHeight={420} />
+					{form.errors.content && <p className="-mt-3 text-[14.5px] font-semibold text-rust">{form.errors.content}</p>}
+				</div>
+				<aside className="grid gap-5 rounded-card bg-mist px-6 py-7 lg:sticky lg:top-6">
 					<Field label="Status" required>
 						{({ id }) => (
 							<Select id={id} value={form.data.status} onChange={event => form.setData("status", event.target.value as "draft" | "published")}>
@@ -309,21 +321,44 @@ function NewsForm({ item, categories }: { item: News | null; categories: Option[
 							</Select>
 						)}
 					</Field>
-				</div>
-				<Field label="Category" help="Items without a category only show under “All updates”.">
-					{({ id, describedBy }) => (
-						<Select id={id} value={form.data.category} onChange={event => form.setData("category", event.target.value)} aria-describedby={describedBy}>
-							<option value="">No category</option>
-							{categories.map(category => (
-								<option key={category.value} value={category.value}>
-									{category.label}
-								</option>
-							))}
-						</Select>
-					)}
-				</Field>
+					<Field label="Publish date" error={form.errors.publish_date}>
+						{({ id }) => <TextInput id={id} type="date" value={form.data.publish_date} onChange={event => form.setData("publish_date", event.target.value)} className="h-13" />}
+					</Field>
+					<Field label="Category" help="Items without a category only show under “All updates”.">
+						{({ id, describedBy }) => (
+							<Select id={id} value={form.data.category} onChange={event => form.setData("category", event.target.value)} aria-describedby={describedBy}>
+								<option value="">No category</option>
+								{categories.map(category => (
+									<option key={category.value} value={category.value}>
+										{category.label}
+									</option>
+								))}
+							</Select>
+						)}
+					</Field>
+					<div>
+						<p className="font-bold">Image</p>
+						<div className="mt-2 overflow-hidden rounded-card border-[1.5px] border-dashed border-line-strong bg-white">
+							<span aria-hidden="true" className="flex aspect-[16/9] items-center justify-center overflow-hidden bg-teal-50">
+								{form.data.image ? <img src={`/images/news/${form.data.image}`} alt="" className="size-full object-cover" /> : <ImageIcon size={28} strokeWidth={2} className="text-teal-500" />}
+							</span>
+							<div className="flex items-center gap-4 px-4 py-3">
+								<span className="min-w-0 flex-1 truncate text-[14.5px] font-bold">{form.data.image || "No image"}</span>
+								<label className="cursor-pointer font-display font-extrabold text-link">
+									{uploading ? "Uploading…" : form.data.image ? "Replace" : "Upload"}
+									<input type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="sr-only" onChange={event => upload(event.target.files?.[0])} />
+								</label>
+								{form.data.image && (
+									<button type="button" onClick={() => form.setData("image", "")} className="font-display font-extrabold">
+										Remove
+									</button>
+								)}
+							</div>
+						</div>
+					</div>
+					<FormActions processing={form.processing} onCancel={() => go("news")} />
+				</aside>
 			</div>
-			<FormActions processing={form.processing} onCancel={() => go("news")} />
 		</form>
 	);
 }
@@ -426,7 +461,7 @@ function FaqForm({ item, categories, audiences }: { item: Faq | null; categories
 				<Field label="Title" required error={form.errors.title}>
 					{({ id, invalid }) => <TextInput id={id} value={form.data.title} onChange={event => form.setData("title", event.target.value)} aria-invalid={invalid} className="h-13" />}
 				</Field>
-				<RichText label="Content" required value={form.data.content} onChange={html => form.setData("content", html)} invalid={!!form.errors.content} minHeight={160} />
+				<RichText label="Content" required value={form.data.content} onChange={html => form.setData("content", html)} invalid={!!form.errors.content} minHeight={280} />
 				{form.errors.content && <p className="-mt-3 text-[14.5px] font-semibold text-rust">{form.errors.content}</p>}
 				<div className="grid gap-4 sm:grid-cols-2">
 					<Field label="FAQ category" required>
@@ -474,33 +509,26 @@ function FaqForm({ item, categories, audiences }: { item: Faq | null; categories
 /* Pages --------------------------------------------------------------------- */
 
 function PagesTab({ pages }: { pages: ContentPage[] }) {
-	const editing = useEditing();
-	const current = pages.find(page => page.id === editing) ?? null;
 	return (
-		<Split
-			list={
-				<>
-					<p className="text-[15px] text-ink-muted">Pages with texts the PCT team edits. The home, about and help pages follow the A2 design and are not edited here.</p>
-					<ul className="mt-5 divide-y divide-line overflow-hidden rounded-card border border-line bg-white">
-						{pages.map(page => (
-							<li key={page.id} className={cn("flex flex-wrap items-center justify-between gap-3 px-5 py-4", page.id === editing && "bg-teal-50")}>
-								<span className="min-w-0">
-									<span className="block font-bold">{page.title}</span>
-									<span className="text-[14px] text-ink-muted">
-										{page.slug}
-										{page.updated_at && ` · updated ${formatDate(page.updated_at)}`}
-									</span>
-								</span>
-								<button type="button" onClick={() => go("pages", page.id)} className="font-display font-extrabold text-link">
-									Edit<span className="sr-only"> {page.title}</span>
-								</button>
-							</li>
-						))}
-					</ul>
-				</>
-			}
-			editor={current ? <PageForm key={current.id} page={current} /> : <EmptyEditor what="a page" />}
-		/>
+		<>
+			<p className="text-[15px] text-ink-muted">Pages with texts the PCT team edits. The home, about and help pages follow the A2 design and are not edited here.</p>
+			<ul className="mt-5 divide-y divide-line overflow-hidden rounded-card border border-line bg-white">
+				{pages.map(page => (
+					<li key={page.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+						<span className="min-w-0">
+							<span className="block font-bold">{page.title}</span>
+							<span className="text-[14px] text-ink-muted">
+								{page.slug}
+								{page.updated_at && ` · updated ${formatDate(page.updated_at)}`}
+							</span>
+						</span>
+						<button type="button" onClick={() => go("pages", page.id)} className="font-display font-extrabold text-link">
+							Edit<span className="sr-only"> {page.title}</span>
+						</button>
+					</li>
+				))}
+			</ul>
+		</>
 	);
 }
 
@@ -511,8 +539,8 @@ function PageForm({ page }: { page: ContentPage }) {
 		form.put(`/admin/content/pages/${page.id}`, { preserveScroll: true });
 	};
 	return (
-		<form onSubmit={submit} noValidate>
-			<EditorHead title="Edit page" sub={page.slug} />
+		<form onSubmit={submit} noValidate className="max-w-[880px]">
+			<EditorHead page title="Edit page" sub={`${page.slug}${page.updated_at ? ` · last updated ${formatDate(page.updated_at)}` : ""}`} />
 			<div className="grid gap-5">
 				<Field label="Title" required error={form.errors.title}>
 					{({ id, invalid }) => <TextInput id={id} value={form.data.title} onChange={event => form.setData("title", event.target.value)} aria-invalid={invalid} className="h-13" />}
