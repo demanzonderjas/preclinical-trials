@@ -101,7 +101,7 @@ export default function ShowProtocol({ protocol, versions, original, linked }: P
 					</p>
 				</aside>
 
-				<div className="grid min-w-0 content-start gap-6">
+				<div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-6">
 					<History versions={versions} original={original} total={total} version={version} onVersion={setVersion} changesOnly={changesOnly} onChangesOnly={setChangesOnly} />
 
 					<FieldSection id="general" index={1} title="General" values={values} changes={changes} version={version} changesOnly={changesOnly} fields={protocolFields.filter(f => f.section === "general")} />
