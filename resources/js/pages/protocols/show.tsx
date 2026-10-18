@@ -1,6 +1,6 @@
 import { router } from "@inertiajs/react";
 import { Check, ChevronRight, Copy, Download, Lock, MessageCircleQuestion, Pencil } from "lucide-react";
-import { Fragment, type ReactNode, useMemo, useState } from "react";
+import { createContext, Fragment, type ReactNode, useContext, useMemo, useState } from "react";
 import { Badge, EmbargoBadge, StatusBadge, type ProtocolStatus } from "@/components/ui/Badge";
 import { Button, ButtonAnchor } from "@/components/ui/Button";
 import { DetailList, Diff, Note } from "@/components/ui/Content";
@@ -11,6 +11,7 @@ import { designGroupTitles, fieldByKey, formatValue, isVisible, type ProtocolFie
 import { PublicLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
 import { changesIn, type Details, plainText, textDiff, valuesAt, type Version, versionCount } from "@/lib/protocol-versions";
+import { decodeEntities } from "@/lib/rich-text";
 import { routes } from "@/lib/routes";
 
 type Props = {
@@ -31,6 +32,8 @@ type Props = {
 		centre_place: string;
 		is_owner: boolean;
 		shows_contact: boolean;
+		/** Names of the country codes in the study centres. */
+		countries: Record<string, string>;
 		amendment: { id: number; status: "pending" | "returned" } | null;
 	};
 	versions: Version[];
@@ -39,6 +42,11 @@ type Props = {
 };
 
 const text = (value: unknown) => (typeof value === "string" ? value : value == null ? "" : String(value));
+
+/** Text typed into an arm or centre row; older rows were stored with escaped characters. */
+const cell = (value: unknown) => decodeEntities(text(value).trim());
+
+const Countries = createContext<Record<string, string>>({});
 
 export default function ShowProtocol({ protocol, versions, original, linked }: Props) {
 	const total = versionCount(versions);
@@ -57,59 +65,61 @@ export default function ShowProtocol({ protocol, versions, original, linked }: P
 	];
 
 	return (
-		<PublicLayout title={`${protocol.pct_id} · ${protocol.title}`}>
-			<Hero protocol={protocol} values={values} field={field} total={total} versions={versions} />
+		<Countries.Provider value={protocol.countries}>
+			<PublicLayout title={`${protocol.pct_id} · ${protocol.title}`}>
+				<Hero protocol={protocol} values={values} field={field} total={total} versions={versions} />
 
-			<div className="container-page grid gap-10 py-12 lg:grid-cols-[280px_minmax(0,1fr)] lg:py-16">
-				<aside className="grid content-start gap-6 lg:sticky lg:top-6 lg:self-start">
-					<nav aria-label="On this page" className="rounded-[22px] bg-mist p-6 max-lg:hidden">
-						<p className="eyebrow">On this page</p>
-						<ul className="mt-4 grid gap-1">
-							{sections.map(section => (
-								<li key={section.id}>
-									<a href={`#${section.id}`} className="flex items-baseline justify-between gap-3 rounded-xl px-3 py-2.5 font-display text-base font-bold text-ink hover:bg-white hover:text-ink">
-										{section.label}
-										<span className="font-sans text-[13.5px] font-normal text-ink-muted">{section.note}</span>
-									</a>
-								</li>
-							))}
-						</ul>
-					</nav>
-					{linked.length > 0 && (
-						<section aria-labelledby="linked-title" className="rounded-card border border-line p-5">
-							<h2 id="linked-title" className="text-lg font-bold">
-								Linked protocols
-							</h2>
-							<p className="mt-1 text-[14.5px] text-ink-muted">Linked by the author as part of the same research programme.</p>
-							<ul className="mt-4 grid gap-2.5">
-								{linked.map(item => (
-									<li key={item.id}>
-										<a href={`/database/view-protocol/${item.id}`} className="block rounded-input border border-line px-3.5 py-3 text-ink hover:border-teal-300 hover:text-ink">
-											<span className="pct-id text-[13.5px]">{item.pct_id}</span>
-											<span className="mt-1 block text-[14.5px] leading-snug text-ink-muted">{item.title}</span>
+				<div className="container-page grid gap-10 py-12 lg:grid-cols-[280px_minmax(0,1fr)] lg:py-16">
+					<aside className="grid content-start gap-6 lg:sticky lg:top-6 lg:self-start">
+						<nav aria-label="On this page" className="rounded-[22px] bg-mist p-6 max-lg:hidden">
+							<p className="eyebrow">On this page</p>
+							<ul className="mt-4 grid gap-1">
+								{sections.map(section => (
+									<li key={section.id}>
+										<a href={`#${section.id}`} className="flex items-baseline justify-between gap-3 rounded-xl px-3 py-2.5 font-display text-base font-bold text-ink hover:bg-white hover:text-ink">
+											{section.label}
+											<span className="font-sans text-[13.5px] font-normal text-ink-muted">{section.note}</span>
 										</a>
 									</li>
 								))}
 							</ul>
-						</section>
-					)}
-					<p className="text-[15px] text-ink-muted">
-						Something not right?{" "}
-						<a href={`${routes.contact}?topic=record&pct_id=${protocol.pct_id}`} className="font-bold underline underline-offset-3">
-							Report an issue with this record
-						</a>
-					</p>
-				</aside>
+						</nav>
+						{linked.length > 0 && (
+							<section aria-labelledby="linked-title" className="rounded-card border border-line p-5">
+								<h2 id="linked-title" className="text-lg font-bold">
+									Linked protocols
+								</h2>
+								<p className="mt-1 text-[14.5px] text-ink-muted">Linked by the author as part of the same research programme.</p>
+								<ul className="mt-4 grid gap-2.5">
+									{linked.map(item => (
+										<li key={item.id}>
+											<a href={`/database/view-protocol/${item.id}`} className="block rounded-input border border-line px-3.5 py-3 text-ink hover:border-teal-300 hover:text-ink">
+												<span className="pct-id text-[13.5px]">{item.pct_id}</span>
+												<span className="mt-1 block text-[14.5px] leading-snug text-ink-muted">{item.title}</span>
+											</a>
+										</li>
+									))}
+								</ul>
+							</section>
+						)}
+						<p className="text-[15px] text-ink-muted">
+							Something not right?{" "}
+							<a href={`${routes.contact}?topic=record&pct_id=${protocol.pct_id}`} className="font-bold underline underline-offset-3">
+								Report an issue with this record
+							</a>
+						</p>
+					</aside>
 
-				<div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-6">
-					<History versions={versions} original={original} total={total} version={version} onVersion={setVersion} changesOnly={changesOnly} onChangesOnly={setChangesOnly} />
+					<div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-6">
+						<History versions={versions} original={original} total={total} version={version} onVersion={setVersion} changesOnly={changesOnly} onChangesOnly={setChangesOnly} />
 
-					<FieldSection id="general" index={1} title="General" values={values} changes={changes} version={version} changesOnly={changesOnly} fields={protocolFields.filter(f => f.section === "general")} />
-					<FieldSection id="design" index={2} title="Study design" values={values} changes={changes} version={version} changesOnly={changesOnly} fields={protocolFields.filter(f => f.section === "design")} grouped />
-					<ContactSection protocol={protocol} values={values} changes={changes} version={version} changesOnly={changesOnly} />
+						<FieldSection id="general" index={1} title="General" values={values} changes={changes} version={version} changesOnly={changesOnly} fields={protocolFields.filter(f => f.section === "general")} />
+						<FieldSection id="design" index={2} title="Study design" values={values} changes={changes} version={version} changesOnly={changesOnly} fields={protocolFields.filter(f => f.section === "design")} grouped />
+						<ContactSection protocol={protocol} values={values} changes={changes} version={version} changesOnly={changesOnly} />
+					</div>
 				</div>
-			</div>
-		</PublicLayout>
+			</PublicLayout>
+		</Countries.Provider>
 	);
 }
 
@@ -584,13 +594,21 @@ function InlineDiff({ field, before, after }: { field: ProtocolField; before: un
 
 type Arm = { type?: string; number?: number | string; intervention?: string };
 
+const filledArm = (arm: Arm) => !!(cell(arm?.type) || cell(arm?.number) || cell(arm?.intervention));
+
+/** The animals in all arms, or null when a count is not a number (older rows hold "A", "B"…). */
+function armTotal(arms: Arm[]): number | null {
+	const counts = arms.map(arm => cell(arm.number)).filter(Boolean);
+	return counts.every(count => /^\d+$/.test(count)) ? counts.reduce((sum, count) => sum + Number(count), 0) : null;
+}
+
 function StudyArms({ value, before }: { value: unknown; before?: unknown }) {
-	const arms = (Array.isArray(value) ? value : []) as Arm[];
-	const previous = Array.isArray(before) ? (before as Arm[]) : null;
+	const arms = ((Array.isArray(value) ? value : []) as Arm[]).filter(filledArm);
+	const previous = Array.isArray(before) ? (before as Arm[]).filter(filledArm) : null;
 	if (!arms.length) return <p className="text-ink-muted italic">Not provided</p>;
-	const total = arms.reduce((sum, arm) => sum + (Number(arm.number) || 0), 0);
-	const previousTotal = previous?.reduce((sum, arm) => sum + (Number(arm.number) || 0), 0);
-	const typeLabel = (type?: string) => (type ? type.charAt(0).toUpperCase() + type.slice(1) : "");
+	const total = armTotal(arms);
+	const previousTotal = previous ? armTotal(previous) : undefined;
+	const typeLabel = (type: string) => type.charAt(0).toUpperCase() + type.slice(1);
 
 	return (
 		<div className="overflow-x-auto rounded-input shadow-[inset_0_0_0_1px_var(--color-line)]">
@@ -610,10 +628,10 @@ function StudyArms({ value, before }: { value: unknown; before?: unknown }) {
 						return (
 							<tr key={index} className="border-t border-teal-50">
 								<td className="px-4 py-3 font-display font-bold tabular-nums">{index + 1}</td>
-								<td className="px-4 py-3">{typeLabel(arm.type)}</td>
-								<td className="px-4 py-3 font-semibold">{arm.intervention}</td>
+								<td className="px-4 py-3">{typeLabel(cell(arm.type))}</td>
+								<td className="px-4 py-3 font-semibold">{cell(arm.intervention)}</td>
 								<td className="px-4 py-3 text-right tabular-nums">
-									{old && String(old.number) !== String(arm.number) ? <Diff removed={String(old.number ?? "")} added={String(arm.number ?? "")} /> : arm.number}
+									{old && cell(old.number) !== cell(arm.number) ? <Diff removed={cell(old.number)} added={cell(arm.number)} /> : cell(arm.number)}
 								</td>
 							</tr>
 						);
@@ -625,7 +643,7 @@ function StudyArms({ value, before }: { value: unknown; before?: unknown }) {
 							{arms.length} {arms.length === 1 ? "group" : "groups"}
 						</td>
 						<td className="px-4 py-3 text-right font-bold tabular-nums">
-							{previousTotal !== undefined && previousTotal !== total ? <Diff removed={String(previousTotal)} added={String(total)} /> : total}
+							{previousTotal !== undefined && previousTotal !== total ? <Diff removed={String(previousTotal ?? "—")} added={String(total ?? "—")} /> : (total ?? "—")}
 						</td>
 					</tr>
 				</tbody>
@@ -637,7 +655,8 @@ function StudyArms({ value, before }: { value: unknown; before?: unknown }) {
 type Centre = { name?: string; city?: string; country?: string };
 
 function StudyCentres({ value }: { value: unknown }) {
-	const centres = (Array.isArray(value) ? value : []) as Centre[];
+	const countries = useContext(Countries);
+	const centres = ((Array.isArray(value) ? value : []) as Centre[]).filter(centre => cell(centre?.name) || cell(centre?.city) || cell(centre?.country));
 	if (!centres.length) return <p className="text-ink-muted italic">Not provided</p>;
 	return (
 		<div className="overflow-x-auto rounded-input shadow-[inset_0_0_0_1px_var(--color-line)]">
@@ -654,9 +673,9 @@ function StudyCentres({ value }: { value: unknown }) {
 				<tbody>
 					{centres.map((centre, index) => (
 						<tr key={index} className="border-t border-teal-50">
-							<td className="px-4 py-3 font-bold">{centre.name}</td>
-							<td className="px-4 py-3">{centre.city}</td>
-							<td className="px-4 py-3">{centre.country}</td>
+							<td className="px-4 py-3 font-bold">{cell(centre.name)}</td>
+							<td className="px-4 py-3">{cell(centre.city)}</td>
+							<td className="px-4 py-3">{countries[cell(centre.country)] ?? cell(centre.country)}</td>
 						</tr>
 					))}
 				</tbody>

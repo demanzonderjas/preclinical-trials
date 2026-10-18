@@ -172,13 +172,13 @@ class RegisterSearch
     public static function label(string $facet, string $value): string
     {
         return match ($facet) {
-            'stage' => __("pct.study_stage.$value"),
-            'status' => __("pct.study_status.$value"),
-            'species' => __("pct.species.$value"),
+            'stage' => PublicRegister::option('study_stage', $value),
+            'status' => PublicRegister::option('study_status', $value),
+            'species' => PublicRegister::option('species', $value),
             'country' => config("pct.countries.$value") ?? $value,
-            'sex' => __("pct.sex.$value"),
-            'support' => __("pct.financial_support.$value"),
-            'intervention' => __("pct.intervention_type.$value"),
+            'sex' => PublicRegister::option('sex', $value),
+            'support' => PublicRegister::option('financial_support', $value),
+            'intervention' => PublicRegister::option('intervention_type', $value),
             default => $value,
         };
     }

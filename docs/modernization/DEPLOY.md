@@ -111,3 +111,20 @@ npm ci && npm run build                                   # A2 pages → public/
 - Legacy protocols with status `resubmitted_for_publication` that already had an approval are
   amendments made the old way: they left the register when they were sent. They still show in
   the review queue as "Resubmitted" and are published again on approval.
+
+## Moving the production data
+
+The new site runs on the existing database; there is no import. `php artisan migrate --force`
+adds the new tables and columns and, in `2026_10_18_120000`, rewrites option values that older
+answers spell differently from the current ones (e.g. `completed_and_published_full-text`,
+`investigator driven`, `coin-toss`), so the register shows proper labels and its filters count
+them together. The version history keeps the old values. There is no `down()`: take the backup
+first.
+
+- **Keep `APP_KEY`.** Protocol answers and messages are encrypted with it. With another key they
+  do not fail, they show as empty.
+- **Copy the uploads** with the code: `public/images/protocols` (images in answers) and
+  `public/images/news`. They are not in the database.
+- Older answers are shown as stored and cleaned on the way out: Word and web markup, escaped
+  characters (`p&lt;0.05`), superscript and subscript, Word comment markers, and pasted style
+  blocks. Answers holding images from the ILES editor (private Radboud links) show the text only.

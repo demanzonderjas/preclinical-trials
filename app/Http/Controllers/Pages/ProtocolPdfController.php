@@ -116,7 +116,9 @@ class ProtocolPdfController extends Controller
     private function cell(array $field, array $values): array
     {
         $value = $values[$field['key']] ?? null;
-        $text = $field['type'] === 'longtext' && is_string($value) ? (ProtocolSchema::plainText($value) ?: null) : ProtocolSchema::format($field, $value);
+        $formatted = $field['type'] === 'longtext' && is_string($value) ? $value : ProtocolSchema::format($field, $value);
+        // As on the page: older short answers can hold markup and escaped characters too.
+        $text = $formatted === null ? null : (ProtocolSchema::plainText($formatted) ?: null);
 
         $rich = $text !== null && $field['type'] === 'longtext' && $field['key'] !== 'sum_of_animals' && preg_match('/<\/?[a-z][^>]*>/i', (string) $value);
 
@@ -126,8 +128,8 @@ class ProtocolPdfController extends Controller
             // Cleaned again here: answers from the legacy editor were never cleaned on the server.
             'html' => $rich ? Html::answer($value) : null,
             'table' => match ($field['type']) {
-                'study_arms' => $this->table(['Type', 'Intervention', 'Animals'], $value, fn ($arm) => [ucfirst((string) data_get($arm, 'type')), data_get($arm, 'intervention'), data_get($arm, 'number')]),
-                'study_centres' => $this->table(['Name', 'City', 'Country'], $value, fn ($centre) => [data_get($centre, 'name'), data_get($centre, 'city'), config('pct.countries.'.data_get($centre, 'country')) ?? data_get($centre, 'country')]),
+                'study_arms' => $this->table(['Type', 'Intervention', 'Animals'], $value, fn ($arm) => [ucfirst($this->text(data_get($arm, 'type'))), $this->text(data_get($arm, 'intervention')), $this->text(data_get($arm, 'number'))]),
+                'study_centres' => $this->table(['Name', 'City', 'Country'], $value, fn ($centre) => [$this->text(data_get($centre, 'name')), $this->text(data_get($centre, 'city')), config('pct.countries.'.data_get($centre, 'country')) ?? $this->text(data_get($centre, 'country'))]),
                 default => null,
             },
             'images' => in_array($field['type'], ['image', 'images'], true) ? count(array_filter((array) $value)) : 0,
@@ -136,9 +138,16 @@ class ProtocolPdfController extends Controller
 
     private function table(array $headers, mixed $rows, callable $row): ?array
     {
-        $rows = is_array($rows) ? array_map($row, $rows) : [];
+        // Rows left empty in the legacy form are skipped.
+        $rows = is_array($rows) ? array_values(array_filter(array_map($row, $rows), fn (array $cells) => implode('', $cells) !== '')) : [];
 
         return $rows ? ['headers' => $headers, 'rows' => $rows] : null;
+    }
+
+    /** A table cell as typed; older rows were stored with escaped characters. */
+    private function text(mixed $value): string
+    {
+        return is_scalar($value) ? trim(html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5)) : '';
     }
 
     private function now(): string

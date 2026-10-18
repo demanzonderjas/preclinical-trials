@@ -123,6 +123,24 @@ class ProtocolPageTest extends TestCase
         $this->assertNull(ProtocolPageController::timing(null, Carbon::parse('2026-06-01')));
     }
 
+    public function test_older_records_read_well(): void
+    {
+        $protocol = $this->makePublishedProtocol($this->makeUser());
+        // Older registrations kept only the date.
+        $protocol->adminActions()->update(['created_at' => '2017-09-29 00:00:00']);
+        $protocol->addDetailsToDatabase([
+            'study_centre' => [['name' => 'Lalu Lab', 'city' => 'Ottawa', 'country' => 'CA'], ['name' => null, 'city' => null, 'country' => null]],
+        ]);
+        Revision::create(['protocol_id' => $protocol->id, 'changes' => [['key' => 'study_centre', 'old_value' => [['name' => 'UMC', 'city' => 'Utrecht', 'country' => 'NL']], 'new_value' => []]]]);
+
+        $this->actingAs($this->makeUser())->get("/database/view-protocol/{$protocol->id}")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('protocol.registered_at', '29 Sep 2017')
+                ->where('original.time', null)
+                ->where('protocol.countries', ['CA' => 'Canada', 'NL' => 'Netherlands']));
+    }
+
     protected function tearDown(): void
     {
         PublicRegister::forget();

@@ -2,6 +2,7 @@
 // in the e2e suite (workspace.spec.ts).
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { fieldByKey, optionLabel } from "../../resources/js/data/protocol-schema.ts";
 import { looksLikeHtml, parseAnswer, type RichNode, textToHtml, toEditorHtml } from "../../resources/js/lib/rich-text.ts";
 
 /** The tree as compact markup, to compare against. */
@@ -49,4 +50,22 @@ test("tables from the legacy editor read as one line per row", () => {
 
 test("entities are decoded once", () => {
 	assert.equal(markup(parseAnswer("<p>&amp;lt; &#8211; &#x2013; &micro;g &unknown;</p>")), "<p>&lt; – – µg &unknown;</p>");
+});
+
+test("superscript and subscript stay, as in 10⁶ cells and CO₂", () => {
+	assert.equal(markup(parseAnswer('<p>10<sup style="font-size:9px">6</sup> cells in CO<sub>2</sub></p>')), "<p>10<sup>6</sup> cells in CO<sub>2</sub></p>");
+});
+
+test("option values without a label read as text, not as keys", () => {
+	const field = fieldByKey.investigators_blinded_assessment;
+	assert.equal(optionLabel(field, "yes"), "Yes");
+	assert.equal(optionLabel(field, "outcome_assessors_are_blinded"), "Outcome assessors are blinded");
+});
+
+test("Word comment markers go with their text", () => {
+	assert.equal(markup(parseAnswer('<p>in the kidney <a href="#_msoanchor_1">[E1]</a></p><p><a class="msocomanchor" id="_anchor_1" href="#_msocom_1">[SK2]</a>end</p>')), "<p>in the kidney </p><p>end</p>");
+});
+
+test("style and title blocks pasted as escaped text are dropped", () => {
+	assert.equal(markup(parseAnswer("&lt;style&gt;\na { color: #464feb; }\n&lt;/style&gt;<p>&lt;title&gt;&lt;/title&gt;Sample size</p>")), "<p>Sample size</p>");
 });

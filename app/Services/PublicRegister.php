@@ -6,6 +6,7 @@ use App\Models\Protocol;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Read model of the public register: published protocols without embargo, as display-ready
@@ -76,13 +77,13 @@ class PublicRegister
             'title' => $protocol->title,
             'summary' => self::plainText($detail('hypothesis')),
             'study_status' => $status,
-            'study_status_label' => $status ? __("pct.study_status.$status") : null,
+            'study_status_label' => $status ? self::option('study_status', $status) : null,
             'study_stage' => $stage,
-            'study_stage_label' => $stage ? __("pct.study_stage.$stage") : null,
+            'study_stage_label' => $stage ? self::option('study_stage', $stage) : null,
             'species' => $species,
             'species_label' => $species === 'other' && $detail('other_species')
                 ? ucfirst((string) $detail('other_species'))
-                : ($species ? __("pct.species.$species") : null),
+                : ($species ? self::option('species', $species) : null),
             'research_field' => $detail('research_field'),
             'centre_name' => data_get($centre, 'name'),
             'centre_city' => data_get($centre, 'city'),
@@ -106,7 +107,7 @@ class PublicRegister
                 'centre' => implode(' ', array_filter([data_get($centre, 'name'), data_get($centre, 'city'), $countryCode ? config("pct.countries.$countryCode") : null])),
                 'pct_id' => (string) $protocol->pct_id,
                 'other' => implode(' ', array_filter([
-                    $species ? __("pct.species.$species") : null,
+                    $species ? self::option('species', $species) : null,
                     (string) $detail('other_species'),
                     (string) $detail('strain'),
                     self::plainText($detail('primary_readout_parameter')),
@@ -163,7 +164,7 @@ class PublicRegister
                 ->groupBy('species')
                 ->map(fn (Collection $group, string $species) => [
                     'species' => $species,
-                    'label' => __("pct.species.$species"),
+                    'label' => self::option('species', $species),
                     'count' => $group->count(),
                 ])
                 ->sortByDesc('count')
@@ -194,12 +195,21 @@ class PublicRegister
         return trim(($start?->format('M Y') ?? '…').' – '.($end?->format('M Y') ?? '…'));
     }
 
+    /**
+     * The label of a stored option value, e.g. option('study_status', 'active'). A value without
+     * a label is shown readable instead of as a translation key.
+     */
+    public static function option(string $group, string $value): string
+    {
+        return Lang::has("pct.$group.$value") ? __("pct.$group.$value") : ProtocolSchema::readable($value);
+    }
+
     private static function plainText(mixed $value): ?string
     {
         if (! is_string($value) || trim($value) === '') {
             return null;
         }
 
-        return trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($value))));
+        return trim(preg_replace('/\s+/u', ' ', ProtocolSchema::plainText($value)));
     }
 }

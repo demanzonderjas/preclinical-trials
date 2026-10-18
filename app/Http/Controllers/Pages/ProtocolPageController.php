@@ -11,6 +11,7 @@ use App\Services\PublicRegister;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -68,7 +69,7 @@ class ProtocolPageController extends Controller
                 'status' => $protocol->status,
                 'title' => $protocol->title,
                 'details' => $details,
-                'registered_at' => $registeredAt?->format('j M Y, H:i'),
+                'registered_at' => $registeredAt?->format(self::dateOnly($registeredAt) ? 'j M Y' : 'j M Y, H:i'),
                 'registered_year' => $registeredAt?->year,
                 'registered_before_start' => $summary['registered_before_start'],
                 'timing' => self::timing($registeredAt, $summary['start_date'] ? Carbon::parse($summary['start_date']) : null),
@@ -79,6 +80,7 @@ class ProtocolPageController extends Controller
                 'centre_place' => trim(implode(', ', array_filter([$summary['centre_city'], $summary['country_name']]))),
                 'is_owner' => $user->id === $protocol->user_id,
                 'shows_contact' => $privileged,
+                'countries' => self::countries($details->get('study_centre'), $versions),
                 // Only the owner and the PCT team learn that changes wait for review.
                 'amendment' => $privileged && $protocol->status === 'published' && ($open = $protocol->openAmendment)
                     ? ['id' => $open->id, 'status' => $open->status]
@@ -87,7 +89,7 @@ class ProtocolPageController extends Controller
             'versions' => $versions,
             'original' => [
                 'date' => $registeredAt?->format('j M Y'),
-                'time' => $registeredAt?->format('H:i'),
+                'time' => self::dateOnly($registeredAt) ? null : $registeredAt?->format('H:i'),
             ],
             'linked' => $linked,
         ]);
@@ -140,5 +142,28 @@ class ProtocolPageController extends Controller
             'text' => $before ? "Registered $span before the study started." : "Registered $span after the study started.",
             'before' => $before,
         ];
+    }
+
+    /** Older registrations kept only the date, stored as midnight. */
+    private static function dateOnly(?Carbon $moment): bool
+    {
+        return $moment?->format('H:i:s') === '00:00:00';
+    }
+
+    /**
+     * Country names for the study centre codes the page shows, now and in earlier versions.
+     *
+     * @return array<string, string>
+     */
+    private static function countries(mixed $centres, Collection $versions): array
+    {
+        $codes = collect([$centres])
+            ->merge($versions->flatMap(fn (array $version) => collect($version['changes'])->where('key', 'study_centre')->flatMap(fn ($change) => [$change['old_value'] ?? null, $change['new_value'] ?? null])))
+            ->flatMap(fn ($list) => is_array($list) ? $list : [])
+            ->map(fn ($centre) => data_get($centre, 'country'))
+            ->filter(fn ($code) => is_string($code) && config("pct.countries.$code"))
+            ->unique();
+
+        return $codes->mapWithKeys(fn (string $code) => [$code => config("pct.countries.$code")])->all();
     }
 }

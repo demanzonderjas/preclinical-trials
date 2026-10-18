@@ -142,18 +142,34 @@ class ProtocolSchema
         return $value !== null && trim(is_bool($value) ? ($value ? 'true' : 'false') : (string) $value) !== '';
     }
 
-    /** Rich text from the legacy editor as plain paragraphs. */
+    /**
+     * Rich text from the legacy editor as plain paragraphs. Scripts, styles and comment markers
+     * pasted from Word or web pages go with their contents; only tags go, so "p<0.05 and n>3"
+     * stays text.
+     */
     public static function plainText(?string $value): string
     {
-        $text = preg_replace(['/<br\s*\/?>/i', '/<\/(p|div|li|h\d)>/i'], "\n", (string) $value);
+        $text = preg_replace(['/<!--.*?-->/s', '/<(script|style|title|xml)\b.*?<\/\1\s*>/is', '/<a\b[^>]*(#_mso|msocomanchor)[^>]*>.*?<\/a>/is', Html::ESCAPED_HEAD], '', (string) $value);
+        $text = preg_replace(['/<br\s*\/?>/i', '/<\/(p|div|li|h\d)>/i'], "\n", $text);
+        $text = preg_replace('/<\/?[a-z][^<>]*>/i', '', $text);
 
-        return trim(preg_replace("/\n{3,}/", "\n\n", html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5)));
+        return trim(preg_replace("/\n{3,}/", "\n\n", html_entity_decode($text, ENT_QUOTES | ENT_HTML5)));
+    }
+
+    /**
+     * A stored value that is not one of the options, as readable text: older answers hold
+     * retired spellings and free text the legacy form turned into keys
+     * ("outcome_assessors_are_blinded" becomes "Outcome assessors are blinded").
+     */
+    public static function readable(string $value): string
+    {
+        return ucfirst(trim(str_replace('_', ' ', $value)));
     }
 
     private static function formatScalar(array $field, string $value): string
     {
         return match ($field['type']) {
-            'select', 'radio', 'checkboxes', 'yesno' => collect($field['options'] ?? [])->firstWhere('value', $value)['label'] ?? $value,
+            'select', 'radio', 'checkboxes', 'yesno' => collect($field['options'] ?? [])->firstWhere('value', $value)['label'] ?? self::readable($value),
             'date' => preg_match('/^(\d{4})-(\d{2})-(\d{2})/', $value, $m) && (int) $m[2] >= 1 && (int) $m[2] <= 12
                 ? ((int) $m[3]).' '.date('F', mktime(0, 0, 0, (int) $m[2], 1)).' '.$m[1]
                 : $value,

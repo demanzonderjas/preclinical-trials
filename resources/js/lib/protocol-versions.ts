@@ -6,6 +6,8 @@
  * version equals the current details.
  */
 
+import { decodeEntities, ESCAPED_HEAD } from "@/lib/rich-text";
+
 export type Change = { key: string; old_value: unknown; new_value: unknown };
 export type Version = { date: string | null; time: string | null; reason: string | null; admin_only: boolean; changes: Change[] };
 
@@ -51,7 +53,6 @@ export function textDiff(before: string, after: string): { keep: string; removed
 	return { keep: after.slice(0, cut), removed: before.slice(cut), added: after.slice(cut) };
 }
 
-const entities: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", nbsp: " " };
 
 /**
  * Rich text from the legacy editor as plain text with line breaks, so stored HTML is never
@@ -60,11 +61,17 @@ const entities: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"'
 export function plainText(value: string | null | undefined): string {
 	if (!value) return "";
 	return value
+		.replace(/<!--[\s\S]*?-->/g, "")
+		.replace(ESCAPED_HEAD, "")
+		.replace(/<(script|style|title|xml)\b[\s\S]*?<\/\1\s*>/gi, "")
+		// Word's comment markers ("[E1]").
+		.replace(/<a\b[^>]*(#_mso|msocomanchor)[^>]*>[\s\S]*?<\/a>/gi, "")
 		.replace(/<\s*br\s*\/?>/gi, "\n")
 		.replace(/<\/(p|div|li|h[1-6])>/gi, "\n")
 		.replace(/<li[^>]*>/gi, "• ")
-		.replace(/<[^>]+>/g, "")
-		.replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (_, entity: string) => entities[entity])
+		// Only tags: "p<0.05 and n>3" is text.
+		.replace(/<\/?[a-z][^<>]*>/gi, "")
+		.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, decodeEntities)
 		.replace(/\n{3,}/g, "\n\n")
 		.trim();
 }

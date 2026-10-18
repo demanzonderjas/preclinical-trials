@@ -618,12 +618,13 @@ export const protocolFields: ProtocolField[] = [
 	},
 	{
 		key: "randomisation_method_used",
-		label: "Method used - If randomisation is applied, please indicate the method used.",
+		label: "Method used",
 		section: "design",
 		group: "randomisation",
 		step: 4,
 		type: "select",
 		required: true,
+		help: "If randomisation is applied, please indicate the method used.",
 		options: [
 			{
 				value: "computer_generated_random_number_sequence",
@@ -654,12 +655,13 @@ export const protocolFields: ProtocolField[] = [
 	},
 	{
 		key: "details_randomisation",
-		label: "Further details on randomisation - Provide further details on randomisation.",
+		label: "Further details on randomisation",
 		section: "design",
 		group: "randomisation",
 		step: 4,
 		type: "select",
 		required: true,
+		help: "Provide further details on randomisation.",
 		options: [
 			{ value: "simple_randomisation", label: "Simple randomisation" },
 			{ value: "block_randomisation", label: "Block randomisation" },
@@ -1071,9 +1073,19 @@ function toList(value: unknown): string[] {
 	return [String(value)];
 }
 
-/** The English label of a stored option value, or the value itself when it is not an option. */
+/**
+ * The English label of a stored option value. A value that is not an option is shown as
+ * readable text: older answers hold retired spellings and free text the legacy form turned into
+ * keys ("outcome_assessors_are_blinded" becomes "Outcome assessors are blinded").
+ */
 export function optionLabel(field: ProtocolField, value: string): string {
-	return field.options?.find((option) => option.value === value)?.label ?? value;
+	return field.options?.find((option) => option.value === value)?.label ?? readable(value);
+}
+
+/** Mirrors ProtocolSchema::readable(). */
+export function readable(value: string): string {
+	const text = value.replaceAll("_", " ").trim();
+	return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 const monthNames = [

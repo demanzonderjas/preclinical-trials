@@ -153,14 +153,18 @@ function stripMarker(item: Element, marker: RegExp) {
 /* Reading answers without the DOM (also during server-side rendering)        */
 /* -------------------------------------------------------------------------- */
 
-export type RichNode = { tag: "p" | "br" | "strong" | "em" | "u" | "ul" | "ol" | "li" | "a"; href?: string; children: RichNode[] } | string;
+export type RichNode = { tag: "p" | "br" | "strong" | "em" | "u" | "sup" | "sub" | "ul" | "ol" | "li" | "a"; href?: string; children: RichNode[] } | string;
 
-const TAGS: Record<string, Exclude<RichNode, string>["tag"]> = { p: "p", div: "p", tr: "p", caption: "p", h1: "p", h2: "p", h3: "p", h4: "p", h5: "p", h6: "p", blockquote: "p", br: "br", strong: "strong", b: "strong", em: "em", i: "em", u: "u", ul: "ul", ol: "ol", li: "li", a: "a" };
+const TAGS: Record<string, Exclude<RichNode, string>["tag"]> = { p: "p", div: "p", tr: "p", caption: "p", h1: "p", h2: "p", h3: "p", h4: "p", h5: "p", h6: "p", blockquote: "p", br: "br", strong: "strong", b: "strong", em: "em", i: "em", u: "u", sup: "sup", sub: "sub", ul: "ul", ol: "ol", li: "li", a: "a" };
 const VOID = new Set(["br", "img", "hr", "meta", "link", "input", "col", "wbr"]);
+/** A style or title block some editors paste as escaped text ("&lt;style&gt;a { … }&lt;/style&gt;"). */
+export const ESCAPED_HEAD = /&lt;(style|title)\b[\s\S]*?&lt;\/\1\s*&gt;/gi;
+
 const SKIP = new Set(["script", "style", "title", "xml", "template", "svg", "math", "iframe", "object"]);
 const entities: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", lsquo: "‘", rsquo: "’", ldquo: "“", rdquo: "”", hellip: "…", bull: "•", middot: "·", euro: "€", deg: "°", micro: "µ", plusmn: "±", times: "×" };
 
-const decode = (text: string) =>
+/** Character references (&lt;, &amp;, &#8211;…) as the characters they stand for. */
+export const decodeEntities = (text: string) =>
 	text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, entity: string) => {
 		if (entity[0] === "#") {
 			const code = entity[1].toLowerCase() === "x" ? parseInt(entity.slice(2), 16) : parseInt(entity.slice(1), 10);
@@ -170,7 +174,7 @@ const decode = (text: string) =>
 	});
 
 const safeHref = (href: string) => {
-	const url = decode(href).trim();
+	const url = decodeEntities(href).trim();
 	return /^(https?:\/\/|mailto:)/i.test(url) ? url : /^www\./i.test(url) ? `https://${url}` : undefined;
 };
 
@@ -185,10 +189,10 @@ export function parseAnswer(value: string): RichNode[] {
 	const parent = () => [...stack].reverse().find(entry => entry.node)!.node!;
 	let skipping: string | null = null;
 
-	for (const token of value.replace(/<!--[\s\S]*?-->/g, "").split(/(<\/?[a-z][a-z0-9:-]*\b[^>]*>)/i)) {
+	for (const token of value.replace(/<!--[\s\S]*?-->/g, "").replace(ESCAPED_HEAD, "").split(/(<\/?[a-z][a-z0-9:-]*\b[^>]*>)/i)) {
 		const tag = /^<(\/?)([a-z][a-z0-9:-]*)\b([^>]*)>$/i.exec(token);
 		if (!tag) {
-			if (!skipping && token) parent().children.push(decode(token));
+			if (!skipping && token) parent().children.push(decodeEntities(token));
 			continue;
 		}
 		const [, closing, rawName, attributes] = tag;
@@ -197,7 +201,9 @@ export function parseAnswer(value: string): RichNode[] {
 			if (closing && name === skipping) skipping = null;
 			continue;
 		}
-		if (SKIP.has(name)) {
+		// Word's comment markers ("[E1]") link to the comments, which are not kept.
+		const wordComment = name === "a" && /href\s*=\s*["']?#_mso|msocomanchor/i.test(attributes);
+		if (SKIP.has(name) || wordComment) {
 			if (!closing && !/\/\s*$/.test(attributes)) skipping = name;
 			continue;
 		}

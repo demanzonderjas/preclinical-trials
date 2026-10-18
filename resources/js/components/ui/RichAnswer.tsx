@@ -1,15 +1,16 @@
 import { Fragment, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { looksLikeHtml, parseAnswer, type RichNode } from "@/lib/rich-text";
+import { decodeEntities, looksLikeHtml, parseAnswer, type RichNode } from "@/lib/rich-text";
 
-const INLINE = new Set(["strong", "em", "u", "a", "br"]);
+const INLINE = new Set(["strong", "em", "u", "sup", "sub", "a", "br"]);
 
 /**
- * A long answer as the researcher formatted it: paragraphs, lists, bold, italic, underline and
- * links. Plain-text answers keep their line breaks. Built from React elements, never from HTML.
+ * A long answer as the researcher formatted it: paragraphs, lists, bold, italic, underline,
+ * superscript, subscript and links. Plain-text answers keep their line breaks; older ones were
+ * stored with escaped characters ("p&lt;0.05"). Built from React elements, never from HTML.
  */
 export function RichAnswer({ value, className }: { value: string; className?: string }) {
-	if (!looksLikeHtml(value)) return <p className={cn("leading-relaxed whitespace-pre-line", className)}>{value.trim()}</p>;
+	if (!looksLikeHtml(value)) return <p className={cn("leading-relaxed whitespace-pre-line", className)}>{decodeEntities(value.trim())}</p>;
 	return <div className={cn("grid gap-2.5 leading-relaxed whitespace-normal", className)}>{blocks(parseAnswer(value))}</div>;
 }
 
@@ -56,6 +57,10 @@ function renderNode(node: Exclude<RichNode, string>, key: number): ReactNode {
 			return <em key={key}>{render(node.children)}</em>;
 		case "u":
 			return <u key={key}>{render(node.children)}</u>;
+		case "sup":
+			return <sup key={key}>{render(node.children)}</sup>;
+		case "sub":
+			return <sub key={key}>{render(node.children)}</sub>;
 		case "a":
 			return node.href ? (
 				<a key={key} href={node.href} target="_blank" rel="noopener noreferrer nofollow" className="break-words text-link underline underline-offset-2">

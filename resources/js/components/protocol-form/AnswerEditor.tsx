@@ -1,4 +1,6 @@
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
+import Subscript from "@tiptap/extension-subscript";
+import Superscript from "@tiptap/extension-superscript";
 import StarterKit from "@tiptap/starter-kit";
 import { Bold, Italic, Link2, List, ListOrdered, RemoveFormatting, Underline } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
@@ -8,7 +10,8 @@ import { cleanPastedHtml, textToHtml, toEditorHtml } from "@/lib/rich-text";
 const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
 
 /**
- * A long answer: paragraphs, lists, bold, italic, underline and links. Text pasted from Word,
+ * A long answer: paragraphs, lists, bold, italic, underline, superscript, subscript ("10⁶ cells",
+ * "CO₂"; Mod+. and Mod+,) and links. Text pasted from Word,
  * Google Docs, PDFs or web pages keeps that structure and loses the rest (fonts, colours,
  * Word's hidden markup). Markdown-style shortcuts work too: "- " starts a list, "1. " a
  * numbered one, **bold** and *italic*.
@@ -29,7 +32,9 @@ export function AnswerEditor({ id, labelId, value, onChange, required, invalid, 
 				strike: false,
 				trailingNode: false,
 				link: { openOnClick: false, autolink: true, linkOnPaste: true, defaultProtocol: "https", protocols: ["mailto"], HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }
-			})
+			}),
+			Superscript,
+			Subscript
 		],
 		content: toEditorHtml(value),
 		editorProps: {

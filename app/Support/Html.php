@@ -17,7 +17,10 @@ class Html
     private const ATTRIBUTES = ['a' => ['href', 'target', 'rel'], 'img' => ['src', 'alt']];
 
     /** Long protocol answers: what the protocol form's answer editor makes. */
-    private const ANSWER_TAGS = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'a'];
+    private const ANSWER_TAGS = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'sup', 'sub', 'ul', 'ol', 'li', 'a'];
+
+    /** A style or title block some editors paste as escaped text ("&lt;style&gt;a { … }&lt;/style&gt;"). */
+    public const ESCAPED_HEAD = '/&lt;(style|title)\b.*?&lt;\/\1\s*&gt;/is';
 
     /** Elements removed with everything inside them. */
     private const DROP = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select', 'svg', 'math', 'template'];
@@ -29,7 +32,8 @@ class Html
 
     /**
      * A long answer from the protocol form, the ILES import or the legacy editor: paragraphs,
-     * lists, bold, italic, underline and absolute links. Everything else keeps its text only.
+     * lists, bold, italic, underline, superscript, subscript ("10<sup>6</sup> cells") and
+     * absolute links. Everything else keeps its text only.
      */
     public static function answer(?string $html): string
     {
@@ -42,6 +46,7 @@ class Html
             return '';
         }
 
+        $html = preg_replace(self::ESCAPED_HEAD, '', $html);
         $document = new DOMDocument;
         libxml_use_internal_errors(true);
         $document->loadHTML('<?xml encoding="utf-8"?><div id="root">'.$html.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NONET);
@@ -62,7 +67,9 @@ class Html
         foreach (iterator_to_array($node->childNodes) as $child) {
             if ($child instanceof DOMElement) {
                 $tag = strtolower($child->tagName);
-                if (in_array($tag, self::DROP, true)) {
+                // Word's comment markers ("[E1]") link to the comments, which are not kept.
+                $wordComment = $tag === 'a' && (str_starts_with($child->getAttribute('href'), '#_mso') || str_contains($child->getAttribute('class'), 'msocomanchor'));
+                if (in_array($tag, self::DROP, true) || $wordComment) {
                     $child->parentNode->removeChild($child);
 
                     continue;
