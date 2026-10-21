@@ -47,7 +47,7 @@ class CheckEmbargoStatus extends Command
         $embargoEndDates = EmbargoEndDate::where('is_active', TRUE)->get();
 
         $embargoEndDates->each(function ($embargoEndDate) {
-            $diffInDays = Carbon::now()->diffInDays(new Carbon($embargoEndDate->date), false);
+            $diffInDays = (int) Carbon::now()->diffInDays(new Carbon($embargoEndDate->date), false);
 
             $NEEDS_FIRST_REMINDER = $diffInDays <= 30 && $diffInDays > 0 && $embargoEndDate->mail_status === NULL;
             $NEEDS_SECOND_REMINDER = $diffInDays <= 14 && $diffInDays > 0 && $embargoEndDate->mail_status === "first_reminder";

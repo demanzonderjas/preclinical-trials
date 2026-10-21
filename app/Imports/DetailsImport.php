@@ -12,7 +12,7 @@ class DetailsImport implements ToCollection, WithHeadingRow
     /**
      * @param Collection $collection
      */
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         $importHelper = new OldRecordDataImportHelper();
         foreach ($rows as $row) {

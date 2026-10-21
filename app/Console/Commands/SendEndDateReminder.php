@@ -55,7 +55,7 @@ class SendEndDateReminder extends Command
                 return;
             }
 
-            $diffInDays = Carbon::now()->diffInDays(new Carbon($end_date), false);
+            $diffInDays = (int) Carbon::now()->diffInDays(new Carbon($end_date), false);
 
             $NEEDS_REMINDER = $diffInDays === -90;
             $NEEDS_SECOND_REMINDER = $diffInDays === -365;

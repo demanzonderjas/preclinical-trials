@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class RadboudUsersImport implements ToModel, SkipsEmptyRows
 {
-    public function model(array $row)
+    public function model(array $row): \Illuminate\Database\Eloquent\Model|array|null
     {
 
         $password = Str::random(16);
