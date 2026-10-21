@@ -1,6 +1,8 @@
 <?php
 
 return [
+	"admin_mail" => env("ADMIN_MAIL"),
+
 	"valid_protocol_keys" => [
 		"title",
 		"short_title",

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Support\AdminMail;
 use App\Http\Controllers\Controller;
 use App\Mail\EmbargoExtensionApproved;
 use App\Mail\EmbargoExtensionRejected;
@@ -37,7 +38,7 @@ class EmbargoController extends Controller
 		]);
 		$targetProtocol->embargoExtensions()->save($extension);
 
-		Mail::to(env('ADMIN_MAIL'))->send(new EmbargoExtensionRequested($extension));
+		AdminMail::send(new EmbargoExtensionRequested($extension));
 
 		return response()->json(["embargo_extension" => $extension]);
 	}

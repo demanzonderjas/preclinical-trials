@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Support\AdminMail;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProtocolResource;
 use App\Mail\FirstProtocolFeedback;
@@ -98,7 +99,7 @@ class ProtocolController extends Controller
 		$protocol->status = $protocol->status !== "draft" ? "resubmitted_for_publication" : "submitted_for_publication";
 		$protocol->save();
 
-		Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
+		AdminMail::send(new ProtocolSubmittedForPublication($protocol));
 		Mail::to($protocol->user)->send(new ProtocolSubmittedUser($protocol));
 	}
 
@@ -263,7 +264,7 @@ class ProtocolController extends Controller
 			$log->type = "iles";
 			$log->save();
 
-			Mail::to(env('ADMIN_MAIL'))->send(new ProtocolSubmittedForPublication($protocol));
+			AdminMail::send(new ProtocolSubmittedForPublication($protocol));
 			Mail::to($user)->send(new ProtocolSubmittedUser($protocol));
 		} catch (Exception $e) {
 			return response()->json(['success' => false, 'message' => 'error_during_saving_in_database', 'exception' => $e]);

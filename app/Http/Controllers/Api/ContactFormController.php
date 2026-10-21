@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Support\AdminMail;
 use App\Http\Controllers\Controller;
 use App\Mail\ContactFormSubmitted;
 use App\Models\ContactForm;
@@ -18,7 +19,7 @@ class ContactFormController extends Controller
 		$form->message = $request->message;
 		$form->save();
 
-		Mail::to(env('ADMIN_MAIL'))->send(new ContactFormSubmitted($form));
+		AdminMail::send(new ContactFormSubmitted($form));
 
 		return response()->json(["success" => true]);
 	}
