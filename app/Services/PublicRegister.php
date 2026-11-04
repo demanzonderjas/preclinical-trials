@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Lang;
  */
 class PublicRegister
 {
-    public const CACHE_KEY = 'public-register:v2';
+    public const CACHE_KEY = 'public-register:v3';
 
     /**
      * @return Collection<int, array<string, mixed>>
@@ -84,7 +84,7 @@ class PublicRegister
             'species_label' => $species === 'other' && $detail('other_species')
                 ? ucfirst((string) $detail('other_species'))
                 : ($species ? self::option('species', $species) : null),
-            'research_field' => $detail('research_field'),
+            'research_field' => self::plainText($detail('research_field')),
             'centre_name' => data_get($centre, 'name'),
             'centre_city' => data_get($centre, 'city'),
             'country' => $countryCode,
@@ -103,7 +103,7 @@ class PublicRegister
             'search' => [
                 'title' => (string) $protocol->title,
                 'hypothesis' => (string) self::plainText($detail('hypothesis')),
-                'research_field' => (string) $detail('research_field'),
+                'research_field' => (string) self::plainText($detail('research_field')),
                 'centre' => implode(' ', array_filter([data_get($centre, 'name'), data_get($centre, 'city'), $countryCode ? config("pct.countries.$countryCode") : null])),
                 'pct_id' => (string) $protocol->pct_id,
                 'other' => implode(' ', array_filter([
