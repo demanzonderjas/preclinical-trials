@@ -4,6 +4,9 @@ return [
 	// Receives submissions, embargo requests and contact form messages.
 	"admin_mail" => env("ADMIN_MAIL"),
 
+	// Test mode: every email goes to admin_mail instead of its recipients (app/Mail/RedirectToAdmin.php).
+	"mail_redirect_to_admin" => (bool) env("MAIL_REDIRECT_TO_ADMIN", false),
+
 	// Shared secrets of the two external integrations (see routes/api.php).
 	"iles_token" => env("ILES_TOKEN"),
 	"external_api_key" => env("EXTERNAL_API_KEY"),

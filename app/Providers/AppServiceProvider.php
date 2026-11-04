@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Mail\RedirectToAdmin;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -21,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
         // F13: at least 12 characters with upper and lower case and a number. Existing
         // passwords keep working; the rule applies when a password is set or changed.
         Password::defaults(fn () => Password::min(12)->mixedCase()->numbers());
+
+        // Test mode: all email to the admin instead of real users (MAIL_REDIRECT_TO_ADMIN).
+        Event::listen(MessageSending::class, [RedirectToAdmin::class, 'handle']);
 
         // Applied to every /api route. A named limiter keeps its own counter, so it no longer
         // eats into stricter route limits such as the contact form's throttle:10,1.
