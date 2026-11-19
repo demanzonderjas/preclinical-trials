@@ -116,6 +116,22 @@ class TwoFactorTest extends TestCase
         $this->actingAs($admin)->withSession([TwoFactor::SESSION_KEY => $admin->id])->get('/admin')->assertRedirect('/admin/protocols');
     }
 
+    public function test_a_local_environment_skips_two_factor(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin)->get('/admin/users')->assertRedirect('/admin/two-factor');
+
+        $this->app->detectEnvironment(fn () => 'local');
+
+        $this->actingAs($admin)->get('/admin/users')->assertOk();
+        // The two-factor page itself sends them on, to the page they first asked for.
+        $this->actingAs($admin)->get('/admin/two-factor')->assertRedirect('/admin/users');
+
+        // Only local: production and staging keep the step.
+        $this->app->detectEnvironment(fn () => 'production');
+        $this->actingAs($admin)->get('/admin/users')->assertRedirect('/admin/two-factor');
+    }
+
     public function test_the_reset_command_removes_two_factor(): void
     {
         $admin = $this->makeAdmin();

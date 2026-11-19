@@ -15,7 +15,7 @@ class TwoFactorController extends Controller
         $user = $request->user();
         $twoFactor = TwoFactor::for($user);
 
-        if ($request->session()->get(TwoFactor::SESSION_KEY) === $user->id) {
+        if (TwoFactor::passed($request)) {
             return redirect()->intended(route('admin.protocols'));
         }
 

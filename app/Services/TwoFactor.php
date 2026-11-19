@@ -7,6 +7,7 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -30,6 +31,16 @@ class TwoFactor
     public static function for(User $user): self
     {
         return new self($user);
+    }
+
+    /**
+     * Whether this request may enter the admin area: the session passed as this user.
+     * On a developer's machine (APP_ENV=local, never production) there is no second step.
+     */
+    public static function passed(Request $request): bool
+    {
+        return app()->environment('local')
+            || $request->session()->get(self::SESSION_KEY) === $request->user()->id;
     }
 
     public function enabled(): bool
