@@ -41,7 +41,9 @@ class PageContent
     public static function pages(): array
     {
         $pages = [];
-        foreach (config('page-content.pages', []) as $class) {
+        // A config cache built before config/page-content.php existed has no list: read the file
+        // then, so a deploy that skips `config:cache` doesn't take the menu and footer down.
+        foreach (config('page-content.pages') ?? (require config_path('page-content.php'))['pages'] as $class) {
             $schema = self::$schemas[$class] ??= new $class;
             $pages[$schema->key] = $schema;
         }

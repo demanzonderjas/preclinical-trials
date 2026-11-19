@@ -128,3 +128,15 @@ first.
 - Older answers are shown as stored and cleaned on the way out: Word and web markup, escaped
   characters (`p&lt;0.05`), superscript and subscript, Word comment markers, and pasted style
   blocks. Answers holding images from the ILES editor (private Radboud links) show the text only.
+
+## Release of 19 Nov 2026 (client feedback, editable page texts)
+
+Run after deploying the code, in this order:
+
+```bash
+php artisan migrate --force   # page_contents table, feedback_points.reopened_at
+php artisan config:cache      # picks up the new config/page-content.php
+```
+
+No seeding: page texts default to the text in `app/Content/Pages/*`; the privacy statement
+record is created the first time an admin opens Content → Pages.
