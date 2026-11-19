@@ -13,9 +13,9 @@ export type BadgeTone =
 	| "teal"
 	/** Pale teal with a teal ring: published. */
 	| "teal-ring"
-	/** Peach tint: needs changes, "before study start". */
+	/** Peach tint: more information needed (referred), "before study start". */
 	| "peach"
-	/** White with a slate outline: embargo. */
+	/** White with a slate outline: embargo, declined. */
 	| "outline";
 
 const tones: Record<BadgeTone, string> = {
@@ -57,14 +57,16 @@ export function Badge({ tone = "teal", dot, icon, size = "md", className, childr
 	);
 }
 
-export type ProtocolStatus = "draft" | "submitted_for_publication" | "resubmitted_for_publication" | "published" | "rejected";
+/** `rejected` is shown as "More information needed" (referred); `declined` is final (not eligible). */
+export type ProtocolStatus = "draft" | "submitted_for_publication" | "resubmitted_for_publication" | "published" | "rejected" | "declined";
 
 const statusBadges: Record<ProtocolStatus, { label: string; tone: BadgeTone; dot?: "grey"; icon?: ReactNode }> = {
 	draft: { label: "Draft", tone: "neutral", dot: "grey" },
 	submitted_for_publication: { label: "Submitted for publication", tone: "blue" },
 	resubmitted_for_publication: { label: "Resubmitted for publication", tone: "blue-outline" },
 	published: { label: "Published", tone: "teal-ring", icon: <Check size={12} strokeWidth={2.8} aria-hidden="true" /> },
-	rejected: { label: "Needs changes", tone: "peach" }
+	rejected: { label: "More information needed", tone: "peach" },
+	declined: { label: "Declined", tone: "outline" }
 };
 
 /** The registration status of a protocol. */

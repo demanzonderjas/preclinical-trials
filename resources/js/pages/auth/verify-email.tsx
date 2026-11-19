@@ -3,10 +3,20 @@ import { MailCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Panel } from "@/components/ui/Content";
 import { FlashMessage } from "@/components/ui/Interactive";
+import { RichContent } from "@/components/ui/RichContent";
 import { AuthLayout } from "@/layouts/Layouts";
-import { routes } from "@/lib/routes";
+import type { AuthContent } from "@/types/page-content";
 
-export default function VerifyEmail({ email, sent }: { email: string; sent: boolean }) {
+type Props = {
+	/** The texts, edited in Admin → Content → Pages (app/Content/Pages/AuthPages.php). */
+	content: AuthContent["verify_email"];
+	email: string;
+	sent: boolean;
+};
+
+export default function VerifyEmail({ content, email, sent }: Props) {
+	// "We sent a link to {email}. …": the address in bold where the text names it.
+	const [before, ...after] = content.text.split("{email}");
 	return (
 		<AuthLayout title="Verify your email">
 			<div className="container-page">
@@ -14,10 +24,12 @@ export default function VerifyEmail({ email, sent }: { email: string; sent: bool
 					<span className="mx-auto flex size-20 items-center justify-center rounded-[22px] bg-teal-50">
 						<MailCheck size={40} strokeWidth={1.6} aria-hidden="true" />
 					</span>
-					<p className="eyebrow mt-6">Step 1 of 3</p>
-					<h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-5xl">Verify your email</h1>
+					<p className="eyebrow mt-6">{content.eyebrow}</p>
+					<h1 className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-5xl">{content.title}</h1>
 					<p className="mx-auto mt-4 max-w-md text-lg leading-normal text-ink-muted">
-						We sent a link to <strong className="text-ink">{email}</strong>. Click it to finish creating your account, then you can register your first protocol.
+						{before}
+						{after.length > 0 && <strong className="text-ink">{email}</strong>}
+						{after.join(email)}
 					</p>
 					{sent && (
 						<div className="mt-6 text-left">
@@ -32,13 +44,7 @@ export default function VerifyEmail({ email, sent }: { email: string; sent: bool
 							Log out
 						</Link>
 					</div>
-					<p className="mt-8 text-[15px] text-ink-muted">
-						Nothing after 10 minutes? Check your spam folder or{" "}
-						<a href={routes.contact} className="font-bold underline underline-offset-3">
-							contact the helpdesk
-						</a>
-						.
-					</p>
+					<RichContent html={content.help} className="mt-8 text-[15px] text-ink-muted [&_a]:font-bold" />
 				</Panel>
 			</div>
 		</AuthLayout>

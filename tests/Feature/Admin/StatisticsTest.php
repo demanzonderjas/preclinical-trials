@@ -26,7 +26,7 @@ class StatisticsTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('admin/statistics')
-                ->where('lifecycle', ['submitted' => 3, 'published' => 2, 'rejected' => 0, 'awaiting' => 1])
+                ->where('lifecycle', ['submitted' => 3, 'published' => 2, 'rejected' => 0, 'declined' => 0, 'awaiting' => 1])
                 ->where('embargo', ['embargoed' => 1, 'public' => 1])
                 ->has('per_month', 12)
                 ->where('per_month.0.count', 2)

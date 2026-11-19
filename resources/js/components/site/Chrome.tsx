@@ -7,7 +7,9 @@ import { Avatar } from "@/components/ui/Content";
 import { TextInput } from "@/components/ui/Form";
 import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/cn";
+import { fill } from "@/lib/content";
 import { routes } from "@/lib/routes";
+import type { ContentLink, SiteChromeContent } from "@/types/page-content";
 
 /*
  * Page chrome for the three areas of the site: the public site, the researcher's
@@ -15,12 +17,20 @@ import { routes } from "@/lib/routes";
  * the navigation collapses into a menu sheet (public) or scrolling tabs (workspace, admin).
  */
 
-const publicNav = [
-	{ label: "Database", href: routes.database },
-	{ label: "Register a protocol", href: routes.registerProtocol },
-	{ label: "About", href: routes.about },
-	{ label: "Help", href: routes.help }
-];
+/** The texts of the menu and footer, edited in Admin → Content → Pages (app/Content/Pages/SiteChrome.php). */
+function useChromeText(): SiteChromeContent {
+	return usePage().props.siteContent.site_chrome;
+}
+
+/** The public menu: the labels come from the admin, where each item goes stays here. */
+function publicNav(menu: SiteChromeContent["menu"]) {
+	return [
+		{ label: menu.database, href: routes.database },
+		{ label: menu.register, href: routes.registerProtocol },
+		{ label: menu.about, href: routes.about },
+		{ label: menu.help, href: routes.help }
+	];
+}
 
 function isCurrent(url: string, href: string) {
 	const path = href.split("?")[0];
@@ -34,6 +44,8 @@ function isCurrent(url: string, href: string) {
 export function SiteHeader() {
 	const { url, props } = usePage();
 	const user = props.auth.user;
+	const { menu } = props.siteContent.site_chrome;
+	const nav = publicNav(menu);
 	const [open, setOpen] = useState(false);
 	const menuId = useId();
 
@@ -53,7 +65,7 @@ export function SiteHeader() {
 			<div className="container-page flex h-18 items-center gap-6 lg:h-20 lg:gap-10">
 				<Logo />
 				<nav aria-label="Main" className="mx-auto hidden items-center gap-1 lg:flex">
-					{publicNav.map(item => (
+					{nav.map(item => (
 						<a
 							key={item.href}
 							href={item.href}
@@ -67,15 +79,15 @@ export function SiteHeader() {
 				<div className="ml-auto flex items-center gap-2 lg:ml-0">
 					{user ? (
 						<ButtonAnchor href={routes.dashboard} size="sm" className="max-sm:hidden">
-							My workspace
+							{menu.workspace}
 						</ButtonAnchor>
 					) : (
 						<>
 							<a href={routes.login} className="inline-flex h-11 items-center rounded-full px-4 text-[16.5px] font-bold whitespace-nowrap text-ink hover:bg-teal-50 hover:text-ink max-sm:hidden">
-								Log in
+								{menu.login}
 							</a>
 							<ButtonAnchor href={routes.createAccount} size="sm" className="max-sm:hidden">
-								Create account
+								{menu.signup}
 							</ButtonAnchor>
 						</>
 					)}
@@ -94,7 +106,7 @@ export function SiteHeader() {
 			{open && (
 				<div id={menuId} className="fixed inset-x-0 top-18 bottom-0 z-30 overflow-y-auto bg-white lg:hidden">
 					<nav aria-label="Main" className="container-page flex flex-col py-4">
-						{publicNav.map(item => (
+						{nav.map(item => (
 							<a
 								key={item.href}
 								href={item.href}
@@ -107,15 +119,15 @@ export function SiteHeader() {
 						<div className="mt-6 grid gap-3">
 							{user ? (
 								<ButtonAnchor href={routes.dashboard} size="lg">
-									My workspace
+									{menu.workspace}
 								</ButtonAnchor>
 							) : (
 								<>
 									<ButtonAnchor href={routes.createAccount} size="lg">
-										Create account
+										{menu.signup}
 									</ButtonAnchor>
 									<ButtonAnchor href={routes.login} variant="secondary" size="lg">
-										Log in
+										{menu.login}
 									</ButtonAnchor>
 								</>
 							)}
@@ -131,39 +143,27 @@ export function SiteHeader() {
 /* Footers                                                                     */
 /* -------------------------------------------------------------------------- */
 
-const footerColumns = [
-	{
-		title: "Register",
-		links: [
-			{ label: "Search the database", href: routes.database },
-			{ label: "Register a protocol", href: routes.registerProtocol },
-			{ label: "Create account", href: routes.createAccount },
-			{ label: "Log in", href: routes.login }
-		]
-	},
-	{
-		title: "About",
-		links: [
-			{ label: "About us", href: routes.about },
-			{ label: "News", href: routes.news },
-			{ label: "Contact", href: routes.contact }
-		]
-	},
-	{
-		title: "Help",
-		links: [
-			{ label: "Help centre", href: routes.help },
-			{ label: "How-to guide (PDF)", href: routes.howToGuide },
-			{ label: "Book a 1:1 appointment", href: routes.bookAppointment }
-		]
-	}
-];
-
-function Copyright() {
-	return <p>© {new Date().getFullYear()} PreclinicalTrials.eu · UMC Utrecht, Utrecht, the Netherlands</p>;
+/**
+ * The bottom line: the copyright ({year} filled in) and the hosting parts after it, one part
+ * per item. The parts wrap between items on narrow screens, so a longer line (e.g. two places) fits.
+ */
+function Copyright({ bottom }: { bottom: SiteChromeContent["bottom"] }) {
+	const parts = [fill(bottom.copyright, { year: new Date().getFullYear() }), ...bottom.hosting.map(part => part.text)];
+	return (
+		<p className="min-w-0">
+			{parts.map((part, index) => (
+				<span key={index}>
+					{index > 0 && " · "}
+					<span className="sm:whitespace-nowrap">{part}</span>
+				</span>
+			))}
+		</p>
+	);
 }
 
 export function SiteFooter({ newsletter = true }: { newsletter?: boolean }) {
+	const text = useChromeText();
+	const columns = [text.register_links, text.about_links, text.help_links];
 	return (
 		<footer className="border-t border-line bg-mist text-ink">
 			<div className="container-page pt-14 pb-8 lg:pt-16">
@@ -171,43 +171,46 @@ export function SiteFooter({ newsletter = true }: { newsletter?: boolean }) {
 					<div className="sm:col-span-3 lg:col-span-1">
 						<Logo glass="white" />
 						<p className="mt-4.5 max-w-[330px] text-base leading-relaxed text-ink-muted">
-							The international register of preclinical animal study protocols — open to all types of animal studies, from every field and every country.
+							{text.about.text}
 						</p>
 						<p className="mt-4 flex max-w-[330px] items-start gap-2.5 text-sm leading-normal text-ink-muted">
 							<ShieldCheck size={18} strokeWidth={2} className="mt-0.5 shrink-0 text-teal-500" aria-hidden="true" />
-							Permanent access to the database is guaranteed by KNAW and NWO.
+							{text.about.funding}
 						</p>
 					</div>
-					{footerColumns.map(column => (
-						<FooterLinks key={column.title} title={column.title} links={column.links} />
+					{columns.map((column, index) => (
+						<FooterLinks key={index} title={column.title} links={column.links.map(item => item.link)} />
 					))}
 					{newsletter && (
 						<div className="@container self-start rounded-[22px] bg-white px-7 pt-7 pb-7 shadow-[inset_0_0_0_1px_var(--color-line)] sm:col-span-3 lg:col-span-1">
-							<NewsletterForm />
+							<NewsletterForm text={text.newsletter} />
 						</div>
 					)}
 				</div>
-				<div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-ink-muted md:flex-row md:items-center md:justify-between">
-					<Copyright />
-					<ul className="flex flex-wrap gap-x-6 gap-y-2">
-						<li>
-							<a href={routes.terms} className="text-ink-muted hover:text-link hover:underline">
-								Terms and conditions
-							</a>
-						</li>
-						<li>
-							<a href={routes.privacy} className="text-ink-muted hover:text-link hover:underline">
-								Privacy statement
-							</a>
-						</li>
-					</ul>
+				<div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-ink-muted md:flex-row md:items-center md:justify-between md:gap-8">
+					<Copyright bottom={text.bottom} />
+					<BottomLinks links={text.bottom.links} />
 				</div>
 			</div>
 		</footer>
 	);
 }
 
-function FooterLinks({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+function BottomLinks({ links }: { links: { link: ContentLink }[] }) {
+	return (
+		<ul className="flex shrink-0 flex-wrap gap-x-6 gap-y-2">
+			{links.map(({ link }, index) => (
+				<li key={index}>
+					<a href={link.url} className="text-ink-muted hover:text-link hover:underline">
+						{link.label}
+					</a>
+				</li>
+			))}
+		</ul>
+	);
+}
+
+function FooterLinks({ title, links }: { title: string; links: ContentLink[] }) {
 	const id = useId();
 	return (
 		<nav aria-labelledby={id}>
@@ -215,9 +218,9 @@ function FooterLinks({ title, links }: { title: string; links: { label: string; 
 				{title}
 			</h2>
 			<ul className="grid gap-3 text-base">
-				{links.map(link => (
-					<li key={link.label}>
-						<a href={link.href} className="text-ink hover:text-link hover:underline">
+				{links.map((link, index) => (
+					<li key={index}>
+						<a href={link.url} className="text-ink hover:text-link hover:underline">
 							{link.label}
 						</a>
 					</li>
@@ -231,7 +234,7 @@ function FooterLinks({ title, links }: { title: string; links: { label: string; 
  * Newsletter sign-up. Until the Laposta list is confirmed with the client it opens the
  * contact form with the topic "Newsletter" and the address filled in.
  */
-function NewsletterForm() {
+function NewsletterForm({ text }: { text: SiteChromeContent["newsletter"] }) {
 	const id = useId();
 	return (
 		<form action={routes.contact} method="get">
@@ -240,9 +243,9 @@ function NewsletterForm() {
 				<span aria-hidden="true" className="flex size-9 items-center justify-center rounded-[10px] bg-peach-300">
 					<Mail size={18} strokeWidth={2.2} />
 				</span>
-				Newsletter
+				{text.title}
 			</h2>
-			<p className="mt-3 text-[15px] leading-normal text-ink-muted">Follow PCT's updates by registering for the newsletter.</p>
+			<p className="mt-3 text-[15px] leading-normal text-ink-muted">{text.text}</p>
 			<label htmlFor={id} className="mt-5 block text-[14px] font-semibold">
 				Email address
 			</label>
@@ -259,24 +262,12 @@ function NewsletterForm() {
 
 /** One line under auth screens and long tool screens. */
 export function SlimFooter() {
+	const { bottom } = useChromeText();
 	return (
 		<footer className="border-t border-line bg-mist">
-			<div className="container-page flex min-h-18 flex-col gap-3 py-5 text-sm text-ink-muted md:flex-row md:items-center md:justify-between">
-				<Copyright />
-				<ul className="flex flex-wrap gap-x-6 gap-y-2">
-					{[
-						["Help", routes.help],
-						["Contact", routes.contact],
-						["Terms and conditions", routes.terms],
-						["Privacy statement", routes.privacy]
-					].map(([label, href]) => (
-						<li key={label}>
-							<a href={href} className="text-ink-muted hover:text-link hover:underline">
-								{label}
-							</a>
-						</li>
-					))}
-				</ul>
+			<div className="container-page flex min-h-18 flex-col gap-3 py-5 text-sm text-ink-muted md:flex-row md:items-center md:justify-between md:gap-8">
+				<Copyright bottom={bottom} />
+				<BottomLinks links={bottom.slim_links} />
 			</div>
 		</footer>
 	);

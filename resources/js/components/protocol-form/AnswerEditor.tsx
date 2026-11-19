@@ -18,6 +18,9 @@ const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigat
  */
 export function AnswerEditor({ id, labelId, value, onChange, required, invalid, minRows = 5 }: { id: string; labelId: string; value: unknown; onChange: (html: string) => void; required?: boolean; invalid?: boolean; minRows?: number }) {
 	const [focused, setFocused] = useState(false);
+	// The paste hint stays once shown: hiding it on blur shortens the form between mouse down
+	// and up, so a click on the sticky step list (which moves with it) was lost.
+	const [hinted, setHinted] = useState(false);
 	const [linking, setLinking] = useState(false);
 
 	const editor = useEditor({
@@ -58,7 +61,10 @@ export function AnswerEditor({ id, labelId, value, onChange, required, invalid, 
 			}
 		},
 		onUpdate: ({ editor }) => onChange(editor.isEmpty ? "" : editor.getHTML()),
-		onFocus: () => setFocused(true),
+		onFocus: () => {
+			setFocused(true);
+			setHinted(true);
+		},
 		onBlur: () => setFocused(false)
 	});
 
@@ -130,7 +136,7 @@ export function AnswerEditor({ id, labelId, value, onChange, required, invalid, 
 				// Before the editor starts (and during server rendering): the same box, read-only.
 				<div style={{ minHeight }} className="answer-editor px-4 py-3 text-md leading-normal text-ink-muted" aria-hidden="true" />
 			)}
-			<p className={cn("px-4 pb-2.5 text-[13px] leading-snug text-ink-muted", focused ? "block" : "sr-only")}>
+			<p className={cn("px-4 pb-2.5 text-[13px] leading-snug text-ink-muted", hinted ? "block" : "sr-only")}>
 				Pasting from Word, Google Docs or a web page keeps paragraphs, lists, bold and links, and removes other styling. {mod}+Shift+V pastes plain text.
 			</p>
 		</div>

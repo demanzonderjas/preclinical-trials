@@ -11,6 +11,7 @@ import { cn } from "@/lib/cn";
 import { formatDate, formatMoment } from "@/lib/dates";
 import { routes } from "@/lib/routes";
 import type { FeedbackStatus, Progress } from "@/lib/workspace";
+import type { WorkspaceContent } from "@/types/page-content";
 
 type Comment = { id: number; author: string; initials: string | null; team: boolean; text: string; at: string; unread: boolean };
 
@@ -26,6 +27,7 @@ type Card = {
 	saved_at: string;
 	submitted_at: string | null;
 	returned_at: string | null;
+	decline_reason: string | null;
 	registered_at: string | null;
 	registered_before_start: boolean;
 	timing: string | null;
@@ -42,22 +44,29 @@ type Card = {
 	comments: Comment[];
 };
 
-type Filter = "all" | "draft" | "rejected" | "submitted" | "published" | "embargo";
+type Filter = "all" | "draft" | "rejected" | "submitted" | "published" | "embargo" | "declined";
 
 const filters: { key: Filter; label: string; dot: string; test: (card: Card) => boolean }[] = [
 	{ key: "all", label: "All", dot: "", test: () => true },
 	{ key: "draft", label: "Draft", dot: "bg-line-strong", test: card => card.status === "draft" },
-	{ key: "rejected", label: "Needs changes", dot: "bg-peach-300", test: card => card.status === "rejected" },
+	{ key: "rejected", label: "More information needed", dot: "bg-peach-300", test: card => card.status === "rejected" },
 	{ key: "submitted", label: "Submitted", dot: "bg-blue-400", test: card => card.status === "submitted_for_publication" || card.status === "resubmitted_for_publication" },
 	{ key: "published", label: "Published", dot: "bg-teal-500", test: card => card.status === "published" },
-	{ key: "embargo", label: "Under embargo", dot: "ring-[1.5px] ring-ink-muted ring-inset", test: card => card.status === "published" && !!card.embargo_ends }
+	{ key: "embargo", label: "Under embargo", dot: "ring-[1.5px] ring-ink-muted ring-inset", test: card => card.status === "published" && !!card.embargo_ends },
+	{ key: "declined", label: "Declined", dot: "bg-ink-muted", test: card => card.status === "declined" }
 ];
 
 const untitled = (card: Pick<Card, "title">) => card.title || "Untitled draft";
 
 type DialogKind = "submit" | "delete" | "link" | "withdraw";
 
-export default function MyProtocols({ protocols }: { protocols: Card[] }) {
+type Props = {
+	/** The texts, edited in Admin → Content → Pages (app/Content/Pages/WorkspacePages.php). */
+	content: WorkspaceContent["my_protocols"];
+	protocols: Card[];
+};
+
+export default function MyProtocols({ content, protocols }: Props) {
 	const [query, setQuery] = useState("");
 	const [filter, setFilter] = useState<Filter>("all");
 	const [dialog, setDialog] = useState<{ kind: DialogKind; card: Card } | null>(null);
@@ -73,14 +82,14 @@ export default function MyProtocols({ protocols }: { protocols: Card[] }) {
 			<section aria-labelledby="page-title" className="bg-teal-50">
 				<div className="container-page flex flex-col gap-6 pt-12 pb-11 lg:flex-row lg:items-end lg:justify-between">
 					<div className="max-w-[720px]">
-						<p className="eyebrow">Your workspace</p>
+						<p className="eyebrow">{content.eyebrow}</p>
 						<h1 id="page-title" className="mt-3 text-5xl leading-[1.05] font-extrabold tracking-[-0.04em] sm:text-[52px]">
-							My protocols
+							{content.title}
 						</h1>
-						<p className="mt-4 text-lg leading-[1.55]">Listed below are all records you have created. You can also duplicate a record, or link records that belong to the same project.</p>
+						<p className="mt-4 text-lg leading-[1.55]">{content.text}</p>
 					</div>
 					<ButtonAnchor href={routes.importProtocol} variant="secondary" className="self-start lg:self-auto">
-						Import PRIS or APAFiS file
+						{content.import_button}
 					</ButtonAnchor>
 				</div>
 			</section>
@@ -89,14 +98,14 @@ export default function MyProtocols({ protocols }: { protocols: Card[] }) {
 				{protocols.length === 0 ? (
 					<div className="mt-4">
 						<EmptyState
-							title="No protocols yet"
+							title={content.empty_title}
 							action={
 								<ButtonAnchor href={routes.newProtocol} arrow>
-									Register a protocol
+									{content.empty_button}
 								</ButtonAnchor>
 							}
 						>
-							Start a draft at any time; only you can see it until you submit it.
+							{content.empty_text}
 						</EmptyState>
 					</div>
 				) : (
@@ -148,12 +157,12 @@ export default function MyProtocols({ protocols }: { protocols: Card[] }) {
 						<div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
 							<div className="grid gap-5">
 								{visible.length === 0 ? (
-									<EmptyState title="No protocols match">Try another word, or show all statuses.</EmptyState>
+									<EmptyState title={content.no_match_title}>{content.no_match_text}</EmptyState>
 								) : (
 									visible.map(card => <ProtocolCardItem key={card.id} card={card} onDialog={kind => setDialog({ kind, card })} />)
 								)}
 							</div>
-							<Legend />
+							<Legend content={content} />
 						</div>
 					</>
 				)}
@@ -178,6 +187,8 @@ function statusLine(card: Card): string {
 		case "submitted_for_publication":
 		case "resubmitted_for_publication":
 			return `${card.status === "resubmitted_for_publication" ? "Resubmitted" : "Submitted"} ${formatDate(card.submitted_at ?? card.saved_at)}`;
+		case "declined":
+			return `Declined ${formatDate(card.returned_at ?? card.saved_at)}`;
 		case "published":
 			return card.registered_at ? `Registered ${formatDate(card.registered_at)}${card.timing ? `, ${card.registered_before_start ? "before" : "after"} the study started` : ""}` : "Published";
 	}
@@ -191,7 +202,8 @@ function StatusBadges({ card }: { card: Card }) {
 					Draft
 				</Badge>
 			)}
-			{card.status === "rejected" && <Badge tone="peach">Rejected · needs changes</Badge>}
+			{card.status === "rejected" && <Badge tone="peach">More information needed</Badge>}
+			{card.status === "declined" && <Badge tone="outline">Declined · not eligible</Badge>}
 			{card.status === "submitted_for_publication" && <Badge tone="blue">Submitted · in review</Badge>}
 			{card.status === "resubmitted_for_publication" && <Badge tone="blue-outline">Resubmitted · in review</Badge>}
 			{card.status === "published" && (
@@ -233,6 +245,12 @@ function ProtocolCardItem({ card, onDialog }: { card: Card; onDialog: (kind: Dia
 				{card.summary && <p className="mt-2 line-clamp-2 text-[15.5px] leading-normal text-ink-muted">{card.summary}</p>}
 
 				{card.status === "rejected" && card.points.length > 0 && <PointsChip points={card.points} />}
+				{card.status === "declined" && (
+					<div className="mt-4 rounded-input bg-mist px-4 py-3 text-[15px] leading-normal">
+						<p className="font-bold">The PCT team declined this protocol as not eligible for the platform. This decision is final.</p>
+						{card.decline_reason && <p className="mt-1 whitespace-pre-line text-ink-muted">{card.decline_reason}</p>}
+					</div>
+				)}
 				{card.status === "draft" && card.progress && (
 					<p className="mt-4 inline-flex h-8 items-center gap-2.5 rounded-full bg-white px-3 text-[13.5px] font-bold shadow-[inset_0_0_0_1px_var(--color-line)]">
 						<span aria-hidden="true" className="h-1.5 w-12 overflow-hidden rounded-full bg-teal-50">
@@ -368,6 +386,7 @@ function Locked({ children, reason }: { children: ReactNode; reason: string }) {
 function Actions({ card, onDialog }: { card: Card; onDialog: (kind: DialogKind) => void }) {
 	const [copied, setCopied] = useState(false);
 	const published = card.status === "published";
+	const declined = card.status === "declined";
 	const openPoints = card.points.filter(point => point.status === "open").length;
 	const complete = card.progress ? card.progress.missing === 0 : false;
 
@@ -383,7 +402,7 @@ function Actions({ card, onDialog }: { card: Card; onDialog: (kind: DialogKind) 
 	};
 
 	const items = [
-		{ label: "Duplicate as new draft", onSelect: () => router.post(`/dashboard/protocols/${card.id}/duplicate`) },
+		...(declined ? [] : [{ label: "Duplicate as new draft", onSelect: () => router.post(`/dashboard/protocols/${card.id}/duplicate`) }]),
 		{ label: "Link to a related protocol", onSelect: () => onDialog("link") },
 		...(published && card.pct_id ? [{ label: copied ? "Citation copied" : "Cite this protocol", onSelect: cite }, { label: "Registration certificate", href: routes.certificate(card.id) }] : [])
 	];
@@ -411,6 +430,14 @@ function Actions({ card, onDialog }: { card: Card; onDialog: (kind: DialogKind) 
 					<a href={routes.protocol(card.id)} className={linkClass}>
 						View
 					</a>
+				</>
+			)}
+			{declined && (
+				<>
+					<a href={routes.protocol(card.id)} className={linkClass}>
+						View
+					</a>
+					<Locked reason="Declined protocols are final">Edit · declined</Locked>
 				</>
 			)}
 			{(card.status === "submitted_for_publication" || card.status === "resubmitted_for_publication") && (
@@ -472,6 +499,11 @@ function Actions({ card, onDialog }: { card: Card; onDialog: (kind: DialogKind) 
 					Delete draft
 				</button>
 			)}
+			{declined && (
+				<button type="button" className={linkClass} onClick={() => onDialog("delete")}>
+					Delete
+				</button>
+			)}
 			{published && card.embargo_ends && !card.extension_pending && (
 				<a href={routes.extendEmbargo(card.id)} className={linkClass}>
 					Extend embargo
@@ -484,7 +516,7 @@ function Actions({ card, onDialog }: { card: Card; onDialog: (kind: DialogKind) 
 				</a>
 			)}
 
-			<Menu className="ml-auto" items={items} footer={published ? "Published records can’t be deleted. Changes are kept as amendments." : undefined} />
+			<Menu className="ml-auto" items={items} footer={published ? "Published records can’t be deleted. Changes are kept as amendments." : declined ? "Declined protocols can’t be edited, resubmitted or duplicated." : undefined} />
 		</div>
 	);
 }
@@ -563,13 +595,14 @@ function WithdrawDialog({ card, onClose }: { card: Card; onClose: () => void }) 
 
 function DeleteDialog({ card, onClose }: { card: Card; onClose: () => void }) {
 	const [busy, setBusy] = useState(false);
+	const declined = card.status === "declined";
 	return (
 		<Dialog
 			open
 			size="sm"
 			onClose={onClose}
-			title="Delete this draft?"
-			description="A draft that was never submitted is removed for good. This can’t be undone."
+			title={declined ? "Delete this declined protocol?" : "Delete this draft?"}
+			description={declined ? "The protocol and its comments are removed for good. This can’t be undone." : "A draft that was never submitted is removed for good. This can’t be undone."}
 			footer={
 				<>
 					<Button variant="secondary" onClick={onClose}>
@@ -583,7 +616,7 @@ function DeleteDialog({ card, onClose }: { card: Card; onClose: () => void }) {
 							router.delete(`/dashboard/protocols/${card.id}`, { preserveScroll: true, onFinish: onClose });
 						}}
 					>
-						Delete draft
+						{declined ? "Delete protocol" : "Delete draft"}
 					</Button>
 				</>
 			}
@@ -642,31 +675,31 @@ function LinkDialog({ card, protocols, onClose }: { card: Card; protocols: Card[
 /* -------------------------------------------------------------------------- */
 
 const legend: [string, string, string][] = [
-	["View feedback", "Needs changes", "Open the form with the reviewer’s points next to each field."],
+	["View feedback", "More information needed", "Open the form with the reviewer’s points next to each field."],
 	["View", "All statuses", "See the protocol as it appears in the register, with its revision history."],
-	["Edit", "Draft · Needs changes", "Change the form. Locked while the PCT team is reviewing."],
+	["Edit", "Draft · More information needed", "Change the form. Locked while the PCT team is reviewing, and after a protocol is declined."],
 	["Create amendment", "Published", "Change a published protocol. The old version stays visible in the audit trail."],
-	["Submit / Resubmit", "Draft · Needs changes", "Send it to the PCT team for checking. Unlocks when every required question and feedback point is done."],
+	["Submit / Resubmit", "Draft · More information needed", "Send it to the PCT team for checking. Unlocks when every required question and feedback point is done."],
 	["Extend embargo", "Published under embargo", "Ask for more time before the details become public."],
 	["Link publication", "Published", "Connect the finished paper so readers can compare plan and report."],
 	["Download PDF", "All statuses", "A time-stamped copy for your ethics committee, funder or journal."],
 	["Comments", "All statuses", "Notes between you and the PCT team about this record. A peach dot marks a new one."],
 	["Duplicate · Link", "More menu", "Start a new draft from a copy, or link protocols of the same project."],
-	["Delete draft", "Draft only", "Removes a draft that was never submitted. This can’t be undone."]
+	["Delete", "Draft · Declined", "Removes a draft that was never submitted, or a declined protocol. This can’t be undone."]
 ];
 
-function Legend() {
+function Legend({ content }: { content: WorkspaceContent["my_protocols"] }) {
 	return (
 		<aside aria-label="About the actions" className="grid gap-5">
 			<details className="group rounded-card border border-line bg-white px-6 py-6" open>
 				<summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-					<span className="eyebrow">Legend</span>
+					<span className="eyebrow">{content.legend_eyebrow}</span>
 					<span className="mt-2 flex items-center justify-between text-2xl font-extrabold tracking-[-0.02em]">
-						Actions, explained
+						{content.legend_title}
 						<ChevronDown size={20} strokeWidth={2.4} aria-hidden="true" className="transition-transform group-open:rotate-180" />
 					</span>
 				</summary>
-				<p className="mt-2 text-[14.5px] leading-normal text-ink-muted">Every card keeps its actions in the same place: the bar at the bottom. Only the actions that fit the status are shown.</p>
+				<p className="mt-2 text-[14.5px] leading-normal text-ink-muted">{content.legend_text}</p>
 				<dl className="mt-3 divide-y divide-line">
 					{legend.map(([term, when, text]) => (
 						<div key={term} className="py-3.5">
@@ -698,7 +731,7 @@ function Legend() {
 					</li>
 					<li aria-hidden="true" className="ml-6 h-3 w-px bg-teal-300" />
 					<li className="flex items-center gap-2">
-						<Badge tone="peach">Rejected</Badge>
+						<Badge tone="peach">More information needed</Badge>
 						<span aria-hidden="true">→</span>
 						<Badge tone="blue-outline">Resubmitted</Badge>
 					</li>
@@ -710,6 +743,10 @@ function Legend() {
 						<span className="text-ink-muted">gets its PCT ID</span>
 					</li>
 				</ol>
+				<p className="mt-4 flex flex-wrap items-center gap-2 text-[14.5px]">
+					<Badge tone="outline">Declined</Badge>
+					<span className="text-ink-muted">not eligible for the platform; final, can be deleted</span>
+				</p>
 				<p className="mt-4 text-[14.5px] leading-normal">
 					<strong>Embargo</strong> is a separate flag: a published protocol can stay private for one year after approval.
 				</p>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Pages\Admin;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Pages\ContentPageController;
 use App\Models\Ambassador;
 use App\Models\FaqCategory;
 use App\Models\FaqItem;
@@ -13,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -26,13 +29,16 @@ class ContentController extends Controller
     public function index(Request $request): Response
     {
         $tab = in_array($request->query('tab'), self::TABS, true) ? $request->query('tab') : 'news';
+        $live = self::liveSlugs();
+        // The privacy statement starts as placeholder text in the code; from here on it is a page to edit.
+        ContentPageController::ensurePlaceholders($live);
 
         return Inertia::render('admin/content', [
             'tab' => $tab,
             'counts' => [
                 'news' => NewsItem::count(),
                 'faq' => FaqItem::count(),
-                'pages' => Page::count(),
+                'pages' => Page::whereIn('slug', $live)->count() + count(PageContent::pages()),
                 'ambassadors' => Ambassador::count(),
             ],
             'news' => $tab === 'news' ? NewsItem::orderByRaw('publish_date is null desc')->orderByDesc('publish_date')->orderByDesc('id')->get()->map(fn (NewsItem $n) => [
@@ -61,12 +67,23 @@ class ContentController extends Controller
                 ]),
             ]) : [],
             'audiences' => collect(FaqItem::AUDIENCES)->map(fn ($info, $key) => ['value' => $key, 'label' => $info[0]])->values(),
-            'pages' => $tab === 'pages' ? Page::orderBy('id')->get()->map(fn (Page $page) => [
+            'pages' => $tab === 'pages' ? Page::whereIn('slug', $live)->orderBy('id')->get()->map(fn (Page $page) => [
                 'id' => $page->id,
                 'title' => $page->title,
                 'subtitle' => $page->subtitle,
                 'slug' => $page->slug,
                 'blocks' => collect($page->content_blocks ?? [])->map(fn ($block) => is_string($block) ? $block : (data_get($block, 'content') ?? data_get($block, 'text') ?? ''))->values(),
+                'updated_at' => $page->updated_at?->toIso8601String(),
+            ]) : [],
+            // The designed pages whose texts are edited field by field (app/Content/Pages).
+            'editablePages' => $tab === 'pages' ? PageContentController::list() : [],
+            'pageEditor' => $tab === 'pages' && is_string($request->query('page')) ? PageContentController::editor($request->query('page')) : null,
+            // Texts of the former SPA pages (home, about, help, news, contact): the A2 pages have
+            // their own design and do not read them. Kept in the database, not editable here.
+            'retiredPages' => $tab === 'pages' ? Page::whereNotIn('slug', $live)->orderBy('id')->get(['id', 'title', 'slug', 'updated_at'])->map(fn (Page $page) => [
+                'id' => $page->id,
+                'title' => $page->title,
+                'slug' => $page->slug,
                 'updated_at' => $page->updated_at?->toIso8601String(),
             ]) : [],
             'ambassadors' => $tab === 'ambassadors' ? Ambassador::orderBy('id')->get()->map(fn (Ambassador $a) => [
@@ -159,13 +176,23 @@ class ContentController extends Controller
             'blocks' => ['array'],
             'blocks.*' => ['nullable', 'string', 'max:200000'],
         ]);
-        $page = Page::findOrFail($id);
+        $page = Page::whereIn('slug', self::liveSlugs())->findOrFail($id);
         $page->title = $data['title'];
         $page->subtitle = $data['subtitle'] ?? '';
         $page->content_blocks = collect($data['blocks'] ?? [])->map(fn ($html) => ['type' => 'text', 'content' => Html::clean($html)])->filter(fn ($block) => $block['content'] !== '')->values()->all();
         $page->save();
 
         return redirect("/admin/content?tab=pages&edit={$page->id}")->with('success', 'Page saved.');
+    }
+
+    /** @return list<string> the slugs of the pages the site renders from the database, read from the routes */
+    public static function liveSlugs(): array
+    {
+        return collect(Route::getRoutes()->getRoutes())
+            ->filter(fn ($route) => in_array('GET', $route->methods(), true) && $route->getControllerClass() === ContentPageController::class)
+            ->map(fn ($route) => '/'.ltrim($route->uri(), '/'))
+            ->values()
+            ->all();
     }
 
     /* Ambassadors ------------------------------------------------------------- */

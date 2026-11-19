@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Services\PublicRegister;
 use App\Services\RegisterSearch;
@@ -13,9 +14,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DatabaseController extends Controller
 {
-    /** Shown under the search box; a curated list until search statistics exist. */
-    public const POPULAR = ['Neonatal resuscitation', 'Myocardial infarction', 'Ischemia-reperfusion', 'Stroke', 'Antimicrobials'];
-
     public function index(Request $request, PublicRegister $register): Response
     {
         $search = new RegisterSearch($register, $request);
@@ -29,7 +27,9 @@ class DatabaseController extends Controller
             'beforeStartCount' => $search->beforeStartCount(),
             'publicTotal' => $figures['public'],
             'underEmbargo' => $figures['under_embargo'],
-            'popular' => self::POPULAR,
+            // The texts, edited in Admin → Content → Pages (App\Content\Pages\DatabasePages),
+            // including the search suggestions under the search box.
+            'content' => PageContent::for('database'),
         ]);
     }
 
@@ -49,9 +49,10 @@ class DatabaseController extends Controller
             'Study stage' => 'study_stage_label',
             'Species' => 'species_label',
             'Research field' => 'research_field',
-            'Study centre' => 'centre_name',
-            'City' => 'centre_city',
-            'Country' => 'country_name',
+            // Every centre, joined with "; " per column.
+            'Study centre' => fn ($row) => collect($row['centres'])->pluck('name')->filter()->implode('; '),
+            'City' => fn ($row) => collect($row['centres'])->pluck('city')->filter()->implode('; '),
+            'Country' => fn ($row) => collect($row['centres'])->pluck('country_name')->filter()->unique()->implode('; '),
             'Start date' => 'start_date',
             'Expected end date' => 'end_date',
             'Hypothesis' => 'summary',

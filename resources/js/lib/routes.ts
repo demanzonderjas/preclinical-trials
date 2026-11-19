@@ -37,7 +37,7 @@ export const routes = {
 		twoFactor: "/admin/two-factor"
 	},
 	terms: "/disclaimer",
-	privacy: "/disclaimer",
+	privacy: "/privacy-statement",
 	howToGuide: "/help",
 	researcherFaq: "/help?for=researcher",
 	bookAppointment: "/contact?topic=registering"

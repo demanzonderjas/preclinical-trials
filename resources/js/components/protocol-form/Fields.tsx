@@ -1,7 +1,8 @@
-import { Check, ImageIcon, Plus, Trash2, Upload, X } from "lucide-react";
+import { Check, ChevronDown, ImageIcon, Lightbulb, Plus, Trash2, Upload, X } from "lucide-react";
 import { type ReactNode, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { RadioCards, Select, TextInput } from "@/components/ui/Form";
+import { protocolMoreHelp } from "@/data/protocol-help";
 import { type ProtocolField, isVisible, protocolFields } from "@/data/protocol-schema";
 import { cn } from "@/lib/cn";
 import { AnswerEditor } from "./AnswerEditor";
@@ -83,6 +84,7 @@ export function Question({ field, ctx, first, badge, after }: { field: ProtocolF
 			{/* Everything under the title lines up with the title, not with the number. */}
 			<div className={cn(field.number && "sm:pl-11")}>
 				{field.help && <p className="mt-1.5 text-[14.5px] leading-normal whitespace-pre-line text-ink-muted">{field.help}</p>}
+				<MoreHelp fieldKey={field.key} />
 				{point && point.status === "open" && (
 					<p className="mt-3 rounded-input bg-peach-100 px-4 py-3 text-[15px]">
 						<strong>PCT review team:</strong> {point.body}
@@ -120,6 +122,7 @@ function FollowUp({ field, ctx }: { field: ProtocolField; ctx: FieldContext }) {
 					!/optional/i.test(field.label) && <span className="font-normal text-ink-muted"> (optional)</span>
 				)}
 			</label>
+			{field.help && <p className="mt-1 text-[14.5px] leading-normal whitespace-pre-line text-ink-muted">{field.help}</p>}
 			{point && point.status === "open" && (
 				<p className="mt-2 rounded-input bg-peach-100 px-4 py-3 text-[15px]">
 					<strong>PCT review team:</strong> {point.body}
@@ -129,6 +132,35 @@ function FollowUp({ field, ctx }: { field: ProtocolField; ctx: FieldContext }) {
 				<Control field={field} ctx={ctx} id={id} />
 			</div>
 		</div>
+	);
+}
+
+/**
+ * The legacy form's worked examples and background links for a question, folded away under
+ * its description (see data/protocol-help.ts).
+ */
+export function MoreHelp({ fieldKey }: { fieldKey: string }) {
+	const html = protocolMoreHelp[fieldKey];
+	if (!html) return null;
+	return (
+		<details className="group mt-2.5 max-w-[72ch]">
+			<summary className="inline-flex min-h-9 cursor-pointer list-none items-center gap-1.5 rounded-full text-[14.5px] font-bold text-link [&::-webkit-details-marker]:hidden">
+				<Lightbulb size={16} strokeWidth={2.3} aria-hidden="true" />
+				<span className="underline-offset-3 group-hover:underline">More help and examples</span>
+				<ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" className="shrink-0 transition-transform group-open:rotate-180" />
+			</summary>
+			<div
+				className={cn(
+					"mt-2 rounded-input bg-mist px-4.5 py-3.5 text-[15px] leading-normal text-ink",
+					"[&_a]:font-semibold [&_a]:break-words [&_a]:text-link [&_a]:underline [&_a]:underline-offset-3",
+					"[&_p]:my-2 [&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:my-1",
+					"[&_table]:my-2 [&_table]:w-full [&_table]:max-w-[520px] [&_table]:border-collapse [&_table]:bg-white [&_table]:text-[14.5px]",
+					"[&_td]:border [&_td]:border-line [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-line [&_th]:px-3 [&_th]:py-1.5 [&_th]:text-left [&_th]:font-bold"
+				)}
+				// Static text from data/protocol-help.ts, written by the PCT team.
+				dangerouslySetInnerHTML={{ __html: html }}
+			/>
+		</details>
 	);
 }
 

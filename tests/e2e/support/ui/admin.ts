@@ -62,13 +62,13 @@ export class AdminUI {
 		await expect(this.page).toHaveURL(/\/admin\/protocols$/);
 	}
 
-	/** Returns the protocol with its saved points and a message (the legacy "reject"). */
+	/** Refers the protocol back with its saved points and a message (status `rejected`, shown as "More information needed"). */
 	async reject(title: string, message: string, points: { question: string; text: string }[] = []) {
 		await this.openReview(title);
 		for (const point of points) await this.addFeedbackPoint(point.question, point.text);
-		await this.page.getByRole("radio", { name: /return with feedback/i }).check();
+		await this.page.getByRole("radio", { name: /refer · more information needed/i }).check();
 		await this.page.getByLabel(/message to the researcher/i).fill(message);
-		await this.page.getByRole("button", { name: /^return with \d+ points?$/i }).click();
+		await this.page.getByRole("button", { name: /^refer with \d+ points?$/i }).click();
 		await expect(this.page).toHaveURL(/\/admin\/protocols$/);
 	}
 

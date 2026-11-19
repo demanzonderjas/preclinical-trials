@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Models\NewsItem;
 use Carbon\Carbon;
@@ -26,6 +27,8 @@ class NewsController extends Controller
         }
 
         return Inertia::render('news/index', [
+            // The texts around the items: Admin → Content → Pages; the items are on the News tab.
+            'content' => PageContent::for('news'),
             'categories' => collect(NewsItem::CATEGORIES)->map(fn ($label, $value) => [
                 'value' => $value,
                 'label' => $label,

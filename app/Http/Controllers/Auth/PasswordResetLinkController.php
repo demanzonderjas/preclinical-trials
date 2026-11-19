@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -23,6 +24,7 @@ class PasswordResetLinkController extends Controller
     public function create(Request $request)
     {
         return Inertia::render('auth/forgot-password', [
+            'content' => PageContent::for('auth')['forgot_password'],
             'sentTo' => $request->session()->get('reset_link_sent_to'),
             'sentAt' => $request->session()->get('reset_link_sent_at'),
         ]);

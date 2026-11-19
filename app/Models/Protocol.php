@@ -11,6 +11,12 @@ class Protocol extends Model
 {
     use HasFactory;
 
+    /** Sent back for more information ("Referred"). The stored value stays `rejected` for legacy data and the external APIs. */
+    public const REFERRED = 'rejected';
+
+    /** Not eligible for the platform. Final: viewable and deletable by the owner, never editable or public. */
+    public const DECLINED = 'declined';
+
     protected $fillable = [
         'id',
         'user_id',

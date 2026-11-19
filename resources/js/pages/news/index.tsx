@@ -6,9 +6,12 @@ import { ButtonAnchor } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Content";
 import { Select } from "@/components/ui/Form";
 import { LogoMark } from "@/components/ui/Logo";
+import { RichContent } from "@/components/ui/RichContent";
 import { PublicLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
+import { fill } from "@/lib/content";
 import { routes } from "@/lib/routes";
+import type { NewsContent } from "@/types/page-content";
 
 export type NewsItem = {
 	id: number;
@@ -24,6 +27,8 @@ export type NewsItem = {
 };
 
 type Props = {
+	/** The texts around the items, edited in Admin → Content → Pages (app/Content/Pages/NewsPage.php). */
+	content: NewsContent;
 	categories: { value: string; label: string; count: number }[];
 	total: number;
 	category: string | null;
@@ -38,7 +43,8 @@ export function newsHref(item: Pick<NewsItem, "id">) {
 	return `/news/view-item/${item.id}`;
 }
 
-export default function News({ categories, total, category, sort, featured, years }: Props) {
+export default function News({ content, categories, total, category, sort, featured, years }: Props) {
+	const { intro, archive, newsletter, events } = content;
 	const visit = (next: { category?: string | null; sort?: string }) => {
 		const query: Record<string, string> = {};
 		const nextCategory = next.category !== undefined ? next.category : category;
@@ -49,7 +55,7 @@ export default function News({ categories, total, category, sort, featured, year
 	};
 
 	return (
-		<PublicLayout title="News" description="Updates including congresses and workshops where preclinicaltrials.eu is involved, and the milestones of the register itself.">
+		<PublicLayout title="News" description={intro.text}>
 			<section aria-labelledby="news-title" className="relative overflow-hidden bg-teal-50">
 				<svg aria-hidden="true" className="pointer-events-none absolute -top-56 -right-40 hidden h-[600px] w-[600px] lg:block" viewBox="0 0 600 600" fill="none">
 					<circle cx="300" cy="300" r="290" stroke="#83B2BA" strokeWidth="2" />
@@ -72,9 +78,9 @@ export default function News({ categories, total, category, sort, featured, year
 						</ol>
 					</nav>
 					<h1 id="news-title" className="mt-6 text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-5xl lg:text-[60px]">
-						News
+						{intro.title}
 					</h1>
-					<p className="mt-4 max-w-[600px] text-lg leading-[1.55] sm:text-[19px]">Updates including congresses and workshops where preclinicaltrials.eu is involved — and the milestones of the register itself.</p>
+					<p className="mt-4 max-w-[600px] text-lg leading-[1.55] sm:text-[19px]">{intro.text}</p>
 					<div className="mt-8 flex flex-wrap gap-2.5" role="group" aria-label="Filter by category">
 						<CategoryChip label="All updates" count={total} active={!category} onClick={() => visit({ category: null })} />
 						{categories
@@ -87,15 +93,15 @@ export default function News({ categories, total, category, sort, featured, year
 			</section>
 
 			<div className="container-page py-14 lg:py-16">
-				{featured ? <Featured item={featured} /> : <EmptyState title="No updates yet">News about the register and its events appears here.</EmptyState>}
+				{featured ? <Featured item={featured} /> : <EmptyState title={intro.empty_title}>{intro.empty_text}</EmptyState>}
 
 				{years.length > 0 && (
 					<section aria-labelledby="archive-title" className="mt-16 lg:mt-20">
 						<div className="flex items-end justify-between gap-4">
 							<div>
-								<p className="eyebrow">Archive</p>
+								<p className="eyebrow">{archive.eyebrow}</p>
 								<h2 id="archive-title" className="mt-3 text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
-									Earlier updates
+									{archive.title}
 								</h2>
 							</div>
 							<label className="flex items-center gap-2">
@@ -127,22 +133,16 @@ export default function News({ categories, total, category, sort, featured, year
 								</section>
 							))}
 						</div>
-						<p className="mt-6 text-center text-[15.5px] text-ink-muted">
-							That’s everything{years.length ? ` since ${years[years.length - 1].year}` : ""}. Looking for the story of the register itself? See the timeline on our{" "}
-							<a href={routes.about} className="font-bold underline underline-offset-3">
-								About page
-							</a>
-							.
-						</p>
+						<RichContent html={fill(archive.end, { year: years[years.length - 1].year })} className="mt-6 text-center text-[15.5px] text-ink-muted [&_a]:font-bold" />
 					</section>
 				)}
 			</div>
 
 			<section className="container-page grid gap-6 pb-20 lg:grid-cols-2 lg:pb-24">
 				<div id="newsletter" className="rounded-[28px] bg-teal-50 p-7 sm:p-10">
-					<p className="eyebrow">Newsletter</p>
-					<h2 className="mt-3 text-2xl font-extrabold tracking-[-0.025em] sm:text-3xl">Never miss an update</h2>
-					<p className="mt-2 text-ink-muted">Follow PCT’s updates by registering for the newsletter.</p>
+					<p className="eyebrow">{newsletter.eyebrow}</p>
+					<h2 className="mt-3 text-2xl font-extrabold tracking-[-0.025em] sm:text-3xl">{newsletter.title}</h2>
+					<p className="mt-2 text-ink-muted">{newsletter.text}</p>
 					<form action={routes.contact} method="get" className="mt-6 flex flex-col gap-2 sm:flex-row">
 						<input type="hidden" name="topic" value="newsletter" />
 						<label htmlFor="news-newsletter" className="sr-only">
@@ -155,14 +155,14 @@ export default function News({ categories, total, category, sort, featured, year
 					</form>
 					<p className="mt-3 flex items-center gap-2 text-[14.5px] text-ink-muted">
 						<Check size={14} strokeWidth={2.6} className="text-teal-500" aria-hidden="true" />
-						Unsubscribe with one click, any time.
+						{newsletter.note}
 					</p>
 				</div>
 				<div className="relative overflow-hidden rounded-[28px] bg-peach-100 p-7 sm:p-10">
-					<p className="eyebrow text-ink">Invite us to your event</p>
-					<h2 className="mt-3 max-w-md text-2xl font-extrabold tracking-[-0.025em] sm:text-3xl">Congress, webinar or lab meeting — we love to talk about preregistration.</h2>
-					<ButtonAnchor href={`${routes.contact}?topic=press`} arrow className="mt-7">
-						Get in touch
+					<p className="eyebrow text-ink">{events.eyebrow}</p>
+					<h2 className="mt-3 max-w-md text-2xl font-extrabold tracking-[-0.025em] sm:text-3xl">{events.title}</h2>
+					<ButtonAnchor href={events.link.url} arrow className="mt-7">
+						{events.link.label}
 					</ButtonAnchor>
 					<Megaphone size={120} strokeWidth={1.2} aria-hidden="true" className="absolute -right-4 -bottom-4 text-peach-300 max-sm:hidden" />
 				</div>

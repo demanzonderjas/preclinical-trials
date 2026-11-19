@@ -55,6 +55,7 @@ class FeedbackController extends Controller
                     'status' => $point->status,
                     'at' => ($round->decided_at ?? $point->created_at)->toIso8601String(),
                     'addressed_at' => $point->addressed_at?->toIso8601String(),
+                    'reopened' => $point->reopened_at !== null,
                     'messages' => ($point->channel?->messages ?? collect())->sortBy('created_at')->values()->map(fn (Message $message) => [
                         'id' => $message->id,
                         'mine' => $message->user_id === $user->id,
@@ -77,14 +78,19 @@ class FeedbackController extends Controller
         return Inertia::render('workspace/feedback', $props);
     }
 
-    /** The researcher marks a point addressed (or open again), e.g. after answering in the thread. */
+    /**
+     * The researcher marks a point addressed (e.g. after answering in the thread), or keeps
+     * it open after a change marked it addressed: then later changes leave it open.
+     */
     public function status(Request $request, int $point): RedirectResponse
     {
         $point = $this->ownPoint($request, $point);
         abort_if($point->status === FeedbackPoint::RESOLVED, 422, 'The reviewer already accepted this point.');
         $addressed = $request->validate(['addressed' => ['required', 'boolean']])['addressed'];
 
-        $point->update(['status' => $addressed ? FeedbackPoint::ADDRESSED : FeedbackPoint::OPEN, 'addressed_at' => $addressed ? now() : null]);
+        $point->update($addressed
+            ? ['status' => FeedbackPoint::ADDRESSED, 'addressed_at' => now()]
+            : ['status' => FeedbackPoint::OPEN, 'addressed_at' => null, 'reopened_at' => now()]);
         if ($addressed) {
             ActivityLog::record($point->protocol, 'addressed', ['fields' => [$point->field_key]], $request->user());
         }

@@ -7,15 +7,15 @@ import { FlashMessage } from "@/components/ui/Interactive";
 import { LogoMark } from "@/components/ui/Logo";
 import { AuthLayout } from "@/layouts/Layouts";
 import { routes } from "@/lib/routes";
+import type { AuthContent } from "@/types/page-content";
 
-const reasons = [
-	"Save drafts and finish them whenever you like",
-	"Import an existing protocol from PRIS (.json) or APAFiS (.xml)",
-	"Choose an embargo: details go public after one year",
-	"Talk to the PCT review team, right next to your fields"
-];
+type Props = {
+	/** The texts, edited in Admin → Content → Pages (app/Content/Pages/AuthPages.php). */
+	content: AuthContent["login"];
+	status?: string | null;
+};
 
-export default function Login({ status }: { status?: string | null }) {
+export default function Login({ content, status }: Props) {
 	const form = useForm({ email: "", password: "", remember: true });
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -29,11 +29,11 @@ export default function Login({ status }: { status?: string | null }) {
 			<div className="container-page">
 				<div className="mx-auto grid max-w-[1160px] gap-3 rounded-[32px] bg-white p-3 shadow-[inset_0_0_0_1px_var(--color-line),var(--shadow-raised)] lg:grid-cols-[600px_minmax(0,1fr)]">
 					<section aria-labelledby="login-title" className="px-5 pt-8 pb-8 sm:px-10 lg:pt-11 lg:pr-16 lg:pb-10 lg:pl-14">
-						<p className="eyebrow">Researcher account</p>
+						<p className="eyebrow">{content.eyebrow}</p>
 						<h1 id="login-title" className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-5xl">
-							Welcome back
+							{content.title}
 						</h1>
-						<p className="mt-3 text-lg leading-normal text-ink-muted">Log in to register, amend and follow up on your protocols.</p>
+						<p className="mt-3 text-lg leading-normal text-ink-muted">{content.text}</p>
 
 						{status && (
 							<div className="mt-6">
@@ -95,28 +95,28 @@ export default function Login({ status }: { status?: string | null }) {
 						</form>
 
 						<p className="mt-7 text-center text-base text-ink-muted">
-							New to PreclinicalTrials.eu?{" "}
-							<a href={routes.createAccount} className="font-bold underline underline-offset-3">
-								Create a free account
+							{content.register_prompt}{" "}
+							<a href={content.register_link.url} className="font-bold underline underline-offset-3">
+								{content.register_link.label}
 							</a>
 						</p>
 					</section>
 
 					<aside aria-labelledby="why-account" className="flex flex-col rounded-[22px] bg-mist px-6 pt-10 pb-8 sm:px-12 sm:pt-12 sm:pb-10">
-						<p className="eyebrow">Why an account?</p>
+						<p className="eyebrow">{content.side_eyebrow}</p>
 						<h2 id="why-account" className="mt-3.5 max-w-[420px] text-2xl leading-[1.12] font-extrabold tracking-[-0.025em] sm:text-3xl">
-							Your protocols, safely in one place.
+							{content.side_title}
 						</h2>
 						<ul className="mt-7 grid max-w-[410px] gap-4">
-							{reasons.map(reason => (
-								<li key={reason} className="flex items-start gap-3 text-md leading-normal">
+							{content.reasons.map((reason, index) => (
+								<li key={index} className="flex items-start gap-3 text-md leading-normal">
 									<Check size={20} strokeWidth={2.6} className="mt-0.5 shrink-0 text-teal-500" aria-hidden="true" />
-									{reason}
+									{reason.text}
 								</li>
 							))}
 						</ul>
 						<div className="mt-auto flex items-end justify-between gap-6 pt-8">
-							<p className="max-w-[270px] text-[15.5px] leading-normal text-ink-muted">An account is free of charge. Your name is only published if you choose so.</p>
+							<p className="max-w-[270px] text-[15.5px] leading-normal text-ink-muted">{content.side_note}</p>
 							<LogoMark size={112} glass="white" className="max-sm:hidden" />
 						</div>
 					</aside>

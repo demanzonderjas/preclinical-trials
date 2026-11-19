@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Services\PublicRegister;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +22,8 @@ class HomeController extends Controller
         }
 
         return Inertia::render('home', [
+            // The texts, edited in Admin → Content → Pages (app/Content/Pages/HomePage.php).
+            'content' => PageContent::for('home'),
             'figures' => $register->figures(),
             'recent' => $register->summaries()->take(4)->map(fn (array $summary) => PublicRegister::forClient($summary))->values(),
             'updatedOn' => now()->format('j F Y'),

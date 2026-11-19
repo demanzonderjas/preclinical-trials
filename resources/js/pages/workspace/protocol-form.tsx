@@ -444,7 +444,7 @@ function ContactStep({ ctx, profile }: { ctx: FieldContext; profile: Props["prof
 			</QuestionCard>
 			<QuestionCard title="Study centre details">
 				<div id="question-study_centre" className="scroll-mt-28 py-6">
-					<p className="mb-4 text-[14.5px] text-ink-muted">Where the experiments take place. The first centre is shown on the protocol card in the register.</p>
+					<p className="mb-4 text-[14.5px] text-ink-muted">Where the experiments take place. Every centre is shown on the protocol card in the register.</p>
 					<Control field={protocolFields.find(field => field.key === "study_centre")!} ctx={ctx} id="field-study_centre" />
 				</div>
 			</QuestionCard>
@@ -656,7 +656,8 @@ function ImportDialog({ onClose }: { onClose: () => void }) {
 						<input
 							id={id}
 							type="file"
-							accept=".json,.xml,application/json,text/xml,application/xml"
+							// No accept filter: older exports come with other extensions (.txt, none);
+							// the server reads the content and says what is wrong with it.
 							onChange={event => form.setData("file", event.target.files?.[0] ?? null)}
 							aria-describedby={describedBy}
 							aria-invalid={invalid}

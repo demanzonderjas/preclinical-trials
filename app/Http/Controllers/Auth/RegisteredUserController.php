@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -66,6 +67,7 @@ class RegisteredUserController extends Controller
         }
 
         return Inertia::render('auth/register', [
+            'content' => PageContent::for('auth')['register'],
             'countries' => collect(config('pct.countries'))->map(fn ($name, $code) => ['value' => $code, 'label' => $name])->values(),
             'roles' => self::ROLES,
         ]);

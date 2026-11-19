@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Models\FaqCategory;
 use App\Models\FaqItem;
@@ -13,8 +14,6 @@ use Inertia\Response;
 
 class HelpController extends Controller
 {
-    public const POPULAR = ['Embargo', 'Amendment', 'PRIS', 'Time stamp', 'Re-submit'];
-
     public function index(Request $request): Response
     {
         // In the order the PCT team set: categories first, then the questions within them.
@@ -45,6 +44,8 @@ class HelpController extends Controller
         }
 
         return Inertia::render('help', [
+            // The texts around the questions, the role cards and the search suggestions: Admin → Content → Pages.
+            'content' => PageContent::for('help'),
             'audiences' => collect(FaqItem::AUDIENCES)->map(fn ($info, $key) => [
                 'value' => $key,
                 'label' => $info[0],
@@ -58,7 +59,6 @@ class HelpController extends Controller
             'total' => $items->count(),
             'query' => $query,
             'results' => $results,
-            'popular' => self::POPULAR,
             'voted' => $request->session()->get('faq_votes', []),
             'updatedOn' => optional($items->max('updated_at'))->format('F Y'),
         ]);

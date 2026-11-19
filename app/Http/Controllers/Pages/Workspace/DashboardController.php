@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages\Workspace;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Models\ActivityLog;
@@ -13,6 +14,7 @@ use App\Services\ProtocolSchema;
 use App\Services\PublicRegister;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,6 +40,7 @@ class DashboardController extends Controller
         $register = app(PublicRegister::class)->summaries();
 
         return Inertia::render('workspace/dashboard', [
+            'content' => Arr::only(PageContent::for('workspace'), ['dashboard_top', 'dashboard_shortcuts', 'dashboard_cards', 'dashboard_help']),
             'today' => now()->format('j F Y'),
             'overview' => $this->overview($protocols),
             'actions' => $this->actions($protocols),

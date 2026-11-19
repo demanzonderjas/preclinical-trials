@@ -1,12 +1,13 @@
 @extends('mail.layout')
 
-@section('title', 'Your PCT registration: additional details needed before we can publish your protocol')
-@section('preheader', 'Your PCT registration: additional details needed before we can publish your protocol')
+@section('title', 'PCT.eu - More information needed for your protocol')
+@section('preheader', 'The PCT team needs a little more information before your protocol can be published.')
 @section('name', $protocol->user->name)
 
 @section('content')
     <p>
-        The publication of your protocol has been declined. See the comments below to see what needs to be changed:
+        Thank you for submitting your protocol. Before we can publish it, we need some more information.
+        The comments below explain what to add or clarify. Once you have updated your protocol, you can resubmit it.
     </p>
     <div>
         {!! $note !!}
@@ -14,7 +15,7 @@
 @stop
 
 @section('cta-link', config('app.url') . '/dashboard/edit-protocol/' . $protocol->id)
-@section('cta-text', 'Edit protocol')
+@section('cta-text', 'Update protocol')
 
 @section('closing')
     <p>

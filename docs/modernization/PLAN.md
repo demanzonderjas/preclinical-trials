@@ -190,7 +190,7 @@ Found by the security review of the modernization branch (October) and fixed:
 ## 8. Open items
 
 - Section 3d placeholders: booking link, video URL, newsletter, logo sign-off.
-- **Copy of the designed pages:** the home, about and help texts now come from the A2 design and live in the code. On the legacy site, the about texts were CMS pages (Admin → Pages). Decide with the client which texts must stay editable; phase 5 (admin content) can expose them as page sections.
+- **Copy of the designed pages:** in progress: the texts become editable in Admin → Content → Pages, page by page (Contact done; see [PAGE_CONTENT.md](PAGE_CONTENT.md)). Before that, the home, about and help texts now come from the A2 design and live in the code. On the legacy site, the about texts were CMS pages (Admin → Pages). Decide with the client which texts must stay editable; phase 5 (admin content) can expose them as page sections.
 - **Terms and privacy:** both footer links point to the existing Disclaimer page until separate texts exist.
 - **Images:** done. Static images are in `public/static`; `public/images` holds only uploads.
 - **F12 PubMed ID:** settled. As in the A2 protocol artboard, the PubMed ID is read from the "Link to publication" answer ("PubMed 42493553"); no separate field.

@@ -26,10 +26,10 @@ type Row = {
 	last_comment: string | null;
 };
 
-type Filter = "all" | "awaiting" | "resubmitted" | "published" | "rejected" | "draft";
+type Filter = "all" | "awaiting" | "resubmitted" | "published" | "rejected" | "declined" | "draft";
 
 type Props = {
-	stats: { awaiting: number; oldest_days: number | null; resubmitted: number; amendments: number; public: number; embargoed: number; rejected: number };
+	stats: { awaiting: number; oldest_days: number | null; resubmitted: number; amendments: number; public: number; embargoed: number; rejected: number; declined: number };
 	filters: { status: Filter; embargo: "any" | "yes" | "no"; q: string };
 	totals: Record<Filter, number>;
 	protocols: { data: Row[]; total: number; from: number | null; to: number | null; current_page: number; last_page: number; links: PaginationLink[] };
@@ -40,7 +40,8 @@ const chips: [Filter, string][] = [
 	["awaiting", "Awaiting review"],
 	["resubmitted", "Resubmitted"],
 	["published", "Published"],
-	["rejected", "Rejected / needs changes"],
+	["rejected", "Referred · more information needed"],
+	["declined", "Declined"],
 	["draft", "Draft"]
 ];
 
@@ -67,14 +68,15 @@ export default function AdminProtocols({ stats, filters, totals, protocols }: Pr
 			</section>
 
 			<div className="container-page pt-8 pb-16">
-				<dl className="grid grid-cols-2 overflow-hidden rounded-card border border-line bg-white md:grid-cols-3 lg:grid-cols-5">
+				<dl className="grid grid-cols-2 overflow-hidden rounded-card border border-line bg-white md:grid-cols-3 lg:grid-cols-6">
 					{(
 						[
 							["Awaiting review", stats.awaiting, stats.oldest_days === null ? "Nothing waiting" : `Oldest has waited ${days(stats.oldest_days)}${stats.amendments ? ` · ${stats.amendments} amendment${stats.amendments === 1 ? "" : "s"}` : ""}`],
 							["Resubmitted", stats.resubmitted, `Of the ${stats.awaiting}, after an earlier round`],
 							["Published", stats.public, "Publicly visible"],
 							["Under embargo", stats.embargoed, "Published, details hidden"],
-							["Rejected / needs changes", stats.rejected, "Returned to the researcher"]
+							["Referred", stats.rejected, "More information needed"],
+							["Declined", stats.declined, "Not eligible, final"]
 						] as const
 					).map(([term, value, note]) => (
 						<div key={term} className="border-line px-6 py-5 not-last:border-b md:border-r lg:border-b-0">
@@ -180,7 +182,7 @@ export default function AdminProtocols({ stats, filters, totals, protocols }: Pr
 												Review
 											</ButtonAnchor>
 										)}
-										<a href={routes.protocol(row.id)} className="font-display font-extrabold text-link">
+										<a href={routes.protocol(row.id)} target="_blank" rel="noopener" className="font-display font-extrabold text-link">
 											View
 										</a>
 										{row.status === "published" && row.embargo_until && (

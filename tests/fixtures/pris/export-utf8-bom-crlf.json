@@ -1,0 +1,38 @@
+﻿{
+	"id": 4182,
+	"version": 3,
+	"content": {
+		"title": "Remote ischemic conditioning before cardiac surgery in pigs",
+		"shortTitle": "RIC-PIG",
+		"hypotheses": "Remote ischemic conditioning reduces myocardial injury after cardiopulmonary bypass in pigs.",
+		"medicineFields": "Cardiologie & hartchirurgie (cœur)",
+		"stage": 1,
+		"species": { "description": "Pigs" },
+		"strains": [
+			{ "description": "Landrace", "supplier": "Topigs", "speciesCode": "SUS" },
+			{ "description": "Yorkshire", "supplier": "Topigs", "speciesCode": "SUS" }
+		],
+		"animalSex": "F",
+		"animalCount": 36,
+		"animalCommittee": { "applicationNumber": "AVD1150020174264" },
+		"date": { "start": "2027-04-01T00:00:00Z", "end": "2028-03-31T00:00:00Z" },
+		"endpoints": { "primary": "Troponin T at 24 hours", "secondary": "Infarct size; ejection fraction" },
+		"groups": [
+			{ "name": "Sham surgery", "count": 6, "type": { "selection": 0 } },
+			{ "name": "Bypass without conditioning", "count": 15, "type": { "selection": 1 } },
+			{ "name": "Bypass with remote conditioning", "count": 15, "type": { "selection": 2 } }
+		],
+		"placeboArms": false,
+		"randomisation": { "selection": 1, "description": "" },
+		"blinding": {
+			"investigator": { "selection": 1, "description": "Conditioning is done by a technician behind a screen." },
+			"outcome": { "selection": 2, "description": "" }
+		},
+		"sampleSize": { "selection": 0, "description": "Power 0.8, alpha 0.05, expected difference 30% in troponin." },
+		"reuseAnimals": { "selection": 0 },
+		"interventionType": { "selection": 5, "description": "" },
+		"supportSources": { "selection": [1, 2] },
+		"studyCentres": { "name": "Amsterdam UMC", "city": "Amsterdam", "country": "NL" },
+		"contact": { "name": "Dr. Lotte Jansen-Müller", "role": "Principal investigator", "email": "l.jansen@example.org" }
+	}
+}

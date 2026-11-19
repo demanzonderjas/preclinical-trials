@@ -16,7 +16,8 @@
 <table class="record">
     <tr><td class="term">Submitted for publication</td><td><strong>{{ $lifecycle['submitted'] }}</strong></td></tr>
     <tr><td class="term">Published</td><td>{{ $lifecycle['published'] }}</td></tr>
-    <tr><td class="term">Rejected / needs changes</td><td>{{ $lifecycle['rejected'] }}</td></tr>
+    <tr><td class="term">Referred (more information needed)</td><td>{{ $lifecycle['rejected'] }}</td></tr>
+    <tr><td class="term">Declined (not eligible)</td><td>{{ $lifecycle['declined'] }}</td></tr>
     <tr><td class="term">Awaiting review</td><td>{{ $lifecycle['awaiting'] }}</td></tr>
     <tr><td class="term">Under embargo</td><td>{{ $embargo['embargoed'] }}</td></tr>
     <tr><td class="term">Publicly visible</td><td>{{ $embargo['public'] }}</td></tr>

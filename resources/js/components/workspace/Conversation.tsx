@@ -28,7 +28,8 @@ const statusWord: Record<ProtocolStatus, string> = {
 	draft: "draft",
 	submitted_for_publication: "submitted",
 	resubmitted_for_publication: "resubmitted",
-	rejected: "needs changes",
+	rejected: "more information needed",
+	declined: "declined",
 	published: "published"
 };
 

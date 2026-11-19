@@ -7,8 +7,8 @@
  *   from the former SPA's definitions in resources/legacy/js/data/forms/fields/protocol/*.ts (see git history), in the
  *   field order of `createProtocolForm` (resources/legacy/js/data/forms/protocol.ts).
  * - Labels, options and help texts are the English strings from
- *   resources/legacy/js/data/translations/en.json, with HTML stripped. Legacy info-icon texts
- *   (worked examples) are not included.
+ *   resources/legacy/js/data/translations/en.json, with HTML stripped. The legacy info-icon texts
+ *   (worked examples) live in data/protocol-help.ts and show as "More help" in the form.
  * - Stored values match `valid_protocol_keys` and `valid_field_values` in config/pct.php.
  * - Numbering, sections and design groups follow the A2 protocol view. `step` follows the
  *   7-step A2 form.

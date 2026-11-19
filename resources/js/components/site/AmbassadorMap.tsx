@@ -1,8 +1,11 @@
-import { Mail, MapPin, Search } from "lucide-react";
+import { MapPin, Search } from "lucide-react";
 import { useId, useRef } from "react";
 import world from "@/data/world-dots.json";
 import { ButtonAnchor } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
+import { fill } from "@/lib/content";
+import { RichContent } from "@/components/ui/RichContent";
+import type { ContentHtml } from "@/types/page-content";
 import { routes } from "@/lib/routes";
 
 export type Ambassador = {
@@ -212,7 +215,14 @@ function Pin({ a, x, y, active, onSelect, small = false, labelLeft = false, focu
 	);
 }
 
-export function AmbassadorCard({ a }: { a: Ambassador }) {
+/** The card's texts, edited in Admin → Content → Pages (About → Ambassadors). */
+export type AmbassadorCardText = {
+	/** Rich text: "<p><strong>{count} public protocols</strong> come from study centres in {country}.</p>". */
+	protocols: ContentHtml;
+	link: string;
+};
+
+export function AmbassadorCard({ a, text }: { a: Ambassador; text: AmbassadorCardText }) {
 	const initials = a.name
 		.replace(/^(Prof\.|Dr\.)\s*/g, "")
 		.split(/\s+/)
@@ -236,23 +246,22 @@ export function AmbassadorCard({ a }: { a: Ambassador }) {
 			</div>
 			{a.description && <p className="mt-3 text-[15px] leading-normal text-ink-muted">{a.description}</p>}
 			{!!a.protocols_in_country && a.country && (
-				<p className="mt-3 rounded-input bg-mist px-3.5 py-2.5 text-[14.5px]">
-					<strong>{a.protocols_in_country} public protocols</strong> come from study centres in {a.country}.
-				</p>
+				<RichContent html={fill(text.protocols, { count: a.protocols_in_country, country: escapeHtml(a.country) })} className="mt-3 rounded-input bg-mist px-3.5 py-2.5 text-[14.5px]" />
 			)}
-			<div className="mt-4 flex flex-wrap gap-2.5">
-				<ButtonAnchor href={`${routes.contact}?topic=ambassador`} size="sm" icon={<Mail size={16} strokeWidth={2.2} aria-hidden="true" />}>
-					Get in touch
-				</ButtonAnchor>
-				{a.country_code && (
+			{/* Ambassadors are not a contact channel (product owner decision), so the card has no contact link. */}
+			{a.country_code && (
+				<div className="mt-4 flex flex-wrap gap-2.5">
 					<ButtonAnchor href={`${routes.database}?country[]=${a.country_code}`} size="sm" variant="secondary" icon={<Search size={16} strokeWidth={2.2} aria-hidden="true" />}>
-						Their country’s protocols
+						{text.link}
 					</ButtonAnchor>
-				)}
-			</div>
+				</div>
+			)}
 		</div>
 	);
 }
+
+/** A country name as it goes into the HTML of the card's rich text. */
+const escapeHtml = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export function AmbassadorList({ ambassadors, selected, onSelect }: { ambassadors: Ambassador[]; selected: Ambassador | null; onSelect: (a: Ambassador) => void }) {
 	return (

@@ -13,6 +13,7 @@ use App\Mail\FirstProtocolFeedback;
 use App\Mail\ProtocolApprovedAndPublished;
 use App\Mail\ProtocolEndDateReminder;
 use App\Mail\ProtocolEndDateReminderFollowUp;
+use App\Mail\ProtocolDeclined;
 use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
@@ -68,6 +69,7 @@ class MailRenderingTest extends TestCase
 			new ProtocolEndDateReminder($protocol),
 			new ProtocolEndDateReminderFollowUp($protocol),
 			new ProtocolRejected($protocol, 'Please add a sample size calculation.'),
+			new ProtocolDeclined($protocol, 'Clinical study, not preclinical.'),
 			new ProtocolSubmittedForPublication($protocol),
 			new ProtocolSubmittedUser($protocol),
 			new ReceivedMessage($owner, $message->fresh()),

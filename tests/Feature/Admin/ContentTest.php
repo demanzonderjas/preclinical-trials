@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Content\PageContent;
+use App\Http\Controllers\Pages\ContentPageController;
 use App\Models\Ambassador;
 use App\Models\FaqCategory;
 use App\Models\FaqItem;
@@ -77,6 +79,53 @@ class ContentTest extends TestCase
         $this->actingAs($admin)->post('/admin/content/ambassadors', ['name' => 'Dr. Emily Sena', 'description' => 'Senior lecturer', 'place' => 'Edinburgh, United Kingdom', 'latitude' => '55.953', 'longitude' => '-3.188'])->assertRedirect();
         $this->assertSame('Edinburgh, United Kingdom', Ambassador::firstOrFail()->geo_search);
         $this->actingAs($admin)->post('/admin/content/ambassadors', ['name' => 'X', 'description' => 'Y', 'place' => 'Z', 'latitude' => '123', 'longitude' => '0'])->assertSessionHasErrors('latitude');
+    }
+
+    public function test_the_pages_tab_lists_only_pages_the_site_shows(): void
+    {
+        $admin = $this->makeAdmin();
+        foreach (['/disclaimer' => 'Disclaimer', '/about-pct/team' => 'Team', '/' => 'Home'] as $slug => $title) {
+            $page = new Page();
+            $page->title = $title;
+            $page->slug = $slug;
+            $page->content_blocks = [['type' => 'text', 'content' => "<p>{$title}</p>"]];
+            $page->save();
+        }
+
+        $this->actingAs($admin)->get('/admin/content?tab=pages')->assertInertia(fn (Assert $page) => $page
+            // The disclaimer, the privacy statement (made from its placeholder), and the designed
+            // pages edited field by field (PageContentTest).
+            ->where('counts.pages', 2 + count(PageContent::pages()))
+            ->has('pages', 2)
+            ->where('pages.0.slug', '/disclaimer')
+            ->where('pages.1.slug', '/privacy-statement')
+            ->has('retiredPages', 2)
+            ->where('retiredPages.0.slug', '/about-pct/team'));
+
+        // Editing a page the site does not show would change nothing, so it is refused; the text stays.
+        $team = Page::where('slug', '/about-pct/team')->firstOrFail();
+        $this->actingAs($admin)->put("/admin/content/pages/{$team->id}", ['title' => 'Team', 'blocks' => ['<p>New</p>']])->assertNotFound();
+        $this->assertSame('<p>Team</p>', data_get($team->fresh()->content_blocks, '0.content'));
+        $this->assertSame(4, Page::count());
+    }
+
+    public function test_the_privacy_statement_is_edited_like_the_disclaimer(): void
+    {
+        $admin = $this->makeAdmin();
+        $placeholder = ContentPageController::PLACEHOLDERS['/privacy-statement'];
+
+        // Until the PCT team opens the Pages tab, the site shows the placeholder.
+        $this->get('/privacy-statement')->assertInertia(fn (Assert $page) => $page->where('page.sections.0', $placeholder['sections'][0])->where('page.updated_on', null));
+
+        // Opening the tab makes it a page with the placeholder as its text, unchanged on the site.
+        $this->actingAs($admin)->get('/admin/content?tab=pages')->assertInertia(fn (Assert $page) => $page->where('pages.0.slug', '/privacy-statement')->where('pages.0.title', 'Privacy statement'));
+        $this->actingAs($admin)->get('/admin/content?tab=pages');
+        $this->assertSame(1, Page::where('slug', '/privacy-statement')->count());
+        $this->get('/privacy-statement')->assertInertia(fn (Assert $page) => $page->where('page.sections.0', $placeholder['sections'][0])->where('page.updated_on', null));
+
+        $privacy = Page::where('slug', '/privacy-statement')->firstOrFail();
+        $this->actingAs($admin)->put("/admin/content/pages/{$privacy->id}", ['title' => 'Privacy statement', 'subtitle' => '', 'blocks' => ['<h2>Your data</h2><p>We keep it safe.</p>']])->assertRedirect();
+        $this->get('/privacy-statement')->assertInertia(fn (Assert $page) => $page->where('page.sections.0', '<h2>Your data</h2><p>We keep it safe.</p>')->where('page.updated_on', now()->format('j F Y')));
     }
 
     public function test_images_are_uploaded_but_not_svg(): void

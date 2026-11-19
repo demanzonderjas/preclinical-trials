@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Models\Ambassador;
 use App\Services\PublicRegister;
@@ -22,6 +23,11 @@ class AboutController extends Controller
             ->map(function (Ambassador $ambassador, int $index) use ($perCountry, $codes) {
                 [$city, $country] = array_pad(array_map('trim', explode(',', (string) $ambassador->geo_search, 2)), 2, null);
                 $code = $country ? ($codes[mb_strtolower($country)] ?? self::alias($country)) : null;
+                // Places saved by the legacy admin hold the city only ("Edmonton"); the admin form now
+                // asks for "City, country". Until those places are re-saved, look the country up.
+                if (! $country && $city && ($code = self::legacyCityCountry($city))) {
+                    $country = config("pct.countries.$code");
+                }
 
                 return [
                     'id' => $ambassador->id,
@@ -39,6 +45,8 @@ class AboutController extends Controller
             });
 
         return Inertia::render('about', [
+            // The texts, the team and the timelines: Admin → Content → Pages (app/Content/Pages/AboutPage.php).
+            'content' => PageContent::for('about'),
             'figures' => [
                 'total' => $figures['total'],
                 'countries' => $figures['countries'],
@@ -47,6 +55,29 @@ class AboutController extends Controller
             ],
             'ambassadors' => $ambassadors,
         ]);
+    }
+
+    /**
+     * The country of the cities in ambassador places saved without a country by the legacy admin,
+     * as ISO code. Places written as "City, country" do not need this.
+     */
+    private static function legacyCityCountry(string $city): ?string
+    {
+        return [
+            'edmonton' => 'CA',
+            'ottawa' => 'CA',
+            'guadalajara' => 'MX',
+            'louisville' => 'US',
+            'edinburgh' => 'GB',
+            'paris' => 'FR',
+            'amsterdam' => 'NL',
+            'utrecht' => 'NL',
+            'amersfoort' => 'NL',
+            'lund' => 'SE',
+            'saint petersburg' => 'RU',
+            'ain shams university' => 'EG',
+            'surabaya' => 'ID',
+        ][mb_strtolower($city)] ?? null;
     }
 
     /** Country spellings in ambassador locations that differ from config('pct.countries'). */

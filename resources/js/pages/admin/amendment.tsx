@@ -61,7 +61,7 @@ export default function Amendment({ amendment, protocol, published, proposed, ch
 						<h1 id="amendment-title" className="max-w-[860px] text-4xl leading-[1.08] font-extrabold tracking-[-0.035em] sm:text-[40px]">
 							{protocol.title}
 						</h1>
-						<ButtonAnchor href={routes.protocol(protocol.id)} variant="secondary" className="shrink-0 self-start">
+						<ButtonAnchor href={routes.protocol(protocol.id)} target="_blank" rel="noopener" variant="secondary" className="shrink-0 self-start">
 							View published version
 						</ButtonAnchor>
 					</div>

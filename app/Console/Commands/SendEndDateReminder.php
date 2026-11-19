@@ -42,7 +42,8 @@ class SendEndDateReminder extends Command
      */
     public function handle()
     {
-        $protocols = Protocol::all();
+        // A declined protocol can't be updated, so there is nothing to remind its owner of.
+        $protocols = Protocol::where('status', '!=', Protocol::DECLINED)->get();
 
         $protocols->each(function (Protocol $protocol) {
 

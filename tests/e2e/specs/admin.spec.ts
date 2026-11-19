@@ -100,6 +100,31 @@ test.describe("Admin: content", () => {
 		await expect(page.getByText("E2E: the register is provided as is.")).toBeVisible();
 	});
 
+	test("edits the texts of the contact page, then resets one to the original", async ({ admin, page }) => {
+		await admin.openPages();
+		await page.getByRole("button", { name: "Edit Contact" }).click();
+		await expect(page.getByRole("heading", { level: 1, name: "Edit page: Contact" })).toBeVisible();
+		const intro = page.getByRole("region", { name: "Introduction" });
+		await intro.getByLabel(/^Heading/).fill("E2E: talk to the PCT team");
+		const team = page.getByRole("region", { name: "You’ll hear from" });
+		await team.getByRole("button", { name: "Down: Julia Menon, MSc" }).click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
+		await expect(page.getByText("Page saved.")).toBeVisible();
+
+		await page.goto("/contact");
+		await expect(page.getByRole("heading", { level: 1, name: "E2E: talk to the PCT team" })).toBeVisible();
+		await expect(page.getByRole("region", { name: "You’ll hear from" }).getByRole("listitem").first()).toContainText("Bente Verbruggen");
+
+		await admin.openPages();
+		await expect(page.getByText(/last edited .* by /)).toBeVisible();
+		await page.getByRole("button", { name: "Edit Contact" }).click();
+		await page.getByRole("button", { name: "Reset to original text: Heading" }).first().click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
+		await expect(page.getByText("Page saved.")).toBeVisible();
+		await page.goto("/contact");
+		await expect(page.getByRole("heading", { level: 1, name: "Get in touch" })).toBeVisible();
+	});
+
 	test("adds an ambassador to the map on the about page", async ({ admin, page }) => {
 		await admin.openAmbassadors();
 		await page.getByRole("button", { name: "Add ambassador" }).click();

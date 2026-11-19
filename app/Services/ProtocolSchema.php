@@ -26,6 +26,24 @@ class ProtocolSchema
         return self::fields()->firstWhere('key', $key);
     }
 
+    /** The numbered question a field belongs to: a follow-up shows inside its parent. */
+    public static function questionOf(string $key): string
+    {
+        $field = self::field($key);
+
+        return $field && ! empty($field['parent']) && empty($field['number']) ? $field['parent'] : $key;
+    }
+
+    /**
+     * A question with its follow-ups, as the forms show them together.
+     *
+     * @return array<int, string>
+     */
+    public static function questionKeys(string $key): array
+    {
+        return [$key, ...self::fields()->filter(fn ($field) => ($field['parent'] ?? null) === $key && empty($field['number']))->pluck('key')->all()];
+    }
+
     /** What ProtocolImages::store() names an upload (the legacy upload used the same). */
     public const IMAGE_NAME = '/^\d+-[A-Za-z0-9]{16}\.[a-z0-9]{2,5}$/';
 

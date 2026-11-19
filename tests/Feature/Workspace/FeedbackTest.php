@@ -9,6 +9,7 @@ use App\Models\Message;
 use App\Models\Protocol;
 use App\Services\Inbox;
 use App\Services\ProtocolWorkflow;
+use App\Support\Answers;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -70,6 +71,77 @@ class FeedbackTest extends TestCase
         $this->assertSame(FeedbackPoint::OPEN, $this->point->fresh()->status);
 
         $this->actingAs($this->makeUser())->post("/dashboard/feedback-points/{$this->point->id}/status", ['addressed' => true])->assertForbidden();
+    }
+
+    public function test_a_change_to_a_follow_up_addresses_the_point_on_its_question(): void
+    {
+        $owner = $this->protocol->user;
+        $point = $this->returnWithPointOn('randomisation', ['randomisation' => 'yes']);
+
+        // The answer the reviewer asked about lives in a follow-up of "Randomisation".
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$this->protocol->id}/answers", ['values' => ['randomisation_method_used' => 'coin_toss']])->assertOk();
+
+        $this->assertSame(FeedbackPoint::ADDRESSED, $point->fresh()->status);
+        $this->assertNotNull($point->fresh()->addressed_at);
+    }
+
+    public function test_a_save_that_changes_nothing_the_reviewer_saw_leaves_the_point_open(): void
+    {
+        $owner = $this->protocol->user;
+        $point = $this->returnWithPointOn('study_centre', ['study_centre' => [['name' => 'UMC Utrecht', 'city' => 'Utrecht', 'country' => 'NL']]]);
+
+        // The same centre, typed back with its keys in another order and a stray space.
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$this->protocol->id}/answers", ['values' => ['study_centre' => [['country' => 'NL', 'city' => 'Utrecht ', 'name' => 'UMC Utrecht']]]])->assertOk();
+        $this->assertSame(FeedbackPoint::OPEN, $point->fresh()->status);
+
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$this->protocol->id}/answers", ['values' => ['study_centre' => [['name' => 'UMC Utrecht', 'city' => 'Utrecht', 'country' => 'NL'], ['name' => 'Karolinska Institutet', 'city' => 'Stockholm', 'country' => 'SE']]]])->assertOk();
+        $this->assertSame(FeedbackPoint::ADDRESSED, $point->fresh()->status);
+    }
+
+    public function test_a_point_kept_open_after_a_change_stays_open_on_later_changes(): void
+    {
+        $owner = $this->protocol->user;
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$this->protocol->id}/answers", ['values' => ['title' => 'New title']])->assertOk();
+        $this->assertSame(FeedbackPoint::ADDRESSED, $this->point->fresh()->status);
+
+        // Undo: the change was not meant for this point.
+        $this->actingAs($owner)->post("/dashboard/feedback-points/{$this->point->id}/status", ['addressed' => false])->assertRedirect();
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$this->protocol->id}/answers", ['values' => ['title' => 'Newer title in mice']])->assertOk();
+        $this->assertSame(FeedbackPoint::OPEN, $this->point->fresh()->status);
+
+        $this->actingAs($owner)->get("/dashboard/protocols/{$this->protocol->id}/feedback")
+            ->assertInertia(fn (Assert $page) => $page->where('points.0.status', 'open')->where('points.0.reopened', true));
+
+        // Marking it addressed by hand still works.
+        $this->actingAs($owner)->post("/dashboard/feedback-points/{$this->point->id}/status", ['addressed' => true]);
+        $this->assertSame(FeedbackPoint::ADDRESSED, $this->point->fresh()->status);
+    }
+
+    public function test_answers_compare_by_what_they_say(): void
+    {
+        $this->assertTrue(Answers::same([['name' => 'A', 'city' => 'B', 'country' => 'NL']], [(object) ['city' => 'B', 'country' => 'NL', 'name' => 'A']]));
+        $this->assertTrue(Answers::same('', null));
+        $this->assertTrue(Answers::same([], null));
+        $this->assertTrue(Answers::same([['name' => '', 'city' => '', 'country' => '']], null));
+        $this->assertTrue(Answers::same("line one\r\nline two ", "line one\nline two"));
+        $this->assertTrue(Answers::same(12, '12'));
+        $this->assertTrue(Answers::same(true, 'true'));
+        $this->assertFalse(Answers::same([['name' => 'A'], ['name' => 'B']], [['name' => 'B'], ['name' => 'A']]));
+        $this->assertFalse(Answers::same(['mouse'], ['mouse', 'rat']));
+        $this->assertFalse(Answers::same('Old', 'New'));
+        $this->assertSame(['b'], Answers::changedKeys(['a' => [['x' => 1, 'y' => 2]], 'b' => 'old'], ['a' => [['y' => '2', 'x' => '1']], 'b' => 'new']));
+    }
+
+    /** Resubmits the protocol and returns it again, with one open point on $field. */
+    private function returnWithPointOn(string $field, array $answers): FeedbackPoint
+    {
+        $workflow = app(ProtocolWorkflow::class);
+        $this->protocol->addDetailsToDatabase($answers);
+        $workflow->submit($this->protocol->fresh());
+        $point = $workflow->currentRound($this->protocol)->points()->create(['protocol_id' => $this->protocol->id, 'field_key' => $field, 'body' => 'Please check.']);
+        $workflow->returnWithFeedback($this->protocol->fresh(), $this->makeAdmin(), null);
+
+        return $point;
     }
 
     public function test_questions_on_a_point_go_to_the_pct_team_and_replies_are_read_on_the_page(): void

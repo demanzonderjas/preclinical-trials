@@ -1,28 +1,51 @@
-import { Check, ChevronRight, Coins, Copy, FileCheck, FileText, Flag, Handshake, Layers, Mail, Mic, Scale, Search, Share2, Users } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { Check, ChevronRight, Coins, Copy, FileCheck, FileText, Flag, Handshake, Info, Layers, Mail, Mic, Scale, Search, Share2, Users } from "lucide-react";
+import { Fragment, type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { type Ambassador, AmbassadorCard, AmbassadorList, AmbassadorMap } from "@/components/site/AmbassadorMap";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonAnchor } from "@/components/ui/Button";
 import { ArrowLink, Avatar } from "@/components/ui/Content";
 import { PublicLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
+import { fill } from "@/lib/content";
 import { routes } from "@/lib/routes";
+import type { AboutContent } from "@/types/page-content";
 
 type Props = {
+	/** The texts, the team and the timelines, edited in Admin → Content → Pages (app/Content/Pages/AboutPage.php). */
+	content: AboutContent;
 	figures: { total: number; countries: number; public: number; registered_before_start: number };
 	ambassadors: Ambassador[];
 };
 
-export default function About({ figures, ambassadors }: Props) {
+/** The icons an aim card can show (the `icon` select of the aims in AboutPage.php). */
+const aimIcons = { copy: Copy, scale: Scale, share: Share2, users: Users, search: Search, file_check: FileCheck, handshake: Handshake, layers: Layers, flag: Flag };
+
+/** A heading written over several lines: each line break becomes a <br>, on phones only a space when `wideOnly`. */
+function Lines({ text, wideOnly = false }: { text: string; wideOnly?: boolean }) {
+	return text.split("\n").map((line, index) => (
+		<Fragment key={index}>
+			{index > 0 && (wideOnly ? <> <br className="max-sm:hidden" /></> : <br />)}
+			{line}
+		</Fragment>
+	));
+}
+
+/** Initials for an avatar without a photo: "Prof. Jonathan Kimmelman" → "JK". */
+const initials = (name: string) => {
+	const words = name.replace(/^((Prof|Dr)\.\s*)+/, "").split(/\s+/).filter(word => /^[A-Z]/.test(word));
+	return words.length > 1 ? words[0][0] + words[words.length - 1][0] : (words[0]?.[0] ?? "");
+};
+
+export default function About({ content, figures, ambassadors }: Props) {
 	return (
-		<PublicLayout title="About" description="PreclinicalTrials.eu aims to provide a comprehensive overview of all animal studies — including those that might otherwise remain unpublished.">
-			<Hero figures={figures} />
-			<Guides />
-			<Aims figures={figures} />
-			<People />
-			{ambassadors.length > 0 && <Ambassadors ambassadors={ambassadors} />}
-			<Background />
-			<Closing />
+		<PublicLayout title="About" description={content.hero.description}>
+			<Hero text={content.hero} figures={figures} />
+			<Guides text={content.guides} />
+			<Aims text={content.aims} terms={content.bias_terms.terms} studies={content.studies} figures={figures} />
+			<People text={content.people} />
+			{ambassadors.length > 0 && <Ambassadors text={content.ambassadors} ambassadors={ambassadors} />}
+			<Background text={content.background} />
+			<Closing text={content.closing} />
 		</PublicLayout>
 	);
 }
@@ -47,7 +70,20 @@ function Breadcrumb() {
 	);
 }
 
-function Hero({ figures }: { figures: Props["figures"] }) {
+/** The heading, with the first occurrence of `underline` underlined in peach. */
+function Underlined({ title, underline }: { title: string; underline: string }) {
+	const at = underline ? title.indexOf(underline) : -1;
+	if (at < 0) return title;
+	return (
+		<>
+			{title.slice(0, at)}
+			<span className="underline decoration-peach-300 decoration-[5px] underline-offset-[8px] [text-decoration-skip-ink:none]">{underline}</span>
+			{title.slice(at + underline.length)}
+		</>
+	);
+}
+
+function Hero({ text, figures }: { text: AboutContent["hero"]; figures: Props["figures"] }) {
 	return (
 		<section aria-labelledby="about-title" className="relative overflow-hidden bg-teal-50">
 			<svg aria-hidden="true" className="pointer-events-none absolute -top-24 -right-56 hidden h-[620px] w-[620px] lg:block" viewBox="0 0 600 600" fill="none">
@@ -57,19 +93,16 @@ function Hero({ figures }: { figures: Props["figures"] }) {
 			<div className="container-page relative py-10 lg:py-14">
 				<Breadcrumb />
 				<h1 id="about-title" className="mt-6 max-w-4xl text-4xl leading-[1.05] font-extrabold tracking-[-0.04em] sm:text-5xl lg:text-[60px]">
-					Every animal study counts.{" "}
-					<span className="underline decoration-peach-300 decoration-[5px] underline-offset-[8px] [text-decoration-skip-ink:none]">Also</span> the unpublished ones.
+					<Underlined title={text.title} underline={text.underline} />
 				</h1>
-				<p className="mt-5 max-w-[760px] text-lg leading-[1.6]">
-					PreclinicalTrials.eu aims to provide a comprehensive overview of all animal studies — including those that might otherwise remain unpublished. An open, international register, hosted at UMC Utrecht.
-				</p>
+				<p className="mt-5 max-w-[760px] text-lg leading-[1.6]">{text.text}</p>
 				<dl className="mt-9 grid max-w-[720px] grid-cols-3 border-t border-teal-200">
 					{[
-						["2018", "online since February"],
-						[String(figures.total), "protocols registered"],
-						[String(figures.countries), "countries with study centres"]
+						[text.online_value, text.online_label],
+						[String(figures.total), text.protocols_label],
+						[String(figures.countries), text.countries_label]
 					].map(([value, label], index) => (
-						<div key={label} className={cn("pt-5", index > 0 && "border-l border-teal-200 pl-4 sm:pl-6")}>
+						<div key={index} className={cn("pt-5", index > 0 && "border-l border-teal-200 pl-4 sm:pl-6")}>
 							<dd className="font-display text-3xl font-extrabold tracking-[-0.03em] tabular-nums sm:text-[40px]">{value}</dd>
 							<dt className="mt-1 text-[14px] text-ink-muted sm:text-[15px]">{label}</dt>
 						</div>
@@ -80,52 +113,110 @@ function Hero({ figures }: { figures: Props["figures"] }) {
 	);
 }
 
-function Guides() {
+function Guides({ text }: { text: AboutContent["guides"] }) {
 	return (
 		<section aria-labelledby="guides-title" className="container-page grid items-center gap-12 py-20 lg:grid-cols-[minmax(0,1fr)_600px] lg:py-24">
 			<div>
-				<p className="eyebrow">What guides us</p>
+				<p className="eyebrow">{text.eyebrow}</p>
 				<h2 id="guides-title" className="mt-3.5 text-3xl leading-[1.08] font-extrabold tracking-[-0.03em] sm:text-[48px]">
-					Vision, mission <br className="max-sm:hidden" />
-					and core values.
+					<Lines text={text.title} wideOnly />
 				</h2>
-				<p className="mt-5 max-w-[460px] text-[17px] leading-[1.6] text-ink-muted">Read them as layers. The vision is the plan we hold on to, the mission is how we act on it, and our values keep every step honest.</p>
-				<ArrowLink href={routes.database} className="mt-4">
-					See them at work in the database
+				<p className="mt-5 max-w-[460px] text-[17px] leading-[1.6] text-ink-muted">{text.text}</p>
+				<ArrowLink href={text.link.url} className="mt-4">
+					{text.link.label}
 				</ArrowLink>
 			</div>
 			<div className="grid gap-[-1px]">
 				<div className="relative z-[1] rounded-card border border-line bg-white p-7 pb-16 shadow-raised lg:ml-[72px]">
 					<Badge tone="teal" size="sm" className="tracking-[0.08em] uppercase">
-						01 · Vision
+						01 · {text.vision_label}
 					</Badge>
-					<p className="mt-4 font-display text-2xl leading-snug font-bold">Effective preclinical research to improve human health.</p>
+					<p className="mt-4 font-display text-2xl leading-snug font-bold">{text.vision_text}</p>
 				</div>
 				<div className="relative z-[2] -mt-10 rounded-card border border-teal-300 bg-teal-50/85 p-7 pt-12 lg:mr-[36px] lg:ml-[36px]">
 					<Badge tone="outline" size="sm" className="tracking-[0.08em] uppercase">
-						02 · Mission
+						02 · {text.mission_label}
 					</Badge>
-					<p className="mt-4 font-display text-xl leading-snug font-bold">To contribute to transparent, robust and responsible preclinical research via preregistration.</p>
+					<p className="mt-4 font-display text-xl leading-snug font-bold">{text.mission_text}</p>
 				</div>
 				<div className="relative z-[3] -mt-8 rounded-card border border-blue-400 bg-blue-100/70 p-7 lg:mr-[72px]">
 					<Badge tone="blue" size="sm" className="bg-white/70 tracking-[0.08em] uppercase">
-						03 · Core values
+						03 · {text.values_label}
 					</Badge>
 					<dl className="mt-4 grid gap-5 sm:grid-cols-3">
-						{[
-							["Responsibility", "Every animal used should add to knowledge, whatever the result."],
-							["Transparency", "Plans, amendments and outcomes stay on the public record."],
-							["Integrity", "Report what was planned, what changed and why."]
-						].map(([term, text]) => (
-							<div key={term}>
-								<dt className="font-display text-lg font-bold">{term}</dt>
-								<dd className="mt-1 text-[14.5px] leading-normal text-ink-muted">{text}</dd>
+						{text.values.map((value, index) => (
+							<div key={index}>
+								<dt className="font-display text-lg font-bold">{value.term}</dt>
+								<dd className="mt-1 text-[14.5px] leading-normal text-ink-muted">{value.text}</dd>
 							</div>
 						))}
 					</dl>
 				</div>
 			</div>
 		</section>
+	);
+}
+
+/**
+ * Chips that show a short definition: on hover (mouse), on keyboard focus and on tap or click,
+ * which keeps it open until a second tap, Escape or a tap elsewhere. The definition opens below
+ * the chips, across the card's width, and is announced through a polite live region.
+ */
+function TermChips({ terms }: { terms: { term: string; definition: string }[] }) {
+	const [open, setOpen] = useState<{ term: string; pinned: boolean } | null>(null);
+	const ref = useRef<HTMLDivElement>(null);
+	const panelId = useId();
+	const current = terms.find(item => item.term === open?.term);
+
+	useEffect(() => {
+		if (!open) return;
+		const outside = (event: PointerEvent) => !ref.current?.contains(event.target as Node) && setOpen(null);
+		document.addEventListener("pointerdown", outside);
+		return () => document.removeEventListener("pointerdown", outside);
+	}, [open]);
+
+	return (
+		<div
+			ref={ref}
+			className="relative mt-3"
+			onPointerLeave={event => event.pointerType === "mouse" && !open?.pinned && setOpen(null)}
+			onBlur={event => !ref.current?.contains(event.relatedTarget as Node) && setOpen(null)}
+			onKeyDown={event => event.key === "Escape" && setOpen(null)}
+		>
+			<ul className="flex flex-wrap gap-2">
+				{terms.map(({ term }) => {
+					const active = open?.term === term;
+					return (
+						<li key={term}>
+							<button
+								type="button"
+								aria-expanded={active}
+								aria-controls={panelId}
+								onPointerEnter={event => event.pointerType === "mouse" && !open?.pinned && setOpen({ term, pinned: false })}
+								onFocus={event => event.currentTarget.matches(":focus-visible") && setOpen({ term, pinned: false })}
+								onClick={() => setOpen(active && open?.pinned ? null : { term, pinned: true })}
+								className={cn(
+									"inline-flex min-h-8 items-center gap-1.5 rounded-full border py-1 pr-2.5 pl-3 text-[14px] font-semibold text-ink",
+									active ? "border-teal-500 bg-teal-50" : "border-line bg-mist hover:border-teal-300"
+								)}
+							>
+								{term}
+								<Info size={14} strokeWidth={2.2} className="text-teal-500" aria-hidden="true" />
+							</button>
+						</li>
+					);
+				})}
+			</ul>
+			{/* Always rendered, so screen readers announce the definition when it appears. */}
+			<div id={panelId} role="status" className="absolute inset-x-0 top-full z-20 mt-2">
+				{current && (
+					<p className="rounded-input bg-white p-4 text-[14.5px] leading-normal text-ink shadow-[0_0_0_1px_var(--color-line),0_16px_36px_-20px_rgb(50_55_66/0.35)]">
+						<strong className="block font-display font-bold">{current.term}</strong>
+						{current.definition}
+					</p>
+				)}
+			</div>
+		</div>
 	);
 }
 
@@ -142,120 +233,80 @@ function AimCard({ number, icon, title, children }: { number: string; icon: Reac
 	);
 }
 
-function Aims({ figures }: { figures: Props["figures"] }) {
+function Aims({ text, terms, studies, figures }: { text: AboutContent["aims"]; terms: AboutContent["bias_terms"]["terms"]; studies: AboutContent["studies"]; figures: Props["figures"] }) {
 	const share = figures.public ? Math.round((figures.registered_before_start / figures.public) * 100) : 0;
-	const icon = (Icon: typeof Copy) => <Icon size={20} strokeWidth={2} aria-hidden="true" />;
 	return (
 		<section aria-labelledby="aims-title" className="bg-mist py-20 lg:py-24">
 			<div className="container-page">
 				<div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
 					<div>
-						<p className="eyebrow">Goals and aims</p>
+						<p className="eyebrow">{text.eyebrow}</p>
 						<h2 id="aims-title" className="mt-3.5 text-3xl leading-[1.08] font-extrabold tracking-[-0.03em] sm:text-[48px]">
-							Five aims.
-							<br />
-							One open record.
+							<Lines text={text.title} />
 						</h2>
 					</div>
-					<p className="max-w-md text-[17px] leading-[1.6] text-ink-muted">Registration preferably at inception — so every completed study can be compared with what was planned in its protocol.</p>
+					<p className="max-w-md text-[17px] leading-[1.6] text-ink-muted">{text.text}</p>
 				</div>
 				<div className="mt-10 grid gap-6 lg:grid-cols-3">
 					<article className="flex flex-col rounded-card border border-line bg-white p-7 lg:row-span-2">
 						<div className="relative h-[196px] overflow-hidden rounded-[18px] bg-teal-50" aria-hidden="true">
 							<span className="absolute top-4 left-5 h-20 w-[64%] rounded-xl bg-white p-3 shadow-sm">
 								<Badge tone="teal" size="sm" className="tracking-[0.08em] uppercase">
-									Plan
+									{text.picture_plan}
 								</Badge>
 							</span>
 							<span className="absolute top-14 left-[18%] h-20 w-[64%] rounded-xl border border-teal-300 bg-teal-50/80 p-3">
 								<Badge tone="outline" size="sm" className="tracking-[0.08em] uppercase">
-									Amendment
+									{text.picture_amendment}
 								</Badge>
 							</span>
 							<span className="absolute top-24 right-4 h-20 w-[64%] rounded-xl border border-blue-400 bg-blue-100/80 p-3">
 								<Badge tone="blue" size="sm" className="bg-white/70 tracking-[0.08em] uppercase">
-									Publication
+									{text.picture_publication}
 								</Badge>
 								<span className="mt-2 flex items-center gap-1.5 text-[13.5px] font-bold">
 									<Check size={14} strokeWidth={2.6} className="text-teal-500" />
-									Compared with the plan
+									{text.picture_compared}
 								</span>
 							</span>
 						</div>
 						<p className="eyebrow mt-7">Aim 01</p>
-						<h3 className="mt-2 text-[26px] font-extrabold tracking-[-0.02em]">Increase transparency</h3>
-						<p className="mt-2.5 text-[15.5px] leading-normal text-ink-muted">Register the plan before the study starts. Anyone can then compare the finished study with what was intended.</p>
+						<h3 className="mt-2 text-[26px] font-extrabold tracking-[-0.02em]">{text.first_title}</h3>
+						<p className="mt-2.5 text-[15.5px] leading-normal text-ink-muted">{text.first_text}</p>
 						<div className="mt-auto border-t border-line pt-5">
 							<p className="flex items-baseline justify-between gap-4 text-[15px]">
-								Registered before the study started
-								<span className="font-display text-2xl font-extrabold tabular-nums">{share}%</span>
+								{text.first_figure_label}
+<span className="font-display text-2xl font-extrabold tabular-nums">{share}%</span>
 							</p>
 							<div className="mt-2 h-2 overflow-hidden rounded-full bg-peach-100" aria-hidden="true">
 								<span className="block h-full rounded-full bg-peach-300" style={{ width: `${share}%` }} />
 							</div>
-							<p className="mt-2 text-[14px] text-ink-muted">
-								{figures.registered_before_start} of {figures.public} public protocols. We want this number to grow.
-							</p>
+							<p className="mt-2 text-[14px] text-ink-muted">{fill(text.first_figure_text, { registered: figures.registered_before_start, public: figures.public })}</p>
 						</div>
 					</article>
-					<AimCard number="02" icon={icon(Copy)} title="Avoid unnecessary duplication">
-						See which animal studies are already planned or running before you design a new one.
-					</AimCard>
-					<AimCard number="03" icon={icon(Scale)} title="Reduce reporting bias">
-						A fixed plan makes these visible:
-						<span className="mt-3 flex flex-wrap gap-2">
-							{["Publication bias", "p-hacking", "HARKing", "Selective outcome reporting"].map(item => (
-								<Badge key={item} tone="neutral" size="sm" className="font-semibold">
-									{item}
-								</Badge>
-							))}
-						</span>
-					</AimCard>
-					<AimCard number="04" icon={icon(Share2)} title="Increase data sharing">
-						Link the data and the full-text publication to the registered protocol.
-					</AimCard>
-					<AimCard number="05" icon={icon(Users)} title="Create opportunities for collaborative research">
-						Find groups working on the same question, and join forces.
-					</AimCard>
+					{text.items.map((aim, index) => {
+						const Icon = aimIcons[aim.icon] ?? Copy;
+						return (
+							<AimCard key={index} number={String(index + 2).padStart(2, "0")} icon={<Icon size={20} strokeWidth={2} aria-hidden="true" />} title={aim.title}>
+								{aim.text}
+								{aim.extra === "bias_terms" && terms.length > 0 && <TermChips terms={terms} />}
+							</AimCard>
+						);
+					})}
 				</div>
 				<div className="mt-6 flex flex-col gap-4 rounded-card border border-line bg-white p-6 sm:flex-row sm:items-center sm:p-7">
 					<span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-peach-100">
 						<FileCheck size={22} strokeWidth={2} aria-hidden="true" />
 					</span>
 					<div>
-						<h3 className="text-lg font-bold">Which studies can you register?</h3>
-						<p className="mt-1 text-[15.5px] text-ink-muted">
-							All animal studies, in any field and from any country. Confirmatory studies are especially encouraged. The register was created with support of the TACTICS alliance, with an original focus on cardiac regenerative therapy.
-						</p>
+						<h3 className="text-lg font-bold">{studies.title}</h3>
+						<p className="mt-1 text-[15.5px] text-ink-muted">{studies.text}</p>
 					</div>
 				</div>
 			</div>
 		</section>
 	);
 }
-
-const directors = [
-	{ name: "Julia Menon, MSc", role: "Scientific Daily Director", image: "julia.jpg", text: "Leads our educational and promotional work — webinars, guidance hours and research into what helps researchers preregister.", first: "Julia" },
-	{ name: "Bente Verbruggen", role: "Project Manager", image: "bente.jpg", text: "Coordinates the project, our partners and the day-to-day running of the register.", first: "Bente" }
-];
-
-const steering = [
-	{ name: "Prof. Dr. Steven Chamuleau", place: "Amsterdam UMC", image: "steven.jpg" },
-	{ name: "Prof. Dr. Dirk Duncker", place: "Erasmus MC, Rotterdam", image: "dirk.jpg" },
-	{ name: "Dr. Mira van der Naald", place: "UMC Utrecht · TACTICS", image: "mira.jpg" },
-	{ name: "Dr. Judith de Haan", place: "Open Science Programme, Utrecht University", image: "judith.jpg" },
-	{ name: "Dr. Nelleke Verhave", place: "Animal Welfare Body Utrecht", image: "nelleke.jpg" },
-	{ name: "Dr. Kim Wever", place: "SYRCLE, Radboudumc Nijmegen", image: "kim.jpg" }
-];
-
-const advisory = [
-	["JK", "Prof. Jonathan Kimmelman", "McGill University · biomedical ethics"],
-	["PG", "Prof. Paul Glasziou", "Bond University · evidence-based medicine"],
-	["JI", "Prof. John Ioannidis", "Stanford University"],
-	["LB", "Prof. Lina Badimon", "Barcelona"],
-	["TE", "Prof. Thomas Eschenhagen", "UKE Hamburg · DZHK"],
-	["TE", "Dr. Tim Errington", "Center for Open Science"]
-];
 
 function GroupTitle({ id, children }: { id: string; children: ReactNode }) {
 	return (
@@ -265,36 +316,36 @@ function GroupTitle({ id, children }: { id: string; children: ReactNode }) {
 	);
 }
 
-function People() {
+function People({ text }: { text: AboutContent["people"] }) {
 	return (
 		<section id="team" aria-labelledby="people-title" className="scroll-mt-6 bg-teal-50 py-20 lg:py-24">
 			<div className="container-page">
 				<div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
 					<div>
-						<p className="eyebrow">Who we are</p>
+						<p className="eyebrow">{text.eyebrow}</p>
 						<h2 id="people-title" className="mt-3.5 text-3xl font-extrabold tracking-[-0.03em] sm:text-[48px]">
-							The people behind the register
+							{text.title}
 						</h2>
-						<p className="mt-3.5 max-w-3xl text-lg leading-[1.55] text-ink-muted">A small team at UMC Utrecht, guided by a steering committee and an international advisory board — and carried by ambassadors around the world.</p>
+						<p className="mt-3.5 max-w-3xl text-lg leading-[1.55] text-ink-muted">{text.text}</p>
 					</div>
-					<ButtonAnchor href={`${routes.contact}?topic=partnership`} variant="secondary" icon={<Handshake size={18} strokeWidth={2} aria-hidden="true" />}>
-						Work with us
+					<ButtonAnchor href={text.link.url} variant="secondary" icon={<Handshake size={18} strokeWidth={2} aria-hidden="true" />}>
+						{text.link.label}
 					</ButtonAnchor>
 				</div>
 
 				<div className="mt-12">
-					<GroupTitle id="directors">Daily directors</GroupTitle>
+					<GroupTitle id="directors">{text.directors_title}</GroupTitle>
 					<ul className="mt-6 grid gap-6 lg:grid-cols-2">
-						{directors.map(person => (
-							<li key={person.name} className="grid gap-5 rounded-card bg-white p-3.5 sm:grid-cols-[184px_minmax(0,1fr)]">
-								<img src={`/static/about-us/${person.image}`} alt={`Portrait of ${person.name}`} className="aspect-square w-full rounded-[14px] object-cover max-sm:max-w-[184px]" loading="lazy" />
+						{text.directors.map((person, index) => (
+							<li key={index} className="grid gap-5 rounded-card bg-white p-3.5 sm:grid-cols-[184px_minmax(0,1fr)]">
+<img src={person.photo.src} alt={person.photo.alt} className="aspect-square w-full rounded-[14px] object-cover max-sm:max-w-[184px]" loading="lazy" />
 								<div className="flex flex-col py-2 pr-4">
 									<p className="eyebrow">{person.role}</p>
 									<p className="mt-2 font-display text-2xl font-bold">{person.name}</p>
 									<p className="mt-2 text-[15.5px] leading-normal text-ink-muted">{person.text}</p>
-									<a href={`${routes.contact}?topic=other`} className="mt-auto inline-flex items-center gap-2 pt-4 font-display font-bold">
+									<a href={person.contact.url} className="mt-auto inline-flex items-center gap-2 pt-4 font-display font-bold">
 										<Mail size={16} strokeWidth={2.2} aria-hidden="true" />
-										Contact {person.first}
+										{person.contact.label}
 									</a>
 								</div>
 							</li>
@@ -303,11 +354,11 @@ function People() {
 				</div>
 
 				<div className="mt-12">
-					<GroupTitle id="steering">Steering committee</GroupTitle>
+					<GroupTitle id="steering">{text.steering_title}</GroupTitle>
 					<ul className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
-						{steering.map(person => (
-							<li key={person.name}>
-								<img src={`/static/about-us/${person.image}`} alt={`Portrait of ${person.name}`} className="aspect-[4/5] w-full rounded-[14px] object-cover" loading="lazy" />
+						{text.steering.map((person, index) => (
+							<li key={index}>
+								<img src={person.photo.src} alt={person.photo.alt} className="aspect-[4/5] w-full rounded-[14px] object-cover" loading="lazy" />
 								<p className="mt-3 font-display text-[17px] leading-snug font-bold">{person.name}</p>
 								<p className="mt-1 text-[14.5px] text-ink-muted">{person.place}</p>
 							</li>
@@ -316,14 +367,14 @@ function People() {
 				</div>
 
 				<div id="advisory-board" className="mt-12 scroll-mt-6">
-					<GroupTitle id="advisory">Advisory board</GroupTitle>
+					<GroupTitle id="advisory">{text.advisory_title}</GroupTitle>
 					<ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-						{advisory.map(([initials, name, place]) => (
-							<li key={name} className="flex items-center gap-4 rounded-card bg-white px-5 py-4.5">
-								<Avatar initials={initials} size={48} />
+						{text.advisory.map((person, index) => (
+							<li key={index} className="flex items-center gap-4 rounded-card bg-white px-5 py-4.5">
+								{person.photo.src ? <img src={person.photo.src} alt={person.photo.alt} className="size-12 shrink-0 rounded-full object-cover" loading="lazy" /> : <Avatar initials={initials(person.name)} size={48} />}
 								<span>
-									<span className="block font-display text-lg font-bold">{name}</span>
-									<span className="block text-[14.5px] text-ink-muted">{place}</span>
+									<span className="block font-display text-lg font-bold">{person.name}</span>
+									<span className="block text-[14.5px] text-ink-muted">{person.place}</span>
 								</span>
 							</li>
 						))}
@@ -334,7 +385,7 @@ function People() {
 	);
 }
 
-function Ambassadors({ ambassadors }: { ambassadors: Ambassador[] }) {
+function Ambassadors({ text, ambassadors }: { text: AboutContent["ambassadors"]; ambassadors: Ambassador[] }) {
 	// Opens on Utrecht, where PCT is based, when an ambassador is there.
 	const [selected, setSelected] = useState<Ambassador | null>(ambassadors.find(a => a.city === "Utrecht") ?? ambassadors[0] ?? null);
 	const countries = new Set(ambassadors.map(a => a.country).filter(Boolean)).size;
@@ -345,15 +396,16 @@ function Ambassadors({ ambassadors }: { ambassadors: Ambassador[] }) {
 			<div className="rounded-[32px] bg-mist p-5 sm:p-12">
 				<div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
 					<div>
-						<p className="eyebrow">Ambassadors</p>
+						<p className="eyebrow">{text.eyebrow}</p>
 						<h2 id="amb-title" className="mt-3.5 max-w-2xl text-3xl leading-[1.08] font-extrabold tracking-[-0.03em] sm:text-[44px]">
-							Preregistration has friends in {cities} cities
+							{fill(text.title, { cities })}
 						</h2>
 					</div>
 					<dl className="flex gap-7">
 						{[
-							[ambassadors.length, "ambassadors"],
-							[countries, "countries"]
+							[ambassadors.length, text.ambassadors_label],
+							// Only when the places name their country; never "0 countries".
+							...(countries > 0 ? [[countries, text.countries_label]] : [])
 						].map(([value, label]) => (
 							<div key={label} className="text-right">
 								<dd className="font-display text-4xl font-extrabold tabular-nums">{value}</dd>
@@ -365,21 +417,23 @@ function Ambassadors({ ambassadors }: { ambassadors: Ambassador[] }) {
 				<div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-end">
 					<div className="max-md:hidden">
 						<AmbassadorMap ambassadors={ambassadors} selected={selected} onSelect={setSelected} onClear={() => setSelected(null)} />
-						<p className="mt-3 max-w-md text-[15.5px] text-ink-muted">Select a pin to meet the ambassador. The lens follows your choice, so cities that sit close together, as in Europe, are easy to tell apart.</p>
+						<p className="mt-3 max-w-md text-[15.5px] text-ink-muted">
+							{text.map_hint} {text.tiles_hint && <strong className="font-semibold text-ink">{text.tiles_hint}</strong>}
+						</p>
 					</div>
 					<div aria-live="polite" className="max-md:hidden">
 						{selected ? (
-							<AmbassadorCard a={selected} />
+							<AmbassadorCard a={selected} text={{ protocols: text.card_protocols, link: text.card_link }} />
 						) : (
-							<p className="rounded-card border-[1.5px] border-dashed border-line-strong px-5.5 py-6 text-[15.5px] text-ink-muted">Select a pin on the map, or an ambassador below, to meet them.</p>
+							<p className="rounded-card border-[1.5px] border-dashed border-line-strongpx-5.5 py-6 text-[15.5px] text-ink-muted">{text.empty_card}</p>
 						)}
 					</div>
-					<p className="text-[15.5px] text-ink-muted md:hidden">Our ambassadors are listed below; open one to meet them.</p>
+<p className="text-[15.5px] text-ink-muted md:hidden">{text.mobile_hint}</p>
 				</div>
 			</div>
 			<div className="mt-10 flex flex-wrap items-baseline justify-between gap-4">
-				<h3 className="text-[22px] font-bold">All ambassadors</h3>
-				<ArrowLink href={`${routes.contact}?topic=ambassador`}>Become an ambassador in your country</ArrowLink>
+				<h3 className="text-[22px] font-bold">{text.list_title}</h3>
+				<ArrowLink href={text.become.url}>{text.become.label}</ArrowLink>
 			</div>
 			<div className="mt-5">
 				<AmbassadorList ambassadors={ambassadors} selected={selected} onSelect={setSelected} />
@@ -388,29 +442,15 @@ function Ambassadors({ ambassadors }: { ambassadors: Ambassador[] }) {
 	);
 }
 
-type Moment = { year: string; kind: "Publication" | "Milestone" | "Funding" | "Event"; when: string; title: string; text: string };
+type Moment = AboutContent["background"]["making"][number];
 
-const making: Moment[] = [
-	{ year: "2012", kind: "Publication", when: "2012", title: "“Should preclinical studies be registered?”", text: "Kimmelman J & Anderson JA · Nature Biotechnology · doi:10.1038/nbt.2261" },
-	{ year: "2015", kind: "Publication", when: "2015", title: "“All preclinical trials should be registered in advance in an online registry”", text: "Jansen of Lorkeers SJ et al. · European Journal of Clinical Investigation" },
-	{ year: "2016", kind: "Publication", when: "2016", title: "“Translational research in cardiovascular repair: a call for a paradigm shift”", text: "Chamuleau SAJ et al. · Circulation Research" },
-	{ year: "2018", kind: "Milestone", when: "February 2018", title: "PreclinicalTrials.eu goes live", text: "Launched with support of the TACTICS alliance and ESC WG CARE, followed by a first think tank with stakeholders" },
-	{ year: "2018", kind: "Milestone", when: "3 July 2018", title: "Dutch parliament: preregistration should become the norm", text: "A motion states that prospective registration of animal studies should become standard practice" },
-	{ year: "2020", kind: "Publication", when: "2020", title: "“Publication rate in preclinical research: a plea for preregistration”", text: "van der Naald M et al. · BMJ Open Science — picked up by Science and NRC" },
-	{ year: "2021", kind: "Milestone", when: "May 2021", title: "A new daily director and a new strategy", text: "Julia Menon joins. A walk-through video, webinars and guidance hours follow" }
-];
-
-const growing: Moment[] = [
-	{ year: "2022", kind: "Funding", when: "March 2022", title: "Dutch government funds a 3-year pilot", text: "€200,000 to increase the number of preregistrations in the Netherlands and beyond" },
-	{ year: "2022", kind: "Event", when: "July 2022", title: "Scientific meeting on preregistration", text: "Update, Share and Brainstorm, four years after the first think tank — plus a full session at the 15th FELASA Congress" },
-	{ year: "2023", kind: "Event", when: "September 2023", title: "Session at WC12", text: "“From Systematic Reviews to Pre-registration: Streamlining for Better Research”" },
-	{ year: "2023", kind: "Event", when: "October 2023", title: "International meeting on preregistration", text: "Two days at the Holland Heart House in Utrecht, with stakeholders from Europe and North America" },
-	{ year: "2023", kind: "Funding", when: "November 2023", title: "Ministry of Agriculture extends funding to end 2026", text: "Three extra years to grow outside the Netherlands and build new tools" },
-	{ year: "2024", kind: "Event", when: "March 2024", title: "Webinar with the French 3R Center", text: "More than 500 people joined our first webinar in French — our own record" },
-	{ year: "2024", kind: "Event", when: "September 2024", title: "Results presented at EUSAAT 2024", text: "Our research project shows it: preregistration does improve quality of reporting" }
-];
-
-const kindIcons = { Publication: FileText, Milestone: Flag, Funding: Coins, Event: Mic };
+/** The kinds of moments (the `kind` select in AboutPage.php): label and icon. */
+const kinds = {
+	publication: { label: "Publication", icon: FileText },
+	milestone: { label: "Milestone", icon: Flag },
+	funding: { label: "Funding", icon: Coins },
+	event: { label: "Event", icon: Mic }
+};
 
 function Timeline({ title, note, moments }: { title: string; note: string; moments: Moment[] }) {
 	return (
@@ -420,29 +460,39 @@ function Timeline({ title, note, moments }: { title: string; note: string; momen
 				<span className="text-[15px] text-ink-muted">{note}</span>
 			</p>
 			<ol className="relative mt-6 grid gap-3 before:absolute before:top-4 before:bottom-4 before:left-7 before:w-0.5 before:bg-teal-200">
-				{moments.map(moment => {
-					const Icon = kindIcons[moment.kind];
-					const milestone = moment.kind === "Milestone";
+				{moments.map((moment, index) => {
+					const { label: kind, icon: Icon } = kinds[moment.kind] ?? kinds.event;
+					const milestone = moment.kind === "milestone";
+					// The line shows the year of the date ("March 2024" → 2024), or the date itself.
+					const year = moment.date.match(/\b\d{4}\b/)?.[0] ?? moment.date;
 					return (
-						<li key={moment.title} className="relative grid grid-cols-[56px_minmax(0,1fr)] gap-2 sm:grid-cols-[64px_minmax(0,1fr)]">
+						<li key={index} className="relative grid grid-cols-[56px_minmax(0,1fr)] gap-2 sm:grid-cols-[64px_minmax(0,1fr)]">
 							<span className={cn("relative mt-4 flex h-8 w-14 items-center justify-center rounded-full bg-white font-display text-[14px] font-bold tabular-nums", milestone ? "shadow-[inset_0_0_0_2px_var(--color-peach-300)]" : "shadow-[inset_0_0_0_2px_var(--color-teal-200)]")}>
-								{moment.year}
+								{year}
 							</span>
 							<div className="rounded-card border border-line bg-white px-5 py-4">
 								<p className="flex items-center gap-2 text-[13.5px] text-ink-muted">
 									{milestone ? (
 										<Badge tone="peach" size="sm" icon={<Icon size={12} strokeWidth={2.4} aria-hidden="true" />}>
-											{moment.kind}
+											{kind}
 										</Badge>
 									) : (
 										<span className="inline-flex items-center gap-1.5 font-bold text-ink">
 											<Icon size={14} strokeWidth={2.2} className="text-teal-500" aria-hidden="true" />
-											{moment.kind}
+											{kind}
 										</span>
 									)}
-									· {moment.when}
+									· {moment.date}
 								</p>
-								<p className="mt-1.5 font-display text-lg leading-snug font-bold">{moment.title}</p>
+								<p className="mt-1.5 font-display text-lg leading-snug font-bold">
+									{moment.url ? (
+										<a href={moment.url} className="underline decoration-teal-300 underline-offset-3 hover:text-link">
+											{moment.title}
+										</a>
+									) : (
+										moment.title
+									)}
+								</p>
 								<p className="mt-1 text-[14.5px] text-ink-muted">{moment.text}</p>
 							</div>
 						</li>
@@ -453,49 +503,49 @@ function Timeline({ title, note, moments }: { title: string; note: string; momen
 	);
 }
 
-function Background() {
+function Background({ text }: { text: AboutContent["background"] }) {
 	return (
 		<section id="background" aria-labelledby="bg-title" className="scroll-mt-6 bg-mist py-20 lg:py-24">
 			<div className="container-page">
 				<div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
 					<div>
-						<p className="eyebrow">Background</p>
+						<p className="eyebrow">{text.eyebrow}</p>
 						<h2 id="bg-title" className="mt-3.5 max-w-2xl text-3xl leading-[1.08] font-extrabold tracking-[-0.03em] sm:text-[48px]">
-							From a question in Nature Biotechnology to an international register
+							{text.title}
 						</h2>
 					</div>
 					<div className="rounded-card border border-line bg-white p-6 lg:max-w-[476px]">
 						<p className="flex items-center gap-2.5 font-display text-lg font-bold">
 							<Layers size={18} strokeWidth={2} className="text-teal-500" aria-hidden="true" />
-							Built on solid ground
+							{text.card_title}
 						</p>
-						<p className="mt-2 text-[15px] text-ink-muted">PreclinicalTrials.eu builds on the systematic-review groups CAMARADES and SYRCLE and on the WHO clinical-trial registries. KNAW and NWO guarantee permanent access to the database.</p>
+						<p className="mt-2 text-[15px] text-ink-muted">{text.card_text}</p>
 					</div>
 				</div>
 				<div className="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-12">
-					<Timeline title="2012–2021" note="Making the case" moments={making} />
-					<Timeline title="2022–2024" note="Growing international" moments={growing} />
+					<Timeline title={text.making_title} note={text.making_note} moments={text.making} />
+					<Timeline title={text.growing_title} note={text.growing_note} moments={text.growing} />
 				</div>
 			</div>
 		</section>
 	);
 }
 
-function Closing() {
+function Closing({ text }: { text: AboutContent["closing"] }) {
 	return (
 		<section aria-labelledby="closing-title" className="bg-teal-50 py-20 text-center lg:py-24">
 			<div className="container-page">
-				<Badge tone="peach">Today {new Date().getFullYear()}</Badge>
+				<Badge tone="peach">{fill(text.badge, { year: new Date().getFullYear() })}</Badge>
 				<h2 id="closing-title" className="mt-5 text-3xl font-extrabold tracking-[-0.03em] sm:text-[48px]">
-					The next chapter is yours.
+					{text.title}
 				</h2>
-				<p className="mt-3 text-lg text-ink-muted">Register your study before it starts, or see what others have planned.</p>
+				<p className="mt-3 text-lg text-ink-muted">{text.text}</p>
 				<div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-					<ButtonAnchor href={routes.registerProtocol} variant="accent" size="lg" arrow>
-						Register a protocol
+					<ButtonAnchor href={text.primary.url} variant="accent" size="lg" arrow>
+						{text.primary.label}
 					</ButtonAnchor>
-					<ButtonAnchor href={routes.database} variant="secondary" size="lg" icon={<Search size={18} strokeWidth={2.2} aria-hidden="true" />}>
-						Search the database
+					<ButtonAnchor href={text.secondary.url} variant="secondary" size="lg" icon={<Search size={18} strokeWidth={2.2} aria-hidden="true" />}>
+						{text.secondary.label}
 					</ButtonAnchor>
 				</div>
 			</div>

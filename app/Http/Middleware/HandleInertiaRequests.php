@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Content\PageContent;
 use App\Models\Amendment;
 use App\Models\EmbargoExtension;
 use App\Models\Protocol;
@@ -51,6 +52,8 @@ class HandleInertiaRequests extends Middleware
                     + Amendment::where('status', Amendment::PENDING)->count(),
                 'embargo_requests' => EmbargoExtension::where('status', 'awaiting_approval')->count(),
             ] : null,
+            // Editable texts shown on every page, such as the footer (App\Content\PageContent, cached).
+            'siteContent' => fn () => (object) PageContent::shared(),
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),

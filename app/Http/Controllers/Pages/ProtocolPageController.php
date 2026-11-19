@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\Detail;
@@ -76,8 +77,8 @@ class ProtocolPageController extends Controller
                 'has_embargo' => $protocol->has_embargo,
                 'embargo_end_date' => $protocol->embargo_end_date ? Carbon::parse($protocol->embargo_end_date)->format('j M Y') : null,
                 'study_status_label' => $summary['study_status_label'],
-                'centre' => $summary['centre_name'],
-                'centre_place' => trim(implode(', ', array_filter([$summary['centre_city'], $summary['country_name']]))),
+                // The citation's author: every centre by name.
+                'centre' => PublicRegister::centreLine($summary['centres'], fn (array $centre) => (string) $centre['name']),
                 'is_owner' => $user->id === $protocol->user_id,
                 'shows_contact' => $privileged,
                 'countries' => self::countries($details->get('study_centre'), $versions),
@@ -92,6 +93,8 @@ class ProtocolPageController extends Controller
                 'time' => self::dateOnly($registeredAt) ? null : $registeredAt?->format('H:i'),
             ],
             'linked' => $linked,
+            // The explanatory texts, edited in Admin → Content → Pages (App\Content\Pages\DatabasePages).
+            'content' => PageContent::for('database'),
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         return Inertia::render('auth/login', [
+            'content' => PageContent::for('auth')['login'],
             'status' => $request->session()->get('status'),
         ]);
     }

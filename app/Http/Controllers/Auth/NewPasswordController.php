@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -29,6 +30,7 @@ class NewPasswordController extends Controller
     public function create(Request $request, string $token)
     {
         return Inertia::render('auth/reset-password', [
+            'content' => PageContent::for('auth')['reset_password'],
             'token' => $token,
             'email' => (string) $request->query('email', ''),
         ]);

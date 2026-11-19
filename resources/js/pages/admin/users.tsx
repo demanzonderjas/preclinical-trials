@@ -1,10 +1,11 @@
 import { router, useForm } from "@inertiajs/react";
-import { Check, Copy, Search } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { Check, Copy, Search, X } from "lucide-react";
+import { type FormEvent, type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import { Badge, type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Avatar, EmptyState } from "@/components/ui/Content";
 import { Dialog, Pagination, type PaginationLink } from "@/components/ui/Interactive";
+import { Select } from "@/components/ui/Form";
 import { PasswordField } from "@/components/ui/PasswordField";
 import { AdminLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
@@ -31,8 +32,9 @@ type Selected = {
 
 type Props = {
 	users: { data: Row[]; total: number; from: number | null; to: number | null; links: PaginationLink[] };
-	filters: { filter: Filter; q: string };
+	filters: { filter: Filter; q: string; country: string; institution: string };
 	counts: Record<Filter, number>;
+	countries: { value: string; label: string; count: number }[];
 	regions: { total: number; dutch: number; utrecht: number; nijmegen: number; utrecht_nijmegen_protocols: number };
 	selected: Selected | null;
 	temporaryPassword: { user: number; email: string; password: string } | null;
@@ -45,10 +47,15 @@ const chips: [Filter, string][] = [
 	["admins", "Admins"]
 ];
 
-export default function Users({ users, filters, counts, regions, selected, temporaryPassword }: Props) {
+export default function Users({ users, filters, counts, countries, regions, selected, temporaryPassword }: Props) {
 	const [q, setQ] = useState(filters.q);
-	const params = (next: Record<string, unknown>) => ({ filter: filters.filter, q, user: selected?.id, ...next });
+	const params = (next: Record<string, unknown>) => {
+		const all: Record<string, unknown> = { filter: filters.filter, q, country: filters.country, institution: filters.institution, user: selected?.id, ...next };
+		return Object.fromEntries(Object.entries(all).filter(([key, value]) => value !== undefined && value !== "" && !(key === "filter" && value === "all"))) as Record<string, string | number>;
+	};
 	const visit = (next: Record<string, unknown>) => router.get(routes.admin.users, params(next), { preserveState: true, preserveScroll: true, replace: true });
+	const countryLabel = countries.find(option => option.value === filters.country)?.label ?? filters.country;
+	const narrowed = filters.country !== "" || filters.institution !== "" || filters.q !== "" || filters.filter !== "all";
 
 	return (
 		<AdminLayout title="Users">
@@ -99,6 +106,20 @@ export default function Users({ users, filters, counts, regions, selected, tempo
 							/>
 						</label>
 					</form>
+					<div role="group" aria-label="Country and institution" className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+						<label className="block">
+							<span className="text-[14px] font-bold">Country</span>
+							<Select className="mt-1.5 h-12" value={filters.country} onChange={event => visit({ country: event.target.value, page: undefined })}>
+								<option value="">All countries</option>
+								{countries.map(option => (
+									<option key={option.value} value={option.value}>
+										{option.label} ({option.count})
+									</option>
+								))}
+							</Select>
+						</label>
+						<InstitutionFilter key={filters.institution} value={filters.institution} country={filters.country} onApply={institution => visit({ institution, page: undefined })} />
+					</div>
 					<div className="mt-4 flex flex-wrap items-center justify-between gap-3">
 						<div role="group" aria-label="Filter users" className="flex flex-wrap gap-2">
 							{chips.map(([key, label]) => (
@@ -115,6 +136,36 @@ export default function Users({ users, filters, counts, regions, selected, tempo
 							))}
 						</div>
 						<p className="text-[14.5px] text-ink-muted">Newest first</p>
+					</div>
+					<div role="status" className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 rounded-card bg-mist px-5 py-4">
+						<p className="text-[16px]">
+							<strong className="font-display text-[26px] leading-none font-extrabold">{users.total}</strong> {users.total === 1 ? "user" : "users"}
+							{narrowed && (
+								<span className="text-ink-muted">
+									{" "}
+									{[
+										filters.filter !== "all" && chips.find(([key]) => key === filters.filter)?.[1].toLowerCase(),
+										filters.institution && `institution contains “${filters.institution}”`,
+										filters.country && (filters.country === "none" ? "no country set" : `in ${countryLabel}`),
+										filters.q && `matching “${filters.q}”`
+									]
+										.filter(Boolean)
+										.join(" · ")}
+								</span>
+							)}
+						</p>
+						{narrowed && (
+							<button
+								type="button"
+								onClick={() => {
+									setQ("");
+									visit({ filter: undefined, q: undefined, country: undefined, institution: undefined, page: undefined });
+								}}
+								className="font-display text-[15px] font-extrabold text-link"
+							>
+								Clear filters
+							</button>
+						)}
 					</div>
 
 					{users.data.length === 0 ? (
@@ -190,6 +241,125 @@ export default function Users({ users, filters, counts, regions, selected, tempo
 	);
 }
 
+type InstitutionOption = { value: string; count: number };
+
+/**
+ * The institution filter: type part of a name and pick a suggestion, or press Enter to filter on
+ * the typed text. The match is "contains", case-insensitive, because the values are free text.
+ */
+function InstitutionFilter({ value, country, onApply }: { value: string; country: string; onApply: (institution: string) => void }) {
+	const id = useId();
+	const [text, setText] = useState(value);
+	const [open, setOpen] = useState(false);
+	const [active, setActive] = useState(-1);
+	const [result, setResult] = useState<{ options: InstitutionOption[]; contains: number | null }>({ options: [], contains: null });
+	const root = useRef<HTMLDivElement>(null);
+	const typed = text.trim();
+	const options: (InstitutionOption & { label: string })[] = [
+		...(typed && result.contains !== null ? [{ value: typed, count: result.contains, label: `All containing “${typed}”` }] : []),
+		...result.options.filter(option => option.value.toLowerCase() !== typed.toLowerCase() || !typed).map(option => ({ ...option, label: option.value }))
+	];
+
+	useEffect(() => {
+		if (!open) return;
+		const controller = new AbortController();
+		const timer = window.setTimeout(() => {
+			const query = new URLSearchParams({ q: typed, ...(country ? { country } : {}) });
+			fetch(`${routes.admin.users}/institutions?${query}`, { headers: { Accept: "application/json" }, signal: controller.signal })
+				.then(response => (response.ok ? response.json() : Promise.reject()))
+				.then(data => {
+					setResult(data);
+					setActive(-1);
+				})
+				.catch(() => {});
+		}, 200);
+		return () => {
+			window.clearTimeout(timer);
+			controller.abort();
+		};
+	}, [typed, country, open]);
+
+	useEffect(() => {
+		if (!open) return;
+		const onPointer = (event: PointerEvent) => root.current && !root.current.contains(event.target as Node) && setOpen(false);
+		document.addEventListener("pointerdown", onPointer);
+		return () => document.removeEventListener("pointerdown", onPointer);
+	}, [open]);
+
+	const apply = (next: string) => {
+		setOpen(false);
+		setText(next);
+		if (next.trim() !== value) onApply(next.trim());
+	};
+
+	const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+			event.preventDefault();
+			setOpen(true);
+			if (options.length) setActive(current => (event.key === "ArrowDown" ? (current + 1) % options.length : (current - 1 + options.length) % options.length));
+		} else if (event.key === "Enter") {
+			event.preventDefault();
+			apply(open && active >= 0 && options[active] ? options[active].value : text);
+		} else if (event.key === "Escape" && open) {
+			event.preventDefault();
+			setOpen(false);
+		}
+	};
+
+	return (
+		<div ref={root} className="relative">
+			<label htmlFor={`${id}-input`} className="text-[14px] font-bold">
+				Institution
+			</label>
+			<div className="relative mt-1.5">
+				<input
+					id={`${id}-input`}
+					type="text"
+					role="combobox"
+					aria-expanded={open && options.length > 0}
+					aria-controls={`${id}-list`}
+					aria-autocomplete="list"
+					aria-activedescendant={open && active >= 0 ? `${id}-option-${active}` : undefined}
+					autoComplete="off"
+					value={text}
+					placeholder="Any institution, e.g. Utrecht"
+					onChange={event => {
+						setText(event.target.value);
+						setOpen(true);
+					}}
+					onFocus={() => setOpen(true)}
+					onKeyDown={onKeyDown}
+					className="h-12 w-full rounded-input border-[1.5px] border-ink-subtle bg-white pr-11 pl-4 text-md placeholder:text-ink-subtle focus:border-link focus:shadow-[0_0_0_4px_var(--color-blue-100)] focus:outline-none"
+				/>
+				{text !== "" && (
+					<button type="button" aria-label="Clear institution" onClick={() => apply("")} className="absolute top-1/2 right-2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-ink-muted hover:bg-teal-50">
+						<X size={16} strokeWidth={2.4} aria-hidden="true" />
+					</button>
+				)}
+			</div>
+			{open && options.length > 0 && (
+				<ul id={`${id}-list`} role="listbox" aria-label="Institutions" className="absolute z-30 mt-2 max-h-80 w-full overflow-y-auto rounded-card bg-white p-2 shadow-[inset_0_0_0_1px_var(--color-line),var(--shadow-raised)]">
+					{options.map((option, index) => (
+						<li
+							key={`${index}-${option.value}`}
+							id={`${id}-option-${index}`}
+							role="option"
+							aria-selected={index === active}
+							onPointerDown={event => event.preventDefault()}
+							onClick={() => apply(option.value)}
+							className={cn("flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-md px-3 text-[15px]", index === active ? "bg-teal-50" : "hover:bg-teal-50", index === 0 && typed && result.contains !== null && "font-bold")}
+						>
+							<span className="min-w-0 truncate">{option.label}</span>
+							<span className="shrink-0 text-[13.5px] text-ink-muted">{option.count}</span>
+						</li>
+					))}
+				</ul>
+			)}
+			<p className="mt-1.5 text-[13px] text-ink-muted">Matches any institution that contains the text.</p>
+		</div>
+	);
+}
+
 function UserPanel({ user, temporaryPassword }: { user: Selected; temporaryPassword: Props["temporaryPassword"] }) {
 	const [confirm, setConfirm] = useState(false);
 	const [copied, setCopied] = useState(false);
@@ -254,7 +424,7 @@ function UserPanel({ user, temporaryPassword }: { user: Selected; temporaryPassw
 							) : protocol.status === "draft" ? (
 								<span className="shrink-0 text-[13.5px] text-ink-muted">Owner only</span>
 							) : (
-								<a href={routes.protocol(protocol.id)} className="shrink-0 font-display font-extrabold text-link">
+								<a href={routes.protocol(protocol.id)} target="_blank" rel="noopener" className="shrink-0 font-display font-extrabold text-link">
 									View
 								</a>
 							)}

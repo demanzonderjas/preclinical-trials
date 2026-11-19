@@ -4,6 +4,7 @@ use App\Http\Controllers\Pages\AboutController;
 use App\Http\Controllers\Pages\Admin\AmendmentsController as AdminAmendmentsController;
 use App\Http\Controllers\Pages\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Pages\Admin\EmbargoesController as AdminEmbargoesController;
+use App\Http\Controllers\Pages\Admin\PageContentController as AdminPageContentController;
 use App\Http\Controllers\Pages\Admin\ProtocolsController as AdminProtocolsController;
 use App\Http\Controllers\Pages\Admin\StatisticsController as AdminStatisticsController;
 use App\Http\Controllers\Pages\Admin\TwoFactorController as AdminTwoFactorController;
@@ -59,6 +60,8 @@ Route::permanentRedirect('/about-pct/ambassadors', '/about-pct#ambassadors');
 Route::permanentRedirect('/about-pct/background-information', '/about-pct#background');
 
 Route::get('/disclaimer', ContentPageController::class)->name('disclaimer');
+// No privacy text existed on the legacy site (its footer only had the disclaimer); written in Admin → Pages.
+Route::get('/privacy-statement', ContentPageController::class)->name('privacy');
 
 Route::get('/help', [HelpController::class, 'index'])->name('help');
 Route::post('/help/{id}/feedback', [HelpController::class, 'feedback'])->whereNumber('id')->middleware('throttle:30,1')->name('help.feedback');
@@ -109,6 +112,8 @@ Route::middleware(['auth', 'verified', 'admin', 'admin.2fa'])->prefix('admin')->
         Route::delete('/faq/{id}', [AdminContentController::class, 'destroyFaq'])->name('admin.content.faq.destroy');
         Route::put('/faq-categories/{category}/order', [AdminContentController::class, 'orderFaq'])->name('admin.content.faq.order');
         Route::put('/pages/{id}', [AdminContentController::class, 'savePage'])->name('admin.content.pages.update');
+        Route::put('/page-content/{page}', [AdminPageContentController::class, 'update'])->where('page', '[a-z0-9_-]+')->name('admin.content.page-content.update');
+        Route::post('/page-images', [AdminPageContentController::class, 'image'])->middleware('throttle:60,1')->name('admin.content.page-images');
         Route::post('/ambassadors', [AdminContentController::class, 'saveAmbassador'])->name('admin.content.ambassadors.store');
         Route::put('/ambassadors/{id}', [AdminContentController::class, 'saveAmbassador'])->name('admin.content.ambassadors.update');
         Route::delete('/ambassadors/{id}', [AdminContentController::class, 'destroyAmbassador'])->name('admin.content.ambassadors.destroy');
@@ -124,6 +129,7 @@ Route::middleware(['auth', 'verified', 'admin', 'admin.2fa'])->prefix('admin')->
     Route::get('/statistics/statistics.pdf', [AdminStatisticsController::class, 'pdf'])->name('admin.statistics.pdf');
     Route::redirect('/stats', '/admin/statistics');
     Route::get('/users', [AdminUsersController::class, 'index'])->name('admin.users');
+    Route::get('/users/institutions', [AdminUsersController::class, 'institutions'])->name('admin.users.institutions');
     Route::whereNumber('id')->prefix('users/{id}')->group(function () {
         Route::post('/verify', [AdminUsersController::class, 'verify'])->name('admin.users.verify');
         Route::post('/reset-link', [AdminUsersController::class, 'sendResetLink'])->middleware('throttle:10,1')->name('admin.users.reset-link');

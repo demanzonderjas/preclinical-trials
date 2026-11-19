@@ -10,9 +10,11 @@ import { RichAnswer } from "@/components/ui/RichAnswer";
 import { designGroupTitles, fieldByKey, formatValue, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
 import { PublicLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
+import { fill } from "@/lib/content";
 import { changesIn, type Details, plainText, textDiff, valuesAt, type Version, versionCount } from "@/lib/protocol-versions";
 import { decodeEntities } from "@/lib/rich-text";
 import { routes } from "@/lib/routes";
+import type { DatabaseContent } from "@/types/page-content";
 
 type Props = {
 	protocol: {
@@ -28,8 +30,8 @@ type Props = {
 		has_embargo: boolean;
 		embargo_end_date: string | null;
 		study_status_label: string | null;
+		/** Every centre by name, for the citation. */
 		centre: string | null;
-		centre_place: string;
 		is_owner: boolean;
 		shows_contact: boolean;
 		/** Names of the country codes in the study centres. */
@@ -39,6 +41,8 @@ type Props = {
 	versions: Version[];
 	original: { date: string | null; time: string | null };
 	linked: { id: number; pct_id: string; title: string }[];
+	/** The explanatory texts, edited in Admin → Content → Pages (app/Content/Pages/DatabasePages.php). */
+	content: DatabaseContent;
 };
 
 const text = (value: unknown) => (typeof value === "string" ? value : value == null ? "" : String(value));
@@ -48,7 +52,8 @@ const cell = (value: unknown) => decodeEntities(text(value).trim());
 
 const Countries = createContext<Record<string, string>>({});
 
-export default function ShowProtocol({ protocol, versions, original, linked }: Props) {
+export default function ShowProtocol({ protocol, versions, original, linked, content }: Props) {
+	const aside = content.protocol_aside;
 	const total = versionCount(versions);
 	const [version, setVersion] = useState(total);
 	const [changesOnly, setChangesOnly] = useState(false);
@@ -67,7 +72,7 @@ export default function ShowProtocol({ protocol, versions, original, linked }: P
 	return (
 		<Countries.Provider value={protocol.countries}>
 			<PublicLayout title={`${protocol.pct_id} · ${protocol.title}`}>
-				<Hero protocol={protocol} values={values} field={field} total={total} versions={versions} />
+				<Hero protocol={protocol} values={values} field={field} total={total} versions={versions} texts={content.protocol_record} />
 
 				<div className="container-page grid gap-10 py-12 lg:grid-cols-[280px_minmax(0,1fr)] lg:py-16">
 					<aside className="grid content-start gap-6 lg:sticky lg:top-6 lg:self-start">
@@ -87,9 +92,9 @@ export default function ShowProtocol({ protocol, versions, original, linked }: P
 						{linked.length > 0 && (
 							<section aria-labelledby="linked-title" className="rounded-card border border-line p-5">
 								<h2 id="linked-title" className="text-lg font-bold">
-									Linked protocols
+									{aside.linked_title}
 								</h2>
-								<p className="mt-1 text-[14.5px] text-ink-muted">Linked by the author as part of the same research programme.</p>
+								<p className="mt-1 text-[14.5px] text-ink-muted">{aside.linked_text}</p>
 								<ul className="mt-4 grid gap-2.5">
 									{linked.map(item => (
 										<li key={item.id}>
@@ -103,19 +108,19 @@ export default function ShowProtocol({ protocol, versions, original, linked }: P
 							</section>
 						)}
 						<p className="text-[15px] text-ink-muted">
-							Something not right?{" "}
+							{aside.report_text}{" "}
 							<a href={`${routes.contact}?topic=record&pct_id=${protocol.pct_id}`} className="font-bold underline underline-offset-3">
-								Report an issue with this record
+								{aside.report_link}
 							</a>
 						</p>
 					</aside>
 
 					<div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-6">
-						<History versions={versions} original={original} total={total} version={version} onVersion={setVersion} changesOnly={changesOnly} onChangesOnly={setChangesOnly} />
+						<History texts={content.protocol_history} versions={versions} original={original} total={total} version={version} onVersion={setVersion} changesOnly={changesOnly} onChangesOnly={setChangesOnly} />
 
 						<FieldSection id="general" index={1} title="General" values={values} changes={changes} version={version} changesOnly={changesOnly} fields={protocolFields.filter(f => f.section === "general")} />
 						<FieldSection id="design" index={2} title="Study design" values={values} changes={changes} version={version} changesOnly={changesOnly} fields={protocolFields.filter(f => f.section === "design")} grouped />
-						<ContactSection protocol={protocol} values={values} changes={changes} version={version} changesOnly={changesOnly} />
+						<ContactSection protocol={protocol} notice={content.protocol_contact} values={values} changes={changes} version={version} changesOnly={changesOnly} />
 					</div>
 				</div>
 			</PublicLayout>
@@ -125,11 +130,29 @@ export default function ShowProtocol({ protocol, versions, original, linked }: P
 
 /* -------------------------------------------------------------------------- */
 
-function Hero({ protocol, values, field, total, versions }: { protocol: Props["protocol"]; values: Details; field: (key: string) => string | null; total: number; versions: Version[] }) {
+function Hero({
+	protocol,
+	values,
+	field,
+	total,
+	versions,
+	texts: record
+}: {
+	protocol: Props["protocol"];
+	values: Details;
+	field: (key: string) => string | null;
+	total: number;
+	versions: Version[];
+	texts: DatabaseContent["protocol_record"];
+}) {
 	const species = [field("species"), field("strain"), field("sex")].filter(Boolean).join(" · ");
 	const stage = field("study_stage");
 	const publication = text(values.link_to_publication);
-	const centre = [protocol.centre, protocol.centre_place].filter(Boolean).join(" · ");
+	const countries = useContext(Countries);
+	// Every centre of the version shown: "Name · City, Country; Name · City, Country".
+	const centre = centreRows(values.study_centre)
+		.map(row => [cell(row.name), [cell(row.city), countries[cell(row.country)] ?? cell(row.country)].filter(Boolean).join(", ")].filter(Boolean).join(" · "))
+		.join("; ");
 	const current = versions[versions.length - 1];
 
 	return (
@@ -199,9 +222,7 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 					</div>
 					{protocol.amendment && (
 						<Note tone={protocol.amendment.status === "returned" ? "peach" : "mist"} className="mt-6 max-w-[620px]">
-							{protocol.amendment.status === "pending"
-								? "An amendment to this protocol waits for review by the PCT team. Readers see this published version until it is approved."
-								: "The PCT team returned the amendment to this protocol. Readers see this published version until a new amendment is approved."}
+							{protocol.amendment.status === "pending" ? record.amendment_pending : record.amendment_returned}
 							{protocol.is_owner ? null : (
 								<>
 									{" "}
@@ -216,7 +237,7 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 
 				<aside aria-labelledby="record-title" className="self-start rounded-[28px] bg-white p-6 shadow-[inset_0_0_0_1px_var(--color-line),var(--shadow-raised)] sm:p-7.5">
 					<p id="record-title" className="eyebrow">
-						Registration record
+						{record.eyebrow}
 					</p>
 					<p className="pct-id mt-2.5 text-3xl leading-none sm:text-[36px]">{protocol.pct_id}</p>
 					<dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-teal-50 pt-6">
@@ -239,7 +260,7 @@ function Hero({ protocol, values, field, total, versions }: { protocol: Props["p
 						</RecordItem>
 					</dl>
 					{protocol.timing && <Timing protocol={protocol} values={values} />}
-					<Citation protocol={protocol} total={total} />
+					<Citation protocol={protocol} total={total} title={record.citation_title} />
 				</aside>
 			</div>
 		</section>
@@ -303,7 +324,7 @@ function Timing({ protocol, values }: { protocol: Props["protocol"]; values: Det
 	);
 }
 
-function Citation({ protocol, total }: { protocol: Props["protocol"]; total: number }) {
+function Citation({ protocol, total, title }: { protocol: Props["protocol"]; total: number; title: string }) {
 	const [copied, setCopied] = useState(false);
 	const author = protocol.centre ?? "PreclinicalTrials.eu";
 	const year = protocol.registered_year ?? new Date().getFullYear();
@@ -318,7 +339,7 @@ function Citation({ protocol, total }: { protocol: Props["protocol"]; total: num
 	return (
 		<div className="mt-6 rounded-[18px] bg-mist p-4.5">
 			<div className="flex items-center justify-between gap-3">
-				<p className="eyebrow text-[12px]">Cite this protocol</p>
+				<p className="eyebrow text-[12px]">{title}</p>
 				<button type="button" onClick={copy} className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-4 font-display text-[14.5px] font-extrabold shadow-[inset_0_0_0_1.5px_var(--color-line-strong)] hover:bg-teal-50">
 					{copied ? <Check size={16} strokeWidth={2.6} aria-hidden="true" /> : <Copy size={16} strokeWidth={2.2} aria-hidden="true" />}
 					{copied ? "Copied" : "Copy"}
@@ -337,6 +358,7 @@ function Citation({ protocol, total }: { protocol: Props["protocol"]; total: num
 /* -------------------------------------------------------------------------- */
 
 function History({
+	texts: history,
 	versions,
 	original,
 	total,
@@ -345,6 +367,7 @@ function History({
 	changesOnly,
 	onChangesOnly
 }: {
+	texts: DatabaseContent["protocol_history"];
 	versions: Version[];
 	original: Props["original"];
 	total: number;
@@ -354,7 +377,7 @@ function History({
 	onChangesOnly: (value: boolean) => void;
 }) {
 	const items = [
-		{ number: 1, date: original.date, title: "Original registration", meta: "Checked and approved by PCT" },
+		{ number: 1, date: original.date, title: history.original_title, meta: history.original_meta },
 		...versions.map((item, index) => ({
 			number: index + 2,
 			date: item.date,
@@ -368,9 +391,9 @@ function History({
 		<section id="history" aria-labelledby="history-title" className="scroll-mt-6 rounded-card border border-line p-6 sm:p-7">
 			<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 				<div>
-					<p className="eyebrow">Revision history</p>
+					<p className="eyebrow">{history.eyebrow}</p>
 					<h2 id="history-title" className="mt-2.5 text-2xl font-bold tracking-[-0.02em] sm:text-[28px]">
-						{total === 1 ? "One version, as registered" : `${total} versions, every change on record`}
+						{total === 1 ? history.title_one : fill(history.title_more, { count: total })}
 					</h2>
 				</div>
 				{total > 1 && (
@@ -420,8 +443,8 @@ function History({
 			{changesOnly && version === 1 && (
 				<div className="mt-6 rounded-card border-2 border-dashed border-teal-200 px-6 py-10 text-center">
 					<LogoMark size={64} className="mx-auto" />
-					<p className="mt-4 font-display text-xl font-bold">V1 is the plan as first registered</p>
-					<p className="mx-auto mt-2 max-w-md text-ink-muted">There is no earlier version to compare it with. Choose V2{total > 2 ? ` or V${total}` : ""} to see exactly what changed, and why.</p>
+					<p className="mt-4 font-display text-xl font-bold">{history.first_title}</p>
+					<p className="mx-auto mt-2 max-w-md text-ink-muted">{fill(history.first_text, { versions: `V2${total > 2 ? ` or V${total}` : ""}` })}</p>
 					{total > 1 && (
 						<Button variant="secondary" className="mt-5" onClick={() => onVersion(2)}>
 							Compare V2 with V1
@@ -654,9 +677,14 @@ function StudyArms({ value, before }: { value: unknown; before?: unknown }) {
 
 type Centre = { name?: string; city?: string; country?: string };
 
+/** The centre rows of an answer, without empty ones. */
+function centreRows(value: unknown) {
+	return ((Array.isArray(value) ? value : []) as Centre[]).filter(centre => cell(centre?.name) || cell(centre?.city) || cell(centre?.country));
+}
+
 function StudyCentres({ value }: { value: unknown }) {
 	const countries = useContext(Countries);
-	const centres = ((Array.isArray(value) ? value : []) as Centre[]).filter(centre => cell(centre?.name) || cell(centre?.city) || cell(centre?.country));
+	const centres = centreRows(value);
 	if (!centres.length) return <p className="text-ink-muted italic">Not provided</p>;
 	return (
 		<div className="overflow-x-auto rounded-input shadow-[inset_0_0_0_1px_var(--color-line)]">
@@ -701,7 +729,7 @@ function Images({ value, label }: { value: unknown; label: string }) {
 	);
 }
 
-function ContactSection({ protocol, values, changes, version, changesOnly }: SectionProps & { protocol: Props["protocol"] }) {
+function ContactSection({ protocol, notice, values, changes, version, changesOnly }: SectionProps & { protocol: Props["protocol"]; notice: DatabaseContent["protocol_contact"] }) {
 	const contactFields = protocolFields.filter(field => field.section === "contact");
 	const changedCount = contactFields.filter(field => changes.has(field.key)).length;
 	const name = text(values.contact_name);
@@ -712,8 +740,8 @@ function ContactSection({ protocol, values, changes, version, changesOnly }: Sec
 			<p className="flex items-start gap-3 rounded-input bg-blue-100 px-5 py-4 text-[15.5px]">
 				<Lock size={16} strokeWidth={2.2} className="mt-1 shrink-0" aria-hidden="true" />
 				<span>
-					<strong>Role and email are only visible to the owner and PCT admins.</strong>
-					{protocol.shows_contact ? " You can see them because this is your protocol or you are an admin." : ""}
+					<strong>{notice.private_notice}</strong>
+					{protocol.shows_contact ? ` ${notice.private_notice_owner}` : ""}
 				</span>
 			</p>
 			<div className="mt-2">

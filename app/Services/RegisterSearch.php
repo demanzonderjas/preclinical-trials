@@ -56,6 +56,8 @@ class RegisterSearch
             'to' => $month($query['to'] ?? null),
             'sort' => in_array($query['sort'] ?? null, self::SORTS, true) ? $query['sort'] : null,
             'per_page' => in_array((int) ($query['per_page'] ?? 10), self::PER_PAGE, true) ? (int) ($query['per_page'] ?? 10) : 10,
+            // How the results are shown: tiles (default) or a list. Only the page uses it.
+            'view' => ($query['view'] ?? null) === 'list' ? 'list' : 'tiles',
         ];
         foreach (array_keys(self::FACETS) as $facet) {
             $filters[$facet] = $list($query[$facet] ?? []);
@@ -186,7 +188,7 @@ class RegisterSearch
     private function apply(Collection $summaries, ?string $except = null): Collection
     {
         $filters = $this->filters;
-        $terms = $filters['q'] === '' ? [] : preg_split('/\s+/', mb_strtolower($filters['q']));
+        $terms = self::parse($filters['q']);
 
         return $summaries->filter(function (array $summary) use ($filters, $terms, $except) {
             if ($terms && ! $this->matches($summary, $terms, $filters['in'])) {
@@ -215,21 +217,70 @@ class RegisterSearch
     }
 
     /**
-     * Every search word must appear in the chosen field (or in any field).
+     * The search query as alternatives of required terms: `pig cardiology` (or `pig AND
+     * cardiology`) is one alternative with two terms, `"heart failure" OR stroke` two
+     * alternatives. A protocol matches when every term of at least one alternative appears.
+     * Terms are lower case; quoted text stays one term. "and"/"or" in any case are operators
+     * (searching for the word itself is meaningless: it is in nearly every protocol).
      *
-     * @param  array<int, string>  $terms
+     * @return list<list<string>>
      */
-    private function matches(array $summary, array $terms, string $in): bool
+    public static function parse(string $q): array
     {
-        $haystack = mb_strtolower($in === 'all' ? implode(' ', $summary['search']) : ($summary['search'][$in] ?? ''));
+        preg_match_all('/"([^"]*)"?|(\S+)/u', $q, $tokens, PREG_SET_ORDER);
 
-        foreach ($terms as $term) {
-            if (! str_contains($haystack, $term)) {
-                return false;
+        $alternatives = [[]];
+        foreach ($tokens as $token) {
+            $quoted = str_starts_with($token[0], '"');
+            $text = $quoted ? trim(preg_replace('/\s+/u', ' ', $token[1] ?? '')) : $token[2];
+            if (! $quoted && in_array(strtoupper($text), ['AND', '+', '&', '&&'], true)) {
+                continue;
+            }
+            if (! $quoted && in_array(strtoupper($text), ['OR', '|', '||'], true)) {
+                $alternatives[] = [];
+
+                continue;
+            }
+            if ($text !== '') {
+                $alternatives[count($alternatives) - 1][] = mb_strtolower($text);
             }
         }
 
-        return true;
+        return array_values(array_filter(array_map(fn (array $terms) => array_values(array_unique($terms)), $alternatives)));
+    }
+
+    /**
+     * Every term of one of the alternatives appears in the chosen field (or in any field).
+     * A term matches at the start of a word, so "cardio" finds "cardiology" but not
+     * "electrocardiogram".
+     *
+     * @param  list<list<string>>  $alternatives
+     */
+    private function matches(array $summary, array $alternatives, string $in): bool
+    {
+        // Fields are joined with a line break so a phrase cannot run from one field into the next.
+        $haystack = mb_strtolower(preg_replace('/[ \t]+/u', ' ', $in === 'all' ? implode("\n", $summary['search']) : ($summary['search'][$in] ?? '')));
+
+        foreach ($alternatives as $terms) {
+            if (array_all($terms, fn (string $term) => self::contains($haystack, $term))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether the (lower case) text holds the term at the start of a word. Numbers match
+     * anywhere, so "123" still finds PCT0000123.
+     */
+    private static function contains(string $haystack, string $term): bool
+    {
+        if (ctype_digit($term[0])) {
+            return str_contains($haystack, $term);
+        }
+
+        return (bool) preg_match('/(?<![\p{L}\p{N}])'.preg_quote($term, '/').'/u', $haystack);
     }
 
     private function sort(Collection $results): Collection
@@ -247,7 +298,7 @@ class RegisterSearch
     private function relevance(array $summary): int
     {
         $score = 0;
-        foreach (preg_split('/\s+/', mb_strtolower($this->filters['q'])) ?: [] as $term) {
+        foreach (array_unique(array_merge(...self::parse($this->filters['q']) ?: [[]])) as $term) {
             $score += substr_count(mb_strtolower($summary['search']['title']), $term) * 5;
             $score += substr_count(mb_strtolower($summary['search']['hypothesis']), $term) * 2;
             $score += substr_count(mb_strtolower(implode(' ', $summary['search'])), $term);

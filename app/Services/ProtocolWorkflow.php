@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\FirstProtocolFeedback;
 use App\Mail\ProtocolApprovedAndPublished;
+use App\Mail\ProtocolDeclined;
 use App\Mail\ProtocolRejected;
 use App\Mail\ProtocolSubmittedForPublication;
 use App\Mail\ProtocolSubmittedUser;
@@ -16,13 +17,14 @@ use App\Models\FeedbackPoint;
 use App\Models\Protocol;
 use App\Models\ReviewRound;
 use App\Models\User;
+use App\Support\Answers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 /**
- * The registration lifecycle: submit, approve, return with feedback. Used by the legacy
+ * The registration lifecycle: submit, approve, return with feedback ("refer"), decline. Used by the legacy
  * JSON API and the A2 pages, so mails, admin actions, review rounds (F1) and the activity
  * log (F6) stay consistent whichever frontend triggers them.
  */
@@ -114,7 +116,43 @@ class ProtocolWorkflow
     }
 
     /**
-     * After the researcher saved changes: open points on changed fields count as addressed.
+     * Declines a protocol as not eligible for the platform. Final: the researcher can view and
+     * delete it, but not edit or resubmit it, and it is never published.
+     */
+    public function decline(Protocol $protocol, ?User $admin, string $reason, ?string $internalNote = null): Protocol
+    {
+        DB::transaction(function () use ($protocol, $admin, $reason, $internalNote) {
+            $protocol->status = Protocol::DECLINED;
+            $protocol->save();
+
+            $this->recordAdminAction($protocol, 'decline', $reason);
+            $this->currentRound($protocol)?->update([
+                'decision' => 'declined',
+                'decided_at' => now(),
+                'decided_by' => $admin?->id,
+                'message' => $reason,
+                'internal_note' => $internalNote,
+                'snapshot' => $protocol->load('details')->values(),
+            ]);
+
+            ActivityLog::record($protocol, 'declined', [], $admin);
+        });
+
+        if ($admin) {
+            Inbox::for($admin)->post(Channel::teamFor($protocol), $reason, notify: false);
+        }
+
+        Mail::to($protocol->user)->send(new ProtocolDeclined($protocol, $reason));
+
+        return $protocol;
+    }
+
+    /**
+     * After the researcher saved changes: open points on changed questions count as addressed.
+     * A point sits on a numbered question, so a change to one of its follow-ups (say the
+     * randomisation details under "Randomisation") counts too. Only a real change counts:
+     * the question must differ from what the reviewer saw. Points the researcher kept open
+     * on purpose (reopened_at) stay open.
      *
      * @param  array<int, string>  $changedKeys
      */
@@ -124,10 +162,23 @@ class ProtocolWorkflow
             return 0;
         }
 
+        $questions = collect($changedKeys)->flatMap(fn (string $key) => [$key, ProtocolSchema::questionOf($key)])->unique()->values();
         $points = $protocol->feedbackPoints()
+            ->with('round')
             ->where('status', FeedbackPoint::OPEN)
-            ->whereIn('field_key', $changedKeys)
+            ->whereNull('reopened_at')
+            ->whereIn('field_key', $questions)
             ->get();
+        $values = $protocol->load('details')->values();
+        $points = $points->filter(function (FeedbackPoint $point) use ($values) {
+            $snapshot = $point->round?->snapshot;
+            if ($snapshot === null) {
+                return true;
+            }
+            $keys = ProtocolSchema::questionKeys($point->field_key);
+
+            return Answers::changedKeys(array_intersect_key($snapshot, array_flip($keys)), array_intersect_key($values, array_flip($keys))) !== [];
+        });
         if ($points->isEmpty()) {
             return 0;
         }

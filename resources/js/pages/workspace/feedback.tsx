@@ -1,5 +1,5 @@
 import { router, useForm } from "@inertiajs/react";
-import { ArrowRight, Check, CheckCheck, ChevronRight, Lock } from "lucide-react";
+import { ArrowRight, Check, CheckCheck, ChevronRight, Lock, Undo2 } from "lucide-react";
 import { type FormEvent, Fragment, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { type Country, type FieldContext, isFilled, Question, type Values } from "@/components/protocol-form/Fields";
 import { SavePill } from "@/components/protocol-form/SavePill";
@@ -10,6 +10,7 @@ import { Avatar, Diff } from "@/components/ui/Content";
 import { Textarea } from "@/components/ui/Form";
 import { draftProgress, fieldByKey, formatValue, formSteps, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
 import { WorkspaceLayout } from "@/layouts/Layouts";
+import { sameAnswer } from "@/lib/answers";
 import { cn } from "@/lib/cn";
 import { formatDate, formatMoment } from "@/lib/dates";
 import { plainText, textDiff } from "@/lib/protocol-versions";
@@ -17,7 +18,7 @@ import { routes } from "@/lib/routes";
 import { type FeedbackStatus, fieldLabel } from "@/lib/workspace";
 
 type ThreadMessage = { id: number; mine: boolean; author: string; initials: string; text: string; at: string; new: boolean };
-type Point = { id: number; number: number; field_key: string; body: string; status: FeedbackStatus; at: string; addressed_at: string | null; messages: ThreadMessage[] };
+type Point = { id: number; number: number; field_key: string; body: string; status: FeedbackStatus; at: string; addressed_at: string | null; reopened: boolean; messages: ThreadMessage[] };
 
 type Props = {
 	protocol: { id: number; title: string; status: "rejected"; returned_at: string; saved_at: string; round: number | null; message: string | null };
@@ -223,7 +224,7 @@ function Steps({ view, ctx, pointsByQuestion, total, snapshot }: { view: "feedba
 													{fieldPoints.length > 0 && (
 														<div className="grid gap-4">
 															{fieldPoints.map(point => (
-																<PointCard key={point.id} point={point} total={total} />
+																<PointCard key={point.id} point={point} total={total} fieldChanged={changed(field, ctx.values, snapshot)} />
 															))}
 														</div>
 													)}
@@ -240,10 +241,13 @@ function Steps({ view, ctx, pointsByQuestion, total, snapshot }: { view: "feedba
 	);
 }
 
-/** Whether a question or one of its follow-ups changed since the protocol was returned. */
+/**
+ * Whether a question or one of its follow-ups changed since the protocol was returned. By
+ * content: the snapshot comes back from the database with object keys reordered.
+ */
 function changed(field: ProtocolField, values: Values, snapshot: Values) {
 	const keys = [field.key, ...protocolFields.filter(child => child.parent === field.key && !child.number).map(child => child.key)];
-	return keys.some(key => JSON.stringify(values[key] ?? null) !== JSON.stringify(snapshot[key] ?? null));
+	return keys.some(key => !sameAnswer(values[key], snapshot[key]));
 }
 
 function ChangedBadge({ points }: { points: Point[] }) {
@@ -289,43 +293,25 @@ const pointStatus: Record<FeedbackStatus, { label: string; tone: "peach" | "outl
 	resolved: { label: "Resolved", tone: "teal-ring" }
 };
 
-function PointCard({ point, total }: { point: Point; total: number }) {
+function PointCard({ point, total, fieldChanged }: { point: Point; total: number; fieldChanged: boolean }) {
 	const [asking, setAsking] = useState(point.messages.length > 0);
 	const form = useForm({ text: "" });
 	const send = (event: FormEvent) => {
 		event.preventDefault();
 		form.post(`/dashboard/feedback-points/${point.id}/messages`, { preserveScroll: true, onSuccess: () => form.reset() });
 	};
-	const toggle = () => router.post(`/dashboard/feedback-points/${point.id}/status`, { addressed: point.status === "open" }, { preserveScroll: true, only: ["points"] });
+	const setAddressed = (addressed: boolean) => router.post(`/dashboard/feedback-points/${point.id}/status`, { addressed }, { preserveScroll: true, only: ["points"] });
 
 	return (
 		<article aria-label={`Point ${point.number} of ${total}`} className={cn("rounded-card bg-white px-5 py-5 shadow-[inset_0_0_0_1px_var(--color-line)]", point.status === "open" && "shadow-[inset_0_0_0_1.5px_var(--color-peach-300)]")}>
-			<div className="flex flex-wrap items-center justify-between gap-2">
-				<p className="flex items-center gap-2.5 text-[14.5px]">
-					<span className="font-semibold text-ink-muted">
-						Point {point.number} of {total}
-					</span>
-					{point.status !== "addressed" && (
-						<Badge tone={pointStatus[point.status].tone} dot={point.status === "open" ? "peach" : undefined} size="sm" className="h-6 text-[12px]">
-							{pointStatus[point.status].label}
-						</Badge>
-					)}
-				</p>
-				{point.status !== "resolved" && (
-					<button
-						type="button"
-						aria-pressed={point.status === "addressed"}
-						onClick={toggle}
-						className={cn(
-							"inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13.5px] font-bold",
-							point.status === "addressed" ? "bg-teal-50 shadow-[inset_0_0_0_1.5px_var(--color-teal-500)]" : "shadow-[inset_0_0_0_1.5px_var(--color-line-strong)] hover:bg-teal-50"
-						)}
-					>
-						<Check size={14} strokeWidth={2.8} aria-hidden="true" />
-						{point.status === "addressed" ? "Addressed" : "Mark as addressed"}
-					</button>
-				)}
-			</div>
+			<p className="flex flex-wrap items-center gap-2.5 text-[14.5px]">
+				<span className="font-semibold text-ink-muted">
+					Point {point.number} of {total}
+				</span>
+				<Badge tone={pointStatus[point.status].tone} dot={point.status === "open" ? "peach" : undefined} icon={point.status === "addressed" ? <Check size={12} strokeWidth={2.8} aria-hidden="true" /> : undefined} size="sm" className="h-6 text-[12px]">
+					{pointStatus[point.status].label}
+				</Badge>
+			</p>
 			<div className="mt-3 flex items-center gap-3">
 				<Avatar initials="PCT" size={34} />
 				<p className="text-[14px] leading-tight">
@@ -334,6 +320,7 @@ function PointCard({ point, total }: { point: Point; total: number }) {
 				</p>
 			</div>
 			<p className="mt-3 text-[16px] leading-normal">{point.body}</p>
+			{point.status !== "resolved" && <PointAction point={point} fieldChanged={fieldChanged} onChange={setAddressed} />}
 
 			<div className="mt-4 border-t border-line pt-3">
 				{point.messages.length > 0 && (
@@ -376,6 +363,47 @@ function PointCard({ point, total }: { point: Point; total: number }) {
 				)}
 			</div>
 		</article>
+	);
+}
+
+/**
+ * What the researcher does about a point, right under it. A change to the field marks the
+ * point addressed on the server (autosave); this says so and offers to keep it open. Without
+ * a change (e.g. answered in the thread) the point is marked addressed here.
+ */
+function PointAction({ point, fieldChanged, onChange }: { point: Point; fieldChanged: boolean; onChange: (addressed: boolean) => void }) {
+	if (point.status === "addressed") {
+		return (
+			<div role="status" className="mt-4 flex items-start justify-between gap-3 rounded-input bg-teal-50 px-4 py-3.5">
+				<p className="flex items-start gap-2.5 text-[14.5px] leading-snug">
+					<Check size={17} strokeWidth={2.8} className="mt-0.5 shrink-0 text-teal-500" aria-hidden="true" />
+					<span>
+						<strong className="block">Marked as addressed</strong>
+						{fieldChanged ? "You changed this field. The reviewer checks it after you resubmit." : "The reviewer checks it after you resubmit."}
+					</span>
+				</p>
+				<Button variant="ghost" size="sm" className="-my-1 -mr-2 h-9 shrink-0 px-3 text-[14px]" icon={<Undo2 size={15} strokeWidth={2.4} aria-hidden="true" />} onClick={() => onChange(false)}>
+					Undo
+				</Button>
+			</div>
+		);
+	}
+	return (
+		<div className={cn("mt-4 rounded-input px-4 py-3.5", fieldChanged ? "bg-peach-100" : "bg-mist")}>
+			<p className="text-[14.5px] leading-snug">
+				{fieldChanged ? (
+					<>
+						<strong className="block">You changed this field</strong>
+						{point.reopened ? "You kept this point open. Mark it as addressed when your change covers it." : "Does your change cover this point?"}
+					</>
+				) : (
+					"Changed the field, or answered in the thread? Mark this point as addressed."
+				)}
+			</p>
+			<Button variant={fieldChanged ? "primary" : "secondary"} size="sm" className="mt-3 w-full" icon={<Check size={16} strokeWidth={2.8} aria-hidden="true" />} onClick={() => onChange(true)}>
+				Mark as addressed
+			</Button>
+		</div>
 	);
 }
 
@@ -479,7 +507,7 @@ function StatusLegend() {
 				{(
 					[
 						["open", "Needs a change or an answer from you."],
-						["addressed", "You changed the field. The reviewer checks it after you resubmit."],
+						["addressed", "Set by itself when you change the field, or by you with “Mark as addressed”. The reviewer checks it after you resubmit."],
 						["resolved", "The reviewer accepted your change. Nothing left to do."]
 					] as const
 				).map(([status, text]) => (

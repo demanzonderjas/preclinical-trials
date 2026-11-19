@@ -19,6 +19,9 @@ class Html
     /** Long protocol answers: what the protocol form's answer editor makes. */
     private const ANSWER_TAGS = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'sup', 'sub', 'ul', 'ol', 'li', 'a'];
 
+    /** Short texts on the designed pages (App\Content\PageContent): paragraphs, lists, bold, italic, links. */
+    private const BASIC_TAGS = ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'a'];
+
     /** A style or title block some editors paste as escaped text ("&lt;style&gt;a { … }&lt;/style&gt;"). */
     public const ESCAPED_HEAD = '/&lt;(style|title)\b.*?&lt;\/\1\s*&gt;/is';
 
@@ -28,6 +31,12 @@ class Html
     public static function clean(?string $html): string
     {
         return self::sanitize($html, self::TAGS, false);
+    }
+
+    /** A rich field of a designed page: no headings or images, so the page keeps its layout. */
+    public static function basic(?string $html): string
+    {
+        return self::sanitize($html, self::BASIC_TAGS, false);
     }
 
     /**

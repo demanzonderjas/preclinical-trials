@@ -50,6 +50,15 @@ test.describe("Researcher: protocols", () => {
 
 		await workspace.askAboutPoint(4, "Does a coded file count as blinded?");
 		await app.expectMail({ to: ADMIN_INBOX });
+
+		// A change to the question's follow-up marks the point addressed by itself, with an undo.
+		await workspace.changeFollowUp("investigators_blinded_assessment", "Details?", "Echo images are analysed by a technician in another lab who does not know the groups.");
+		await workspace.saveChanges();
+		await expect(workspace.feedbackPoint(4).getByRole("status")).toContainText("Marked as addressed");
+		await workspace.keepPointOpen(4);
+		await expect(workspace.feedbackPoint(4)).toContainText("You changed this field");
+		await expect(page.getByRole("button", { name: /resubmit for publication/i })).toBeDisabled();
+
 		await workspace.markPointAddressed(4);
 		await workspace.resubmitFromFeedback("All points addressed.");
 
@@ -161,7 +170,7 @@ test.describe("Admin: review", () => {
 
 		const rejected = await app.protocol(protocols.submitted);
 		expect(rejected.status).toBe("rejected");
-		const mail = await app.expectMail({ to: personas.researcher.email, subject: /reject|feedback|changes/i });
+		const mail = await app.expectMail({ to: personas.researcher.email, subject: /More information needed/ });
 		expect(mail.text).toContain("Please describe the blinding of outcome assessment.");
 	});
 });

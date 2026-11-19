@@ -1,0 +1,2 @@
+# Kept byte for byte: the encodings and line endings are what the tests are about.
+*.json -text

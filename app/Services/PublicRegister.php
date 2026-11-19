@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Lang;
  */
 class PublicRegister
 {
-    public const CACHE_KEY = 'public-register:v3';
+    public const CACHE_KEY = 'public-register:v4';
 
     /**
      * @return Collection<int, array<string, mixed>>
@@ -65,8 +65,9 @@ class PublicRegister
         $registeredAt = $protocol->registration_date ? Carbon::parse($protocol->registration_date) : null;
         $start = self::date($detail('start_date'));
         $end = self::date($detail('end_date'));
-        $centre = collect($detail('study_centre') ?: [])->first();
-        $countryCode = data_get($centre, 'country');
+        $centres = self::centres($detail('study_centre'));
+        $centre = $centres[0] ?? null;
+        $countryCode = $centre['country'] ?? null;
         $species = $detail('species');
         $status = $detail('study_status');
         $stage = $detail('study_stage');
@@ -85,10 +86,12 @@ class PublicRegister
                 ? ucfirst((string) $detail('other_species'))
                 : ($species ? self::option('species', $species) : null),
             'research_field' => self::plainText($detail('research_field')),
-            'centre_name' => data_get($centre, 'name'),
-            'centre_city' => data_get($centre, 'city'),
+            // The first centre, as before; `centres` lists every one of them.
+            'centre_name' => $centre['name'] ?? null,
+            'centre_city' => $centre['city'] ?? null,
             'country' => $countryCode,
-            'country_name' => $countryCode ? (config("pct.countries.$countryCode") ?? $countryCode) : null,
+            'country_name' => $centre['country_name'] ?? null,
+            'centres' => $centres,
             'start_date' => $start?->toDateString(),
             'end_date' => $end?->toDateString(),
             'period' => self::period($start, $end),
@@ -104,7 +107,7 @@ class PublicRegister
                 'title' => (string) $protocol->title,
                 'hypothesis' => (string) self::plainText($detail('hypothesis')),
                 'research_field' => (string) self::plainText($detail('research_field')),
-                'centre' => implode(' ', array_filter([data_get($centre, 'name'), data_get($centre, 'city'), $countryCode ? config("pct.countries.$countryCode") : null])),
+                'centre' => collect($centres)->map(fn (array $centre) => implode(' ', array_filter([$centre['name'], $centre['city'], $centre['country'] ? config("pct.countries.{$centre['country']}") : null])))->implode(' '),
                 'pct_id' => (string) $protocol->pct_id,
                 'other' => implode(' ', array_filter([
                     $species ? self::option('species', $species) : null,
@@ -116,6 +119,57 @@ class PublicRegister
                 ])),
             ],
         ];
+    }
+
+    /**
+     * The study centres of a protocol, without empty rows. Older rows hold escaped
+     * characters (&amp;). Stored as a list of {name, city, country}, as the form saves it.
+     *
+     * @return list<array{name: ?string, city: ?string, country: ?string, country_name: ?string}>
+     */
+    public static function centres(mixed $value): array
+    {
+        $text = function (mixed $value): ?string {
+            $text = is_scalar($value) ? trim(html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5)) : '';
+
+            return $text === '' ? null : $text;
+        };
+
+        // A single centre, or a list stored as an object keyed "0", "1"…
+        if (is_object($value)) {
+            $value = (array) $value;
+        }
+        if (is_array($value) && (array_key_exists('name', $value) || array_key_exists('city', $value) || array_key_exists('country', $value))) {
+            $value = [$value];
+        }
+
+        return collect(is_array($value) ? array_values($value) : [])
+            ->map(function ($centre) use ($text) {
+                $country = $text(data_get($centre, 'country'));
+
+                return [
+                    'name' => $text(data_get($centre, 'name')),
+                    'city' => $text(data_get($centre, 'city')),
+                    'country' => $country,
+                    'country_name' => $country ? (config("pct.countries.$country") ?? $country) : null,
+                ];
+            })
+            ->filter(fn (array $centre) => $centre['name'] || $centre['city'] || $centre['country'])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * The centres as one line: "UMC Utrecht, Utrecht, Netherlands; Charité, Berlin, Germany".
+     *
+     * @param  list<array<string, ?string>>  $centres
+     * @param  callable(array<string, ?string>): string|null  $format  one centre as text
+     */
+    public static function centreLine(array $centres, ?callable $format = null): ?string
+    {
+        $format ??= fn (array $centre) => implode(', ', array_filter([$centre['name'], $centre['city'], $centre['country_name']]));
+
+        return collect($centres)->map($format)->filter()->implode('; ') ?: null;
     }
 
     /**
@@ -144,7 +198,14 @@ class PublicRegister
                 ->mapWithKeys(fn (int $year) => [$year => $perYear->get($year, 0)]);
         }
 
+        // Named countries come from public protocols only, so an embargoed study is never shown by name.
         $countries = $public->pluck('country_name')->filter()->countBy()->sortDesc();
+        // The count includes embargoed protocols (first centre, as for public ones): it only says how many
+        // countries, never which, so it reveals nothing about an embargoed study.
+        $allCountries = $published
+            ->map(fn (Protocol $protocol) => self::centres(optional($protocol->details->firstWhere('key', 'study_centre'))->value)[0]['country'] ?? null)
+            ->filter()
+            ->unique();
         $firstYear = $perYear->keys()->first();
 
         return [
@@ -153,7 +214,7 @@ class PublicRegister
             'under_embargo' => $underEmbargo,
             'first_year' => $firstYear,
             'registered_before_start' => $public->where('registered_before_start', true)->count(),
-            'countries' => $countries->count(),
+            'countries' => $allCountries->count(),
             'top_countries' => $countries->keys()->take(2)->values()->all(),
             'per_year' => $perYear->map(fn (int $count, int $year) => ['year' => $year, 'count' => $count])->values()->all(),
             'stages' => [

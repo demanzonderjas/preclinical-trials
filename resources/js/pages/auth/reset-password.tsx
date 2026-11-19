@@ -7,9 +7,10 @@ import { Field, TextInput } from "@/components/ui/Form";
 import { PasswordField } from "@/components/ui/PasswordField";
 import { AuthLayout } from "@/layouts/Layouts";
 import { routes } from "@/lib/routes";
+import type { AuthContent } from "@/types/page-content";
 
 /** Step two of a reset: opened from the link in the mail. */
-export default function ResetPassword({ token, email }: { token: string; email: string }) {
+export default function ResetPassword({ content, token, email }: { content: AuthContent["reset_password"]; token: string; email: string }) {
 	const form = useForm({ token, email, password: "", password_confirmation: "" });
 
 	const submit = (event: FormEvent) => {
@@ -26,8 +27,8 @@ export default function ResetPassword({ token, email }: { token: string; email: 
 						<ChevronLeft size={14} strokeWidth={2.4} aria-hidden="true" />
 						Back to log in
 					</a>
-					<h1 className="mt-4 text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-5xl">Choose a new password</h1>
-					<p className="mt-3 text-lg text-ink-muted">Pick one you don’t use anywhere else. You’ll log in with it straight after.</p>
+					<h1 className="mt-4 text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-5xl">{content.title}</h1>
+					<p className="mt-3 text-lg text-ink-muted">{content.text}</p>
 					<form onSubmit={submit} className="mt-8 grid gap-5" noValidate>
 						<Field label="Email address" required error={form.errors.email}>
 							{({ id, describedBy, invalid }) => (

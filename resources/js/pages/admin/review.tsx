@@ -4,6 +4,7 @@ import { type FormEvent, useState } from "react";
 import { Badge, type ProtocolStatus, StatusBadge } from "@/components/ui/Badge";
 import { Button, ButtonAnchor } from "@/components/ui/Button";
 import { RadioCards, Textarea } from "@/components/ui/Form";
+import { Dialog } from "@/components/ui/Interactive";
 import { display } from "@/components/admin/FieldValue";
 import { ResearcherMessages } from "@/components/admin/ResearcherMessages";
 import { formSteps, isVisible, type ProtocolField, protocolFields } from "@/data/protocol-schema";
@@ -19,7 +20,7 @@ type EarlierPoint = { field_key: string; body: string; status: string; round: nu
 type Round = {
 	number: number;
 	submitted_at: string | null;
-	decision: "approved" | "returned" | null;
+	decision: "approved" | "returned" | "declined" | null;
 	decided_at: string | null;
 	decided_by: string | null;
 	message: string | null;
@@ -31,7 +32,8 @@ type Round = {
 type Props = {
 	protocol: { id: number; pct_id: string; title: string; status: ProtocolStatus; researcher: string | null; submitted_at: string | null; waiting_days: number | null; round: number; researcher_note: string | null };
 	values: Values;
-	previous: Values | null;
+	/** Fields that differ from what the reviewer saw last round (null in round 1), compared on the server. */
+	changed: string[] | null;
 	points: Point[];
 	earlier: EarlierPoint[];
 	history: Round[];
@@ -42,7 +44,7 @@ type Props = {
 const topLevel = (field: ProtocolField) => (!field.parent || !!field.number) && field.key !== "why_amendment";
 const children = (field: ProtocolField) => protocolFields.filter(child => child.parent === field.key && !child.number);
 
-export default function Review({ protocol, values, previous, points, earlier, history, messages, approval }: Props) {
+export default function Review({ protocol, values, changed, points, earlier, history, messages, approval }: Props) {
 	const numberOf = (point: Point) => points.findIndex(other => other.id === point.id) + 1;
 
 	return (
@@ -68,7 +70,7 @@ export default function Review({ protocol, values, previous, points, earlier, hi
 						<h1 id="review-title" className="max-w-[860px] text-4xl leading-[1.08] font-extrabold tracking-[-0.035em] sm:text-[40px]">
 							{protocol.title}
 						</h1>
-						<ButtonAnchor href={routes.protocol(protocol.id)} variant="secondary" className="shrink-0 self-start">
+						<ButtonAnchor href={routes.protocol(protocol.id)} target="_blank" rel="noopener" variant="secondary" className="shrink-0 self-start">
 							View as a reader
 						</ButtonAnchor>
 					</div>
@@ -122,7 +124,7 @@ export default function Review({ protocol, values, previous, points, earlier, hi
 												protocolId={protocol.id}
 												field={field}
 												values={values}
-												previous={previous}
+												changed={changed}
 												points={points.filter(point => point.field_key === field.key)}
 												numberOf={numberOf}
 												earlier={earlier.filter(point => point.field_key === field.key)}
@@ -137,6 +139,7 @@ export default function Review({ protocol, values, previous, points, earlier, hi
 
 				<aside className="grid content-start gap-5">
 					<Decision protocol={protocol} points={points} approval={approval} />
+					<Decline protocol={protocol} />
 					<ResearcherMessages protocolId={protocol.id} messages={messages} />
 					<History history={history} />
 				</aside>
@@ -147,11 +150,11 @@ export default function Review({ protocol, values, previous, points, earlier, hi
 
 /* -------------------------------------------------------------------------- */
 
-function FieldRow({ protocolId, field, values, previous, points, numberOf, earlier }: { protocolId: number; field: ProtocolField; values: Values; previous: Values | null; points: Point[]; numberOf: (point: Point) => number; earlier: EarlierPoint[] }) {
+function FieldRow({ protocolId, field, values, changed: changedKeys, points, numberOf, earlier }: { protocolId: number; field: ProtocolField; values: Values; changed: string[] | null; points: Point[]; numberOf: (point: Point) => number; earlier: EarlierPoint[] }) {
 	const [adding, setAdding] = useState(false);
 	const followUps = children(field).filter(child => isVisible(child, values));
 	const keys = [field.key, ...followUps.map(child => child.key)];
-	const changed = previous && keys.some(key => JSON.stringify(values[key] ?? null) !== JSON.stringify(previous[key] ?? null));
+	const changed = !!changedKeys && keys.some(key => changedKeys.includes(key));
 	const shown = display(field, values[field.key]);
 
 	return (
@@ -303,7 +306,7 @@ function Decision({ protocol, points, approval }: Pick<Props, "protocol" | "poin
 				value={form.data.decision}
 				onChange={value => form.setData("decision", value)}
 				options={[
-					{ value: "return", label: "Return with feedback", description: `Sends ${n} point${n === 1 ? "" : "s"}. The status becomes Needs changes and the researcher can resubmit.` },
+					{ value: "return", label: "Refer · more information needed", description: `Sends ${n} point${n === 1 ? "" : "s"}. The status becomes Referred and the researcher can update and resubmit.` },
 					{ value: "approve", label: "Approve & publish", description: "Publishes the protocol and sets the date of registration." }
 				]}
 			/>
@@ -362,12 +365,110 @@ function Decision({ protocol, points, approval }: Pick<Props, "protocol" | "poin
 			<Textarea id="internal-note" rows={3} className="mt-2" value={form.data.internal_note} onChange={event => form.setData("internal_note", event.target.value)} />
 
 			<Button type="submit" size="lg" arrow className="mt-6 w-full" disabled={form.processing}>
-				{returning ? `Return with ${n} point${n === 1 ? "" : "s"}` : "Approve & publish"}
+				{returning ? `Refer with ${n} point${n === 1 ? "" : "s"}` : "Approve & publish"}
 			</Button>
 			<p className="mt-2.5 text-[13.5px] leading-snug text-ink-muted">
-				{returning ? "The researcher gets an e-mail with a link to the feedback." : `The researcher gets an e-mail that the protocol is approved and published.${approval.embargo_until ? " The embargo hides the details until the end date." : ""}`}
+				{returning ? "The researcher gets an e-mail that more information is needed, with a link to the feedback." : `The researcher gets an e-mail that the protocol is approved and published.${approval.embargo_until ? " The embargo hides the details until the end date." : ""}`}
 			</p>
 		</form>
+	);
+}
+
+/** Not eligible for the platform: a final decision, with a required reason and a confirmation step. */
+function Decline({ protocol }: Pick<Props, "protocol">) {
+	const [open, setOpen] = useState(false);
+	const [confirming, setConfirming] = useState(false);
+	const form = useForm({ decision: "decline", reason: "", internal_note: "" });
+	const close = () => {
+		setOpen(false);
+		setConfirming(false);
+	};
+	const next = (event: FormEvent) => {
+		event.preventDefault();
+		if (!form.data.reason.trim()) {
+			form.setError("reason", "Give the reason for declining. The researcher receives it by email.");
+			return;
+		}
+		form.clearErrors("reason");
+		setConfirming(true);
+	};
+	const decline = () =>
+		form.post(`/admin/protocols/${protocol.id}/decision`, {
+			preserveScroll: true,
+			onError: () => setConfirming(false)
+		});
+
+	return (
+		<section aria-labelledby="decline-title" className="rounded-card border border-line bg-white px-5 py-6 sm:px-6">
+			<h2 id="decline-title" className="text-xl font-extrabold">
+				Not eligible?
+			</h2>
+			<p className="mt-2 text-[14.5px] leading-snug text-ink-muted">Decline a protocol that does not fit the platform. This is final: the researcher can view or delete it, but not edit or resubmit it.</p>
+			<Button variant="danger" size="sm" className="mt-4" onClick={() => setOpen(true)}>
+				Decline
+			</Button>
+
+			<Dialog
+				open={open}
+				onClose={close}
+				title={confirming ? "Decline this protocol?" : "Decline protocol"}
+				description={
+					confirming
+						? "This is final. The researcher gets an email with your reason, and can no longer edit or resubmit the protocol. It is never published."
+						: "Explain why the protocol is not eligible for PreclinicalTrials.eu. The researcher receives this reason by email."
+				}
+				footer={
+					confirming ? (
+						<>
+							<Button variant="secondary" onClick={() => setConfirming(false)} disabled={form.processing}>
+								Back
+							</Button>
+							<Button variant="danger" onClick={decline} disabled={form.processing}>
+								Yes, decline protocol
+							</Button>
+						</>
+					) : (
+						<>
+							<Button variant="secondary" onClick={close}>
+								Cancel
+							</Button>
+							<Button type="submit" form="decline-form" arrow>
+								Continue
+							</Button>
+						</>
+					)
+				}
+			>
+				{confirming ? (
+					<div>
+						<p className="font-bold">{protocol.title}</p>
+						<p className="eyebrow mt-4 text-xs">Reason sent to the researcher</p>
+						<p className="mt-1 text-[15px] leading-normal whitespace-pre-line">{form.data.reason}</p>
+						{form.errors.reason && <p className="mt-2 text-[14.5px] font-semibold text-rust">{form.errors.reason}</p>}
+					</div>
+				) : (
+					<form id="decline-form" onSubmit={next}>
+						<label htmlFor="decline-reason" className="block font-bold">
+							Reason for declining <span className="font-normal text-ink-muted">(required)</span>
+						</label>
+						<Textarea
+							id="decline-reason"
+							rows={4}
+							className="mt-2"
+							required
+							value={form.data.reason}
+							onChange={event => form.setData("reason", event.target.value)}
+							aria-invalid={!!form.errors.reason}
+						/>
+						{form.errors.reason && <p className="mt-2 text-[14.5px] font-semibold text-rust">{form.errors.reason}</p>}
+						<label htmlFor="decline-internal-note" className="mt-5 block font-bold">
+							Internal note <span className="font-normal text-ink-muted">(PCT team only)</span>
+						</label>
+						<Textarea id="decline-internal-note" rows={2} className="mt-2" value={form.data.internal_note} onChange={event => form.setData("internal_note", event.target.value)} />
+					</form>
+				)}
+			</Dialog>
+		</section>
 	);
 }
 
@@ -384,7 +485,13 @@ function History({ history }: { history: Round[] }) {
 						<span aria-hidden="true" className={cn("absolute top-1.5 left-0 size-3 rounded-full", index === 0 ? "bg-ink" : "bg-teal-300")} />
 						<p className="font-bold">
 							Round {round.number} ·{" "}
-							{round.decision === null ? "in review now" : round.decision === "approved" ? "approved" : `returned with ${round.points.length} point${round.points.length === 1 ? "" : "s"}`}
+							{round.decision === null
+								? "in review now"
+								: round.decision === "approved"
+									? "approved"
+									: round.decision === "declined"
+										? "declined"
+										: `referred with ${round.points.length} point${round.points.length === 1 ? "" : "s"}`}
 						</p>
 						<p className="text-[14px] text-ink-muted">
 							{round.decision === null

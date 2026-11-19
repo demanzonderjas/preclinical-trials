@@ -11,6 +11,8 @@ import { cn } from "@/lib/cn";
 import { dayKey, formatDate, formatShort, formatTime, formatWeekday } from "@/lib/dates";
 import { routes } from "@/lib/routes";
 import { type Conversation, conversationContext, ProtocolChip } from "@/components/workspace/Conversation";
+import { fill } from "@/lib/content";
+import type { WorkspaceContent } from "@/types/page-content";
 
 type ThreadMessage = { id: number; mine: boolean; author: string; initials: string; text: string; at: string; attachment: { name: string; url: string } | null; read: string | null };
 
@@ -23,6 +25,8 @@ type OpenConversation = Conversation & {
 };
 
 type Props = {
+	/** The texts, edited in Admin → Content → Pages (app/Content/Pages/WorkspacePages.php). */
+	content: WorkspaceContent["messages"];
 	conversations: Conversation[];
 	archived: Conversation[];
 	conversation: OpenConversation | null;
@@ -32,7 +36,7 @@ type Props = {
 
 type Filter = "all" | "unread" | "researchers" | "team" | "archived";
 
-export default function Messages({ conversations, archived, conversation, notifications, myProtocols }: Props) {
+export default function Messages({ content, conversations, archived, conversation, notifications, myProtocols }: Props) {
 	const unread = conversations.reduce((sum, item) => sum + (item.unread ? 1 : 0), 0);
 
 	return (
@@ -40,9 +44,9 @@ export default function Messages({ conversations, archived, conversation, notifi
 			<div className="container-page pt-10 pb-14 lg:pt-12 lg:pb-18">
 				<div className={cn("flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between", conversation && "max-lg:hidden")}>
 					<div className="max-w-[640px]">
-						<p className="eyebrow">Inbox · {unread} unread</p>
-						<h1 className="mt-3 text-5xl leading-[1.05] font-extrabold tracking-[-0.04em] sm:text-[52px]">Messages</h1>
-						<p className="mt-3 text-[17px] leading-normal text-ink-muted">All conversations you take part in: with the PCT team, and with researchers who asked about one of your protocols.</p>
+						<p className="eyebrow">{fill(content.eyebrow, { count: unread })}</p>
+						<h1 className="mt-3 text-5xl leading-[1.05] font-extrabold tracking-[-0.04em] sm:text-[52px]">{content.title}</h1>
+						<p className="mt-3 text-[17px] leading-normal text-ink-muted">{content.text}</p>
 					</div>
 					<div className="rounded-full bg-white px-5 py-3 shadow-[inset_0_0_0_1px_var(--color-line)] lg:shrink-0">
 						<Switch checked={notifications} onChange={enabled => router.post("/dashboard/messages/notifications", { enabled }, { preserveScroll: true })} label={<span className="font-semibold">Email me about new messages</span>} />
@@ -50,13 +54,13 @@ export default function Messages({ conversations, archived, conversation, notifi
 				</div>
 
 				<div className="mt-8 grid grid-cols-[minmax(0,1fr)] overflow-hidden rounded-panel border border-line bg-white lg:min-h-[720px] lg:grid-cols-[384px_minmax(0,1fr)]">
-					<ConversationList conversations={conversations} archived={archived} selected={conversation?.id ?? null} hidden={!!conversation} />
+					<ConversationList note={content.privacy_note} conversations={conversations} archived={archived} selected={conversation?.id ?? null} hidden={!!conversation} />
 					{conversation ? (
 						<ConversationView key={conversation.id} conversation={conversation} archived={archived.some(item => item.id === conversation.id)} myProtocols={myProtocols} />
 					) : (
 						<div className="hidden flex-col items-center justify-center border-l border-line px-10 text-center lg:flex">
-							<p className="text-2xl font-extrabold tracking-[-0.02em]">Choose a conversation</p>
-							<p className="mt-2 max-w-sm text-ink-muted">Researchers reach you through “Ask question to author” on your published protocols. The PCT team writes here about your registrations.</p>
+							<p className="text-2xl font-extrabold tracking-[-0.02em]">{content.choose_title}</p>
+							<p className="mt-2 max-w-sm text-ink-muted">{content.choose_text}</p>
 						</div>
 					)}
 				</div>
@@ -67,7 +71,7 @@ export default function Messages({ conversations, archived, conversation, notifi
 
 /* -------------------------------------------------------------------------- */
 
-function ConversationList({ conversations, archived, selected, hidden }: { conversations: Conversation[]; archived: Conversation[]; selected: number | null; hidden: boolean }) {
+function ConversationList({ note, conversations, archived, selected, hidden }: { note: string; conversations: Conversation[]; archived: Conversation[]; selected: number | null; hidden: boolean }) {
 	const [filter, setFilter] = useState<Filter>("all");
 	const [query, setQuery] = useState("");
 
@@ -171,7 +175,7 @@ function ConversationList({ conversations, archived, selected, hidden }: { conve
 					);
 				})}
 			</ul>
-			<p className="border-t border-line px-6 py-4 text-[13.5px] leading-normal text-ink-muted">Your email address is never shared. Researchers reach you through “Ask question to author” on a protocol.</p>
+			<p className="border-t border-line px-6 py-4 text-[13.5px] leading-normal text-ink-muted">{note}</p>
 		</section>
 	);
 }

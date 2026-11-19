@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages\Workspace;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Pages\ProtocolPageController;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -28,7 +29,10 @@ use Inertia\Response;
 class MyProtocolsController extends Controller
 {
     /** Needs action first, then what is with the PCT team, then the register. */
-    private const ORDER = ['rejected' => 0, 'draft' => 1, 'submitted_for_publication' => 2, 'resubmitted_for_publication' => 2, 'published' => 3];
+    private const ORDER = ['rejected' => 0, 'draft' => 1, 'submitted_for_publication' => 2, 'resubmitted_for_publication' => 2, 'published' => 3, Protocol::DECLINED => 4];
+
+    /** The owner may delete a draft, or a protocol the PCT team declined (final, never public). */
+    private const DELETABLE = ['draft', Protocol::DECLINED];
 
     public function index(Request $request): Response
     {
@@ -42,8 +46,9 @@ class MyProtocolsController extends Controller
             ->get()->keyBy('protocol_id');
 
         return Inertia::render('workspace/my-protocols', [
+            'content' => PageContent::for('workspace')['my_protocols'],
             'protocols' => $protocols
-                ->sortBy([fn ($a, $b) => self::ORDER[$a->status] <=> self::ORDER[$b->status], fn ($a, $b) => $b->updated_at <=> $a->updated_at])
+                ->sortBy([fn ($a, $b) => (self::ORDER[$a->status] ?? 5) <=> (self::ORDER[$b->status] ?? 5), fn ($a, $b) => $b->updated_at <=> $a->updated_at])
                 ->values()
                 ->map(fn (Protocol $protocol) => $this->card($protocol, $channels->get($protocol->id), $user->id)),
         ]);
@@ -52,6 +57,8 @@ class MyProtocolsController extends Controller
     public function duplicate(Request $request, int $id): RedirectResponse
     {
         $protocol = $this->owned($request, $id);
+        // A declined protocol is final; copying it would be a way to resubmit it.
+        abort_if($protocol->status === Protocol::DECLINED, 422, 'A declined protocol can’t be duplicated.');
 
         $copy = DB::transaction(function () use ($protocol, $request) {
             $copy = $request->user()->protocols()->create(['status' => 'draft']);
@@ -69,11 +76,12 @@ class MyProtocolsController extends Controller
     public function destroy(Request $request, int $id): RedirectResponse
     {
         $protocol = $this->owned($request, $id);
-        abort_unless($protocol->status === 'draft', 422, 'Only drafts can be deleted.');
+        abort_unless(in_array($protocol->status, self::DELETABLE, true), 422, 'Only drafts and declined protocols can be deleted.');
 
+        $declined = $protocol->status === Protocol::DECLINED;
         $protocol->delete();
 
-        return redirect()->route('workspace.protocols')->with('success', 'The draft was deleted.');
+        return redirect()->route('workspace.protocols')->with('success', $declined ? 'The declined protocol was deleted.' : 'The draft was deleted.');
     }
 
     /** Submit a complete draft, or resubmit once every feedback point is addressed. */
@@ -169,12 +177,13 @@ class MyProtocolsController extends Controller
             'pct_id' => $protocol->status === 'published' ? $protocol->pct_id : null,
             'title' => $protocol->details->firstWhere('key', 'title')?->value,
             'summary' => $summary['summary'],
-            'centre' => $summary['centre_name'] ? trim($summary['centre_name'].($summary['centre_city'] ? " · {$summary['centre_city']}" : '').($summary['country'] ? ", {$summary['country']}" : '')) : null,
+            'centre' => PublicRegister::centreLine($summary['centres'], fn (array $centre) => $centre['name'] ? $centre['name'].($centre['city'] ? " · {$centre['city']}" : '').($centre['country'] ? ", {$centre['country']}" : '') : ''),
             'period' => $summary['period'],
             'facts' => array_values(array_filter([$summary['study_stage_label'], $summary['species_label'], $summary['study_status_label']])),
             'saved_at' => $protocol->updated_at->toIso8601String(),
             'submitted_at' => $round?->submitted_at?->toIso8601String(),
-            'returned_at' => $protocol->status === 'rejected' ? ($round?->decided_at ?? $protocol->updated_at)->toIso8601String() : null,
+            'returned_at' => in_array($protocol->status, ['rejected', Protocol::DECLINED], true) ? ($round?->decided_at ?? $protocol->updated_at)->toIso8601String() : null,
+            'decline_reason' => $protocol->status === Protocol::DECLINED ? $round?->message : null,
             'registered_at' => $registeredAt?->toIso8601String(),
             'registered_before_start' => $summary['registered_before_start'],
             'timing' => ProtocolPageController::timing($registeredAt, $summary['start_date'] ? Carbon::parse($summary['start_date']) : null)['text'] ?? null,

@@ -196,6 +196,7 @@ function Kit({ layout }: { layout: string }) {
 							<StatusBadge status="resubmitted_for_publication" />
 							<StatusBadge status="published" />
 							<StatusBadge status="rejected" />
+							<StatusBadge status="declined" />
 							<EmbargoBadge until="14 Mar 2027" />
 							<Badge tone="peach">Before study start</Badge>
 							<Badge tone="neutral" dot="grey" className="font-semibold">

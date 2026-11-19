@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages\Workspace;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Channel;
@@ -35,6 +36,7 @@ class MessagesController extends Controller
         }
 
         return Inertia::render('workspace/messages', [
+            'content' => PageContent::for('workspace')['messages'],
             'conversations' => $inbox->conversations()->map(fn (Channel $c) => $inbox->summary($c)),
             'archived' => $inbox->conversations(archived: true)->map(fn (Channel $c) => $inbox->summary($c)),
             'conversation' => $channel ? $this->conversation($channel, $user) : null,

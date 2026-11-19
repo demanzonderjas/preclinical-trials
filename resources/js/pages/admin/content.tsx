@@ -1,6 +1,7 @@
 import { router, useForm, usePage } from "@inertiajs/react";
 import { ArrowDown, ArrowLeft, ArrowUp, Check, GripVertical, ImageIcon } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
+import { PageContentEditor, type PageEditorData } from "@/components/admin/PageContentEditor";
 import { RichText } from "@/components/admin/RichText";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -19,6 +20,9 @@ type News = { id: number; title: string; summary: string | null; content: string
 type Faq = { id: number; title: string; content: string; status: "draft" | "published"; audiences: string[]; category_id: number; updated_at: string | null };
 type Category = { id: number; name: string; items: Faq[] };
 type ContentPage = { id: number; title: string; subtitle: string | null; slug: string; blocks: string[]; updated_at: string | null };
+/** A designed page whose texts are edited field by field (app/Content/Pages). */
+type EditablePage = { key: string; title: string; url: string | null; description: string | null; updated_at: string | null; updated_by: string | null };
+type RetiredPage = { id: number; title: string; slug: string; updated_at: string | null };
 type Ambassador = { id: number; name: string; description: string; place: string; latitude: string; longitude: string };
 
 type Props = {
@@ -29,6 +33,9 @@ type Props = {
 	faq: Category[];
 	audiences: Option[];
 	pages: ContentPage[];
+	editablePages: EditablePage[];
+	pageEditor: PageEditorData | null;
+	retiredPages: RetiredPage[];
 	ambassadors: Ambassador[];
 };
 
@@ -61,6 +68,13 @@ export default function Content(props: Props) {
 				</EditorPage>
 			);
 		}
+	}
+	if (props.tab === "pages" && props.pageEditor) {
+		return (
+			<EditorPage title={`Edit page: ${props.pageEditor.title}`} back={() => go("pages")} backLabel="All pages">
+				<PageContentEditor key={`${props.pageEditor.key}-${props.pageEditor.updated_at}`} page={props.pageEditor} onCancel={() => go("pages")} />
+			</EditorPage>
+		);
 	}
 	if (editing !== null && props.tab === "pages") {
 		const page = props.pages.find(other => other.id === editing);
@@ -105,7 +119,7 @@ export default function Content(props: Props) {
 				<div className="mt-6">
 					{props.tab === "news" && <NewsTab news={props.news} />}
 					{props.tab === "faq" && <FaqTab categories={props.faq} audiences={props.audiences} />}
-					{props.tab === "pages" && <PagesTab pages={props.pages} />}
+					{props.tab === "pages" && <PagesTab editable={props.editablePages} pages={props.pages} retired={props.retiredPages} />}
 					{props.tab === "ambassadors" && <AmbassadorsTab ambassadors={props.ambassadors} />}
 				</div>
 			</div>
@@ -508,17 +522,40 @@ function FaqForm({ item, categories, audiences }: { item: Faq | null; categories
 
 /* Pages --------------------------------------------------------------------- */
 
-function PagesTab({ pages }: { pages: ContentPage[] }) {
+function PagesTab({ editable, pages, retired }: { editable: EditablePage[]; pages: ContentPage[]; retired: RetiredPage[] }) {
 	return (
 		<>
-			<p className="text-[15px] text-ink-muted">Pages with texts the PCT team edits. The home, about and help pages follow the A2 design and are not edited here.</p>
+			<p className="text-[15px] text-ink-muted">The texts of the pages on the website. The layout of each page stays as designed; you change its headings, texts, links, images and lists.</p>
 			<ul className="mt-5 divide-y divide-line overflow-hidden rounded-card border border-line bg-white">
+				{editable.map(page => (
+					<li key={page.key} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+						<span className="min-w-0">
+							<span className="block font-bold">{page.title}</span>
+							<span className="text-[14px] text-ink-muted">
+								{page.url ? (
+									<a href={page.url} target="_blank" rel="noopener" className="text-link underline underline-offset-3">
+										{page.url}
+										<span className="sr-only"> (opens in a new tab)</span>
+									</a>
+								) : (
+									"On every page"
+								)}
+								{page.updated_at ? ` · last edited ${formatDate(page.updated_at)}${page.updated_by ? ` by ${page.updated_by}` : ""}` : " · original text"}
+							</span>
+						</span>
+						<button type="button" onClick={() => router.get(routes.admin.content, { tab: "pages", page: page.key }, { preserveScroll: false })} className="font-display font-extrabold text-link">
+							Edit<span className="sr-only"> {page.title}</span>
+						</button>
+					</li>
+				))}
 				{pages.map(page => (
 					<li key={page.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
 						<span className="min-w-0">
 							<span className="block font-bold">{page.title}</span>
 							<span className="text-[14px] text-ink-muted">
-								{page.slug}
+								<a href={page.slug} target="_blank" rel="noopener" className="text-link underline underline-offset-3">
+									{page.slug}
+								</a>
 								{page.updated_at && ` · updated ${formatDate(page.updated_at)}`}
 							</span>
 						</span>
@@ -528,6 +565,26 @@ function PagesTab({ pages }: { pages: ContentPage[] }) {
 					</li>
 				))}
 			</ul>
+			{retired.length > 0 && (
+				<details className="mt-6 rounded-card border border-line bg-mist px-5 py-4">
+					<summary className="cursor-pointer font-bold">
+						{retired.length} old {retired.length === 1 ? "page is" : "pages are"} not on the website
+					</summary>
+					<p className="mt-2 text-[14.5px] text-ink-muted">Texts of the previous website. The new pages do not show them, so editing them would change nothing. They are kept for reference.</p>
+					<ul className="mt-3 grid gap-1.5 text-[14.5px]">
+						{retired.map(page => (
+							<li key={page.id}>
+								<span className="font-semibold">{page.title}</span>
+								<span className="text-ink-muted">
+									{" "}
+									· {page.slug}
+									{page.updated_at && ` · last edited ${formatDate(page.updated_at)}`}
+								</span>
+							</li>
+						))}
+					</ul>
+				</details>
+			)}
 		</>
 	);
 }

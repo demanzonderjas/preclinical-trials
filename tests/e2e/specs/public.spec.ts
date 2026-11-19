@@ -79,8 +79,9 @@ test.describe("Public site", () => {
 	test("a visitor meets an ambassador on the about page", async ({ site, page }) => {
 		await site.openAbout();
 		await page.getByRole("button", { name: /Edinburgh/ }).last().click();
-		await expect(page.getByRole("link", { name: "Get in touch" })).toBeVisible();
 		await expect(page.getByText("Dr. Emily Sena").first()).toBeVisible();
+		// Ambassadors are not a contact channel: their card has no contact link.
+		await expect(page.locator("#ambassadors").getByRole("link", { name: "Get in touch" })).toHaveCount(0);
 	});
 
 	test("unknown pages show a friendly error", async ({ page }) => {

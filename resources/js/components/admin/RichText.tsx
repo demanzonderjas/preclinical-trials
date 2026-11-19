@@ -10,17 +10,41 @@ import { request } from "@/lib/http";
  * The admin editor for news, answers and pages: bold, italic, a heading, lists, links and
  * images, as in A2. It writes HTML; the server cleans it again before saving.
  */
-export function RichText({ label, value, onChange, required, invalid, minHeight = 140 }: { label: string; value: string; onChange: (html: string) => void; required?: boolean; invalid?: boolean; minHeight?: number }) {
+export function RichText({
+	label,
+	value,
+	onChange,
+	required,
+	invalid,
+	minHeight = 140,
+	basic = false,
+	describedBy
+}: {
+	label: string;
+	value: string;
+	onChange: (html: string) => void;
+	required?: boolean;
+	invalid?: boolean;
+	minHeight?: number;
+	/** Paragraphs, bold, italic, lists and links only (no headings or images): the texts of designed pages. */
+	basic?: boolean;
+	describedBy?: string;
+}) {
 	const id = useId();
 	const file = useRef<HTMLInputElement>(null);
 	const editor = useEditor({
 		immediatelyRender: false,
-		extensions: [StarterKit.configure({ heading: { levels: [2, 3] }, link: false }), Link.configure({ openOnClick: false, autolink: true, defaultProtocol: "https" }), Image],
+		extensions: [
+			StarterKit.configure({ heading: basic ? false : { levels: [2, 3] }, blockquote: basic ? false : undefined, link: false }),
+			Link.configure({ openOnClick: false, autolink: true, defaultProtocol: "https" }),
+			...(basic ? [] : [Image])
+		],
 		content: value,
 		editorProps: {
 			attributes: {
 				id,
 				"aria-labelledby": `${id}-label`,
+				...(describedBy ? { "aria-describedby": describedBy } : {}),
 				"aria-multiline": "true",
 				role: "textbox",
 				class: cn("prose-editor px-4 py-3 text-[16px] leading-[1.6] focus:outline-none", "[&_a]:text-link [&_a]:underline [&_h2]:mt-4 [&_h2]:text-xl [&_h2]:font-extrabold [&_h3]:mt-3 [&_h3]:text-lg [&_h3]:font-bold [&_li]:my-1 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:my-2 [&_ul]:list-disc [&_ul]:pl-6 [&_img]:my-3 [&_img]:max-h-60 [&_img]:rounded-md")
@@ -69,7 +93,7 @@ export function RichText({ label, value, onChange, required, invalid, minHeight 
 		? [
 				{ label: "B", active: !!state?.bold, run: () => editor.chain().focus().toggleBold().run() },
 				{ label: "I", active: !!state?.italic, run: () => editor.chain().focus().toggleItalic().run() },
-				{ label: "H2", active: !!state?.h2, run: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
+				...(basic ? [] : [{ label: "H2", active: !!state?.h2, run: () => editor.chain().focus().toggleHeading({ level: 2 }).run() }]),
 				{ label: "List", active: !!state?.list, run: () => editor.chain().focus().toggleBulletList().run() },
 				{ label: "Link", active: !!state?.link, run: setLink }
 			]
@@ -102,10 +126,12 @@ export function RichText({ label, value, onChange, required, invalid, minHeight 
 							{tool.label}
 						</button>
 					))}
-					<label className="inline-flex h-9 cursor-pointer items-center rounded-md px-2.5 text-[14.5px] font-bold hover:bg-white">
-						Image
-						<input ref={file} type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="sr-only" onChange={event => addImage(event.target.files?.[0])} />
-					</label>
+					{!basic && (
+						<label className="inline-flex h-9 cursor-pointer items-center rounded-md px-2.5 text-[14.5px] font-bold hover:bg-white">
+							Image
+							<input ref={file} type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="sr-only" onChange={event => addImage(event.target.files?.[0])} />
+						</label>
+					)}
 				</div>
 				<EditorContent editor={editor} style={{ minHeight }} />
 			</div>

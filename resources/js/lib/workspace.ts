@@ -34,6 +34,8 @@ export function activityLabel(item: ActivityItem): string {
 			return "Resubmitted for publication";
 		case "returned":
 			return points ? `Returned with ${points} feedback point${points === 1 ? "" : "s"}` : "Returned with feedback";
+		case "declined":
+			return "Declined, not eligible for the platform";
 		case "published":
 			return item.data.pct_id ? `Published as ${item.data.pct_id}` : "Published";
 		case "amendment_submitted":

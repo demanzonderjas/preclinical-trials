@@ -12,6 +12,7 @@ use App\Models\Protocol;
 use App\Models\ReviewRound;
 use App\Services\Inbox;
 use App\Services\ProtocolWorkflow;
+use App\Support\Answers;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,8 @@ use Inertia\Response;
 
 /**
  * The PCT team's review queue and review page (F1, admin side): feedback points on fields,
- * then approve and publish, or return with feedback.
+ * then approve and publish, refer back for more information (status `rejected`), or decline
+ * as not eligible for the platform (status `declined`, final).
  */
 class ProtocolsController extends Controller
 {
@@ -33,6 +35,7 @@ class ProtocolsController extends Controller
         'resubmitted' => ['resubmitted_for_publication'],
         'published' => ['published'],
         'rejected' => ['rejected'],
+        'declined' => [Protocol::DECLINED],
         'draft' => ['draft'],
     ];
 
@@ -70,6 +73,7 @@ class ProtocolsController extends Controller
                 'public' => $published->reject(fn ($p) => $p->has_embargo)->count(),
                 'embargoed' => $published->filter(fn ($p) => $p->has_embargo)->count(),
                 'rejected' => $all->where('status', 'rejected')->count(),
+                'declined' => $all->where('status', Protocol::DECLINED)->count(),
             ],
             'filters' => ['status' => $filter, 'embargo' => $embargo, 'q' => $request->query('q', '')],
             'totals' => collect(self::FILTERS)->map(fn ($statuses, $filter) => $all->filter(fn (Protocol $p) => $this->matches($p, $filter))->count()),
@@ -109,8 +113,9 @@ class ProtocolsController extends Controller
                 'researcher_note' => $round->researcher_note,
             ],
             'values' => (object) $protocol->values(),
-            // What the reviewer saw last time, to mark the fields that changed since.
-            'previous' => $previous?->snapshot ? (object) $previous->snapshot : null,
+            // The fields that changed since the reviewer saw them last time, compared by what
+            // they say: the snapshot comes back from a JSON column with its keys reordered.
+            'changed' => $previous?->snapshot ? Answers::changedKeys($previous->snapshot, $protocol->values()) : null,
             'points' => $round->points->map(fn (FeedbackPoint $point) => ['id' => $point->id, 'field_key' => $point->field_key, 'body' => $point->body, 'updated_at' => $point->updated_at->toIso8601String()])->values(),
             'earlier' => $rounds->where('number', '<', $round->number)->flatMap(fn (ReviewRound $r) => $r->points->map(fn (FeedbackPoint $point) => ['field_key' => $point->field_key, 'body' => $point->body, 'status' => $point->status, 'round' => $r->number]))->values(),
             'history' => $rounds->map(fn (ReviewRound $r) => [
@@ -171,11 +176,23 @@ class ProtocolsController extends Controller
     {
         $protocol = $this->inReview($id);
         $data = $request->validate([
-            'decision' => ['required', 'in:approve,return'],
+            'decision' => ['required', 'in:approve,return,decline'],
             'message' => ['nullable', 'string', 'max:10000'],
+            // Declining needs a reason: it goes to the researcher by email.
+            'reason' => ['exclude_unless:decision,decline', 'required', 'string', 'max:10000'],
             'internal_note' => ['nullable', 'string', 'max:10000'],
-        ]);
+        ], ['reason.required' => 'Give the reason for declining. The researcher receives it by email.']);
         $round = $workflow->currentRound($protocol);
+
+        if ($data['decision'] === 'decline') {
+            $reason = trim($data['reason']);
+            if ($reason === '') {
+                return back()->withErrors(['reason' => 'Give the reason for declining. The researcher receives it by email.']);
+            }
+            $workflow->decline($protocol, $request->user(), $reason, $data['internal_note'] ?? null);
+
+            return redirect('/admin/protocols')->with('success', 'Declined. The researcher gets an email with your reason.');
+        }
 
         if ($data['decision'] === 'return') {
             if ($round->points()->count() === 0 && ! trim((string) ($data['message'] ?? ''))) {
@@ -183,7 +200,7 @@ class ProtocolsController extends Controller
             }
             $workflow->returnWithFeedback($protocol, $request->user(), $data['message'] ?? null, $data['internal_note'] ?? null);
 
-            return redirect('/admin/protocols')->with('success', "Returned to the researcher with {$round->points()->count()} feedback points.");
+            return redirect('/admin/protocols')->with('success', "Referred back to the researcher with {$round->points()->count()} feedback points.");
         }
 
         $round->update(['internal_note' => $data['internal_note'] ?? null]);

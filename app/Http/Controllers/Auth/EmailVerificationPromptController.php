@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,6 +20,7 @@ class EmailVerificationPromptController extends Controller
         return $request->user()->hasVerifiedEmail()
                     ? redirect()->intended('/dashboard')
                     : Inertia::render('auth/verify-email', [
+                        'content' => PageContent::for('auth')['verify_email'],
                         'email' => $request->user()->email,
                         'sent' => $request->session()->get('status') === 'verification-link-sent',
                     ]);

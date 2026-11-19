@@ -15,6 +15,8 @@ export type PublicProtocol = {
 	centre_city: string | null;
 	country: string | null;
 	country_name: string | null;
+	/** Every study centre; centre_name, centre_city and country are the first one. */
+	centres?: RegisterCentre[];
 	start_date: string | null;
 	end_date: string | null;
 	period: string | null;
@@ -37,7 +39,11 @@ export type RegisterFigures = {
 	species: { species: string; label: string; count: number }[];
 };
 
-export function centreLine(protocol: Pick<PublicProtocol, "centre_name" | "centre_city" | "country">) {
-	const place = [protocol.centre_city, protocol.country].filter(Boolean).join(", ");
-	return [protocol.centre_name, place].filter(Boolean).join(" · ") || null;
+export type RegisterCentre = { name: string | null; city: string | null; country: string | null; country_name: string | null };
+
+/** Every study centre on one line: "UMC Utrecht · Utrecht, NL; Charité · Berlin, DE". */
+export function centreLine(protocol: Pick<PublicProtocol, "centre_name" | "centre_city" | "country" | "centres">) {
+	const centres = protocol.centres ?? [{ name: protocol.centre_name, city: protocol.centre_city, country: protocol.country, country_name: null }];
+	const line = (centre: Pick<RegisterCentre, "name" | "city" | "country">) => [centre.name, [centre.city, centre.country].filter(Boolean).join(", ")].filter(Boolean).join(" · ");
+	return centres.map(line).filter(Boolean).join("; ") || null;
 }

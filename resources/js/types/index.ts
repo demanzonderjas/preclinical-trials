@@ -1,3 +1,5 @@
+import type { SiteContent } from "@/types/page-content";
+
 export type AuthUser = {
 	id: number;
 	name: string;
@@ -15,6 +17,8 @@ export type SharedProps = {
 	workspace: { protocols: number; unread_messages: number } | null;
 	/** Counts on the admin tabs, for admins. */
 	admin: { awaiting_review: number; embargo_requests: number } | null;
+	/** Editable texts shown on every page, such as the footer (Admin → Content → Pages). */
+	siteContent: SiteContent;
 };
 
 declare module "@inertiajs/core" {

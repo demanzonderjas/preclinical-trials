@@ -43,7 +43,7 @@
 <body>
 {{-- Tables, not floats: dompdf narrows every later line around a float in a fixed box. --}}
 <header class="page"><table><tr><td>preclinicaltrials<span class="eu">.eu</span></td><td class="right">@yield('header-right')</td></tr></table></header>
-<footer class="page"><table><tr><td>© {{ now()->year }} PreclinicalTrials.eu · UMC Utrecht, Utrecht, the Netherlands</td><td class="right">Generated {{ $generated }}</td></tr></table></footer>
+<footer class="page"><table><tr><td>© {{ now()->year }} PreclinicalTrials.eu · Hosted at Utrecht University · Netherlands Heart Institute, Utrecht</td><td class="right">Generated {{ $generated }}</td></tr></table></footer>
 @yield('content')
 </body>
 </html>

@@ -93,6 +93,7 @@ class StatisticsController extends Controller
                 'submitted' => $protocols->where('status', '!=', 'draft')->count(),
                 'published' => $published->count(),
                 'rejected' => $protocols->where('status', 'rejected')->count(),
+                'declined' => $protocols->where('status', Protocol::DECLINED)->count(),
                 'awaiting' => $protocols->whereIn('status', ['submitted_for_publication', 'resubmitted_for_publication'])->count(),
             ],
             'embargo' => [
@@ -124,7 +125,8 @@ class StatisticsController extends Controller
                         null => 'Deleted by owner',
                         'draft' => 'Draft created',
                         'published' => 'Published · '.$log->protocol->pct_id,
-                        'rejected' => 'Returned with feedback',
+                        'rejected' => 'Referred for more information',
+                        Protocol::DECLINED => 'Declined',
                         default => 'Submitted',
                     },
                 ])->values(),

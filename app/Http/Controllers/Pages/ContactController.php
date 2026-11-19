@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Content\PageContent;
 use App\Http\Controllers\Controller;
 use App\Mail\ContactFormSubmitted;
 use App\Models\ContactForm;
@@ -28,15 +29,12 @@ class ContactController extends Controller
         'other' => 'Something else',
     ];
 
-    /** The questions shown under "Asked most often", by title. */
-    public const FREQUENT = ['Is registration free?', 'What will happen with my submitted protocol?', 'I am unable to edit a record that I have published?'];
-
     public function show(Request $request): Response
     {
         return Inertia::render('contact', [
             'topics' => collect(self::TOPICS)->map(fn ($label, $value) => ['value' => $value, 'label' => $label])->values(),
-            'frequent' => FaqItem::whereIn('title', self::FREQUENT)->where('status', '!=', 'draft')->get(['id', 'title'])->each->setAppends([])
-                ->sortBy(fn ($item) => array_search($item->title, self::FREQUENT))->values(),
+            // The texts, the team and the questions under "Asked most often": Admin → Content → Pages.
+            'content' => PageContent::for('contact'),
             'faqCount' => FaqItem::where('status', '!=', 'draft')->count(),
             'prefill' => [
                 'topic' => array_key_exists((string) $request->query('topic'), self::TOPICS) ? $request->query('topic') : null,

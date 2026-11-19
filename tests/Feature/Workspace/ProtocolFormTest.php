@@ -38,6 +38,68 @@ class ProtocolFormTest extends TestCase
                 ->where('values.study_centre.0.name', 'UMC Utrecht'));
     }
 
+    public function test_a_partial_profile_fills_what_it_has(): void
+    {
+        // Most accounts from the old site have no role, city or country.
+        $user = $this->makeUser(['first_name' => 'Megan', 'last_name' => 'Smith', 'role' => null, 'institution' => 'University of Alberta', 'city' => null, 'country' => null]);
+
+        $this->actingAs($user)->get('/dashboard/add-protocol')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('values.contact_name', 'Megan Smith')
+                ->where('values.contact_email', $user->email)
+                ->where('values.contact_role', null)
+                ->where('values.study_centre.0.name', 'University of Alberta'));
+
+        $created = $this->actingAs($user)->postJson('/dashboard/protocols', ['values' => ['title' => 'A study']])->assertCreated();
+        $values = Protocol::findOrFail($created->json('id'))->values();
+        $this->assertSame('Megan Smith', $values['contact_name']);
+        $this->assertSame('University of Alberta', $values['study_centre'][0]->name);
+    }
+
+    public function test_a_draft_with_empty_contact_details_gets_them_from_the_profile(): void
+    {
+        $user = $this->makeUser(['first_name' => 'Sanne', 'last_name' => 'de Vries', 'role' => 'Postdoc', 'institution' => 'UMC Utrecht', 'city' => 'Utrecht', 'country' => 'NL']);
+        // As drafts from the old site and some imports were saved: contact details missing or blank.
+        $draft = $this->makeProtocol($user, 'draft', ['contact_name' => '', 'contact_role' => null, 'study_centre' => [['name' => '', 'city' => '', 'country' => '']]]);
+        $draft->details()->where('key', 'contact_email')->delete();
+
+        $this->actingAs($user)->get("/dashboard/edit-protocol/{$draft->id}")
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('values.contact_name', 'Sanne de Vries')
+                ->where('values.contact_role', 'Postdoc')
+                ->where('values.contact_email', $user->email)
+                ->where('values.study_centre.0.name', 'UMC Utrecht')
+                ->where('values.study_centre.0.country', 'NL'));
+
+        $stored = $draft->fresh('details')->values();
+        $this->assertSame('Sanne de Vries', $stored['contact_name'], 'saved, so it counts for submission');
+        $this->assertSame($user->email, $stored['contact_email']);
+    }
+
+    public function test_contact_details_the_researcher_saved_are_kept(): void
+    {
+        $user = $this->makeUser(['first_name' => 'Sanne', 'last_name' => 'de Vries', 'role' => 'Postdoc', 'institution' => 'UMC Utrecht']);
+        $draft = $this->makeProtocol($user, 'draft', [
+            'contact_name' => 'Prof. Emily Sena',
+            'contact_role' => '',
+            'contact_email' => 'emily@example.test',
+            'study_centre' => [['name' => 'University of Edinburgh', 'city' => 'Edinburgh', 'country' => 'GB'], ['name' => 'Charité', 'city' => 'Berlin', 'country' => 'DE']],
+        ]);
+
+        $this->actingAs($user)->get("/dashboard/edit-protocol/{$draft->id}")
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('values.contact_name', 'Prof. Emily Sena')
+                ->where('values.contact_role', 'Postdoc') // only the empty one is filled
+                ->where('values.contact_email', 'emily@example.test')
+                ->has('values.study_centre', 2)
+                ->where('values.study_centre.0.name', 'University of Edinburgh'));
+
+        // A returned protocol is not changed on opening: a save there addresses feedback.
+        $returned = $this->makeProtocol($user, 'rejected', ['contact_role' => '']);
+        $this->actingAs($user)->get("/dashboard/edit-protocol/{$returned->id}")
+            ->assertInertia(fn (Assert $page) => $page->where('values.contact_role', ''));
+    }
+
     public function test_the_first_autosave_creates_a_draft_and_later_ones_update_it(): void
     {
         $user = $this->makeUser();

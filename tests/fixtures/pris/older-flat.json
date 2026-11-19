@@ -1,0 +1,28 @@
+{
+	"title": "Neuroprotection by xenon after neonatal asphyxia in rats – a randomised study",
+	"short_title": "XENON",
+	"hypothesis": "Xenon reduces brain injury after asphyxia.",
+	"medicine_fields": ["Neurology", "Neonatology"],
+	"stage": "Exploratory",
+	"species": "Rats",
+	"strains": "Wistar - Charles River",
+	"animal_sex": "Both",
+	"animal_count": "48",
+	"date": { "start": "01-09-2026", "end": "31/08/2027" },
+	"groups": [
+		{ "name": "Normoxia", "count": "16", "type": { "selection": "1" } },
+		{ "name": "Asphyxia", "count": "16", "type": "control" },
+		{ "name": "Asphyxia + xenon", "count": "16", "type": { "selection": "2" } }
+	],
+	"randomisation": { "selection": "1" },
+	"sample_size": { "selection": "No", "description": "Pilot study." },
+	"reuse_animals": { "selection": "no" },
+	"placebo_arms": 1,
+	"support_sources": { "selection": "2" },
+	"intervention_type": { "selection": ["1", "7"], "description": "Gas inhalation" },
+	"study_centres": [
+		{ "name": "Universitair Medisch Centrum Utrecht", "city": "Utrecht", "country": "Netherlands" },
+		{ "name": "Charité", "city": "Berlin", "country": "DE" }
+	],
+	"animal_committee": { "application_number": 2016123 }
+}

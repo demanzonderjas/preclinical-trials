@@ -9,7 +9,7 @@ type Count = { label: string; count: number };
 
 type Props = {
 	today: string;
-	lifecycle: { submitted: number; published: number; rejected: number; awaiting: number };
+	lifecycle: { submitted: number; published: number; rejected: number; declined: number; awaiting: number };
 	embargo: { embargoed: number; public: number };
 	before_start: { count: number; public: number };
 	per_year: { year: number; count: number }[];
@@ -62,13 +62,14 @@ export default function Statistics(props: Props) {
 					<Card>
 						<div className="grid gap-8 md:grid-cols-2 md:divide-x md:divide-line">
 							<div className="md:pr-8">
-								<CardTitle>Submitted, published, rejected</CardTitle>
+								<CardTitle>Submitted, published, referred, declined</CardTitle>
 								<Big value={lifecycle.submitted} note="submitted for publication" />
 								<Bars
 									className="mt-5"
 									rows={[
 										{ label: "Published", count: lifecycle.published },
-										{ label: "Rejected / needs changes", count: lifecycle.rejected },
+										{ label: "Referred · more information needed", count: lifecycle.rejected },
+										{ label: "Declined · not eligible", count: lifecycle.declined },
 										{ label: "Awaiting review", count: lifecycle.awaiting }
 									]}
 									tone="blue"

@@ -7,10 +7,12 @@ import { Avatar, Card } from "@/components/ui/Content";
 import { type Conversation, conversationContext, ProtocolChip, shortTitle } from "@/components/workspace/Conversation";
 import { WorkspaceLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
+import { fill } from "@/lib/content";
 import { capitalise, formatDate, formatMoment, formatShort } from "@/lib/dates";
 import { routes } from "@/lib/routes";
 import { formSteps } from "@/data/protocol-schema";
 import { type ActivityItem, activityLabel, type FeedbackStatus, fieldLabel, type Progress } from "@/lib/workspace";
+import type { WorkspaceContent } from "@/types/page-content";
 
 type FeedbackAction = { type: "feedback"; id: number; title: string; date: string; points: { field_key: string; status: FeedbackStatus }[]; message: string | null };
 type EmbargoAction = { type: "embargo"; id: number; pct_id: string; title: string; approved: string | null; ends: string; days_left: number; elapsed: number | null; extension_pending: boolean };
@@ -19,7 +21,11 @@ type AmendmentAction = { type: "amendment"; id: number; pct_id: string; title: s
 type Action = FeedbackAction | AmendmentAction | EmbargoAction | DraftAction;
 
 
+type Content = Pick<WorkspaceContent, "dashboard_top" | "dashboard_shortcuts" | "dashboard_cards" | "dashboard_help">;
+
 type Props = {
+	/** The texts, edited in Admin → Content → Pages (app/Content/Pages/WorkspacePages.php). */
+	content: Content;
 	today: string;
 	overview: {
 		draft: { count: number; last_saved: string | null };
@@ -38,17 +44,19 @@ type Props = {
 export default function Dashboard(props: Props) {
 	const { auth, workspace } = usePage().props;
 	const total = workspace?.protocols ?? 0;
+	const { content } = props;
+	const cards = content.dashboard_cards;
 
 	return (
 		<WorkspaceLayout title="Dashboard" tint={false}>
-			<Hero today={props.today} name={auth.user?.first_name ?? ""} actions={props.actions} unread={workspace?.unread_messages ?? 0} register={props.register} />
+			<Hero content={content} today={props.today} name={auth.user?.first_name ?? ""} actions={props.actions} unread={workspace?.unread_messages ?? 0} register={props.register} />
 
 			<section aria-labelledby="overview-title" className="container-page py-14 lg:py-18">
 				<div className="flex flex-wrap items-end justify-between gap-5">
 					<div>
-						<p className="eyebrow">Overview</p>
+						<p className="eyebrow">{cards.overview_eyebrow}</p>
 						<h2 id="overview-title" className="mt-3 text-3xl leading-tight font-extrabold tracking-[-0.03em] sm:text-4xl">
-							My protocols by status
+							{cards.overview_title}
 						</h2>
 					</div>
 					{total > 0 && (
@@ -62,14 +70,14 @@ export default function Dashboard(props: Props) {
 				<div className="mt-12 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,490px)]">
 					{/* Two columns on wide screens; on phones one list with messages before the activity feed. */}
 					<div className="contents lg:grid lg:gap-6">
-						<NeedsAction actions={props.actions} />
+						<NeedsAction text={cards} actions={props.actions} />
 						<div className="order-3">
-							<RecentActivity activity={props.activity} />
+							<RecentActivity text={cards} activity={props.activity} />
 						</div>
 					</div>
 					<div className="contents lg:grid lg:gap-6">
 						<div className="order-2">
-							<RecentMessages messages={props.messages} />
+							<RecentMessages text={cards} messages={props.messages} />
 						</div>
 						{props.certificate && (
 							<div className="order-4">
@@ -77,7 +85,7 @@ export default function Dashboard(props: Props) {
 							</div>
 						)}
 						<div className="order-5">
-							<HelpLinks />
+							<HelpLinks help={content.dashboard_help} />
 						</div>
 					</div>
 				</div>
@@ -88,7 +96,8 @@ export default function Dashboard(props: Props) {
 
 /* -------------------------------------------------------------------------- */
 
-function Hero({ today, name, actions, unread, register }: { today: string; name: string; actions: Action[]; unread: number; register: Props["register"] }) {
+function Hero({ content, today, name, actions, unread, register }: { content: Content; today: string; name: string; actions: Action[]; unread: number; register: Props["register"] }) {
+	const { dashboard_top: top, dashboard_shortcuts: shortcuts } = content;
 	return (
 		<section aria-labelledby="dashboard-title" className="relative overflow-hidden bg-teal-50">
 			<svg aria-hidden="true" viewBox="0 0 600 600" fill="none" className="pointer-events-none absolute -top-[300px] -right-[220px] hidden w-[600px] md:block">
@@ -96,21 +105,21 @@ function Hero({ today, name, actions, unread, register }: { today: string; name:
 				<circle cx="300" cy="300" r="210" stroke="#B5D1D6" strokeWidth="2" />
 			</svg>
 			<div className="relative container-page pt-12 pb-12 sm:pt-15 lg:pb-14">
-				<p className="eyebrow">{today} · Your workspace</p>
+				<p className="eyebrow">{fill(top.eyebrow, { date: today })}</p>
 				<h1 id="dashboard-title" className="mt-3 text-5xl leading-[1.05] font-extrabold tracking-[-0.04em] sm:text-[64px]">
-					Hi, {name}
+					{fill(top.greeting, { name })}
 				</h1>
-				<p className="mt-4 max-w-[720px] text-lg leading-[1.6]">{summary(actions, unread)}</p>
+				<p className="mt-4 max-w-[720px] text-lg leading-[1.6]">{summary(top, actions, unread)}</p>
 
 				<div className="mt-9 grid gap-4 md:grid-cols-3 lg:gap-6">
-					<QuickAction href={routes.newProtocol} icon={<Plus size={24} strokeWidth={2.2} />} accent title="Register a new protocol">
-						Best at inception. Save a draft at any time.
+					<QuickAction href={routes.newProtocol} icon={<Plus size={24} strokeWidth={2.2} />} accent title={shortcuts.new_title}>
+						{shortcuts.new_text}
 					</QuickAction>
-					<QuickAction href={routes.importProtocol} icon={<ArrowUpToLine size={22} strokeWidth={2.2} />} title="Import a protocol">
-						We prefill the form from your PRIS (.json) or APAFiS (.xml) file.
+					<QuickAction href={routes.importProtocol} icon={<ArrowUpToLine size={22} strokeWidth={2.2} />} title={shortcuts.import_title}>
+						{shortcuts.import_text}
 					</QuickAction>
-					<QuickAction href={routes.database} icon={<Search size={22} strokeWidth={2.2} />} title="Search the database">
-						Browse {register.protocols} public protocols from {register.countries} countries.
+					<QuickAction href={routes.database} icon={<Search size={22} strokeWidth={2.2} />} title={shortcuts.search_title}>
+						{fill(shortcuts.search_text, { protocols: register.protocols, countries: register.countries })}
 					</QuickAction>
 				</div>
 			</div>
@@ -119,7 +128,7 @@ function Hero({ today, name, actions, unread, register }: { today: string; name:
 }
 
 /** "Two things need you today: reviewer feedback on …, and 2 unread messages." */
-function summary(actions: Action[], unread: number): ReactNode {
+function summary(top: Content["dashboard_top"], actions: Action[], unread: number): ReactNode {
 	const feedback = actions.filter((action): action is FeedbackAction => action.type === "feedback");
 	const embargoes = actions.filter((action): action is EmbargoAction => action.type === "embargo" && action.days_left <= 31 && !action.extension_pending);
 	const parts: ReactNode[] = [];
@@ -133,8 +142,8 @@ function summary(actions: Action[], unread: number): ReactNode {
 
 	if (!parts.length) {
 		const draft = actions.find((action): action is DraftAction => action.type === "draft");
-		if (draft) return <>Nothing urgent today. Your draft “{shortTitle(draft.title)}” is {draft.progress.percent}% complete.</>;
-		return <>Nothing needs you today. Register a protocol before your study starts, or browse what others have registered.</>;
+		if (draft) return fill(top.draft_text, { title: shortTitle(draft.title), percent: draft.progress.percent });
+		return top.calm_text;
 	}
 
 	const count = ["", "One thing needs", "Two things need", "Three things need", "Four things need"][parts.length];
@@ -174,10 +183,10 @@ function Overview({ overview }: { overview: Props["overview"] }) {
 	const cards: { label: string; dot: string; count: number; note: ReactNode }[] = [
 		{ label: "Draft", dot: "bg-line-strong", count: draft.count, note: draft.last_saved ? `Last saved ${formatMoment(draft.last_saved)}` : "No drafts" },
 		{
-			label: "Needs changes",
+			label: "More information needed",
 			dot: "bg-peach-300",
 			count: returned.count,
-			note: returned.points ? `${returned.addressed} of ${returned.points} feedback points addressed` : returned.count ? "Returned by the PCT team" : "Nothing returned"
+			note: returned.points ? `${returned.addressed} of ${returned.points} feedback points addressed` : returned.count ? "Referred back by the PCT team" : "Nothing referred back"
 		},
 		{ label: "Submitted", dot: "bg-blue-400", count: submitted.count, note: submitted.since ? `With the PCT team since ${formatDate(submitted.since)}` : "Nothing under review" },
 		{
@@ -206,12 +215,12 @@ function Overview({ overview }: { overview: Props["overview"] }) {
 
 /* -------------------------------------------------------------------------- */
 
-function NeedsAction({ actions }: { actions: Action[] }) {
+function NeedsAction({ text, actions }: { text: Content["dashboard_cards"]; actions: Action[] }) {
 	return (
 		<Card as="section" aria-labelledby="actions-title" className="order-1 px-6 pt-7 pb-3 sm:px-8 sm:pt-8">
 			<div className="flex flex-wrap items-center justify-between gap-3">
 				<h2 id="actions-title" className="flex items-center gap-3 text-2xl font-extrabold tracking-[-0.02em] sm:text-[26px]">
-					Needs your action
+					{text.actions_title}
 					{actions.length > 0 && (
 						<span className="flex size-7 items-center justify-center rounded-full bg-peach-300 font-display text-sm font-extrabold">
 							{actions.length}
@@ -224,7 +233,7 @@ function NeedsAction({ actions }: { actions: Action[] }) {
 			{actions.length === 0 ? (
 				<p className="mt-4 mb-5 flex items-center gap-2.5 text-ink-muted">
 					<Check size={18} strokeWidth={2.4} className="text-teal-500" aria-hidden="true" />
-					All clear. Nothing is waiting for you.
+					{text.actions_empty}
 				</p>
 			) : (
 				<ul className="mt-2 divide-y divide-line">
@@ -379,20 +388,20 @@ function DraftItem({ action }: { action: DraftAction }) {
 
 /* -------------------------------------------------------------------------- */
 
-function RecentMessages({ messages }: { messages: Conversation[] }) {
+function RecentMessages({ text, messages }: { text: Content["dashboard_cards"]; messages: Conversation[] }) {
 	return (
 		<Card as="section" aria-labelledby="messages-title" className="px-6 pt-7 pb-4 sm:px-8 sm:pt-8">
 			<div className="flex items-center justify-between gap-3">
 				<h2 id="messages-title" className="text-2xl font-extrabold tracking-[-0.02em] sm:text-[26px]">
-					Recent messages
+					{text.messages_title}
 				</h2>
 				<a href={routes.messages} className="inline-flex items-center gap-1.5 font-display text-[15.5px] font-bold whitespace-nowrap text-link">
-					Open inbox
+					{text.messages_link}
 					<ArrowRight size={16} strokeWidth={2.4} aria-hidden="true" />
 				</a>
 			</div>
 			{messages.length === 0 ? (
-				<p className="mt-4 mb-4 text-[15px] leading-normal text-ink-muted">No messages yet. Other researchers reach you through “Ask question to author” on your published protocols.</p>
+				<p className="mt-4 mb-4 text-[15px] leading-normal text-ink-muted">{text.messages_empty}</p>
 			) : (
 				<ul className="mt-3 divide-y divide-line">
 					{messages.map(conversation => (
@@ -478,17 +487,17 @@ function Certificate({ certificate }: { certificate: NonNullable<Props["certific
 	);
 }
 
-function RecentActivity({ activity }: { activity: ActivityItem[] }) {
+function RecentActivity({ text, activity }: { text: Content["dashboard_cards"]; activity: ActivityItem[] }) {
 	return (
 		<Card as="section" aria-labelledby="activity-title" className="px-6 pt-7 pb-7 sm:px-8 sm:pt-8">
 			<div className="flex items-center justify-between gap-3">
 				<h2 id="activity-title" className="text-2xl font-extrabold tracking-[-0.02em] sm:text-[26px]">
-					Recent activity
+					{text.activity_title}
 				</h2>
-				<p className="text-[14.5px] text-ink-muted">Audit trail</p>
+				<p className="text-[14.5px] text-ink-muted">{text.activity_label}</p>
 			</div>
 			{activity.length === 0 ? (
-				<p className="mt-4 text-[15px] text-ink-muted">Nothing yet. Every submission, review and amendment of your protocols is listed here.</p>
+				<p className="mt-4 text-[15px] text-ink-muted">{text.activity_empty}</p>
 			) : (
 				<ol className="relative mt-5 grid gap-5 before:absolute before:top-2 before:bottom-2 before:left-[5px] before:w-0.5 before:bg-teal-50">
 					{activity.map((item, index) => (
@@ -507,26 +516,20 @@ function RecentActivity({ activity }: { activity: ActivityItem[] }) {
 	);
 }
 
-function HelpLinks() {
-	const links = [
-		{ href: routes.researcherFaq, title: "Researcher FAQ", text: "Embargo, amendments, resubmitting after feedback" },
-		{ href: routes.howToGuide, title: "How-to guide (PDF)", text: "Every question of the form, explained" },
-		{ href: `${routes.contact}?topic=registering`, title: "Ask the PCT team", text: "Questions about registering a protocol" },
-		{ href: routes.bookAppointment, title: "Book a 1:1 appointment", text: "Talk your protocol through with the PCT team" }
-	];
+function HelpLinks({ help }: { help: Content["dashboard_help"] }) {
 	return (
 		<section aria-labelledby="help-title" className="rounded-card bg-mist px-6 pt-7 pb-4 sm:px-8">
-			<p className="eyebrow">Help & guides</p>
+			<p className="eyebrow">{help.eyebrow}</p>
 			<h2 id="help-title" className="mt-3 text-2xl leading-tight font-extrabold tracking-[-0.02em]">
-				Stuck on a field? We’re happy to help
+				{help.title}
 			</h2>
 			<ul className="mt-3 divide-y divide-line">
-				{links.map(link => (
-					<li key={link.title}>
-						<a href={link.href} className="flex items-center justify-between gap-4 py-4 text-ink hover:text-ink [&:hover_strong]:underline">
+				{help.links.map(({ link, text }, index) => (
+					<li key={index}>
+						<a href={link.url} className="flex items-center justify-between gap-4 py-4 text-ink hover:text-ink [&:hover_strong]:underline">
 							<span>
-								<strong className="block text-[16px]">{link.title}</strong>
-								<span className="mt-0.5 block text-[14.5px] text-ink-muted">{link.text}</span>
+								<strong className="block text-[16px]">{link.label}</strong>
+								<span className="mt-0.5 block text-[14.5px] text-ink-muted">{text}</span>
 							</span>
 							<ArrowRight size={18} strokeWidth={2.2} aria-hidden="true" className="shrink-0" />
 						</a>

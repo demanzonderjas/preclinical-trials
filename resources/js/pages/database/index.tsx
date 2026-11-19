@@ -1,6 +1,7 @@
 import { router, usePage } from "@inertiajs/react";
-import { ChevronDown, ChevronRight, Download, Lock, Search, SlidersHorizontal, X } from "lucide-react";
-import { type FormEvent, type ReactNode, useState } from "react";
+import { ChevronDown, ChevronRight, Download, Info, LayoutGrid, List, Lock, Search, SlidersHorizontal, X } from "lucide-react";
+import { type FormEvent, type ReactNode, useEffect, useId, useState } from "react";
+import { ProtocolTable } from "@/components/site/ProtocolTable";
 import { Badge } from "@/components/ui/Badge";
 import { Button, ButtonAnchor } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Content";
@@ -8,10 +9,15 @@ import { Select, Switch } from "@/components/ui/Form";
 import { Dialog, Pagination, type PaginationLink } from "@/components/ui/Interactive";
 import { LogoMark } from "@/components/ui/Logo";
 import { ProtocolCard } from "@/components/ui/ProtocolCard";
+import { RichContent } from "@/components/ui/RichContent";
 import { PublicLayout } from "@/layouts/Layouts";
 import { cn } from "@/lib/cn";
+import { fill } from "@/lib/content";
 import { routes } from "@/lib/routes";
+import type { DatabaseContent } from "@/types/page-content";
 import { centreLine, type PublicProtocol } from "@/types/register";
+
+const VIEW_STORAGE_KEY = "pct.database.view";
 
 type FacetName = "stage" | "status" | "species" | "country" | "sex" | "support" | "intervention";
 type FacetOption = { value: string; label: string; count: number };
@@ -24,6 +30,7 @@ type Filters = {
 	to: string | null;
 	sort: "newest" | "oldest" | "start" | "relevance" | "pct_id";
 	per_page: number;
+	view: "tiles" | "list";
 } & Record<FacetName, string[]>;
 
 type Props = {
@@ -34,7 +41,11 @@ type Props = {
 	beforeStartCount: number;
 	publicTotal: number;
 	underEmbargo: number;
-	popular: string[];
+	/**
+	 * The texts, edited in Admin → Content → Pages (app/Content/Pages/DatabasePages.php). The
+	 * "How search works" points describe App\Services\RegisterSearch; keep their defaults in step.
+	 */
+	content: DatabaseContent;
 };
 
 const facetTitles: Record<FacetName, string> = {
@@ -74,6 +85,7 @@ function toQuery(filters: Filters): Record<string, string | string[]> {
 	if (filters.to) query.to = filters.to;
 	if (filters.sort !== (filters.q ? "relevance" : "newest")) query.sort = filters.sort;
 	if (filters.per_page !== 10) query.per_page = String(filters.per_page);
+	if (filters.view === "list") query.view = "list";
 	(Object.keys(facetTitles) as FacetName[]).forEach(facet => {
 		if (filters[facet].length) query[facet] = filters[facet];
 	});
@@ -87,7 +99,8 @@ function monthLabel(value: string | null) {
 }
 
 export default function Database(props: Props) {
-	const { filters } = props;
+	const { filters, content } = props;
+	const { results: text } = content;
 	const user = usePage().props.auth.user;
 	const [sheet, setSheet] = useState(false);
 
@@ -95,6 +108,29 @@ export default function Database(props: Props) {
 		const merged = { ...filters, ...next };
 		router.get("/database", toQuery(merged), { preserveState: true, preserveScroll: true, replace: true });
 	};
+
+	// The view lives in the URL (so links and pagination keep it) and is remembered in the
+	// browser for the next visit without one.
+	const setView = (view: Filters["view"]) => {
+		try {
+			window.localStorage.setItem(VIEW_STORAGE_KEY, view);
+		} catch {
+			// Storage can be unavailable (private mode); the URL still holds the view.
+		}
+		if (view !== filters.view) visit({ view });
+	};
+	useEffect(() => {
+		if (new URLSearchParams(window.location.search).has("view")) return;
+		let stored: string | null = null;
+		try {
+			stored = window.localStorage.getItem(VIEW_STORAGE_KEY);
+		} catch {
+			return;
+		}
+		if (stored === "list" && filters.view !== "list") visit({ view: "list" });
+		// Only on arrival.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const toggle = (facet: FacetName, value: string) =>
 		visit({ [facet]: filters[facet].includes(value) ? filters[facet].filter(item => item !== value) : [...filters[facet], value] } as Partial<Filters>);
@@ -118,8 +154,8 @@ export default function Database(props: Props) {
 	const panel = <FilterPanel {...props} activeCount={active.length} onToggle={toggle} onVisit={visit} onClear={clearAll} />;
 
 	return (
-		<PublicLayout title="Search the register" description="Search the international register of preclinical animal study protocols by stage, species, status, country and more.">
-			<SearchHero filters={filters} popular={props.popular} onSearch={(q, field) => visit({ q, in: field, sort: q ? "relevance" : "newest" })} />
+		<PublicLayout title="Search the register" description={content.intro.description}>
+			<SearchHero filters={filters} content={content} onSearch={(q, field) => visit({ q, in: field, sort: q ? "relevance" : "newest" })} />
 
 			<div className="container-page grid gap-10 py-12 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-10 lg:py-14">
 				<aside aria-label="Filters" className="hidden lg:block">
@@ -130,13 +166,12 @@ export default function Database(props: Props) {
 					<div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
 						<div>
 							<h2 id="results-title" className="text-3xl leading-none font-extrabold tracking-[-0.03em] tabular-nums sm:text-4xl">
-								{props.results.total} {props.results.total === 1 ? "protocol" : "protocols"}
+								{fill(props.results.total === 1 ? text.count_one : text.count, { count: props.results.total })}
 							</h2>
-							<p className="mt-2 text-[15.5px] text-ink-muted">
-								{active.length || filters.q ? "match your filters" : "in the register"}, out of {props.publicTotal} public protocols
-							</p>
+							<p className="mt-2 text-[15.5px] text-ink-muted">{fill(active.length || filters.q ? text.filtered_text : text.all_text, { total: props.publicTotal })}</p>
 						</div>
 						<div className="flex flex-wrap items-center gap-3">
+							<ViewToggle view={filters.view} onChange={setView} />
 							<button
 								type="button"
 								onClick={() => setSheet(true)}
@@ -162,7 +197,7 @@ export default function Database(props: Props) {
 								size="sm"
 								className="h-12"
 								icon={<Download size={18} strokeWidth={2.2} aria-hidden="true" />}
-								title={user ? undefined : "Log in to export"}
+								title={user ? undefined : text.export_login}
 							>
 								Export CSV
 							</ButtonAnchor>
@@ -191,12 +226,16 @@ export default function Database(props: Props) {
 						{props.underEmbargo > 0 && (
 							<p className="flex items-center gap-2 text-[14.5px] text-ink-muted">
 								<Lock size={14} strokeWidth={2.2} aria-hidden="true" className="shrink-0" />
-								{props.underEmbargo} protocols under embargo appear here on the day their embargo ends.
+								{fill(text.embargo_text, { count: props.underEmbargo })}
 							</p>
 						)}
 					</div>
 
-					{props.results.data.length ? (
+					{props.results.data.length && filters.view === "list" ? (
+						<div className="mt-6">
+							<ProtocolTable protocols={props.results.data} caption={`Protocols ${props.results.from}–${props.results.to} of ${props.results.total}`} />
+						</div>
+					) : props.results.data.length ? (
 						<ul className="mt-6 grid gap-5 md:grid-cols-2">
 							{props.results.data.map(protocol => (
 								<li key={protocol.id} className="flex">
@@ -222,8 +261,8 @@ export default function Database(props: Props) {
 						</ul>
 					) : (
 						<div className="mt-6">
-							<EmptyState title="No protocols match" action={active.length ? <Button variant="secondary" onClick={clearAll}>Clear all filters</Button> : undefined}>
-								Try fewer words, another field, or fewer filters.
+							<EmptyState title={text.empty_title} action={active.length ? <Button variant="secondary" onClick={clearAll}>Clear all filters</Button> : undefined}>
+								{text.empty_text}
 							</EmptyState>
 						</div>
 					)}
@@ -258,7 +297,7 @@ export default function Database(props: Props) {
 				</section>
 			</div>
 
-			<RegisterCta />
+			<RegisterCta content={content.cta} />
 
 			<Dialog open={sheet} onClose={() => setSheet(false)} title="Filters" size="md">
 				{panel}
@@ -270,9 +309,12 @@ export default function Database(props: Props) {
 	);
 }
 
-function SearchHero({ filters, popular, onSearch }: { filters: Filters; popular: string[]; onSearch: (q: string, field: Filters["in"]) => void }) {
+function SearchHero({ filters, content, onSearch }: { filters: Filters; content: DatabaseContent; onSearch: (q: string, field: Filters["in"]) => void }) {
+	const { intro, search_help: help } = content;
 	const [q, setQ] = useState(filters.q);
 	const [field, setField] = useState<Filters["in"]>(filters.in);
+	const [helpOpen, setHelpOpen] = useState(false);
+	const helpId = useId();
 
 	const submit = (event: FormEvent) => {
 		event.preventDefault();
@@ -302,9 +344,9 @@ function SearchHero({ filters, popular, onSearch }: { filters: Filters; popular:
 					</ol>
 				</nav>
 				<h1 id="db-title" className="mt-6 text-4xl leading-[1.05] font-extrabold tracking-[-0.035em] sm:text-5xl lg:text-[60px]">
-					Search the register
+					{intro.title}
 				</h1>
-				<p className="mt-4 max-w-[660px] text-lg leading-[1.55] sm:text-[19px]">Filter by stage, species or status. Every record links to its full protocol and revision history.</p>
+				<p className="mt-4 max-w-[660px] text-lg leading-[1.55] sm:text-[19px]">{intro.text}</p>
 
 				<form role="search" onSubmit={submit} className="mt-8 flex max-w-[960px] flex-col gap-3 rounded-[28px] bg-white p-2 shadow-[0_16px_36px_-20px_rgb(50_55_66/0.35)] sm:flex-row sm:items-center sm:rounded-full">
 					<label className="flex min-w-0 flex-1 items-center gap-3 px-4">
@@ -314,7 +356,7 @@ function SearchHero({ filters, popular, onSearch }: { filters: Filters; popular:
 							type="search"
 							value={q}
 							onChange={event => setQ(event.target.value)}
-							placeholder="Search titles, hypotheses, species, institutions…"
+							placeholder={intro.search_placeholder}
 							className="h-12 min-w-0 flex-1 bg-transparent text-md outline-none placeholder:text-ink-subtle"
 						/>
 					</label>
@@ -342,11 +384,11 @@ function SearchHero({ filters, popular, onSearch }: { filters: Filters; popular:
 					</div>
 				</form>
 
-				<div className="mt-5 flex flex-wrap items-center gap-2.5">
-					<span className="text-[15px] font-semibold text-ink-muted">Popular:</span>
-					{popular.map(term => (
+				<div className="mt-5 flex max-w-[960px] flex-wrap items-center gap-2.5">
+					{intro.popular.length > 0 && <span className="text-[15px] font-semibold text-ink-muted">{intro.popular_label}</span>}
+					{intro.popular.map(({ term }, index) => (
 						<button
-							key={term}
+							key={index}
 							type="button"
 							onClick={() => {
 								setQ(term);
@@ -358,9 +400,56 @@ function SearchHero({ filters, popular, onSearch }: { filters: Filters; popular:
 							{term}
 						</button>
 					))}
+					<button
+						type="button"
+						aria-expanded={helpOpen}
+						aria-controls={helpId}
+						onClick={() => setHelpOpen(!helpOpen)}
+						className="inline-flex h-9 items-center gap-1.5 rounded-full px-2 text-[15px] font-bold text-link underline-offset-3 hover:underline sm:ml-auto"
+					>
+						<Info size={17} strokeWidth={2.3} aria-hidden="true" />
+						{help.toggle}
+						<ChevronDown size={14} strokeWidth={2.4} aria-hidden="true" className={cn("transition-transform", helpOpen && "rotate-180")} />
+					</button>
+				</div>
+				<div id={helpId} hidden={!helpOpen} className="mt-4 max-w-[960px] rounded-input bg-white px-5 py-4.5 shadow-[inset_0_0_0_1px_var(--color-line)] sm:px-6">
+					<h2 className="font-display text-lg font-extrabold">{help.title}</h2>
+					<ul className="mt-2.5 grid list-disc gap-1.5 pl-5 text-[15.5px] leading-normal marker:text-teal-500">
+						{help.items.map((item, index) => (
+							<li key={index}>
+								<RichContent html={item.text} className="[&_a]:font-bold [&_a]:text-link" />
+							</li>
+						))}
+					</ul>
 				</div>
 			</div>
 		</section>
+	);
+}
+
+function ViewToggle({ view, onChange }: { view: Filters["view"]; onChange: (view: Filters["view"]) => void }) {
+	const options: [Filters["view"], string, ReactNode][] = [
+		["tiles", "Tiles", <LayoutGrid key="tiles" size={17} strokeWidth={2.2} aria-hidden="true" />],
+		["list", "List", <List key="list" size={18} strokeWidth={2.2} aria-hidden="true" />]
+	];
+	return (
+		<div role="group" aria-label="Show results as" className="inline-flex h-12 items-center gap-1 rounded-full bg-white p-1 shadow-[inset_0_0_0_1.5px_var(--color-line-strong)]">
+			{options.map(([value, label, icon]) => (
+				<button
+					key={value}
+					type="button"
+					aria-pressed={view === value}
+					onClick={() => onChange(value)}
+					className={cn(
+						"inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 font-display text-[14.5px] font-bold",
+						view === value ? "bg-ink text-white" : "text-ink-muted hover:bg-mist hover:text-ink"
+					)}
+				>
+					{icon}
+					{label}
+				</button>
+			))}
+		</div>
 	);
 }
 
@@ -371,7 +460,7 @@ type PanelProps = Props & {
 	onClear: () => void;
 };
 
-function FilterPanel({ filters, facets, timeline, beforeStartCount, activeCount, onToggle, onVisit, onClear }: PanelProps) {
+function FilterPanel({ filters, facets, timeline, beforeStartCount, content, activeCount, onToggle, onVisit, onClear }: PanelProps) {
 	return (
 		<div>
 			<div className="flex items-center justify-between">
@@ -394,7 +483,7 @@ function FilterPanel({ filters, facets, timeline, beforeStartCount, activeCount,
 					label={<span className="font-bold">Only preregistered studies</span>}
 					description={
 						<>
-							Registered before the study started, as preregistration is meant to work.{" "}
+							{content.filters.before_start_text}{" "}
 							<span className="font-semibold text-ink tabular-nums">
 								{beforeStartCount} {beforeStartCount === 1 ? "protocol" : "protocols"}
 							</span>
@@ -535,21 +624,21 @@ function MonthInput({ label, value, onChange }: { label: string; value: string |
 	);
 }
 
-function RegisterCta() {
+function RegisterCta({ content }: { content: DatabaseContent["cta"] }) {
 	return (
 		<section aria-labelledby="cta-title" className="container-page pb-20">
 			<div className="relative overflow-hidden rounded-[32px] bg-teal-50 px-6 py-12 sm:px-16 sm:py-14">
 				<div className="relative max-w-[680px]">
-					<p className="eyebrow">Not in the register yet?</p>
+					<p className="eyebrow">{content.eyebrow}</p>
 					<h2 id="cta-title" className="mt-3.5 text-3xl leading-[1.08] font-extrabold tracking-[-0.03em] sm:text-4xl">
-						Register your study before it starts — so others don't repeat it.
+						{content.title}
 					</h2>
 					<div className="mt-8 flex flex-col gap-3 sm:flex-row">
-						<ButtonAnchor href={routes.registerProtocol} variant="accent" size="lg" arrow>
-							Register a protocol
+						<ButtonAnchor href={content.primary.url} variant="accent" size="lg" arrow>
+							{content.primary.label}
 						</ButtonAnchor>
-						<ButtonAnchor href={`${routes.home}#how-title`} variant="secondary" size="lg">
-							How registration works
+						<ButtonAnchor href={content.secondary.url} variant="secondary" size="lg">
+							{content.secondary.label}
 						</ButtonAnchor>
 					</div>
 				</div>

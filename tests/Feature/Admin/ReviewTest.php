@@ -110,7 +110,7 @@ class ReviewTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->where('protocol.round', 2)
                 ->where('protocol.researcher_note', 'Changed the title')
-                ->where('previous.title', 'Before')
+                ->where('changed', ['title'])
                 ->where('earlier.0.body', 'Better title please')
                 ->has('history', 2));
 
@@ -119,6 +119,49 @@ class ReviewTest extends TestCase
         $this->assertSame('published', $protocol->fresh()->status);
         Mail::assertSent(ProtocolApprovedAndPublished::class);
         $this->actingAs($this->admin)->get("/admin/protocols/{$protocol->id}/review")->assertRedirect("/database/view-protocol/{$protocol->id}");
+    }
+
+    /**
+     * The snapshot of the last round lives in a MySQL JSON column, which sorts object keys:
+     * {name, city, country} came back as {city, name, country}, so every study centre (and
+     * legacy study arms) showed "Changed since last round" though nobody touched them.
+     */
+    public function test_untouched_study_centres_and_arms_do_not_show_as_changed(): void
+    {
+        $owner = $this->makeUser();
+        $protocol = $this->makeProtocol($owner, 'submitted_for_publication', [
+            'study_centre' => [
+                ['name' => 'UMC Utrecht', 'city' => 'Utrecht', 'country' => 'NL'],
+                ['name' => 'Karolinska Institutet', 'city' => 'Stockholm', 'country' => 'SE'],
+            ],
+            'study_arms' => [['type' => 'experimental', 'intervention' => 'Colchicine', 'number' => '12']],
+            'sum_of_animals' => '12',
+        ]);
+        $workflow = app(ProtocolWorkflow::class);
+        $workflow->currentRound($protocol)->points()->create(['protocol_id' => $protocol->id, 'field_key' => 'title', 'body' => 'Better title please']);
+        $workflow->returnWithFeedback($protocol, $this->admin, null);
+
+        // The stored snapshot really has its keys reordered: the cause of the false diff.
+        $this->assertSame(['city', 'name', 'country'], array_keys($protocol->reviewRounds()->first()->snapshot['study_centre'][0]));
+
+        // The researcher changes the title only; autosave sends just that answer.
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$protocol->id}/answers", ['values' => ['title' => 'Colchicine in mice']])->assertOk();
+        $workflow->submit($protocol->fresh(), $owner);
+
+        $this->actingAs($this->admin)->get("/admin/protocols/{$protocol->id}/review")
+            ->assertInertia(fn (Assert $page) => $page->where('protocol.round', 2)->where('changed', ['title']));
+
+        // A real change to a centre still shows.
+        $workflow->currentRound($protocol)->points()->create(['protocol_id' => $protocol->id, 'field_key' => 'study_centre', 'body' => 'Which department?']);
+        $workflow->returnWithFeedback($protocol->fresh(), $this->admin, null);
+        $this->actingAs($owner)->putJson("/dashboard/protocols/{$protocol->id}/answers", ['values' => ['study_centre' => [
+            ['name' => 'UMC Utrecht, Cardiology', 'city' => 'Utrecht', 'country' => 'NL'],
+            ['name' => 'Karolinska Institutet', 'city' => 'Stockholm', 'country' => 'SE'],
+        ]]])->assertOk();
+        $workflow->submit($protocol->fresh(), $owner);
+
+        $this->actingAs($this->admin)->get("/admin/protocols/{$protocol->id}/review")
+            ->assertInertia(fn (Assert $page) => $page->where('protocol.round', 3)->where('changed', ['study_centre']));
     }
 
     public function test_messages_to_the_researcher_notify_them(): void

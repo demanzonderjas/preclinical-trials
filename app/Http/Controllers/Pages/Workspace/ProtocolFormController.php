@@ -9,10 +9,12 @@ use App\Models\FeedbackPoint;
 use App\Models\Protocol;
 use App\Models\User;
 use App\Services\AmendmentWorkflow;
+use App\Services\Import\ImportException;
 use App\Services\Import\ProtocolImporter;
 use App\Services\ProtocolImages;
 use App\Services\ProtocolSchema;
 use App\Services\ProtocolWorkflow;
+use App\Services\PublicRegister;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,8 +39,15 @@ class ProtocolFormController extends Controller
     public function edit(Request $request, int $id): Response|RedirectResponse
     {
         $protocol = $this->owned($request, $id);
+        if ($protocol->status === Protocol::DECLINED) {
+            return redirect("/database/view-protocol/{$protocol->id}")->with('error', 'This protocol was declined. It can no longer be edited or resubmitted.');
+        }
         if (! in_array($protocol->status, [...self::EDITABLE, 'published'], true)) {
             return redirect("/database/view-protocol/{$protocol->id}")->with('error', 'This protocol is locked while the PCT team reviews it.');
+        }
+
+        if ($protocol->status === 'draft') {
+            $this->fillContactFromProfile($protocol, $request->user());
         }
 
         // Protocols from before A2 have no choice stored; their name stayed private.
@@ -139,15 +148,27 @@ class ProtocolFormController extends Controller
 
     public function import(Request $request, ProtocolImporter $importer): RedirectResponse
     {
-        $request->validate(['file' => ['required', 'file', 'max:5120', 'mimetypes:application/json,text/plain,text/xml,application/xml']]);
+        // No check on the type the browser or the server's file sniffing reports: exports saved
+        // with a byte order mark or in Windows-1252 come out as text/plain or worse. The importer
+        // reads the content itself and says what is wrong with it.
+        $request->validate(['file' => ['required', 'file', 'max:5120']], [
+            'file.max' => 'This file is larger than 5 MB. PRIS and APAFiS exports are much smaller: check that you chose the export file.',
+        ]);
 
         try {
             $result = $importer->import($request->user(), $request->file('file'), $this->defaults($request->user()));
-        } catch (\InvalidArgumentException|\JsonException) {
-            return back()->withErrors(['file' => 'This is not a PRIS (.json) or APAFiS (.xml) export.']);
+        } catch (ImportException $error) {
+            return back()->withErrors(['file' => $error->getMessage()]);
+        } catch (\Throwable $error) {
+            report($error);
+
+            return back()->withErrors(['file' => 'Something went wrong while reading this file. Please send it to the PCT team via the contact page so we can look at it.']);
         }
 
         $message = "Imported from {$result['source']}. Check every answer: imports rarely fill the whole form.";
+        if ($result['skipped']) {
+            $message .= ' These answers could not be read and are left empty: '.implode(', ', $result['skipped']).'.';
+        }
         if ($result['untranslated']) {
             $message .= " {$result['untranslated']} French answers could not be translated automatically.";
         }
@@ -187,12 +208,41 @@ class ProtocolFormController extends Controller
     private function defaults(User $user): array
     {
         return [
-            'contact_name' => $user->name,
+            'contact_name' => trim($user->name),
             'contact_role' => $user->role,
             'contact_email' => $user->email,
             'publish_name' => (bool) $user->publish_name_default,
             'study_centre' => [['name' => $user->institution, 'city' => $user->city, 'country' => $user->country]],
         ];
+    }
+
+    /**
+     * A draft whose contact details are empty gets them from the profile, as a new protocol
+     * does: drafts from the old site, imports, or a profile completed after the draft began.
+     * Only empty answers are filled, so nothing the researcher typed is overwritten. Saved
+     * straight away, as the first autosave of a new protocol saves them, so they count for
+     * completeness and submission. Returned protocols are left alone: a save there marks
+     * feedback points as addressed.
+     */
+    private function fillContactFromProfile(Protocol $protocol, User $user): void
+    {
+        $stored = $protocol->values();
+        $empty = fn (mixed $value) => $value === null || (is_string($value) && trim($value) === '');
+
+        $fill = collect($this->defaults($user))
+            ->only(['contact_name', 'contact_role', 'contact_email'])
+            ->filter(fn ($value, string $key) => $empty($stored[$key] ?? null) && ! $empty($value))
+            ->all();
+
+        $centre = $this->defaults($user)['study_centre'];
+        if (! PublicRegister::centres($stored['study_centre'] ?? null) && PublicRegister::centres($centre)) {
+            $fill['study_centre'] = $centre;
+        }
+
+        if ($fill) {
+            $protocol->addDetailsToDatabase($fill);
+            $protocol->load('details');
+        }
     }
 
     /** @return array<string, mixed> */

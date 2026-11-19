@@ -69,6 +69,13 @@ export class WorkspaceUI {
 		await field.first().fill(value);
 	}
 
+	/** Changes a follow-up shown inside a question ("Details?" appears under several). */
+	async changeFollowUp(question: string, label: string, value: string) {
+		const field = this.page.locator(`#question-${question}`).getByLabel(label);
+		this.pendingSave = this.page.waitForResponse(r => /\/dashboard\/protocols\/\d+\/answers$/.test(r.url()) && r.request().method() === "PUT");
+		await field.fill(value);
+	}
+
 	/** A form control by its question; required questions end in an asterisk. */
 	/**
 	 * Pastes into a long answer as the browser would from Word, Google Docs or a PDF: a paste
@@ -133,9 +140,16 @@ export class WorkspaceUI {
 	}
 
 	async markPointAddressed(number: number) {
-		const toggle = this.feedbackPoint(number).getByRole("button", { name: /addressed/i });
-		await toggle.click();
-		await expect(toggle).toHaveAttribute("aria-pressed", "true");
+		const point = this.feedbackPoint(number);
+		await point.getByRole("button", { name: "Mark as addressed" }).click();
+		await expect(point.getByRole("status")).toContainText("Marked as addressed");
+	}
+
+	/** Undoes "addressed" on a point, e.g. one a change marked addressed by itself. */
+	async keepPointOpen(number: number) {
+		const point = this.feedbackPoint(number);
+		await point.getByRole("button", { name: "Undo" }).click();
+		await expect(point.getByRole("button", { name: "Mark as addressed" })).toBeVisible();
 	}
 
 	async askAboutPoint(number: number, question: string) {
